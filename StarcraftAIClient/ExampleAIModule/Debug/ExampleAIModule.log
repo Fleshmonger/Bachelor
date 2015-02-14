@@ -1,0 +1,70 @@
+﻿Build started 11-02-2015 15:45:32.
+     1>Project "D:\Bachelor\StarcraftAIClient\ExampleAIModule\ExampleAIModule.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         D:\Programs\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I../include /ID:/Tools/boost_1_56_0/libs/ /Zi /nologo /W3 /WX- /Od /Oy- /D NOMINMAX /D WIN32 /D _DEBUG /D _WINDOWS /D _USRDLL /D EXAMPLEAIMODULE_EXPORTS /D _WINDLL /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Source\Dll.cpp Source\ExampleAIModule.cpp
+         ExampleAIModule.cpp
+         Dll.cpp
+         Generating Code...
+       Link:
+         D:\Programs\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\Bachelor\StarcraftAIClient\Debug\ExampleAIModule.dll" /INCREMENTAL:NO /NOLOGO /LIBPATH:"D:\Tools\boost_1_56_0\lib64-msvc-12.0" ../lib/BWAPId.lib ../lib/BWTA.lib "../lib/libboost_thread-vc120-mt-1_56.lib" "../lib/libboost_system-vc120-mt-1_56.lib" "../lib/libCGAL-vc120-mt-4.4.lib" "../lib/libgmp-10.lib" "../lib/libmpfr-4.lib" kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:\Bachelor\StarcraftAIClient\Debug\ExampleAIModule.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"Debug\ExampleAIModule.lib" /MACHINE:X86 /SAFESEH /DLL Debug\Dll.obj
+         Debug\ExampleAIModule.obj
+     1>BWTA.lib(Polygon.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in Dll.obj
+     1>BWTA.lib(Polygon.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in Dll.obj
+     1>BWTA.lib(terrain_analysis.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in Dll.obj
+     1>BWTA.lib(terrain_analysis.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in Dll.obj
+     1>BWTA.lib(BWTA.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in Dll.obj
+     1>BWTA.lib(BWTA.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in Dll.obj
+     1>BWTA.lib(stdafx.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in Dll.obj
+     1>BWTA.lib(stdafx.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in Dll.obj
+     1>BWTA.lib(VertexData.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in Dll.obj
+     1>BWTA.lib(VertexData.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in Dll.obj
+     1>BWTA.lib(get_voronoi_edges.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in Dll.obj
+     1>BWTA.lib(get_voronoi_edges.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in Dll.obj
+     1>BWTA.lib(util.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in Dll.obj
+     1>BWTA.lib(util.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in Dll.obj
+     1>BWTA.lib(load_data.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in Dll.obj
+     1>BWTA.lib(load_data.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in Dll.obj
+     1>BWTA.lib(calculate_connectivity.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in Dll.obj
+     1>BWTA.lib(calculate_connectivity.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in Dll.obj
+     1>BWTA.lib(Graph.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in Dll.obj
+     1>BWTA.lib(Graph.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in Dll.obj
+     1>BWTA.lib(Node.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in Dll.obj
+     1>BWTA.lib(Node.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in Dll.obj
+     1>BWTA.lib(RegionImpl.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in Dll.obj
+     1>BWTA.lib(RegionImpl.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in Dll.obj
+     1>BWTA.lib(ChokepointImpl.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in Dll.obj
+     1>BWTA.lib(ChokepointImpl.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in Dll.obj
+     1>BWTA.lib(find_base_locations.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in Dll.obj
+     1>BWTA.lib(find_base_locations.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in Dll.obj
+     1>BWTA.lib(extract_polygons.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in Dll.obj
+     1>BWTA.lib(extract_polygons.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in Dll.obj
+     1>BWTA.lib(BWTA_Result.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in Dll.obj
+     1>BWTA.lib(BWTA_Result.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in Dll.obj
+     1>BWTA.lib(MapData.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in Dll.obj
+     1>BWTA.lib(MapData.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in Dll.obj
+     1>BWTA.lib(pathfinding.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in Dll.obj
+     1>BWTA.lib(pathfinding.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in Dll.obj
+     1>BWTA.lib(BaseLocationImpl.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in Dll.obj
+     1>BWTA.lib(BaseLocationImpl.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in Dll.obj
+     1>BWTA.lib(ConnectedComponent.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in Dll.obj
+     1>BWTA.lib(ConnectedComponent.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in Dll.obj
+     1>libboost_thread-vc120-mt-1_56.lib(thread.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in Dll.obj
+     1>libboost_thread-vc120-mt-1_56.lib(thread.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in Dll.obj
+     1>libboost_thread-vc120-mt-1_56.lib(tss_pe.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in Dll.obj
+     1>libboost_thread-vc120-mt-1_56.lib(tss_pe.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in Dll.obj
+     1>libboost_system-vc120-mt-1_56.lib(error_code.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in Dll.obj
+     1>libboost_system-vc120-mt-1_56.lib(error_code.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in Dll.obj
+     1>libCGAL-vc120-mt-4.4.lib(all_files.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in Dll.obj
+     1>libCGAL-vc120-mt-4.4.lib(all_files.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in Dll.obj
+            Creating library Debug\ExampleAIModule.lib and object Debug\ExampleAIModule.exp
+     1>LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
+     1>BWTA.lib(terrain_analysis.obj) : error LNK2019: unresolved external symbol "void __cdecl boost::filesystem::path_traits::convert(char const *,char const *,class std::basic_string<wchar_t,struct std::char_traits<wchar_t>,class std::allocator<wchar_t> > &,class std::codecvt<wchar_t,char,int> const &)" (?convert@path_traits@filesystem@boost@@YAXPBD0AAV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@ABV?$codecvt@_WDH@5@@Z) referenced in function "void __cdecl boost::filesystem::path_traits::dispatch<class std::basic_string<wchar_t,struct std::char_traits<wchar_t>,class std::allocator<wchar_t> > >(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &,class std::basic_string<wchar_t,struct std::char_traits<wchar_t>,class std::allocator<wchar_t> > &,class std::codecvt<wchar_t,char,int> const &)" (??$dispatch@V?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@@path_traits@filesystem@boost@@YAXABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AAV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@4@ABV?$codecvt@_WDH@4@@Z)
+     1>BWTA.lib(terrain_analysis.obj) : error LNK2019: unresolved external symbol "public: static class std::codecvt<wchar_t,char,int> const & __cdecl boost::filesystem::path::codecvt(void)" (?codecvt@path@filesystem@boost@@SAABV?$codecvt@_WDH@std@@XZ) referenced in function "public: __thiscall boost::filesystem::path::path<class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > >(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &,void *)" (??$?0V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@path@filesystem@boost@@QAE@ABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@PAX@Z)
+     1>BWTA.lib(terrain_analysis.obj) : error LNK2019: unresolved external symbol "class boost::filesystem::file_status __cdecl boost::filesystem::detail::status(class boost::filesystem::path const &,class boost::system::error_code *)" (?status@detail@filesystem@boost@@YA?AVfile_status@23@ABVpath@23@PAVerror_code@system@3@@Z) referenced in function "bool __cdecl boost::filesystem::exists(class boost::filesystem::path const &)" (?exists@filesystem@boost@@YA_NABVpath@12@@Z)
+     1>BWTA.lib(terrain_analysis.obj) : error LNK2019: unresolved external symbol "bool __cdecl boost::filesystem::detail::create_directories(class boost::filesystem::path const &,class boost::system::error_code *)" (?create_directories@detail@filesystem@boost@@YA_NABVpath@23@PAVerror_code@system@3@@Z) referenced in function "bool __cdecl BWTA::createDir(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > &)" (?createDir@BWTA@@YA_NAAV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z)
+     1>D:\Bachelor\StarcraftAIClient\Debug\ExampleAIModule.dll : fatal error LNK1120: 4 unresolved externals
+     1>Done Building Project "D:\Bachelor\StarcraftAIClient\ExampleAIModule\ExampleAIModule.vcxproj" (Build target(s)) -- FAILED.
+
+Build FAILED.
+
+Time Elapsed 00:00:02.99

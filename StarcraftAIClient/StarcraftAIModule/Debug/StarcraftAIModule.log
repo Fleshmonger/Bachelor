@@ -1,0 +1,36 @@
+﻿Build started 05-02-2015 19:47:05.
+     1>Project "D:\Bachelor\StarcraftAIClient\StarcraftAIModule\StarcraftAIModule.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         D:\Programs\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I../include /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _WINDLL /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Primary.cpp
+         Primary.cpp
+       Link:
+         D:\Programs\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\Bachelor\StarcraftAIClient\Debug\StarcraftAIModule.dll" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib ../lib/BWAPId.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:\Bachelor\StarcraftAIClient\Debug\StarcraftAIModule.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\Bachelor\StarcraftAIClient\Debug\StarcraftAIModule.lib" /MACHINE:X86 /DLL Debug\Dll.obj
+         Debug\Primary.obj
+            Creating library D:\Bachelor\StarcraftAIClient\Debug\StarcraftAIModule.lib and object D:\Bachelor\StarcraftAIClient\Debug\StarcraftAIModule.exp
+     1>BWAPId.lib(AIModule.obj) : warning LNK4099: PDB 'bwapid.pdb' was not found with 'BWAPId.lib(AIModule.obj)' or at 'D:\Bachelor\StarcraftAIClient\Debug\bwapid.pdb'; linking object as if no debug info
+     1>BWAPId.lib(Color.obj) : warning LNK4099: PDB 'bwapid.pdb' was not found with 'BWAPId.lib(Color.obj)' or at 'D:\Bachelor\StarcraftAIClient\Debug\bwapid.pdb'; linking object as if no debug info
+     1>BWAPId.lib(DamageType.obj) : warning LNK4099: PDB 'bwapid.pdb' was not found with 'BWAPId.lib(DamageType.obj)' or at 'D:\Bachelor\StarcraftAIClient\Debug\bwapid.pdb'; linking object as if no debug info
+     1>BWAPId.lib(Error.obj) : warning LNK4099: PDB 'bwapid.pdb' was not found with 'BWAPId.lib(Error.obj)' or at 'D:\Bachelor\StarcraftAIClient\Debug\bwapid.pdb'; linking object as if no debug info
+     1>BWAPId.lib(ExplosionType.obj) : warning LNK4099: PDB 'bwapid.pdb' was not found with 'BWAPId.lib(ExplosionType.obj)' or at 'D:\Bachelor\StarcraftAIClient\Debug\bwapid.pdb'; linking object as if no debug info
+     1>BWAPId.lib(Filters.obj) : warning LNK4099: PDB 'bwapid.pdb' was not found with 'BWAPId.lib(Filters.obj)' or at 'D:\Bachelor\StarcraftAIClient\Debug\bwapid.pdb'; linking object as if no debug info
+     1>BWAPId.lib(Game.obj) : warning LNK4099: PDB 'bwapid.pdb' was not found with 'BWAPId.lib(Game.obj)' or at 'D:\Bachelor\StarcraftAIClient\Debug\bwapid.pdb'; linking object as if no debug info
+     1>BWAPId.lib(Order.obj) : warning LNK4099: PDB 'bwapid.pdb' was not found with 'BWAPId.lib(Order.obj)' or at 'D:\Bachelor\StarcraftAIClient\Debug\bwapid.pdb'; linking object as if no debug info
+     1>BWAPId.lib(Player.obj) : warning LNK4099: PDB 'bwapid.pdb' was not found with 'BWAPId.lib(Player.obj)' or at 'D:\Bachelor\StarcraftAIClient\Debug\bwapid.pdb'; linking object as if no debug info
+     1>BWAPId.lib(Position.obj) : warning LNK4099: PDB 'bwapid.pdb' was not found with 'BWAPId.lib(Position.obj)' or at 'D:\Bachelor\StarcraftAIClient\Debug\bwapid.pdb'; linking object as if no debug info
+     1>BWAPId.lib(PositionUnit.obj) : warning LNK4099: PDB 'bwapid.pdb' was not found with 'BWAPId.lib(PositionUnit.obj)' or at 'D:\Bachelor\StarcraftAIClient\Debug\bwapid.pdb'; linking object as if no debug info
+     1>BWAPId.lib(Race.obj) : warning LNK4099: PDB 'bwapid.pdb' was not found with 'BWAPId.lib(Race.obj)' or at 'D:\Bachelor\StarcraftAIClient\Debug\bwapid.pdb'; linking object as if no debug info
+     1>BWAPId.lib(TechType.obj) : warning LNK4099: PDB 'bwapid.pdb' was not found with 'BWAPId.lib(TechType.obj)' or at 'D:\Bachelor\StarcraftAIClient\Debug\bwapid.pdb'; linking object as if no debug info
+     1>BWAPId.lib(Unit.obj) : warning LNK4099: PDB 'bwapid.pdb' was not found with 'BWAPId.lib(Unit.obj)' or at 'D:\Bachelor\StarcraftAIClient\Debug\bwapid.pdb'; linking object as if no debug info
+     1>BWAPId.lib(Unitset.obj) : warning LNK4099: PDB 'bwapid.pdb' was not found with 'BWAPId.lib(Unitset.obj)' or at 'D:\Bachelor\StarcraftAIClient\Debug\bwapid.pdb'; linking object as if no debug info
+     1>BWAPId.lib(UnitCommand.obj) : warning LNK4099: PDB 'bwapid.pdb' was not found with 'BWAPId.lib(UnitCommand.obj)' or at 'D:\Bachelor\StarcraftAIClient\Debug\bwapid.pdb'; linking object as if no debug info
+     1>BWAPId.lib(UnitCommandType.obj) : warning LNK4099: PDB 'bwapid.pdb' was not found with 'BWAPId.lib(UnitCommandType.obj)' or at 'D:\Bachelor\StarcraftAIClient\Debug\bwapid.pdb'; linking object as if no debug info
+     1>BWAPId.lib(UnitSizeType.obj) : warning LNK4099: PDB 'bwapid.pdb' was not found with 'BWAPId.lib(UnitSizeType.obj)' or at 'D:\Bachelor\StarcraftAIClient\Debug\bwapid.pdb'; linking object as if no debug info
+     1>BWAPId.lib(UnitType.obj) : warning LNK4099: PDB 'bwapid.pdb' was not found with 'BWAPId.lib(UnitType.obj)' or at 'D:\Bachelor\StarcraftAIClient\Debug\bwapid.pdb'; linking object as if no debug info
+     1>BWAPId.lib(UpgradeType.obj) : warning LNK4099: PDB 'bwapid.pdb' was not found with 'BWAPId.lib(UpgradeType.obj)' or at 'D:\Bachelor\StarcraftAIClient\Debug\bwapid.pdb'; linking object as if no debug info
+     1>BWAPId.lib(WeaponType.obj) : warning LNK4099: PDB 'bwapid.pdb' was not found with 'BWAPId.lib(WeaponType.obj)' or at 'D:\Bachelor\StarcraftAIClient\Debug\bwapid.pdb'; linking object as if no debug info
+         StarcraftAIModule.vcxproj -> D:\Bachelor\StarcraftAIClient\Debug\StarcraftAIModule.dll
+     1>Done Building Project "D:\Bachelor\StarcraftAIClient\StarcraftAIModule\StarcraftAIModule.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:01.50

@@ -1,0 +1,17 @@
+﻿Build started 06-02-2015 02:26:38.
+     1>Project "D:\Bachelor\StarcraftAIClient\ExampleAIModule\ExampleAIModule.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         D:\Programs\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\CL.exe /c /I../include /ID:/Tools/boost_1_57_0/libs/ /Zi /nologo /W3 /WX- /O2 /Oi /D NOMINMAX /D WIN32 /D NDEBUG /D _WINDOWS /D _USRDLL /D EXAMPLEAIMODULE_EXPORTS /D _WINDLL /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"x64\Release\\" /Fd"x64\Release\vc120.pdb" /Gd /TP /errorReport:prompt Source\Dll.cpp Source\ExampleAIModule.cpp
+         Dll.cpp
+         ExampleAIModule.cpp
+         Generating Code...
+       Link:
+         D:\Programs\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\link.exe /ERRORREPORT:PROMPT /OUT:"D:\Bachelor\StarcraftAIClient\x64\Release\ExampleAIModule.dll" /INCREMENTAL:NO /NOLOGO ../lib/BWAPI.lib ../lib/BWTA.lib "../lib/libboost_thread-vc120-mt-1_56.lib" "../lib/libboost_system-vc120-mt-1_56.lib" "../lib/libCGAL-vc120-mt-4.4.lib" "../lib/libgmp-10.lib" "../lib/libmpfr-4.lib" kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:\Bachelor\StarcraftAIClient\x64\Release\ExampleAIModule.pdb" /SUBSYSTEM:WINDOWS /OPT:REF /OPT:ICF /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"x64\Release\ExampleAIModule.lib" /MACHINE:X64 /DLL x64\Release\Dll.obj
+         x64\Release\ExampleAIModule.obj
+     1>LINK : fatal error C1905: Front end and back end not compatible (must target same processor).
+     1>LINK : fatal error LNK1257: code generation failed
+     1>Done Building Project "D:\Bachelor\StarcraftAIClient\ExampleAIModule\ExampleAIModule.vcxproj" (Build target(s)) -- FAILED.
+
+Build FAILED.
+
+Time Elapsed 00:00:02.96

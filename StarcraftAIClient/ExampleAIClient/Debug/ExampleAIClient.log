@@ -1,0 +1,51 @@
+﻿Build started 04-02-2015 20:33:24.
+     1>Project "D:\Programs\BWAPI\ExampleAIClient\ExampleAIClient.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         D:\Programs\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I../include /Zi /nologo /W3 /WX- /Od /Oy- /D NOMINMAX /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Source\ExampleAIClient.cpp
+         ExampleAIClient.cpp
+       Link:
+         D:\Programs\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\Programs\BWAPI\Debug\ExampleAIClient.exe" /INCREMENTAL /NOLOGO ../lib/BWAPId.lib ../lib/BWAPIClientd.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:\Programs\BWAPI\Debug\ExampleAIClient.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\Programs\BWAPI\Debug\ExampleAIClient.lib" /MACHINE:X86 /SAFESEH Debug\ExampleAIClient.obj
+     1>BWAPId.lib(BulletType.obj) : warning LNK4099: PDB 'bwapid.pdb' was not found with 'BWAPId.lib(BulletType.obj)' or at 'D:\Programs\BWAPI\Debug\bwapid.pdb'; linking object as if no debug info
+     1>BWAPId.lib(BWAPI.obj) : warning LNK4099: PDB 'bwapid.pdb' was not found with 'BWAPId.lib(BWAPI.obj)' or at 'D:\Programs\BWAPI\Debug\bwapid.pdb'; linking object as if no debug info
+     1>BWAPId.lib(Color.obj) : warning LNK4099: PDB 'bwapid.pdb' was not found with 'BWAPId.lib(Color.obj)' or at 'D:\Programs\BWAPI\Debug\bwapid.pdb'; linking object as if no debug info
+     1>BWAPId.lib(DamageType.obj) : warning LNK4099: PDB 'bwapid.pdb' was not found with 'BWAPId.lib(DamageType.obj)' or at 'D:\Programs\BWAPI\Debug\bwapid.pdb'; linking object as if no debug info
+     1>BWAPId.lib(Error.obj) : warning LNK4099: PDB 'bwapid.pdb' was not found with 'BWAPId.lib(Error.obj)' or at 'D:\Programs\BWAPI\Debug\bwapid.pdb'; linking object as if no debug info
+     1>BWAPId.lib(Event.obj) : warning LNK4099: PDB 'bwapid.pdb' was not found with 'BWAPId.lib(Event.obj)' or at 'D:\Programs\BWAPI\Debug\bwapid.pdb'; linking object as if no debug info
+     1>BWAPId.lib(ExplosionType.obj) : warning LNK4099: PDB 'bwapid.pdb' was not found with 'BWAPId.lib(ExplosionType.obj)' or at 'D:\Programs\BWAPI\Debug\bwapid.pdb'; linking object as if no debug info
+     1>BWAPId.lib(Filters.obj) : warning LNK4099: PDB 'bwapid.pdb' was not found with 'BWAPId.lib(Filters.obj)' or at 'D:\Programs\BWAPI\Debug\bwapid.pdb'; linking object as if no debug info
+     1>BWAPId.lib(Game.obj) : warning LNK4099: PDB 'bwapid.pdb' was not found with 'BWAPId.lib(Game.obj)' or at 'D:\Programs\BWAPI\Debug\bwapid.pdb'; linking object as if no debug info
+     1>BWAPId.lib(GameType.obj) : warning LNK4099: PDB 'bwapid.pdb' was not found with 'BWAPId.lib(GameType.obj)' or at 'D:\Programs\BWAPI\Debug\bwapid.pdb'; linking object as if no debug info
+     1>BWAPId.lib(Order.obj) : warning LNK4099: PDB 'bwapid.pdb' was not found with 'BWAPId.lib(Order.obj)' or at 'D:\Programs\BWAPI\Debug\bwapid.pdb'; linking object as if no debug info
+     1>BWAPId.lib(Player.obj) : warning LNK4099: PDB 'bwapid.pdb' was not found with 'BWAPId.lib(Player.obj)' or at 'D:\Programs\BWAPI\Debug\bwapid.pdb'; linking object as if no debug info
+     1>BWAPId.lib(PlayerType.obj) : warning LNK4099: PDB 'bwapid.pdb' was not found with 'BWAPId.lib(PlayerType.obj)' or at 'D:\Programs\BWAPI\Debug\bwapid.pdb'; linking object as if no debug info
+     1>BWAPId.lib(Position.obj) : warning LNK4099: PDB 'bwapid.pdb' was not found with 'BWAPId.lib(Position.obj)' or at 'D:\Programs\BWAPI\Debug\bwapid.pdb'; linking object as if no debug info
+     1>BWAPId.lib(PositionUnit.obj) : warning LNK4099: PDB 'bwapid.pdb' was not found with 'BWAPId.lib(PositionUnit.obj)' or at 'D:\Programs\BWAPI\Debug\bwapid.pdb'; linking object as if no debug info
+     1>BWAPId.lib(Race.obj) : warning LNK4099: PDB 'bwapid.pdb' was not found with 'BWAPId.lib(Race.obj)' or at 'D:\Programs\BWAPI\Debug\bwapid.pdb'; linking object as if no debug info
+     1>BWAPId.lib(TechType.obj) : warning LNK4099: PDB 'bwapid.pdb' was not found with 'BWAPId.lib(TechType.obj)' or at 'D:\Programs\BWAPI\Debug\bwapid.pdb'; linking object as if no debug info
+     1>BWAPId.lib(Unit.obj) : warning LNK4099: PDB 'bwapid.pdb' was not found with 'BWAPId.lib(Unit.obj)' or at 'D:\Programs\BWAPI\Debug\bwapid.pdb'; linking object as if no debug info
+     1>BWAPId.lib(Unitset.obj) : warning LNK4099: PDB 'bwapid.pdb' was not found with 'BWAPId.lib(Unitset.obj)' or at 'D:\Programs\BWAPI\Debug\bwapid.pdb'; linking object as if no debug info
+     1>BWAPId.lib(UnitCommand.obj) : warning LNK4099: PDB 'bwapid.pdb' was not found with 'BWAPId.lib(UnitCommand.obj)' or at 'D:\Programs\BWAPI\Debug\bwapid.pdb'; linking object as if no debug info
+     1>BWAPId.lib(UnitCommandType.obj) : warning LNK4099: PDB 'bwapid.pdb' was not found with 'BWAPId.lib(UnitCommandType.obj)' or at 'D:\Programs\BWAPI\Debug\bwapid.pdb'; linking object as if no debug info
+     1>BWAPId.lib(UnitSizeType.obj) : warning LNK4099: PDB 'bwapid.pdb' was not found with 'BWAPId.lib(UnitSizeType.obj)' or at 'D:\Programs\BWAPI\Debug\bwapid.pdb'; linking object as if no debug info
+     1>BWAPId.lib(UnitType.obj) : warning LNK4099: PDB 'bwapid.pdb' was not found with 'BWAPId.lib(UnitType.obj)' or at 'D:\Programs\BWAPI\Debug\bwapid.pdb'; linking object as if no debug info
+     1>BWAPId.lib(UpgradeType.obj) : warning LNK4099: PDB 'bwapid.pdb' was not found with 'BWAPId.lib(UpgradeType.obj)' or at 'D:\Programs\BWAPI\Debug\bwapid.pdb'; linking object as if no debug info
+     1>BWAPId.lib(WeaponType.obj) : warning LNK4099: PDB 'bwapid.pdb' was not found with 'BWAPId.lib(WeaponType.obj)' or at 'D:\Programs\BWAPI\Debug\bwapid.pdb'; linking object as if no debug info
+     1>BWAPIClientd.lib(BulletImpl.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPIClientd.lib(BulletImpl.obj)' or at 'D:\Programs\BWAPI\Debug\vc120.pdb'; linking object as if no debug info
+     1>BWAPIClientd.lib(BulletShared.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPIClientd.lib(BulletShared.obj)' or at 'D:\Programs\BWAPI\Debug\vc120.pdb'; linking object as if no debug info
+     1>BWAPIClientd.lib(Client.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPIClientd.lib(Client.obj)' or at 'D:\Programs\BWAPI\Debug\vc120.pdb'; linking object as if no debug info
+     1>BWAPIClientd.lib(ForceImpl.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPIClientd.lib(ForceImpl.obj)' or at 'D:\Programs\BWAPI\Debug\vc120.pdb'; linking object as if no debug info
+     1>BWAPIClientd.lib(ForceShared.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPIClientd.lib(ForceShared.obj)' or at 'D:\Programs\BWAPI\Debug\vc120.pdb'; linking object as if no debug info
+     1>BWAPIClientd.lib(GameImpl.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPIClientd.lib(GameImpl.obj)' or at 'D:\Programs\BWAPI\Debug\vc120.pdb'; linking object as if no debug info
+     1>BWAPIClientd.lib(GameShared.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPIClientd.lib(GameShared.obj)' or at 'D:\Programs\BWAPI\Debug\vc120.pdb'; linking object as if no debug info
+     1>BWAPIClientd.lib(PlayerImpl.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPIClientd.lib(PlayerImpl.obj)' or at 'D:\Programs\BWAPI\Debug\vc120.pdb'; linking object as if no debug info
+     1>BWAPIClientd.lib(PlayerShared.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPIClientd.lib(PlayerShared.obj)' or at 'D:\Programs\BWAPI\Debug\vc120.pdb'; linking object as if no debug info
+     1>BWAPIClientd.lib(RegionImpl.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPIClientd.lib(RegionImpl.obj)' or at 'D:\Programs\BWAPI\Debug\vc120.pdb'; linking object as if no debug info
+     1>BWAPIClientd.lib(RegionShared.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPIClientd.lib(RegionShared.obj)' or at 'D:\Programs\BWAPI\Debug\vc120.pdb'; linking object as if no debug info
+     1>BWAPIClientd.lib(UnitImpl.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPIClientd.lib(UnitImpl.obj)' or at 'D:\Programs\BWAPI\Debug\vc120.pdb'; linking object as if no debug info
+     1>BWAPIClientd.lib(UnitShared.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPIClientd.lib(UnitShared.obj)' or at 'D:\Programs\BWAPI\Debug\vc120.pdb'; linking object as if no debug info
+         ExampleAIClient.vcxproj -> D:\Programs\BWAPI\Debug\ExampleAIClient.exe
+     1>Done Building Project "D:\Programs\BWAPI\ExampleAIClient\ExampleAIClient.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:03.18

@@ -1,0 +1,44 @@
+#include "Reconnoiter.h"
+
+using namespace BWAPI;
+
+Reconnoiter::Reconnoiter(WorkerManager * workerManager)
+{
+	this->workerManager = workerManager;
+}
+
+// Unused deconstructor
+Reconnoiter::~Reconnoiter()
+{
+}
+
+void Reconnoiter::update()
+{
+	// Retrieving Target
+	// TODO Remove the loop, make it simpler.
+	if (!target || Broodwar->isExplored(target))
+	{
+		for (auto &p : Broodwar->getStartLocations())
+		{
+			if (!Broodwar->isExplored(p))
+			{
+				target = p; // TODO Does this ever deallocate?
+				break;
+			}
+		}
+	}
+	// Retrieving Scout
+	if ((!scout || !scout->exists()) && workerManager->getWorkers()->size() >= MINIMUM_WORKERS)
+	{
+		if (scout && !scout->exists())
+			workerManager->removeWorker(scout);
+		scout = workerManager->takeWorker();
+	}
+	if (scout && scout->isCompleted())
+	{
+		if (scout->isCarryingGas() || scout->isCarryingMinerals())
+			scout->returnCargo();
+		else if (!scout->isMoving())
+			scout->move(Position(target));
+	}
+}
