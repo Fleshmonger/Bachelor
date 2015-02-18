@@ -1,7 +1,8 @@
 #include "Architect.h"
 
-Architect::Architect(WorkerManager * workerManager)
+Architect::Architect(Accountant * accountant, WorkerManager * workerManager)
 {
+	this->accountant = accountant;
 	this->workerManager = workerManager;
 	buildOrders = new std::map < BWAPI::UnitType, std::pair<BWAPI::Unit,BWAPI::TilePosition> > ;
 	constructOrders = new std::map < BWAPI::UnitType, BWAPI::Unit > ;
@@ -23,7 +24,7 @@ bool Architect::orderBuilding(BWAPI::UnitType buildingType)
 		if (buildingType.isBuilding())
 		{
 			// Check if we have the resources.
-			if (canAfford(buildingType))
+			if (accountant->isAffordable(buildingType))
 			{
 				// Find a build location
 				TilePosition desiredBuildLocation;
@@ -57,6 +58,7 @@ bool Architect::orderBuilding(BWAPI::UnitType buildingType)
 						// Order the construction.
 						builder->build(buildingType, buildLocation);
 						(*buildOrders)[buildingType] = std::make_pair(builder, buildLocation);
+						accountant->allocUnit(buildingType);
 						return true;
 					} // closure: builder
 				} // closure: location
@@ -73,13 +75,6 @@ bool Architect::hasOrder(BWAPI::UnitType buildingType)
 	return buildOrders->count(buildingType) == 1 || constructOrders->count(buildingType) == 1;
 }
 
-bool Architect::canAfford(BWAPI::UnitType buildingType)
-{
-	BWAPI::PlayerInterface * player = Broodwar->self();
-	return player->minerals() >= buildingType.mineralPrice() &&
-		player->gas() >= buildingType.gasPrice();
-}
-
 /*
 // Removes a completed order from the list of current orders.
 // Throws an exception if the order does not exist (eg. a building was built without the architect knowing.)
@@ -92,7 +87,6 @@ void Architect::buildingCompleted(BWAPI::Unit building)
 */
 
 // Removes a building from the orders.
-// Throws an exception if the order does not exist.
 void Architect::removeBuildOrder(BWAPI::UnitType buildingType)
 {
 	if (buildOrders->count(buildingType) == 1)
@@ -100,14 +94,13 @@ void Architect::removeBuildOrder(BWAPI::UnitType buildingType)
 		auto order = buildOrders->at(buildingType); // Should this be deconstructed?
 		BWAPI::Unit builder = order.first;
 		if (builder && builder->exists())
-		{
 			workerManager->addWorker(order.first);
-		}
 		buildOrders->erase(buildingType);
+		accountant->deallocUnit(buildingType);
 	}
 }
 
-// Removes a build order and adds a new related construction order 
+// Removes a build order, deallocates resources and adds a new related construction order 
 void Architect::updateBuildOrder(BWAPI::Unit building) // Rename this.
 {
 	BWAPI::UnitType buildingType = building->getType();
@@ -146,9 +139,8 @@ void Architect::update()
 	if (Broodwar->self()->supplyTotal() - Broodwar->self()->supplyUsed() == 0 &&
 		!hasOrder(SUPPLY))
 		orderBuilding(SUPPLY);
-
-	// Check if all build orders are still valid, and ensure builders are building.
-	// Removes all invalid orders-
+	// Remove invalid build orders and continue valid orders.
+	// Code duplication with removeOrder.
 	{
 		auto it = buildOrders->begin();
 		while (it != buildOrders->end())
@@ -157,8 +149,7 @@ void Architect::update()
 			BWAPI::Unit builder = it->second.first;
 			BWAPI::TilePosition buildLocation = it->second.second;
 			if (builder && builder->exists() &&
-				Broodwar->canBuildHere(buildLocation, buildingType) &&
-				canAfford(buildingType))
+				Broodwar->canBuildHere(buildLocation, buildingType))
 			{
 				builder->build(buildingType, buildLocation);
 				++it;
@@ -168,12 +159,11 @@ void Architect::update()
 				if (builder && builder->exists())
 					workerManager->addWorker(builder);
 				it = buildOrders->erase(it);
+				accountant->deallocUnit(buildingType);
 			}
 		}
 	}
-
-	// Check if all construction orders are still valid.
-	// Removes all invalid orders.
+	// Remove all invalid construction orders.
 	{
 		auto it = constructOrders->begin();
 		while (it != constructOrders->end())

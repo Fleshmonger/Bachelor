@@ -9,9 +9,10 @@ void Primary::onStart()
 	Broodwar->setCommandOptimizationLevel(2);
 
 	// Managers Initialization
-	producer = new Producer();
+	accountant = new Accountant();
+	producer = new Producer(accountant);
 	workerManager = new WorkerManager();
-	architect = new Architect(workerManager);
+	architect = new Architect(accountant, workerManager);
 	reconnoiter = new Reconnoiter(workerManager);
 	economist = new Economist(producer, workerManager, architect);
 	armyManager = new ArmyManager(producer, architect);
@@ -44,7 +45,8 @@ void Primary::onFrame()
 {
 	// Display
 	Broodwar->drawTextScreen(200, 0, "FPS: %d", Broodwar->getFPS());
-	Broodwar->drawTextScreen(200, 20, "Average FPS: %f", Broodwar->getAverageFPS());
+	//Broodwar->drawTextScreen(200, 20, "Average FPS: %f", Broodwar->getAverageFPS());
+	Broodwar->drawTextScreen(200, 20, "Minerals: %d", accountant->minerals());
 	Broodwar->drawTextScreen(200, 40, "APM: %d", Broodwar->getAPM());
 
 	// BWTA draw
@@ -271,7 +273,7 @@ void Primary::onUnitHide(BWAPI::Unit unit)
 
 void Primary::onUnitCreate(BWAPI::Unit unit)
 {
-	//Broodwar->sendText("Unit Create");
+	Broodwar << "Unit Create: " << unit->getType().getName() << std::endl;;
 	if (unit->getPlayer() == Broodwar->self()) //Use isOwned somehow
 	{
 		BWAPI::UnitType unitType = unit->getType();
@@ -307,6 +309,7 @@ void Primary::onUnitDestroy(BWAPI::Unit unit) // Merge with onUnitCompleted some
 			workerManager->removeWorker(unit);
 		else // Must be a combat unit // Could be some spawned unit, like fighters?
 			armyManager->removeUnit(unit);
+		// TODO If unit was under construction, resources should be deallocated!
 	}
 	else if (Broodwar->self()->isEnemy(unit->getPlayer()))
 	{

@@ -1,16 +1,11 @@
-﻿Build started 18-02-2015 20:37:36.
+﻿Build started 18-02-2015 22:47:05.
      1>Project "D:\Bachelor\StarcraftAIClient\StarcraftAIModule\StarcraftAIModule.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         D:\Programs\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I../include /Zi /nologo /W3 /WX- /sdl /O2 /Oi /Oy- /D _WINDLL /D _MBCS /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Architect.cpp ArmyManager.cpp Dll.cpp Economist.cpp Primary.cpp Reconnoiter.cpp
-         Architect.cpp
-         ArmyManager.cpp
-         Dll.cpp
-         Economist.cpp
+         D:\Programs\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I../include /Zi /nologo /W3 /WX- /sdl /O2 /Oi /Oy- /D _WINDLL /D _MBCS /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Primary.cpp
          Primary.cpp
-         Reconnoiter.cpp
-         Generating Code...
        Link:
-         D:\Programs\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\Bachelor\StarcraftAIClient\Release\StarcraftAIModule.dll" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib ../lib/BWAPI.lib ../lib/BWTA.lib "../lib/libboost_thread-vc120-mt-1_56.lib" "../lib/libboost_system-vc120-mt-1_56.lib" "../lib/libCGAL-vc120-mt-4.4.lib" "../lib/libgmp-10.lib" "../lib/libmpfr-4.lib" kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:\Bachelor\StarcraftAIClient\Release\StarcraftAIModule.pdb" /SUBSYSTEM:WINDOWS /OPT:REF /OPT:ICF /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"Release\StarcraftAIModule.lib" /MACHINE:X86 /SAFESEH /DLL Release\Architect.obj
+         D:\Programs\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\Bachelor\StarcraftAIClient\Release\StarcraftAIModule.dll" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib ../lib/BWAPI.lib ../lib/BWTA.lib "../lib/libboost_thread-vc120-mt-1_56.lib" "../lib/libboost_system-vc120-mt-1_56.lib" "../lib/libCGAL-vc120-mt-4.4.lib" "../lib/libgmp-10.lib" "../lib/libmpfr-4.lib" kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:\Bachelor\StarcraftAIClient\Release\StarcraftAIModule.pdb" /SUBSYSTEM:WINDOWS /OPT:REF /OPT:ICF /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"Release\StarcraftAIModule.lib" /MACHINE:X86 /SAFESEH /DLL Release\Accountant.obj
+         Release\Architect.obj
          Release\ArmyManager.obj
          Release\Dll.obj
          Release\Economist.obj
@@ -18,15 +13,15 @@
          Release\Producer.obj
          Release\Reconnoiter.obj
          Release\WorkerManager.obj
-         BWAPI.lib(Position.obj) : MSIL .netmodule or module compiled with /GL found; restarting link with /LTCG; add /LTCG to the link command line to improve linker performance
+         BWAPI.lib(UnitType.obj) : MSIL .netmodule or module compiled with /GL found; restarting link with /LTCG; add /LTCG to the link command line to improve linker performance
             Creating library Release\StarcraftAIModule.lib and object Release\StarcraftAIModule.exp
          Generating code
          Finished generating code
-     1>BWAPI.lib(Position.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPI.lib(Position.obj)' or at 'D:\Bachelor\StarcraftAIClient\Release\vc120.pdb'; linking object as if no debug info
      1>BWAPI.lib(UnitType.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPI.lib(UnitType.obj)' or at 'D:\Bachelor\StarcraftAIClient\Release\vc120.pdb'; linking object as if no debug info
-     1>BWAPI.lib(Unit.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPI.lib(Unit.obj)' or at 'D:\Bachelor\StarcraftAIClient\Release\vc120.pdb'; linking object as if no debug info
      1>BWAPI.lib(Game.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPI.lib(Game.obj)' or at 'D:\Bachelor\StarcraftAIClient\Release\vc120.pdb'; linking object as if no debug info
      1>BWAPI.lib(Race.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPI.lib(Race.obj)' or at 'D:\Bachelor\StarcraftAIClient\Release\vc120.pdb'; linking object as if no debug info
+     1>BWAPI.lib(Position.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPI.lib(Position.obj)' or at 'D:\Bachelor\StarcraftAIClient\Release\vc120.pdb'; linking object as if no debug info
+     1>BWAPI.lib(Unit.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPI.lib(Unit.obj)' or at 'D:\Bachelor\StarcraftAIClient\Release\vc120.pdb'; linking object as if no debug info
      1>BWAPI.lib(PositionUnit.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPI.lib(PositionUnit.obj)' or at 'D:\Bachelor\StarcraftAIClient\Release\vc120.pdb'; linking object as if no debug info
      1>BWAPI.lib(AIModule.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPI.lib(AIModule.obj)' or at 'D:\Bachelor\StarcraftAIClient\Release\vc120.pdb'; linking object as if no debug info
      1>BWAPI.lib(Filters.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPI.lib(Filters.obj)' or at 'D:\Bachelor\StarcraftAIClient\Release\vc120.pdb'; linking object as if no debug info
@@ -34,12 +29,12 @@
      1>BWAPI.lib(WeaponType.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPI.lib(WeaponType.obj)' or at 'D:\Bachelor\StarcraftAIClient\Release\vc120.pdb'; linking object as if no debug info
      1>BWAPI.lib(TechType.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPI.lib(TechType.obj)' or at 'D:\Bachelor\StarcraftAIClient\Release\vc120.pdb'; linking object as if no debug info
      1>BWAPI.lib(UnitSizeType.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPI.lib(UnitSizeType.obj)' or at 'D:\Bachelor\StarcraftAIClient\Release\vc120.pdb'; linking object as if no debug info
+     1>BWAPI.lib(DamageType.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPI.lib(DamageType.obj)' or at 'D:\Bachelor\StarcraftAIClient\Release\vc120.pdb'; linking object as if no debug info
      1>BWAPI.lib(Unitset.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPI.lib(Unitset.obj)' or at 'D:\Bachelor\StarcraftAIClient\Release\vc120.pdb'; linking object as if no debug info
      1>BWAPI.lib(Error.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPI.lib(Error.obj)' or at 'D:\Bachelor\StarcraftAIClient\Release\vc120.pdb'; linking object as if no debug info
      1>BWAPI.lib(Player.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPI.lib(Player.obj)' or at 'D:\Bachelor\StarcraftAIClient\Release\vc120.pdb'; linking object as if no debug info
      1>BWAPI.lib(UnitCommand.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPI.lib(UnitCommand.obj)' or at 'D:\Bachelor\StarcraftAIClient\Release\vc120.pdb'; linking object as if no debug info
      1>BWAPI.lib(Order.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPI.lib(Order.obj)' or at 'D:\Bachelor\StarcraftAIClient\Release\vc120.pdb'; linking object as if no debug info
-     1>BWAPI.lib(DamageType.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPI.lib(DamageType.obj)' or at 'D:\Bachelor\StarcraftAIClient\Release\vc120.pdb'; linking object as if no debug info
      1>BWAPI.lib(ExplosionType.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPI.lib(ExplosionType.obj)' or at 'D:\Bachelor\StarcraftAIClient\Release\vc120.pdb'; linking object as if no debug info
      1>BWAPI.lib(UnitCommandType.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPI.lib(UnitCommandType.obj)' or at 'D:\Bachelor\StarcraftAIClient\Release\vc120.pdb'; linking object as if no debug info
          StarcraftAIModule.vcxproj -> D:\Bachelor\StarcraftAIClient\Release\StarcraftAIModule.dll
@@ -47,4 +42,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:07.43
+Time Elapsed 00:00:04.88

@@ -1,7 +1,8 @@
 #include "Producer.h"
 
-Producer::Producer()
+Producer::Producer(Accountant * accountant)
 {
+	this->accountant = accountant;
 	infantryFacilities = new BWAPI::Unitset();
 	idleInfantryFacilities = new BWAPI::Unitset();
 }
@@ -15,12 +16,13 @@ Producer::~Producer()
 // Returns whether or not the attempt was succesful.
 bool Producer::orderInfantry(BWAPI::UnitType unitType) // Note: the return is currently unused
 {
-	if (canAfford(unitType) && !idleInfantryFacilities->empty())
+	if (accountant->isAffordable(unitType) && !idleInfantryFacilities->empty())
 	{
 		BWAPI::Unit facility = *idleInfantryFacilities->begin();
 		idleInfantryFacilities->erase(idleInfantryFacilities->begin());
 		//BWAPI::Unit facility = *idleInfantryFacilities->erase(idleInfantryFacilities->begin());
 		facility->train(unitType);
+		//accountant->allocUnit(unitType);
 		return true;
 	}
 	else
@@ -35,21 +37,14 @@ bool Producer::orderWorker() // Note: the return is currently unused
 	if (depot &&
 		depot->isIdle() &&
 		depot->isCompleted() &&
-		canAfford(workerType))
+		accountant->isAffordable(workerType))
 	{
 		depot->train(workerType);
+		//accountant->allocUnit(workerType);
 		return true;
 	}
 	else
 		return false;
-}
-
-bool Producer::canAfford(BWAPI::UnitType unitType)
-{
-	BWAPI::PlayerInterface * player = Broodwar->self();
-	return player->minerals() >= unitType.mineralPrice() &&
-		player->gas() >= unitType.gasPrice() &&
-		player->supplyTotal() - player->supplyUsed() >= unitType.supplyRequired();
 }
 
 // Returns the amount of designated infantry constructing facilities.

@@ -131,6 +131,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Accountant.h" />
     <ClInclude Include="Architect.h" />
     <ClInclude Include="ArmyManager.h" />
     <ClInclude Include="Economist.h" />
@@ -140,6 +141,7 @@
     <ClInclude Include="WorkerManager.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Accountant.cpp" />
     <ClCompile Include="Architect.cpp" />
     <ClCompile Include="ArmyManager.cpp" />
     <ClCompile Include="Dll.cpp" />

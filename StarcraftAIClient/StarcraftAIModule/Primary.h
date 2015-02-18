@@ -2,6 +2,7 @@
 #include <BWAPI.h>
 #include <BWTA.h>
 #include <windows.h>
+#include "Accountant.h"
 #include "Producer.h"
 #include "WorkerManager.h"
 #include "Architect.h"
@@ -22,6 +23,7 @@ private:
 	bool analyzed;
 	bool analysis_just_finished;
 	*/
+	Accountant * accountant;
 	Producer * producer;
 	WorkerManager * workerManager;
 	Architect * architect;

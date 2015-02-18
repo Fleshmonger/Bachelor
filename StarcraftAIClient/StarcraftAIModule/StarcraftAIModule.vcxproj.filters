@@ -36,6 +36,9 @@
     <ClInclude Include="Architect.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Accountant.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Primary.cpp">
@@ -60,6 +63,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Architect.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Accountant.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

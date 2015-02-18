@@ -1,5 +1,6 @@
 #pragma once
 #include <BWAPI.h>
+#include "Accountant.h"
 #include "WorkerManager.h"
 
 using namespace BWAPI;
@@ -11,6 +12,7 @@ private:
 	//Constants
 	const BWAPI::UnitType SUPPLY = BWAPI::UnitTypes::Protoss_Pylon;
 	// Other Managers
+	Accountant * accountant;
 	WorkerManager * workerManager;
 	// Local variables
 	std::map < BWAPI::UnitType, std::pair<BWAPI::Unit,BWAPI::TilePosition> >  * buildOrders;
@@ -18,11 +20,10 @@ private:
 	BWAPI::Unitset * pylons; // When playing Protoss, these are used when placing buildings.
 	BWAPI::Unit depot;
 public:
-	Architect(WorkerManager * workerManager);
+	Architect(Accountant * accountant, WorkerManager * workerManager);
 	~Architect();
 	bool orderBuilding(BWAPI::UnitType unitType);
 	bool hasOrder(BWAPI::UnitType buildingType);
-	bool canAfford(BWAPI::UnitType buildingType);
 	void removeBuildOrder(BWAPI::UnitType buildingType);
 	void updateBuildOrder(BWAPI::Unit building);
 	void updateConstructOrder(BWAPI::UnitType buildingType);
