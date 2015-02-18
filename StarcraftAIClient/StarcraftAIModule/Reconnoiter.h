@@ -2,6 +2,8 @@
 #include <BWAPI.h>
 #include "WorkerManager.h"
 
+using namespace BWAPI;
+
 class Reconnoiter
 {
 private:

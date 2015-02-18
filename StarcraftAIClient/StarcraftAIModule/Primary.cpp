@@ -275,10 +275,9 @@ void Primary::onUnitCreate(BWAPI::Unit unit)
 	if (unit->getPlayer() == Broodwar->self()) //Use isOwned somehow
 	{
 		BWAPI::UnitType unitType = unit->getType();
-		designateUnit(unit);
 		if (unitType.isBuilding())
 		{
-			architect->removeOrder(unitType);
+			architect->updateBuildOrder(unit);
 			if (unit->getType() == BWAPI::UnitTypes::Protoss_Pylon)
 				architect->addIncompletePylon();
 		}
@@ -306,6 +305,7 @@ void Primary::onUnitDestroy(BWAPI::Unit unit) // Merge with onUnitCompleted some
 				architect->removePylon(unit);
 			else if (unitType == BWAPI::UnitTypes::Protoss_Gateway)
 				producer->removeInfantryFacility(unit);
+			// Remove an order from the architect, if this building was part of it.
 		}
 		else if (unitType.isWorker()) // Check if worker
 			workerManager->removeWorker(unit);
@@ -350,8 +350,12 @@ void Primary::onUnitComplete(BWAPI::Unit unit)
 	//Broodwar->sendText("Unit Complete");
 	if (unit->getPlayer() == Broodwar->self()) //Use isOwned somehow
 	{
+		BWAPI::UnitType unitType = unit->getType();
 		if (unit->getType() == BWAPI::UnitTypes::Protoss_Pylon)
 			architect->addPylon(unit);
+		else if (unitType.isBuilding())
+			architect->updateConstructOrder(unitType);
+		designateUnit(unit);
 	}
 }
 

@@ -3,7 +3,8 @@
 Architect::Architect(WorkerManager * workerManager)
 {
 	this->workerManager = workerManager;
-	orders = new std::map < BWAPI::UnitType, std::pair<BWAPI::Unit,BWAPI::TilePosition> > ;
+	buildOrders = new std::map < BWAPI::UnitType, std::pair<BWAPI::Unit,BWAPI::TilePosition> > ;
+	constructOrders = new std::map < BWAPI::UnitType, BWAPI::Unit > ;
 	pylons = new BWAPI::Unitset();
 	incompletePylons = 0;
 }
@@ -18,7 +19,7 @@ Architect::~Architect()
 bool Architect::orderBuilding(BWAPI::UnitType buildingType)
 {
 	// Check if we already have such an order.
-	if (orders->count(buildingType) == 0)
+	if (!hasOrder(buildingType))
 	{
 		if (buildingType.isBuilding())
 		{
@@ -56,7 +57,7 @@ bool Architect::orderBuilding(BWAPI::UnitType buildingType)
 					{
 						// Order the construction.
 						builder->build(buildingType, buildLocation);
-						(*orders)[buildingType] = std::make_pair(builder, buildLocation);
+						(*buildOrders)[buildingType] = std::make_pair(builder, buildLocation);
 						return true;
 					} // closure: builder
 				} // closure: location
@@ -64,6 +65,13 @@ bool Architect::orderBuilding(BWAPI::UnitType buildingType)
 		} // closure: is building
 	} // closure: order exists
 	return false; // Something went wrong.
+}
+
+// Returns whether or not the architect is processing an order of a given building type.
+// It is currently impossible to detect who commissioned the order.
+bool Architect::hasOrder(BWAPI::UnitType buildingType)
+{
+	return buildOrders->count(buildingType) == 1 || buildOrders->count(buildingType) == 1;
 }
 
 bool Architect::canAfford(BWAPI::UnitType buildingType)
@@ -88,16 +96,30 @@ void Architect::buildingCompleted(BWAPI::Unit building)
 // Throws an exception if the order does not exist.
 void Architect::removeOrder(BWAPI::UnitType buildingType)
 {
-	if (orders->count(buildingType) == 1)
+	if (buildOrders->count(buildingType) == 1)
 	{
-		auto order = orders->at(buildingType); // Should this be deconstructed?
+		auto order = buildOrders->at(buildingType); // Should this be deconstructed?
 		BWAPI::Unit builder = order.first;
 		if (builder && builder->exists())
 		{
 			workerManager->addWorker(order.first);
 		}
-		orders->erase(buildingType);
+		buildOrders->erase(buildingType);
 	}
+}
+
+// Removes a build order and adds a new related construction order 
+void Architect::updateBuildOrder(BWAPI::Unit building) // Rename this.
+{
+	BWAPI::UnitType buildingType = building->getType();
+	constructOrders->insert(std::make_pair(buildingType, building));
+	removeOrder(buildingType);
+}
+
+// Removes a completed construction order.
+void Architect::updateConstructOrder(BWAPI::UnitType buildingType) // Rename this.
+{
+	constructOrders->erase(buildingType);
 }
 
 // Increments the amount of currently unfinished supply buildings.
@@ -138,25 +160,42 @@ void Architect::update()
 		incompletePylons == 0)
 		orderBuilding(Broodwar->self()->getRace().getSupplyProvider());
 
-	// Check if all orders are still valid, and ensure builders are building.
-	auto it = orders->begin();
-	while (it != orders->end())
+	// Check if all build orders are still valid, and ensure builders are building.
+	// Removes all invalid orders-
 	{
-		BWAPI::UnitType buildingType = it->first;
-		BWAPI::Unit builder = it->second.first;
-		BWAPI::TilePosition buildLocation = it->second.second;
-		if (builder && builder->exists() &&
-			Broodwar->canBuildHere(buildLocation, buildingType) &&
-			canAfford(buildingType))
+		auto it = buildOrders->begin();
+		while (it != buildOrders->end())
 		{
-			builder->build(buildingType, buildLocation);
-			++it;
+			BWAPI::UnitType buildingType = it->first;
+			BWAPI::Unit builder = it->second.first;
+			BWAPI::TilePosition buildLocation = it->second.second;
+			if (builder && builder->exists() &&
+				Broodwar->canBuildHere(buildLocation, buildingType) &&
+				canAfford(buildingType))
+			{
+				builder->build(buildingType, buildLocation);
+				++it;
+			}
+			else
+			{
+				if (builder && builder->exists())
+					workerManager->addWorker(builder);
+				it = buildOrders->erase(it);
+			}
 		}
-		else
+	}
+
+	// Check if all construction orders are still valid.
+	// Removes all invalid orders.
+	{
+		auto it = constructOrders->begin();
+		while (it != constructOrders->end())
 		{
-			if (builder && builder->exists())
-				workerManager->addWorker(builder);
-			it = orders->erase(it);
+			BWAPI::Unit building = it->second;
+			if (!building || !building->exists())
+				it = constructOrders->erase(it);
+			else
+				++it;
 		}
 	}
 }
