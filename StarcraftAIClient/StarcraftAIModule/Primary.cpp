@@ -68,6 +68,7 @@ void Primary::onFrame()
 		return;
 
 	// Manager updatíng
+	producer->update();
 	architect->update();
 	reconnoiter->update();
 	economist->update();

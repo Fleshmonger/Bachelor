@@ -3,6 +3,7 @@
 Producer::Producer()
 {
 	infantryFacilities = new BWAPI::Unitset();
+	idleInfantryFacilities = new BWAPI::Unitset();
 }
 
 // Unused deconstructor
@@ -14,11 +15,11 @@ Producer::~Producer()
 // Returns whether or not the attempt was succesful.
 bool Producer::orderInfantry(BWAPI::UnitType unitType) // Note: the return is currently unused
 {
-	BWAPI::Unit facility = getIdleFacility(infantryFacilities);
-	if (facility &&
-		facility->isCompleted() &&
-		canAfford(unitType))
+	if (canAfford(unitType) && !idleInfantryFacilities->empty())
 	{
+		BWAPI::Unit facility = *idleInfantryFacilities->begin();
+		idleInfantryFacilities->erase(idleInfantryFacilities->begin());
+		//BWAPI::Unit facility = *idleInfantryFacilities->erase(idleInfantryFacilities->begin());
 		facility->train(unitType);
 		return true;
 	}
@@ -51,17 +52,6 @@ bool Producer::canAfford(BWAPI::UnitType unitType)
 		player->supplyTotal() - player->supplyUsed() >= unitType.supplyRequired();
 }
 
-// Returns an idle structure in a list of structures. Returns a nullptr if no such structure exists.
-BWAPI::Unit Producer::getIdleFacility(BWAPI::Unitset * facilities)
-{
-	for (auto &f : *facilities)
-	{
-		if (f->isIdle())
-			return f;
-	}
-	return nullptr;
-}
-
 // Returns the amount of designated infantry constructing facilities.
 int Producer::totalInfantryFacilities()
 {
@@ -72,16 +62,37 @@ int Producer::totalInfantryFacilities()
 void Producer::addInfantryFacility(BWAPI::Unit facility)
 {
 	infantryFacilities->insert(facility);
+	idleInfantryFacilities->insert(facility);
 }
 
 // Undesignates an infantry constructing facility.
 void Producer::removeInfantryFacility(BWAPI::Unit facility)
 {
 	infantryFacilities->erase(facility);
+	idleInfantryFacilities->erase(facility);
 }
 
 // Designates the current worker producing facility.
 void Producer::setDepot(BWAPI::Unit depot)
 {
 	this->depot = depot;
+}
+
+void Producer::update()
+{
+	// Find all idle infantry facilities.
+	auto &it = infantryFacilities->begin();
+	while (it != infantryFacilities->end())
+	{
+		BWAPI::Unit facility = *it;
+		if (facility && facility->exists())
+		{
+			if (facility->isCompleted() && // This should be unecessary
+				facility->isIdle())
+				idleInfantryFacilities->insert(facility);
+			++it;
+		}
+		else
+			it = infantryFacilities->erase(it);
+	}
 }

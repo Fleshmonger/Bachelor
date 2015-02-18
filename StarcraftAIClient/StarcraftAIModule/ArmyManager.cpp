@@ -55,14 +55,21 @@ void ArmyManager::removeUnit(BWAPI::Unit unit)
 void ArmyManager::update()
 {
 	// Create new troops
+	/*
 	if (producer->totalInfantryFacilities() > 0) // Check if we can produce troops
 	{
 		producer->orderInfantry(INFANTRY_UNIT);
 	}
+	*/
+	//while (producer->orderInfantry(INFANTRY_UNIT));
+	producer->orderInfantry(INFANTRY_UNIT);
+	architect->orderBuilding(INFANTRY_FACTORY);
+	/*
 	else // Order a troop facility
 	{
 		architect->orderBuilding(INFANTRY_FACTORY);
 	}
+	*/
 
 	// Update enemy positions
 	for (auto &u : *enemyTroops)
@@ -78,9 +85,10 @@ void ArmyManager::update()
 		while (it != troops->end())
 		{
 			BWAPI::Unit unit = *it;
-			if (unit->exists() && !unit->isAttacking())
+			if (unit->exists())
 			{
-				unit->attack(attackTarget); // Some of these units are probably not completed!
+				if (unit->isIdle())
+					unit->attack(attackTarget); // Some of these units are probably not completed!
 				++it;
 			}
 			else

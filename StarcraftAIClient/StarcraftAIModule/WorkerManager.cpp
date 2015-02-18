@@ -31,8 +31,9 @@ BWAPI::Unit WorkerManager::takeWorker()
 		if ((*it)->exists() &&
 			(*it)->isCompleted())
 		{
+			BWAPI::Unit worker = *it;
 			workers->erase(it);
-			return *it;
+			return worker;
 		}
 
 	}
