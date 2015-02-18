@@ -276,11 +276,7 @@ void Primary::onUnitCreate(BWAPI::Unit unit)
 	{
 		BWAPI::UnitType unitType = unit->getType();
 		if (unitType.isBuilding())
-		{
 			architect->updateBuildOrder(unit);
-			if (unit->getType() == BWAPI::UnitTypes::Protoss_Pylon)
-				architect->addIncompletePylon();
-		}
 	}
 }
 
@@ -351,10 +347,12 @@ void Primary::onUnitComplete(BWAPI::Unit unit)
 	if (unit->getPlayer() == Broodwar->self()) //Use isOwned somehow
 	{
 		BWAPI::UnitType unitType = unit->getType();
-		if (unit->getType() == BWAPI::UnitTypes::Protoss_Pylon)
-			architect->addPylon(unit);
-		else if (unitType.isBuilding())
+		if (unitType.isBuilding())
+		{
 			architect->updateConstructOrder(unitType);
+			if (unit->getType() == BWAPI::UnitTypes::Protoss_Pylon)
+				architect->addPylon(unit);
+		}
 		designateUnit(unit);
 	}
 }

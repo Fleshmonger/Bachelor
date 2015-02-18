@@ -1,8 +1,11 @@
-﻿Build started 18-02-2015 19:07:03.
+﻿Build started 18-02-2015 20:12:38.
      1>Project "D:\Bachelor\StarcraftAIClient\StarcraftAIModule\StarcraftAIModule.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         D:\Programs\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I../include /Zi /nologo /W3 /WX- /sdl /O2 /Oi /Oy- /D _WINDLL /D _MBCS /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Dll.cpp Primary.cpp Reconnoiter.cpp
+         D:\Programs\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I../include /Zi /nologo /W3 /WX- /sdl /O2 /Oi /Oy- /D _WINDLL /D _MBCS /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Architect.cpp ArmyManager.cpp Dll.cpp Economist.cpp Primary.cpp Reconnoiter.cpp
+         Architect.cpp
+         ArmyManager.cpp
          Dll.cpp
+         Economist.cpp
          Primary.cpp
          Reconnoiter.cpp
          Generating Code...
@@ -21,9 +24,9 @@
          Finished generating code
      1>BWAPI.lib(Position.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPI.lib(Position.obj)' or at 'D:\Bachelor\StarcraftAIClient\Release\vc120.pdb'; linking object as if no debug info
      1>BWAPI.lib(UnitType.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPI.lib(UnitType.obj)' or at 'D:\Bachelor\StarcraftAIClient\Release\vc120.pdb'; linking object as if no debug info
-     1>BWAPI.lib(Race.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPI.lib(Race.obj)' or at 'D:\Bachelor\StarcraftAIClient\Release\vc120.pdb'; linking object as if no debug info
      1>BWAPI.lib(Unit.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPI.lib(Unit.obj)' or at 'D:\Bachelor\StarcraftAIClient\Release\vc120.pdb'; linking object as if no debug info
      1>BWAPI.lib(Game.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPI.lib(Game.obj)' or at 'D:\Bachelor\StarcraftAIClient\Release\vc120.pdb'; linking object as if no debug info
+     1>BWAPI.lib(Race.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPI.lib(Race.obj)' or at 'D:\Bachelor\StarcraftAIClient\Release\vc120.pdb'; linking object as if no debug info
      1>BWAPI.lib(PositionUnit.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPI.lib(PositionUnit.obj)' or at 'D:\Bachelor\StarcraftAIClient\Release\vc120.pdb'; linking object as if no debug info
      1>BWAPI.lib(AIModule.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPI.lib(AIModule.obj)' or at 'D:\Bachelor\StarcraftAIClient\Release\vc120.pdb'; linking object as if no debug info
      1>BWAPI.lib(Filters.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPI.lib(Filters.obj)' or at 'D:\Bachelor\StarcraftAIClient\Release\vc120.pdb'; linking object as if no debug info
@@ -44,4 +47,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:06.16
+Time Elapsed 00:00:07.69

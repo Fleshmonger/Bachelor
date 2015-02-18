@@ -6,7 +6,6 @@ Architect::Architect(WorkerManager * workerManager)
 	buildOrders = new std::map < BWAPI::UnitType, std::pair<BWAPI::Unit,BWAPI::TilePosition> > ;
 	constructOrders = new std::map < BWAPI::UnitType, BWAPI::Unit > ;
 	pylons = new BWAPI::Unitset();
-	incompletePylons = 0;
 }
 
 //Unused deconstructor
@@ -94,7 +93,7 @@ void Architect::buildingCompleted(BWAPI::Unit building)
 
 // Removes a building from the orders.
 // Throws an exception if the order does not exist.
-void Architect::removeOrder(BWAPI::UnitType buildingType)
+void Architect::removeBuildOrder(BWAPI::UnitType buildingType)
 {
 	if (buildOrders->count(buildingType) == 1)
 	{
@@ -113,7 +112,7 @@ void Architect::updateBuildOrder(BWAPI::Unit building) // Rename this.
 {
 	BWAPI::UnitType buildingType = building->getType();
 	constructOrders->insert(std::make_pair(buildingType, building));
-	removeOrder(buildingType);
+	removeBuildOrder(buildingType);
 }
 
 // Removes a completed construction order.
@@ -122,28 +121,24 @@ void Architect::updateConstructOrder(BWAPI::UnitType buildingType) // Rename thi
 	constructOrders->erase(buildingType);
 }
 
+/*
 // Increments the amount of currently unfinished supply buildings.
 void Architect::addIncompletePylon()
 {
 	incompletePylons++;
 }
+*/
 
-// Adds a pylon to the pylon pool.
+// Adds a pylon to the pylon pool, used for Protoss construction.
 void Architect::addPylon(BWAPI::Unit pylon)
 {
 	pylons->insert(pylon);
-	incompletePylons--;
 }
 
-// Removes a pylon to the pylon pool.
+// Removes a pylon to the pylon pool, ignoring it when placing buildings.
 void Architect::removePylon(BWAPI::Unit pylon)
 {
-	auto it = pylons->find(pylon);
-	// Check if the pylon was completed.
-	if (it != pylons->end())
-		pylons->erase(pylon);
-	else
-		incompletePylons--;
+	pylons->erase(pylon);
 }
 
 // Designates the current base position.
@@ -155,10 +150,10 @@ void Architect::setDepot(BWAPI::Unit depot)
 // Simulate the architect AI. Creates pylons and commands builders.
 void Architect::update() 
 {
-	// Order a pylon if more supply is needed, and no pylons are being constructed.
+	// Order a supply building if more supply is needed, and none are being constructed.
 	if (Broodwar->self()->supplyTotal() - Broodwar->self()->supplyUsed() == 0 &&
-		incompletePylons == 0)
-		orderBuilding(Broodwar->self()->getRace().getSupplyProvider());
+		hasOrder(SUPPLY))
+		orderBuilding(SUPPLY);
 
 	// Check if all build orders are still valid, and ensure builders are building.
 	// Removes all invalid orders-
