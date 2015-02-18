@@ -70,7 +70,7 @@ bool Architect::orderBuilding(BWAPI::UnitType buildingType)
 // It is currently impossible to detect who commissioned the order.
 bool Architect::hasOrder(BWAPI::UnitType buildingType)
 {
-	return buildOrders->count(buildingType) == 1 || buildOrders->count(buildingType) == 1;
+	return buildOrders->count(buildingType) == 1 || constructOrders->count(buildingType) == 1;
 }
 
 bool Architect::canAfford(BWAPI::UnitType buildingType)
@@ -121,14 +121,6 @@ void Architect::updateConstructOrder(BWAPI::UnitType buildingType) // Rename thi
 	constructOrders->erase(buildingType);
 }
 
-/*
-// Increments the amount of currently unfinished supply buildings.
-void Architect::addIncompletePylon()
-{
-	incompletePylons++;
-}
-*/
-
 // Adds a pylon to the pylon pool, used for Protoss construction.
 void Architect::addPylon(BWAPI::Unit pylon)
 {
@@ -152,7 +144,7 @@ void Architect::update()
 {
 	// Order a supply building if more supply is needed, and none are being constructed.
 	if (Broodwar->self()->supplyTotal() - Broodwar->self()->supplyUsed() == 0 &&
-		hasOrder(SUPPLY))
+		!hasOrder(SUPPLY))
 		orderBuilding(SUPPLY);
 
 	// Check if all build orders are still valid, and ensure builders are building.
