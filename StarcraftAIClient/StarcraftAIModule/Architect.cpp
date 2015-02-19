@@ -21,18 +21,19 @@ bool Architect::orderBuilding(BWAPI::UnitType buildingType)
 	// Check if we already have such an order.
 	if (!hasOrder(buildingType))
 	{
+		// Confirm the unit type.
 		if (buildingType.isBuilding())
 		{
 			// Check if we have the resources.
 			if (accountant->isAffordable(buildingType))
 			{
 				// Find a build location
-				TilePosition desiredBuildLocation;
+				TilePosition buildOrigin, buildTarget;
 				if (buildingType == BWAPI::UnitTypes::Protoss_Pylon)
 				{
 					// Build the pylon around the depot.
 					if (depot)
-						desiredBuildLocation = depot->getTilePosition();
+						buildOrigin = depot->getTilePosition();
 					else
 						return false;
 				}
@@ -43,21 +44,21 @@ bool Architect::orderBuilding(BWAPI::UnitType buildingType)
 					{
 						// TODO go through all pylons if no position has been found!
 						auto pylonIt = pylons->begin();
-						desiredBuildLocation = (*pylonIt)->getTilePosition();
+						buildOrigin = (*pylonIt)->getTilePosition();
 					}
 					else
 						return false;
 				}
-				TilePosition buildLocation = Broodwar->getBuildLocation(buildingType, depot->getTilePosition());
-				if (buildLocation)
+				buildTarget = Broodwar->getBuildLocation(buildingType, buildOrigin);
+				if (buildTarget)
 				{
 					// Find a builder.
 					BWAPI::Unit builder = workerManager->takeWorker();
 					if (builder)
 					{
 						// Order the construction.
-						builder->build(buildingType, buildLocation);
-						(*buildOrders)[buildingType] = std::make_pair(builder, buildLocation);
+						builder->build(buildingType, buildTarget);
+						(*buildOrders)[buildingType] = std::make_pair(builder, buildTarget);
 						accountant->allocUnit(buildingType);
 						return true;
 					} // closure: builder
@@ -94,9 +95,9 @@ void Architect::removeBuildOrder(BWAPI::UnitType buildingType)
 		auto order = buildOrders->at(buildingType); // Should this be deconstructed?
 		BWAPI::Unit builder = order.first;
 		if (builder && builder->exists())
-			workerManager->addWorker(order.first);
-		buildOrders->erase(buildingType);
+			workerManager->addWorker(builder);
 		accountant->deallocUnit(buildingType);
+		buildOrders->erase(buildingType);
 	}
 }
 
@@ -147,11 +148,12 @@ void Architect::update()
 		{
 			BWAPI::UnitType buildingType = it->first;
 			BWAPI::Unit builder = it->second.first;
-			BWAPI::TilePosition buildLocation = it->second.second;
-			if (builder && builder->exists() &&
-				Broodwar->canBuildHere(buildLocation, buildingType))
+			BWAPI::TilePosition buildTarget = it->second.second;
+			if (builder &&
+				builder->exists() &&
+				Broodwar->canBuildHere(buildTarget, buildingType))
 			{
-				builder->build(buildingType, buildLocation);
+				builder->build(buildingType, buildTarget);
 				++it;
 			}
 			else

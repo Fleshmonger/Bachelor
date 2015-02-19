@@ -24,7 +24,7 @@ public:
 	~Architect();
 	bool orderBuilding(BWAPI::UnitType unitType);
 	bool hasOrder(BWAPI::UnitType buildingType);
-	void removeBuildOrder(BWAPI::UnitType buildingType);
+	void removeBuildOrder(BWAPI::UnitType buildingType); // TODO Build order is ambigious; rename.
 	void updateBuildOrder(BWAPI::Unit building);
 	void updateConstructOrder(BWAPI::UnitType buildingType);
 	void addPylon(BWAPI::Unit pylon);

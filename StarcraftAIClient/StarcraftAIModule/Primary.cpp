@@ -303,13 +303,12 @@ void Primary::onUnitDestroy(BWAPI::Unit unit) // Merge with onUnitCompleted some
 				architect->removePylon(unit);
 			else if (unitType == BWAPI::UnitTypes::Protoss_Gateway)
 				producer->removeInfantryFacility(unit);
-			// Remove an order from the architect, if this building was part of it.
+			// TODO Remove an order from the architect, if this building was part of it.
 		}
 		else if (unitType.isWorker()) // Check if worker
 			workerManager->removeWorker(unit);
 		else // Must be a combat unit // Could be some spawned unit, like fighters?
 			armyManager->removeUnit(unit);
-		// TODO If unit was under construction, resources should be deallocated!
 	}
 	else if (Broodwar->self()->isEnemy(unit->getPlayer()))
 	{
