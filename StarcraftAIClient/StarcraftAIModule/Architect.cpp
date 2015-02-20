@@ -76,6 +76,13 @@ bool Architect::hasOrder(BWAPI::UnitType buildingType)
 	return buildOrders->count(buildingType) == 1 || constructOrders->count(buildingType) == 1;
 }
 
+// Returns the amount of buildings of a specific type currently scheduled.
+int Architect::incompleteCount(BWAPI::UnitType buildingType)
+{
+	return buildOrders->count(buildingType);
+	//return buildOrders->count(buildingType) + constructOrders->count(buildingType);
+}
+
 /*
 // Removes a completed order from the list of current orders.
 // Throws an exception if the order does not exist (eg. a building was built without the architect knowing.)
@@ -105,7 +112,8 @@ void Architect::removeBuildOrder(BWAPI::UnitType buildingType)
 void Architect::updateBuildOrder(BWAPI::Unit building) // Rename this.
 {
 	BWAPI::UnitType buildingType = building->getType();
-	constructOrders->insert(std::make_pair(buildingType, building));
+	//constructOrders->insert(std::make_pair(buildingType, building));
+	(*constructOrders)[buildingType] = building;
 	removeBuildOrder(buildingType);
 }
 
@@ -133,7 +141,8 @@ void Architect::setDepot(BWAPI::Unit depot)
 	this->depot = depot;
 }
 
-// Simulate the architect AI. Creates pylons and commands builders.
+// Simulate the architect AI.
+// Creates pylons, validates orders and commands builders.
 void Architect::update() 
 {
 	// Order a supply building if more supply is needed, and none are being constructed.
@@ -151,7 +160,8 @@ void Architect::update()
 			BWAPI::TilePosition buildTarget = it->second.second;
 			if (builder &&
 				builder->exists() &&
-				Broodwar->canBuildHere(buildTarget, buildingType))
+				Broodwar->canBuildHere(buildTarget, buildingType) &&
+				Broodwar->canMake(buildingType, builder))
 			{
 				builder->build(buildingType, buildTarget);
 				++it;

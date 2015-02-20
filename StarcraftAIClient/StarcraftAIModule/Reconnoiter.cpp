@@ -10,6 +10,8 @@ Reconnoiter::~Reconnoiter()
 {
 }
 
+// Simulate the reconnoiter AI.
+// Retrieves, returns and commands the scout.
 void Reconnoiter::update()
 {
 	// Retrieving Target
@@ -27,24 +29,16 @@ void Reconnoiter::update()
 	{
 		// Retrieving Scout
 		if ((!scout || !scout->exists()) && workerManager->getWorkers()->size() >= MINIMUM_WORKERS)
-		{
-			if (scout && !scout->exists())
-				workerManager->removeWorker(scout);
 			scout = workerManager->takeWorker();
-		}
-		// Ordering Scout
-		if (scout && scout->isCompleted())
-		{
-			if (scout->isCarryingGas() || scout->isCarryingMinerals())
-				scout->returnCargo();
-			else
-				scout->move(Position(target));
-		}
+		// Commanding Scout
+		if (scout)
+			scout->move(Position(target));
 	}
-	else if (scout)
+	else
 	{
 		// Return Scout
-		workerManager->addWorker(scout);
+		if (scout && scout->exists())
+			workerManager->addWorker(scout);
 		scout = nullptr;
 	}
 }

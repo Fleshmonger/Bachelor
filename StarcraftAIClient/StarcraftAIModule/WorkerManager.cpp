@@ -22,25 +22,27 @@ void WorkerManager::removeWorker(BWAPI::Unit worker)
 	workers->erase(worker);
 }
 
-// Returns an undesignated worker. If no workers are in the pool, returns a null pointer.
+// Returns a valid worker or a null pointer if no valid workers are in the pool.
 BWAPI::Unit WorkerManager::takeWorker()
 {
 	auto it = workers->begin();
 	while (it != workers->end())
 	{
-		if ((*it)->exists() &&
-			(*it)->isCompleted())
+		BWAPI::Unit worker = *it;
+		if (worker->exists() && // Should be unecessary
+			worker->isCompleted() && // Should be unecessary
+			!worker->isCarryingMinerals() &&
+			!worker->isCarryingGas())
 		{
-			BWAPI::Unit worker = *it;
 			workers->erase(it);
 			return worker;
 		}
-
+		++it;
 	}
 	return nullptr;
 }
 
-// Returns the entire worker pool, without designating them.
+// Returns the entire worker pool.
 BWAPI::Unitset * WorkerManager::getWorkers()
 {
 	return workers;

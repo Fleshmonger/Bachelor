@@ -46,7 +46,8 @@ void Primary::onFrame()
 	// Display
 	Broodwar->drawTextScreen(200, 0, "FPS: %d", Broodwar->getFPS());
 	//Broodwar->drawTextScreen(200, 20, "Average FPS: %f", Broodwar->getAverageFPS());
-	Broodwar->drawTextScreen(200, 20, "Minerals: %d", accountant->minerals());
+	//Broodwar->drawTextScreen(200, 20, "Unallocated Minerals: %d", accountant->minerals());
+	Broodwar->drawTextScreen(200, 20, "Scheduled Gateways: %d", architect->incompleteCount(BWAPI::UnitTypes::Protoss_Gateway));
 	Broodwar->drawTextScreen(200, 40, "APM: %d", Broodwar->getAPM());
 
 	// BWTA draw
