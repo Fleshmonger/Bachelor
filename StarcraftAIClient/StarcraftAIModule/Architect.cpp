@@ -1,9 +1,9 @@
 #include "Architect.h"
 
-Architect::Architect(Accountant * accountant, WorkerManager * workerManager)
+Architect::Architect(WorkerManager * workerManager, Accountant * accountant)
 {
-	this->accountant = accountant;
 	this->workerManager = workerManager;
+	this->accountant = accountant;
 	buildOrders = new std::map < BWAPI::UnitType, std::pair<BWAPI::Unit,BWAPI::TilePosition> > ;
 	constructOrders = new std::map < BWAPI::UnitType, BWAPI::Unit > ;
 	pylons = new BWAPI::Unitset();

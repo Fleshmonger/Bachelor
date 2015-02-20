@@ -2,11 +2,11 @@
 #include <BWAPI.h>
 #include <BWTA.h>
 #include <windows.h>
-#include "Accountant.h"
-#include "Producer.h"
 #include "WorkerManager.h"
-#include "Architect.h"
+#include "Accountant.h"
 #include "Reconnoiter.h"
+#include "Producer.h"
+#include "Architect.h"
 #include "Economist.h"
 #include "ArmyManager.h"
 
@@ -51,5 +51,7 @@ public:
 	virtual void onUnitComplete(BWAPI::Unit unit);
 	// Everything below this line is safe to modify.
 	void designateUnit(BWAPI::Unit unit);
+	bool isOwned(BWAPI::Unit unit);
+	bool isEnemy(BWAPI::Unit unit);
 	//void drawTerrainData();
 };

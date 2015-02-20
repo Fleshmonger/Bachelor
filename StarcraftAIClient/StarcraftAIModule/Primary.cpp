@@ -9,12 +9,12 @@ void Primary::onStart()
 	Broodwar->setCommandOptimizationLevel(2);
 
 	// Managers Initialization
-	accountant = new Accountant();
-	producer = new Producer(accountant);
 	workerManager = new WorkerManager();
-	architect = new Architect(accountant, workerManager);
+	accountant = new Accountant();
 	reconnoiter = new Reconnoiter(workerManager);
-	economist = new Economist(producer, workerManager, architect);
+	producer = new Producer(accountant);
+	architect = new Architect(workerManager, accountant);
+	economist = new Economist(workerManager, producer, architect);
 	armyManager = new ArmyManager(producer, architect);
 
 	// Designate all starting units.
@@ -258,7 +258,7 @@ void Primary::onUnitEvade(BWAPI::Unit unit)
 void Primary::onUnitShow(BWAPI::Unit unit)
 {
 	//Broodwar->sendText("Unit Show");
-	if (Broodwar->self()->isEnemy(unit->getPlayer())) //Use isOwned somehow
+	if (isEnemy(unit))
 	{
 		if (unit->getType().isBuilding())
 			armyManager->addEnemyBuilding(unit);
@@ -274,11 +274,14 @@ void Primary::onUnitHide(BWAPI::Unit unit)
 void Primary::onUnitCreate(BWAPI::Unit unit)
 {
 	Broodwar << "Unit Create: " << unit->getType().getName() << std::endl;;
-	if (unit->getPlayer() == Broodwar->self()) //Use isOwned somehow
+	// Monitor the construction of the unit.
+	if (isOwned(unit))
 	{
 		BWAPI::UnitType unitType = unit->getType();
 		if (unitType.isBuilding())
 			architect->updateBuildOrder(unit);
+		else
+			producer->incompleteUnit(unit);
 	}
 }
 
@@ -286,13 +289,13 @@ void Primary::onUnitCreate(BWAPI::Unit unit)
 void Primary::onUnitDestroy(BWAPI::Unit unit) // Merge with onUnitCompleted somehow - code duplication!
 {
 	//Broodwar->sendText("Unit Destroy");
-	if (unit->getPlayer() == Broodwar->self()) //Use isOwned somehow
+	if (isOwned(unit))
 	{
 		// Undesignate the destroyed unit.
 		BWAPI::UnitType unitType = unit->getType();
-		if (unitType.isBuilding()) // Check if unit is building.
+		if (unitType.isBuilding())
 		{
-			if (unitType.isResourceDepot()) // Check if building is Command Center, Nexus or Hatchery.
+			if (unitType.isResourceDepot())
 			{
 				// What should happen here?
 				architect->setDepot(nullptr);
@@ -305,12 +308,13 @@ void Primary::onUnitDestroy(BWAPI::Unit unit) // Merge with onUnitCompleted some
 				producer->removeInfantryFacility(unit);
 			// TODO Remove an order from the architect, if this building was part of it.
 		}
-		else if (unitType.isWorker()) // Check if worker
+		else if (unitType.isWorker())
 			workerManager->removeWorker(unit);
 		else // Must be a combat unit // Could be some spawned unit, like fighters?
 			armyManager->removeUnit(unit);
+		// TODO if unit was incomplete, remove it from the producer.
 	}
-	else if (Broodwar->self()->isEnemy(unit->getPlayer()))
+	else if (isEnemy(unit))
 	{
 		if (unit->getType().isBuilding())
 			armyManager->removeEnemyBuilding(unit);
@@ -346,19 +350,21 @@ void Primary::onSaveGame(std::string gameName)
 void Primary::onUnitComplete(BWAPI::Unit unit)
 {
 	//Broodwar->sendText("Unit Complete");
-	if (unit->getPlayer() == Broodwar->self()) //Use isOwned somehow
+	if (isOwned(unit)) //Use isOwned somehow
 	{
+		// Update construction status.
 		BWAPI::UnitType unitType = unit->getType();
 		if (unitType.isBuilding())
-		{
 			architect->updateConstructOrder(unitType);
-			if (unit->getType() == BWAPI::UnitTypes::Protoss_Pylon)
-				architect->addPylon(unit);
-		}
+		else
+			producer->completeUnit(unit);
+		// Deliver the new unit.
 		designateUnit(unit);
 	}
 }
 
+// Delivers a unit to managers who needs it.
+// Assumes the unit is owned.
 void Primary::designateUnit(BWAPI::Unit unit)
 {
 	// Designate the new unit.
@@ -371,6 +377,8 @@ void Primary::designateUnit(BWAPI::Unit unit)
 			economist->setDepot(unit);
 			producer->setDepot(unit);
 		}
+		else if (unitType == BWAPI::UnitTypes::Protoss_Pylon)
+			architect->addPylon(unit);
 		else if (unitType == BWAPI::UnitTypes::Protoss_Gateway)
 			producer->addInfantryFacility(unit);
 	}
@@ -378,6 +386,22 @@ void Primary::designateUnit(BWAPI::Unit unit)
 		workerManager->addWorker(unit);
 	else // Must be a combat unit
 		armyManager->addUnit(unit);
+}
+
+// Returns true if the unit is owned and false otherwise.
+// TODO Move this to some unit monitor class?
+// TODO This can probably be done cheaper.
+bool Primary::isOwned(BWAPI::Unit unit)
+{
+	return unit->getPlayer() == Broodwar->self();
+}
+
+// Returns true if the unit is owned by an enemy and false otherwise.
+// TODO Move this to some unit monitor class?
+// TODO This can probably be done cheaper.
+bool Primary::isEnemy(BWAPI::Unit unit)
+{
+	return Broodwar->self()->isEnemy(unit->getPlayer());
 }
 
 /*

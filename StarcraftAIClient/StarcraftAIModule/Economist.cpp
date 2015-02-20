@@ -1,10 +1,10 @@
 #include "Economist.h"
 
 //In the future needs access to Architect for refinery construction.
-Economist::Economist(Producer * producer, WorkerManager * workerManager, Architect * architect)
+Economist::Economist(WorkerManager * workerManager, Producer * producer, Architect * architect)
 {
-	this->producer = producer;
 	this->workerManager = workerManager;
+	this->producer = producer;
 	this->architect = architect;
 }
 
@@ -13,15 +13,17 @@ Economist::~Economist()
 {
 }
 
+// Designates the current depot used for cargo return.
 void Economist::setDepot(BWAPI::Unit depot)
 {
 	this->depot = depot;
 }
 
+// Simulate the architect AI. Creates pylons and commands builders.
 void Economist::update()
 {
 	// Order more workers;
-	producer->orderWorker();
+	producer->trainUnit(PROTOSS_WORKER);
 
 	// Get all available workers;
 	BWAPI::Unitset * workers = workerManager->getWorkers();

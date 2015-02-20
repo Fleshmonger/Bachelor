@@ -62,7 +62,7 @@ void ArmyManager::update()
 	}
 	*/
 	//while (producer->orderInfantry(INFANTRY_UNIT));
-	producer->orderInfantry(INFANTRY_UNIT);
+	producer->trainUnit(INFANTRY_UNIT);
 	architect->orderBuilding(INFANTRY_FACTORY);
 	/*
 	else // Order a troop facility

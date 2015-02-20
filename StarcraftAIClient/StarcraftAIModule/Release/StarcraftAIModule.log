@@ -1,15 +1,8 @@
-﻿Build started 19-02-2015 17:54:59.
+﻿Build started 20-02-2015 12:45:44.
      1>Project "D:\Bachelor\StarcraftAIClient\StarcraftAIModule\StarcraftAIModule.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         D:\Programs\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I../include /Zi /nologo /W3 /WX- /sdl /O2 /Oi /Oy- /D _WINDLL /D _MBCS /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Accountant.cpp Architect.cpp ArmyManager.cpp Dll.cpp Economist.cpp Primary.cpp Producer.cpp
-         Accountant.cpp
-         Architect.cpp
-         ArmyManager.cpp
-         Dll.cpp
-         Economist.cpp
-         Primary.cpp
+         D:\Programs\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I../include /Zi /nologo /W3 /WX- /sdl /O2 /Oi /Oy- /D _WINDLL /D _MBCS /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Producer.cpp
          Producer.cpp
-         Generating Code...
        Link:
          D:\Programs\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\Bachelor\StarcraftAIClient\Release\StarcraftAIModule.dll" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib ../lib/BWAPI.lib ../lib/BWTA.lib "../lib/libboost_thread-vc120-mt-1_56.lib" "../lib/libboost_system-vc120-mt-1_56.lib" "../lib/libCGAL-vc120-mt-4.4.lib" "../lib/libgmp-10.lib" "../lib/libmpfr-4.lib" kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:\Bachelor\StarcraftAIClient\Release\StarcraftAIModule.pdb" /SUBSYSTEM:WINDOWS /OPT:REF /OPT:ICF /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"Release\StarcraftAIModule.lib" /MACHINE:X86 /SAFESEH /DLL Release\Accountant.obj
          Release\Architect.obj
@@ -49,4 +42,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:08.29
+Time Elapsed 00:00:04.95
