@@ -15,19 +15,20 @@ private:
 	WorkerManager * workerManager;
 	Accountant * accountant;
 	// Local
-	std::map < BWAPI::UnitType, std::pair<BWAPI::Unit,BWAPI::TilePosition> >  * buildOrders;
-	std::map < BWAPI::UnitType, BWAPI::Unit > * constructOrders;
-	BWAPI::Unitset * pylons; // When playing Protoss, these are used when placing buildings.
+	std::multimap < BWAPI::UnitType, std::pair<BWAPI::Unit,BWAPI::TilePosition> >  * buildSchedule;
+	std::multimap < BWAPI::UnitType, BWAPI::Unit > * constructSchedule;
+	BWAPI::Unitset * pylons;
 	BWAPI::Unit depot;
 public:
 	Architect(WorkerManager * workerManager, Accountant * accountant);
 	~Architect();
-	bool orderBuilding(BWAPI::UnitType unitType);
-	bool hasOrder(BWAPI::UnitType buildingType);
-	int incompleteCount(BWAPI::UnitType buildingType);
-	void removeBuildOrder(BWAPI::UnitType buildingType); // TODO Build order is ambigious; rename.
-	void updateBuildOrder(BWAPI::Unit building);
-	void updateConstructOrder(BWAPI::UnitType buildingType);
+	bool scheduleBuild(BWAPI::UnitType buildingType);
+	void scheduleConstruct(BWAPI::Unit building);
+	//void stopBuild(BWAPI::UnitType buildingType);
+	void stopConstruct(BWAPI::Unit building);
+	void completeBuild(BWAPI::Unit building);
+	void completeConstruct(BWAPI::Unit building);
+	int scheduled(BWAPI::UnitType buildingType);
 	void addPylon(BWAPI::Unit pylon);
 	void removePylon(BWAPI::Unit pylon);
 	void setDepot(BWAPI::Unit depot);

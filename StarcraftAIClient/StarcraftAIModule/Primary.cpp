@@ -47,7 +47,7 @@ void Primary::onFrame()
 	Broodwar->drawTextScreen(200, 0, "FPS: %d", Broodwar->getFPS());
 	//Broodwar->drawTextScreen(200, 20, "Average FPS: %f", Broodwar->getAverageFPS());
 	//Broodwar->drawTextScreen(200, 20, "Unallocated Minerals: %d", accountant->minerals());
-	Broodwar->drawTextScreen(200, 20, "Scheduled Gateways: %d", architect->incompleteCount(BWAPI::UnitTypes::Protoss_Gateway));
+	Broodwar->drawTextScreen(200, 20, "Scheduled Gateways: %d", architect->scheduled(BWAPI::UnitTypes::Protoss_Gateway));
 	Broodwar->drawTextScreen(200, 40, "APM: %d", Broodwar->getAPM());
 
 	// BWTA draw
@@ -280,7 +280,7 @@ void Primary::onUnitCreate(BWAPI::Unit unit)
 	{
 		BWAPI::UnitType unitType = unit->getType();
 		if (unitType.isBuilding())
-			architect->updateBuildOrder(unit);
+			architect->completeBuild(unit);
 		else
 			producer->incompleteUnit(unit);
 	}
@@ -356,7 +356,7 @@ void Primary::onUnitComplete(BWAPI::Unit unit)
 		// Update construction status.
 		BWAPI::UnitType unitType = unit->getType();
 		if (unitType.isBuilding())
-			architect->updateConstructOrder(unitType);
+			architect->completeConstruct(unit);
 		else
 			producer->completeUnit(unit);
 		// Deliver the new unit.
