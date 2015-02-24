@@ -24,8 +24,10 @@ public:
 	~Architect();
 	bool scheduleBuild(BWAPI::UnitType buildingType);
 	void scheduleConstruct(BWAPI::Unit building);
-	//void stopBuild(BWAPI::UnitType buildingType);
-	void stopConstruct(BWAPI::Unit building);
+	void removeBuild(std::map<BWAPI::UnitType, std::pair<BWAPI::Unit, BWAPI::TilePosition>>::iterator it);
+	void removeBuild(BWAPI::Unit building);
+	void removeConstruct(std::map<BWAPI::UnitType, BWAPI::Unit>::iterator it);
+	void removeConstruct(BWAPI::Unit building);
 	void completeBuild(BWAPI::Unit building);
 	void completeConstruct(BWAPI::Unit building);
 	int scheduled(BWAPI::UnitType buildingType);

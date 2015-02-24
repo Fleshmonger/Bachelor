@@ -77,24 +77,44 @@ void Architect::scheduleConstruct(BWAPI::Unit building)
 	constructSchedule->insert(std::make_pair(buildingType, building));
 }
 
-/*
-// Removes a building from the build schedule.
-void Architect::stopBuild(BWAPI::UnitType buildingType)
+// Removes an iterator from the build schedule.
+void Architect::removeBuild(std::map<BWAPI::UnitType, std::pair<BWAPI::Unit, BWAPI::TilePosition>>::iterator it)
 {
-	if (buildSchedule->count(buildingType) == 1)
+	auto build = *it;
+	BWAPI::Unit builder = build.second.first;
+	if (builder && builder->exists())
+		workerManager->addWorker(builder);
+	accountant->deallocUnit(build.first);
+	buildSchedule->erase(it);
+}
+
+// Removes a build order from the build schedule.
+void Architect::removeBuild(BWAPI::Unit building)
+{
+	BWAPI::UnitType buildingType = building->getType();
+	auto range = buildSchedule->equal_range(buildingType);
+	auto it = range.first, end = range.second;
+	while (it != end)
 	{
-		auto order = buildSchedule->at(buildingType); // Should this be deconstructed?
-		BWAPI::Unit builder = order.first;
-		if (builder && builder->exists())
-			workerManager->addWorker(builder);
-		accountant->deallocUnit(buildingType);
-		buildSchedule->erase(buildingType);
+		BWAPI::TilePosition location = (*it).second.second;
+		if (location == building->getTilePosition())
+		{
+			removeBuild(it);
+			return;
+		}
+		else
+			++it;
 	}
 }
-*/
 
-// Removes a construction from the construct schedule.
-void Architect::stopConstruct(BWAPI::Unit building)
+// Removes an iterator from the construct schedule.
+void Architect::removeConstruct(std::map<BWAPI::UnitType, BWAPI::Unit>::iterator it)
+{
+	constructSchedule->erase(it);
+}
+
+// Removes a construction order from the construct schedule.
+void Architect::removeConstruct(BWAPI::Unit building)
 {
 	auto range = constructSchedule->equal_range(building->getType());
 	auto it = range.first, end = range.second;
@@ -103,7 +123,7 @@ void Architect::stopConstruct(BWAPI::Unit building)
 		BWAPI::Unit construct = (*it).second;
 		if (construct == building)
 		{
-			constructSchedule->erase(it);
+			removeConstruct(it);
 			return;
 		}
 		else
@@ -114,34 +134,14 @@ void Architect::stopConstruct(BWAPI::Unit building)
 // Identifies a building as built.
 void Architect::completeBuild(BWAPI::Unit building) // Rename this.
 {
-	// Remove the old build schedule.
-	BWAPI::UnitType buildingType = building->getType();
-	auto range = buildSchedule->equal_range(buildingType);
-	auto it = range.first, end = range.second;
-	while (it != end)
-	{
-		auto build = (*it).second;
-		BWAPI::TilePosition location = build.second;
-		if (location == building->getTilePosition())
-		{
-			BWAPI::Unit builder = build.first;
-			if (builder && builder->exists())
-				workerManager->addWorker(builder);
-			accountant->deallocUnit(buildingType);
-			buildSchedule->erase(it);
-			it = end;
-		}
-		else
-			++it;
-	}
-	// Schedule construction.
+	removeBuild(building);
 	scheduleConstruct(building);
 }
 
 // Identifies a building as constructed.
 void Architect::completeConstruct(BWAPI::Unit building) // Rename this.
 {
-	stopConstruct(building);
+	removeConstruct(building);
 }
 
 // Returns the amount of oders of a specific building type currently scheduled.
@@ -197,13 +197,7 @@ void Architect::update()
 				++it;
 			}
 			else
-			{
-				// Cancel build
-				if (builder && builder->exists())
-					workerManager->addWorker(builder);
-				buildSchedule->erase(it++);
-				accountant->deallocUnit(buildingType);
-			}
+				removeBuild(it++);
 		}
 	}
 	// Remove all invalid construction orders.
@@ -214,7 +208,7 @@ void Architect::update()
 		{
 			BWAPI::Unit building = it->second;
 			if (!building || !building->exists())
-				it = constructSchedule->erase(it);
+				removeConstruct(it++);
 			else
 				++it;
 		}

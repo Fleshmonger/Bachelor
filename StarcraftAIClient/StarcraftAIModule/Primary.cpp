@@ -296,6 +296,7 @@ void Primary::onUnitDestroy(BWAPI::Unit unit) // Merge with onUnitCompleted some
 		BWAPI::UnitType unitType = unit->getType();
 		if (unitType.isBuilding())
 		{
+			// Determine the type.
 			if (unitType.isResourceDepot())
 			{
 				// What should happen here?
@@ -307,7 +308,9 @@ void Primary::onUnitDestroy(BWAPI::Unit unit) // Merge with onUnitCompleted some
 				architect->removePylon(unit);
 			else if (unitType == BWAPI::UnitTypes::Protoss_Gateway)
 				producer->removeInfantryFacility(unit);
-			// TODO Remove an order from the architect, if this building was part of it.
+			// Remove constructing units from the architect.
+			if (unit->isConstructing())
+				architect->removeConstruct(unit);
 		}
 		else if (unitType.isWorker())
 			workerManager->removeWorker(unit);
