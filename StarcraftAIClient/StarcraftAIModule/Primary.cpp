@@ -43,12 +43,12 @@ void Primary::onEnd(bool isWinner)
 
 void Primary::onFrame()
 {
-	// Display
-	Broodwar->drawTextScreen(200, 0, "FPS: %d", Broodwar->getFPS());
-	//Broodwar->drawTextScreen(200, 20, "Average FPS: %f", Broodwar->getAverageFPS());
-	//Broodwar->drawTextScreen(200, 20, "Unallocated Minerals: %d", accountant->minerals());
-	Broodwar->drawTextScreen(200, 20, "Scheduled Gateways: %d", architect->scheduled(BWAPI::UnitTypes::Protoss_Gateway));
-	Broodwar->drawTextScreen(200, 40, "APM: %d", Broodwar->getAPM());
+	// Debugging display.
+	DEBUG_SCREEN(200, 0, "FPS: %d", Broodwar->getFPS());
+	//DEBUG_SCREEN(200, 20, "Average FPS: %f", Broodwar->getAverageFPS());
+	//DEBUG_SCREEN(200, 20, "Unallocated Minerals: %d", accountant->minerals());
+	DEBUG_SCREEN(200, 20, "Scheduled Gateways: %d", architect->scheduled(BWAPI::UnitTypes::Protoss_Gateway));
+	DEBUG_SCREEN(200, 40, "APM: %d", Broodwar->getAPM());
 
 	// BWTA draw
 	/*
@@ -255,12 +255,14 @@ void Primary::onUnitEvade(BWAPI::Unit unit)
 }
 
 // Fired when a unit previously obscured is seen by the bot.
-//Notice, this also fires when a unit is being constructed!
+// Notice, this also fires when a unit is being constructed!
 void Primary::onUnitShow(BWAPI::Unit unit)
 {
-	//Broodwar->sendText("Unit Show");
+	DEBUG_OUT("Unit Show: " + unit->getType().getName());
+	// Determine if enemy.
 	if (isEnemy(unit))
 	{
+		// Add to knowledgebase.
 		if (unit->getType().isBuilding())
 			armyManager->addEnemyBuilding(unit);
 		else
@@ -274,7 +276,7 @@ void Primary::onUnitHide(BWAPI::Unit unit)
 
 void Primary::onUnitCreate(BWAPI::Unit unit)
 {
-	Broodwar << "Unit Create: " << unit->getType().getName() << std::endl;;
+	DEBUG_OUT("Unit Create: " + unit->getType().getName());
 	// Monitor the construction of the unit.
 	if (isOwned(unit))
 	{
@@ -287,9 +289,11 @@ void Primary::onUnitCreate(BWAPI::Unit unit)
 }
 
 // Fired when a visible unit is destroyed.
-void Primary::onUnitDestroy(BWAPI::Unit unit) // Merge with onUnitCompleted somehow - code duplication!
+// TODO code duplication with designate
+void Primary::onUnitDestroy(BWAPI::Unit unit)
 {
-	//Broodwar->sendText("Unit Destroy");
+	DEBUG_OUT("Unit Destroy: " + unit->getType().getName());
+	// Determine owner.
 	if (isOwned(unit))
 	{
 		// Undesignate the destroyed unit.
@@ -299,7 +303,7 @@ void Primary::onUnitDestroy(BWAPI::Unit unit) // Merge with onUnitCompleted some
 			// Determine the type.
 			if (unitType.isResourceDepot())
 			{
-				// What should happen here?
+				// TODO What should happen here?
 				architect->setDepot(nullptr);
 				economist->setDepot(nullptr);
 				producer->setDepot(nullptr);
@@ -314,12 +318,13 @@ void Primary::onUnitDestroy(BWAPI::Unit unit) // Merge with onUnitCompleted some
 		}
 		else if (unitType.isWorker())
 			workerManager->removeWorker(unit);
-		else // Must be a combat unit // Could be some spawned unit, like fighters?
+		else // Must be a combat unit // TODO Could be some spawned unit, like fighters or larva?
 			armyManager->removeUnit(unit);
 		// TODO if unit was incomplete, remove it from the producer.
 	}
 	else if (isEnemy(unit))
 	{
+		// Remove the enemy from the knowledge base.
 		if (unit->getType().isBuilding())
 			armyManager->removeEnemyBuilding(unit);
 		else
@@ -329,6 +334,7 @@ void Primary::onUnitDestroy(BWAPI::Unit unit) // Merge with onUnitCompleted some
 
 void Primary::onUnitMorph(BWAPI::Unit unit)
 {
+	// OLD.
 	if (Broodwar->isReplay())
 	{
 		// if we are in a replay, then we will print out the build order of the structures
@@ -348,13 +354,15 @@ void Primary::onUnitRenegade(BWAPI::Unit unit)
 
 void Primary::onSaveGame(std::string gameName)
 {
+	// OLD.
 	Broodwar << "The game was saved to \"" << gameName << "\"" << std::endl;
 }
 
 void Primary::onUnitComplete(BWAPI::Unit unit)
 {
-	//Broodwar->sendText("Unit Complete");
-	if (isOwned(unit)) //Use isOwned somehow
+	DEBUG_OUT("Unit Complete: " + unit->getType().getName());
+	// Determine owner.
+	if (isOwned(unit))
 	{
 		// Update construction status.
 		BWAPI::UnitType unitType = unit->getType();
@@ -362,7 +370,7 @@ void Primary::onUnitComplete(BWAPI::Unit unit)
 			architect->completeConstruct(unit);
 		else
 			producer->completeUnit(unit);
-		// Deliver the new unit.
+		// Designate the new unit.
 		designateUnit(unit);
 	}
 }
@@ -371,11 +379,11 @@ void Primary::onUnitComplete(BWAPI::Unit unit)
 // Assumes the unit is owned.
 void Primary::designateUnit(BWAPI::Unit unit)
 {
-	// Designate the new unit.
+	// Determine type.
 	BWAPI::UnitType unitType = unit->getType();
-	if (unitType.isBuilding()) // Check if unit is building.
+	if (unitType.isBuilding())
 	{
-		if (unitType.isResourceDepot()) // Check if building is Command Center, Nexus or Hatchery.
+		if (unitType.isResourceDepot())
 		{
 			architect->setDepot(unit);
 			economist->setDepot(unit);
@@ -383,10 +391,10 @@ void Primary::designateUnit(BWAPI::Unit unit)
 		}
 		else if (unitType == BWAPI::UnitTypes::Protoss_Pylon)
 			architect->addPylon(unit);
-		else if (unitType == BWAPI::UnitTypes::Protoss_Gateway)
+		else if (unitType == BWAPI::UnitTypes::Protoss_Gateway) // TODO Make generic
 			producer->addInfantryFacility(unit);
 	}
-	else if (unitType.isWorker()) // Check if worker
+	else if (unitType.isWorker())
 		workerManager->addWorker(unit);
 	else // Must be a combat unit
 		armyManager->addUnit(unit);

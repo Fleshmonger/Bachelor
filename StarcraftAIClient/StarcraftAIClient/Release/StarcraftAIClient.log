@@ -1,9 +1,50 @@
-﻿Build started 06-02-2015 13:13:50.
+﻿Build started 25-02-2015 14:03:23.
      1>Project "D:\Bachelor\StarcraftAIClient\StarcraftAIClient\StarcraftAIClient.vcxproj" on node 2 (Build target(s)).
      1>Link:
+         D:\Programs\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\Bachelor\StarcraftAIClient\Release\StarcraftAIClient.exe" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib ../lib/BWAPI.lib ../lib/BWAPIClient.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:\Bachelor\StarcraftAIClient\Release\StarcraftAIClient.pdb" /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\Bachelor\StarcraftAIClient\Release\StarcraftAIClient.lib" /MACHINE:X86 /SAFESEH Release\Primary.obj
+         Generating code
+         Finished generating code
+     1>BWAPI.lib(Race.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPI.lib(Race.obj)' or at 'D:\Bachelor\StarcraftAIClient\Release\vc120.pdb'; linking object as if no debug info
+     1>BWAPI.lib(Event.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPI.lib(Event.obj)' or at 'D:\Bachelor\StarcraftAIClient\Release\vc120.pdb'; linking object as if no debug info
+     1>BWAPI.lib(UnitType.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPI.lib(UnitType.obj)' or at 'D:\Bachelor\StarcraftAIClient\Release\vc120.pdb'; linking object as if no debug info
+     1>BWAPI.lib(Game.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPI.lib(Game.obj)' or at 'D:\Bachelor\StarcraftAIClient\Release\vc120.pdb'; linking object as if no debug info
+     1>BWAPI.lib(PositionUnit.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPI.lib(PositionUnit.obj)' or at 'D:\Bachelor\StarcraftAIClient\Release\vc120.pdb'; linking object as if no debug info
+     1>BWAPI.lib(Color.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPI.lib(Color.obj)' or at 'D:\Bachelor\StarcraftAIClient\Release\vc120.pdb'; linking object as if no debug info
+     1>BWAPI.lib(BulletType.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPI.lib(BulletType.obj)' or at 'D:\Bachelor\StarcraftAIClient\Release\vc120.pdb'; linking object as if no debug info
+     1>BWAPI.lib(Unit.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPI.lib(Unit.obj)' or at 'D:\Bachelor\StarcraftAIClient\Release\vc120.pdb'; linking object as if no debug info
+     1>BWAPI.lib(UpgradeType.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPI.lib(UpgradeType.obj)' or at 'D:\Bachelor\StarcraftAIClient\Release\vc120.pdb'; linking object as if no debug info
+     1>BWAPI.lib(WeaponType.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPI.lib(WeaponType.obj)' or at 'D:\Bachelor\StarcraftAIClient\Release\vc120.pdb'; linking object as if no debug info
+     1>BWAPI.lib(TechType.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPI.lib(TechType.obj)' or at 'D:\Bachelor\StarcraftAIClient\Release\vc120.pdb'; linking object as if no debug info
+     1>BWAPI.lib(UnitSizeType.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPI.lib(UnitSizeType.obj)' or at 'D:\Bachelor\StarcraftAIClient\Release\vc120.pdb'; linking object as if no debug info
+     1>BWAPI.lib(DamageType.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPI.lib(DamageType.obj)' or at 'D:\Bachelor\StarcraftAIClient\Release\vc120.pdb'; linking object as if no debug info
+     1>BWAPI.lib(Unitset.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPI.lib(Unitset.obj)' or at 'D:\Bachelor\StarcraftAIClient\Release\vc120.pdb'; linking object as if no debug info
+     1>BWAPI.lib(Error.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPI.lib(Error.obj)' or at 'D:\Bachelor\StarcraftAIClient\Release\vc120.pdb'; linking object as if no debug info
+     1>BWAPI.lib(Position.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPI.lib(Position.obj)' or at 'D:\Bachelor\StarcraftAIClient\Release\vc120.pdb'; linking object as if no debug info
+     1>BWAPI.lib(Filters.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPI.lib(Filters.obj)' or at 'D:\Bachelor\StarcraftAIClient\Release\vc120.pdb'; linking object as if no debug info
+     1>BWAPI.lib(Player.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPI.lib(Player.obj)' or at 'D:\Bachelor\StarcraftAIClient\Release\vc120.pdb'; linking object as if no debug info
+     1>BWAPI.lib(UnitCommand.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPI.lib(UnitCommand.obj)' or at 'D:\Bachelor\StarcraftAIClient\Release\vc120.pdb'; linking object as if no debug info
+     1>BWAPI.lib(Order.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPI.lib(Order.obj)' or at 'D:\Bachelor\StarcraftAIClient\Release\vc120.pdb'; linking object as if no debug info
+     1>BWAPI.lib(ExplosionType.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPI.lib(ExplosionType.obj)' or at 'D:\Bachelor\StarcraftAIClient\Release\vc120.pdb'; linking object as if no debug info
+     1>BWAPI.lib(UnitCommandType.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPI.lib(UnitCommandType.obj)' or at 'D:\Bachelor\StarcraftAIClient\Release\vc120.pdb'; linking object as if no debug info
+     1>BWAPIClient.lib(Client.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPIClient.lib(Client.obj)' or at 'D:\Bachelor\StarcraftAIClient\Release\vc120.pdb'; linking object as if no debug info
+     1>BWAPIClient.lib(GameImpl.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPIClient.lib(GameImpl.obj)' or at 'D:\Bachelor\StarcraftAIClient\Release\vc120.pdb'; linking object as if no debug info
+     1>BWAPIClient.lib(ForceImpl.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPIClient.lib(ForceImpl.obj)' or at 'D:\Bachelor\StarcraftAIClient\Release\vc120.pdb'; linking object as if no debug info
+     1>BWAPIClient.lib(ForceShared.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPIClient.lib(ForceShared.obj)' or at 'D:\Bachelor\StarcraftAIClient\Release\vc120.pdb'; linking object as if no debug info
+     1>BWAPIClient.lib(BulletShared.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPIClient.lib(BulletShared.obj)' or at 'D:\Bachelor\StarcraftAIClient\Release\vc120.pdb'; linking object as if no debug info
+     1>BWAPIClient.lib(BulletImpl.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPIClient.lib(BulletImpl.obj)' or at 'D:\Bachelor\StarcraftAIClient\Release\vc120.pdb'; linking object as if no debug info
+     1>BWAPIClient.lib(PlayerShared.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPIClient.lib(PlayerShared.obj)' or at 'D:\Bachelor\StarcraftAIClient\Release\vc120.pdb'; linking object as if no debug info
+     1>BWAPIClient.lib(PlayerImpl.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPIClient.lib(PlayerImpl.obj)' or at 'D:\Bachelor\StarcraftAIClient\Release\vc120.pdb'; linking object as if no debug info
+     1>BWAPIClient.lib(GameShared.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPIClient.lib(GameShared.obj)' or at 'D:\Bachelor\StarcraftAIClient\Release\vc120.pdb'; linking object as if no debug info
+     1>BWAPIClient.lib(RegionImpl.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPIClient.lib(RegionImpl.obj)' or at 'D:\Bachelor\StarcraftAIClient\Release\vc120.pdb'; linking object as if no debug info
+     1>BWAPIClient.lib(UnitImpl.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPIClient.lib(UnitImpl.obj)' or at 'D:\Bachelor\StarcraftAIClient\Release\vc120.pdb'; linking object as if no debug info
+     1>BWAPIClient.lib(UnitShared.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPIClient.lib(UnitShared.obj)' or at 'D:\Bachelor\StarcraftAIClient\Release\vc120.pdb'; linking object as if no debug info
+     1>BWAPIClient.lib(RegionShared.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPIClient.lib(RegionShared.obj)' or at 'D:\Bachelor\StarcraftAIClient\Release\vc120.pdb'; linking object as if no debug info
+     1>BWAPI.lib(BWAPI.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPI.lib(BWAPI.obj)' or at 'D:\Bachelor\StarcraftAIClient\Release\vc120.pdb'; linking object as if no debug info
+     1>BWAPI.lib(GameType.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPI.lib(GameType.obj)' or at 'D:\Bachelor\StarcraftAIClient\Release\vc120.pdb'; linking object as if no debug info
+     1>BWAPI.lib(PlayerType.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'BWAPI.lib(PlayerType.obj)' or at 'D:\Bachelor\StarcraftAIClient\Release\vc120.pdb'; linking object as if no debug info
          StarcraftAIClient.vcxproj -> D:\Bachelor\StarcraftAIClient\Release\StarcraftAIClient.exe
      1>Done Building Project "D:\Bachelor\StarcraftAIClient\StarcraftAIClient\StarcraftAIClient.vcxproj" (Build target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:00.06
+Time Elapsed 00:00:07.31

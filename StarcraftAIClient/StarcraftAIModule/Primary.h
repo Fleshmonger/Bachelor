@@ -18,6 +18,15 @@ using namespace Filter;
 
 class Primary : public BWAPI::AIModule
 {
+#define DEBUG
+
+#ifdef DEBUG
+#define DEBUG_OUT(s) Broodwar << s << std::endl;
+#define DEBUG_SCREEN(x, y, s, d) Broodwar->drawTextScreen(x, y, s, d);
+#else
+#define DEBUG_OUT(s)
+#define DEBUG_SCREEN(x, y, s, d)
+#endif
 private:
 	/*
 	bool analyzed;
