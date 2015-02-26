@@ -1,4 +1,4 @@
-﻿Build started 13-02-2015 17:40:12.
+﻿Build started 25-02-2015 16:25:43.
      1>Project "D:\Bachelor\StarcraftAIClient\ExampleAIModule\ExampleAIModule.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
          D:\Programs\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I../include /ID:/Tools/boost_1_56_0/libs/ /Zi /nologo /W3 /WX- /O2 /Oi /Oy- /D NOMINMAX /D WIN32 /D NDEBUG /D _WINDOWS /D _USRDLL /D EXAMPLEAIMODULE_EXPORTS /D _WINDLL /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Source\ExampleAIModule.cpp
@@ -36,4 +36,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:04.80
+Time Elapsed 00:00:13.31

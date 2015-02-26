@@ -179,7 +179,6 @@ void Architect::update()
 		scheduled(SUPPLY) == 0)
 		scheduleBuild(SUPPLY);
 	// Remove invalid build orders and continue valid orders.
-	// Code duplication with stopBuild.
 	{
 		auto it = buildSchedule->begin();
 		while (it != buildSchedule->end())
@@ -192,7 +191,6 @@ void Architect::update()
 				Broodwar->canBuildHere(buildTarget, buildingType) &&
 				Broodwar->canMake(buildingType, builder))
 			{
-				// Continue build
 				builder->build(buildingType, buildTarget);
 				++it;
 			}
@@ -201,7 +199,6 @@ void Architect::update()
 		}
 	}
 	// Remove all invalid construction orders.
-	// Code duplication with stopBuild.
 	{
 		auto it = constructSchedule->begin();
 		while (it != constructSchedule->end())

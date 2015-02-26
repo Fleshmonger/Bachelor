@@ -11,13 +11,14 @@
 #include "ArmyManager.h"
 
 using namespace BWAPI;
-//using namespace BWTA;
+using namespace BWTA;
 using namespace Filter;
 
-//DWORD WINAPI AnalyzeThread();
+DWORD WINAPI AnalyzeThread();
 
 class Primary : public BWAPI::AIModule
 {
+
 #define DEBUG
 
 #ifdef DEBUG
@@ -28,10 +29,7 @@ class Primary : public BWAPI::AIModule
 #define DEBUG_SCREEN(x, y, s, d)
 #endif
 private:
-	/*
-	bool analyzed;
-	bool analysis_just_finished;
-	*/
+	// Managers
 	Accountant * accountant;
 	Producer * producer;
 	WorkerManager * workerManager;
@@ -39,6 +37,7 @@ private:
 	Reconnoiter * reconnoiter;
 	Economist * economist;
 	ArmyManager * armyManager;
+	// Local
 public:
 	// Virtual functions for callbacks, leave these as they are.
 	virtual void onStart();
@@ -62,5 +61,5 @@ public:
 	void designateUnit(BWAPI::Unit unit);
 	bool isOwned(BWAPI::Unit unit);
 	bool isEnemy(BWAPI::Unit unit);
-	//void drawTerrainData();
+	void drawTerrainData();
 };

@@ -24,13 +24,11 @@ void ExampleAIModule::onStart()
   // Enable the UserInput flag, which allows us to control the bot and type messages.
   Broodwar->enableFlag(Flag::UserInput);
 
-  // Uncomment the following line and the bot will know about everything through the fog of war (cheat).
-  //Broodwar->enableFlag(Flag::CompleteMapInformation);
-
   // Set the command optimization level so that common commands can be grouped
   // and reduce the bot's APM (Actions Per Minute).
   Broodwar->setCommandOptimizationLevel(2);
 
+  /*
   // Check if this is a replay
   if ( Broodwar->isReplay() )
   {
@@ -55,6 +53,7 @@ void ExampleAIModule::onStart()
     if ( Broodwar->enemy() ) // First make sure there is an enemy
       Broodwar << "The matchup is " << Broodwar->self()->getRace() << " vs " << Broodwar->enemy()->getRace() << std::endl;
   }
+  */
   BWTA::readMap();
   analyzed = false;
   analysis_just_finished = false;
@@ -85,7 +84,6 @@ void ExampleAIModule::onFrame()
 	Broodwar << "Finished analyzing map." << std::endl;;
 	analysis_just_finished = false;
   }
-
 
   // Return if the game is a replay or is paused
   if ( Broodwar->isReplay() || Broodwar->isPaused() || !Broodwar->self() )
@@ -213,13 +211,17 @@ void ExampleAIModule::onFrame()
 
 void ExampleAIModule::onSendText(std::string text)
 {
+	Broodwar << "A message has been sent" << std::endl;
 	if (text == "/analyze")
 	{
-		if (analyzed = false)
+		Broodwar << "The message was parsed as \"/analyze\"" << std::endl;
+		if (analyzed == false)
 		{
 			Broodwar << "Analyzing map... this may take a minute" << std::endl;;
 			CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)AnalyzeThread, NULL, 0, NULL);
 		}
+		else
+			Broodwar << "This map has already been analyzed" << std::endl;
 	}
 	else
 	{

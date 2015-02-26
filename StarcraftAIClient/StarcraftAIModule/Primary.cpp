@@ -1,6 +1,9 @@
 #include "Primary.h"
 #include <iostream>
 
+bool analyzed;
+bool analysis_just_finished;
+
 void Primary::onStart()
 {
 	// BWAPI Settings
@@ -25,11 +28,9 @@ void Primary::onStart()
 	}
 
 	// BWTA initialization
-	/*
 	BWTA::readMap();
 	analyzed = false;
 	analysis_just_finished = false;
-	*/
 }
 
 void Primary::onEnd(bool isWinner)
@@ -51,7 +52,6 @@ void Primary::onFrame()
 	DEBUG_SCREEN(200, 40, "APM: %d", Broodwar->getAPM());
 
 	// BWTA draw
-	/*
 	if (analyzed)
 	drawTerrainData();
 	if (analysis_just_finished)
@@ -59,7 +59,6 @@ void Primary::onFrame()
 	Broodwar << "Finished analyzing map." << std::endl;;
 	analysis_just_finished = false;
 	}
-	*/
 
 	// Return if the game is a replay or is paused
 	if (Broodwar->isReplay() || Broodwar->isPaused() || !Broodwar->self())
@@ -198,7 +197,6 @@ void Primary::onFrame()
 
 void Primary::onSendText(std::string text)
 {
-	/*
 	if (text == "/analyze")
 	{
 		if (analyzed = false)
@@ -207,7 +205,7 @@ void Primary::onSendText(std::string text)
 			CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)AnalyzeThread, NULL, 0, NULL);
 		}
 	}
-	else*/
+	else
 	{
 		// Send the text to the game if it is not being processed.
 		Broodwar->sendText("%s", text.c_str());
@@ -416,7 +414,6 @@ bool Primary::isEnemy(BWAPI::Unit unit)
 	return Broodwar->self()->isEnemy(unit->getPlayer());
 }
 
-/*
 DWORD WINAPI AnalyzeThread()
 {
 	BWTA::analyze();
@@ -425,9 +422,7 @@ DWORD WINAPI AnalyzeThread()
 	analysis_just_finished = true;
 	return 0;
 }
-*/
 
-/*
 void Primary::drawTerrainData()
 {
 	//we will iterate through all the base locations, and draw their outlines.
@@ -442,14 +437,14 @@ void Primary::drawTerrainData()
 		//draw a circle at each mineral patch
 		for (Unitset::iterator j = (*i)->getStaticMinerals().begin(); j != (*i)->getStaticMinerals().end(); j++)
 		{
-			Position q = j->getInitialPosition();
+			Position q = (*j)->getInitialPosition();
 			Broodwar->drawCircleMap(q.x, q.y, 30, Colors::Cyan);
 		}
 
 		//draw the outlines of vespene geysers
 		for (Unitset::iterator j = (*i)->getGeysers().begin(); j != (*i)->getGeysers().end(); j++)
 		{
-			TilePosition q = j->getInitialTilePosition();
+			TilePosition q = (*j)->getInitialTilePosition();
 			Broodwar->drawBoxMap(q.x * 32, q.y * 32, q.x * 32 + 4 * 32, q.y * 32 + 2 * 32, Colors::Orange);
 		}
 
@@ -481,4 +476,3 @@ void Primary::drawTerrainData()
 		}
 	}
 }
-*/
