@@ -5,9 +5,9 @@ Producer::Producer(Accountant * accountant)
 	// Managers
 	this->accountant = accountant;
 	// Local
-	incompleteUnits = new BWAPI::Unitset();
-	infantryFacilities = new BWAPI::Unitset();
-	idleInfantryFacilities = new BWAPI::Unitset();
+	incompleteUnits = new std::set<Unit*>();
+	infantryFacilities = new std::set<Unit*>();
+	idleInfantryFacilities = new std::set<Unit*>();
 }
 
 // Unused deconstructor
@@ -20,7 +20,7 @@ Producer::~Producer()
 bool Producer::trainUnit(BWAPI::UnitType unitType)
 {
 	// Find the appropriate facility.
-	BWAPI::Unit facility = nullptr;
+	BWAPI::Unit * facility = nullptr;
 	if (accountant->isAffordable(unitType) && !unitType.isBuilding())
 	{
 		if (unitType.isWorker())
@@ -49,14 +49,14 @@ bool Producer::trainUnit(BWAPI::UnitType unitType)
 }
 
 // Add a unit in production to the incomplete pool.
-void Producer::incompleteUnit(BWAPI::Unit unit)
+void Producer::incompleteUnit(BWAPI::Unit * unit)
 {
 	incompleteUnits->insert(unit);
 	accountant->deallocUnit(unit->getType());
 }
 
 // Remove a complete unit from the incomplete pool.
-void Producer::completeUnit(BWAPI::Unit unit)
+void Producer::completeUnit(BWAPI::Unit * unit)
 {
 	incompleteUnits->erase(unit);
 }
@@ -71,21 +71,21 @@ int Producer::totalInfantryFacilities()
 */
 
 // Designates an infantry constructing facility.
-void Producer::addInfantryFacility(BWAPI::Unit facility)
+void Producer::addInfantryFacility(BWAPI::Unit * facility)
 {
 	infantryFacilities->insert(facility);
 	idleInfantryFacilities->insert(facility);
 }
 
 // Undesignates an infantry constructing facility.
-void Producer::removeInfantryFacility(BWAPI::Unit facility)
+void Producer::removeInfantryFacility(BWAPI::Unit * facility)
 {
 	infantryFacilities->erase(facility);
 	idleInfantryFacilities->erase(facility);
 }
 
 // Designates the current worker producing facility.
-void Producer::setDepot(BWAPI::Unit depot)
+void Producer::setDepot(BWAPI::Unit * depot)
 {
 	this->depot = depot;
 }
@@ -99,7 +99,7 @@ void Producer::update()
 		auto it = incompleteUnits->begin();
 		while (it != incompleteUnits->end())
 		{
-			BWAPI::Unit unit = *it;
+			BWAPI::Unit * unit = *it;
 			if (unit->exists() && unit->isBeingConstructed())
 				++it;
 			else
@@ -112,7 +112,7 @@ void Producer::update()
 		auto it = infantryFacilities->begin();
 		while (it != infantryFacilities->end())
 		{
-			BWAPI::Unit facility = *it;
+			BWAPI::Unit * facility = *it;
 			if (facility && facility->exists())
 			{
 				if (facility->isCompleted() && // This should be unecessary

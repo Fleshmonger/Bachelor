@@ -1,22 +1,355 @@
-﻿Build started 27-02-2015 14:21:22.
+﻿Build started 28-02-2015 15:50:39.
      1>Project "D:\Bachelor\StarcraftAIClient\StarcraftAIModule\StarcraftAIModule.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         D:\Programs\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I../include /Zi /nologo /W3 /WX- /sdl /O2 /Oi /Oy- /D _WINDLL /D _MBCS /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Architect.cpp
+         D:\Programs\Microsoft Visual Studio 9.0\VC\bin\CL.exe /c /I../Source /I"D:\Programs\BWAPI 3.7.4/include" /ID:\Tools\boost_1_57_0 /I/include /I/include /I/include/freetype2 /I/include /I../include /Zi /nologo /W3 /WX- /Ox /Ob2 /Oi /Ot /Oy- /GL /D WIN32 /D NDEBUG /D _WINDOWS /D _USRDLL /D EXAMPLEAIMODULE_EXPORTS /D NOMINMAX /D _WINDLL /D _WINDLL /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc90.pdb" /Gd /TP /analyze- /errorReport:prompt Architect.cpp ArmyManager.cpp Dll.cpp Economist.cpp Primary.cpp Producer.cpp Reconnoiter.cpp WorkerManager.cpp
          Architect.cpp
-       Link:
-         D:\Programs\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\Bachelor\StarcraftAIClient\Release\StarcraftAIModule.dll" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib ../lib/BWAPI.lib ../lib/BWTA.lib "../lib/libboost_thread-vc120-mt-1_56.lib" "../lib/libboost_system-vc120-mt-1_56.lib" "../lib/libCGAL-vc120-mt-4.4.lib" "../lib/libgmp-10.lib" "../lib/libmpfr-4.lib" kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:\Bachelor\StarcraftAIClient\Release\StarcraftAIModule.pdb" /SUBSYSTEM:WINDOWS /OPT:REF /OPT:ICF /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"Release\StarcraftAIModule.lib" /MACHINE:X86 /SAFESEH /DLL Release\Accountant.obj
-         Release\Architect.obj
-         Release\ArmyManager.obj
-         Release\Dll.obj
-         Release\Economist.obj
-         Release\Primary.obj
-         Release\Producer.obj
-         Release\Reconnoiter.obj
-         Release\WorkerManager.obj
-         BWAPI.lib(UnitType.obj) : MSIL .netmodule or module compiled with /GL found; restarting link with /LTCG; add /LTCG to the link command line to improve linker performance
-     1>LINK : fatal error LNK1104: cannot open file 'libboost_filesystem-vc120-mt-1_56.lib'
+     1>Architect.cpp(45): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+     1>Architect.cpp(45): error C2440: 'initializing' : cannot convert from 'std::_Tree<_Traits>::iterator' to 'int'
+                 with
+                 [
+                     _Traits=std::_Tset_traits<BWAPI::Unit *,std::less<BWAPI::Unit *>,std::allocator<BWAPI::Unit *>,false>
+                 ]
+                 No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
+     1>Architect.cpp(46): error C2100: illegal indirection
+     1>Architect.cpp(46): error C2227: left of '->getTilePosition' must point to class/struct/union/generic type
+                 type is 'int'
+     1>Architect.cpp(95): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+     1>Architect.cpp(95): error C2440: 'initializing' : cannot convert from 'std::pair<_Ty1,_Ty2>' to 'int'
+                 with
+                 [
+                     _Ty1=std::_Tree<std::_Tmap_traits<BWAPI::UnitType,std::pair<BWAPI::Unit *,BWAPI::TilePosition>,std::less<BWAPI::UnitType>,std::allocator<std::pair<const BWAPI::UnitType,std::pair<BWAPI::Unit *,BWAPI::TilePosition>>>,true>>::iterator,
+                     _Ty2=std::_Tree<std::_Tmap_traits<BWAPI::UnitType,std::pair<BWAPI::Unit *,BWAPI::TilePosition>,std::less<BWAPI::UnitType>,std::allocator<std::pair<const BWAPI::UnitType,std::pair<BWAPI::Unit *,BWAPI::TilePosition>>>,true>>::iterator
+                 ]
+                 No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
+     1>Architect.cpp(96): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+     1>Architect.cpp(96): error C2228: left of '.first' must have class/struct/union
+                 type is 'int'
+     1>Architect.cpp(96): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+     1>Architect.cpp(96): error C2228: left of '.second' must have class/struct/union
+                 type is 'int'
+     1>Architect.cpp(99): error C2100: illegal indirection
+     1>Architect.cpp(99): error C2228: left of '.second' must have class/struct/union
+                 type is 'int'
+     1>Architect.cpp(99): error C2228: left of '.second' must have class/struct/union
+     1>Architect.cpp(103): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+     1>Architect.cpp(103): error C2100: illegal indirection
+     1>Architect.cpp(104): error C2228: left of '.second' must have class/struct/union
+                 type is 'int'
+     1>Architect.cpp(104): error C2228: left of '.first' must have class/struct/union
+     1>Architect.cpp(107): error C2228: left of '.first' must have class/struct/union
+                 type is 'int'
+     1>Architect.cpp(155): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+     1>Architect.cpp(155): error C2440: 'initializing' : cannot convert from 'std::pair<_Ty1,_Ty2>' to 'int'
+                 with
+                 [
+                     _Ty1=std::_Tree<std::_Tmap_traits<BWAPI::UnitType,BWAPI::Unit *,std::less<BWAPI::UnitType>,std::allocator<std::pair<const BWAPI::UnitType,BWAPI::Unit *>>,true>>::iterator,
+                     _Ty2=std::_Tree<std::_Tmap_traits<BWAPI::UnitType,BWAPI::Unit *,std::less<BWAPI::UnitType>,std::allocator<std::pair<const BWAPI::UnitType,BWAPI::Unit *>>,true>>::iterator
+                 ]
+                 No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
+     1>Architect.cpp(156): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+     1>Architect.cpp(156): error C2228: left of '.first' must have class/struct/union
+                 type is 'int'
+     1>Architect.cpp(156): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+     1>Architect.cpp(156): error C2228: left of '.second' must have class/struct/union
+                 type is 'int'
+     1>Architect.cpp(159): error C2100: illegal indirection
+     1>Architect.cpp(159): error C2228: left of '.second' must have class/struct/union
+                 type is 'int'
+     1>Architect.cpp(221): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+     1>Architect.cpp(221): error C2440: 'initializing' : cannot convert from 'std::_Tree<_Traits>::iterator' to 'int'
+                 with
+                 [
+                     _Traits=std::_Tmap_traits<BWAPI::UnitType,std::pair<BWAPI::Unit *,BWAPI::TilePosition>,std::less<BWAPI::UnitType>,std::allocator<std::pair<const BWAPI::UnitType,std::pair<BWAPI::Unit *,BWAPI::TilePosition>>>,true>
+                 ]
+                 No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
+     1>Architect.cpp(222): error C2784: 'bool std::operator !=(const std::vector<_Ty,_Alloc> &,const std::vector<_Ty,_Alloc> &)' : could not deduce template argument for 'const std::vector<_Ty,_Alloc> &' from 'int'
+                 D:\Programs\Microsoft Visual Studio 9.0\VC\include\vector(1312) : see declaration of 'std::operator !='
+     1>Architect.cpp(222): error C2784: 'bool std::operator !=(const std::list<_Ty,_Ax> &,const std::list<_Ty,_Ax> &)' : could not deduce template argument for 'const std::list<_Ty,_Ax> &' from 'int'
+                 D:\Programs\Microsoft Visual Studio 9.0\VC\include\list(1302) : see declaration of 'std::operator !='
+     1>Architect.cpp(222): error C2784: 'bool std::operator !=(const std::_Tree<_Traits> &,const std::_Tree<_Traits> &)' : could not deduce template argument for 'const std::_Tree<_Traits> &' from 'int'
+                 D:\Programs\Microsoft Visual Studio 9.0\VC\include\xtree(1460) : see declaration of 'std::operator !='
+     1>Architect.cpp(222): error C2784: 'bool std::operator !=(const std::istream_iterator<_Ty,_Elem,_Traits,_Diff> &,const std::istream_iterator<_Ty,_Elem,_Traits,_Diff> &)' : could not deduce template argument for 'const std::istream_iterator<_Ty,_Elem,_Traits,_Diff> &' from 'int'
+                 D:\Programs\Microsoft Visual Studio 9.0\VC\include\iterator(277) : see declaration of 'std::operator !='
+     1>Architect.cpp(222): error C2784: 'bool std::operator !=(const std::basic_string<_Elem,_Traits,_Alloc> &,const _Elem *)' : could not deduce template argument for 'const std::basic_string<_Elem,_Traits,_Alloc> &' from 'int'
+                 D:\Programs\Microsoft Visual Studio 9.0\VC\include\string(120) : see declaration of 'std::operator !='
+     1>Architect.cpp(222): error C2784: 'bool std::operator !=(const _Elem *,const std::basic_string<_Elem,_Traits,_Alloc> &)' : could not deduce template argument for 'const _Elem *' from 'int'
+                 D:\Programs\Microsoft Visual Studio 9.0\VC\include\string(110) : see declaration of 'std::operator !='
+     1>Architect.cpp(222): error C2784: 'bool std::operator !=(const std::basic_string<_Elem,_Traits,_Alloc> &,const std::basic_string<_Elem,_Traits,_Alloc> &)' : could not deduce template argument for 'const std::basic_string<_Elem,_Traits,_Alloc> &' from 'int'
+                 D:\Programs\Microsoft Visual Studio 9.0\VC\include\string(100) : see declaration of 'std::operator !='
+     1>Architect.cpp(222): error C2784: 'bool std::operator !=(const std::istreambuf_iterator<_Elem,_Traits> &,const std::istreambuf_iterator<_Elem,_Traits> &)' : could not deduce template argument for 'const std::istreambuf_iterator<_Elem,_Traits> &' from 'int'
+                 D:\Programs\Microsoft Visual Studio 9.0\VC\include\streambuf(557) : see declaration of 'std::operator !='
+     1>Architect.cpp(222): error C2784: 'bool std::operator !=(const std::allocator<_Ty> &,const std::allocator<_Other> &) throw()' : could not deduce template argument for 'const std::allocator<_Ty> &' from 'int'
+                 D:\Programs\Microsoft Visual Studio 9.0\VC\include\xmemory(180) : see declaration of 'std::operator !='
+     1>Architect.cpp(222): error C2784: 'bool std::operator !=(const std::reverse_iterator<_RanIt> &,const std::reverse_iterator<_RanIt2> &)' : could not deduce template argument for 'const std::reverse_iterator<_RanIt> &' from 'int'
+                 D:\Programs\Microsoft Visual Studio 9.0\VC\include\xutility(2228) : see declaration of 'std::operator !='
+     1>Architect.cpp(222): error C2784: 'bool std::operator !=(const std::_Revranit<_RanIt,_Base> &,const std::_Revranit<_RanIt2,_Base2> &)' : could not deduce template argument for 'const std::_Revranit<_RanIt,_Base> &' from 'int'
+                 D:\Programs\Microsoft Visual Studio 9.0\VC\include\xutility(2035) : see declaration of 'std::operator !='
+     1>Architect.cpp(222): error C2784: 'bool std::operator !=(const std::pair<_Ty1,_Ty2> &,const std::pair<_Ty1,_Ty2> &)' : could not deduce template argument for 'const std::pair<_Ty1,_Ty2> &' from 'int'
+                 D:\Programs\Microsoft Visual Studio 9.0\VC\include\utility(76) : see declaration of 'std::operator !='
+     1>Architect.cpp(222): error C2677: binary '!=' : no global operator found which takes type 'std::_Tree<_Traits>::iterator' (or there is no acceptable conversion)
+                 with
+                 [
+                     _Traits=std::_Tmap_traits<BWAPI::UnitType,std::pair<BWAPI::Unit *,BWAPI::TilePosition>,std::less<BWAPI::UnitType>,std::allocator<std::pair<const BWAPI::UnitType,std::pair<BWAPI::Unit *,BWAPI::TilePosition>>>,true>
+                 ]
+     1>Architect.cpp(222): fatal error C1903: unable to recover from previous error(s); stopping compilation
+         ArmyManager.cpp
+     1>d:\bachelor\starcraftaiclient\starcraftaimodule\ArmyManager.h(13): error C2864: 'ArmyManager::INFANTRY_FACTORY' : only static const integral data members can be initialized within a class
+     1>d:\bachelor\starcraftaiclient\starcraftaimodule\ArmyManager.h(14): error C2864: 'ArmyManager::INFANTRY_UNIT' : only static const integral data members can be initialized within a class
+     1>ArmyManager.cpp(77): error C2143: syntax error : missing ',' before ':'
+     1>ArmyManager.cpp(77): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+     1>ArmyManager.cpp(77): error C2530: 'u' : references must be initialized
+     1>ArmyManager.cpp(79): error C2143: syntax error : missing ',' before ':'
+     1>ArmyManager.cpp(79): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+     1>ArmyManager.cpp(79): error C2530: 'u' : references must be initialized
+     1>ArmyManager.cpp(86): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+     1>ArmyManager.cpp(86): error C2440: 'initializing' : cannot convert from 'std::_Tree<_Traits>::iterator' to 'int'
+                 with
+                 [
+                     _Traits=std::_Tset_traits<BWAPI::Unit *,std::less<BWAPI::Unit *>,std::allocator<BWAPI::Unit *>,false>
+                 ]
+                 No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
+     1>ArmyManager.cpp(87): error C2784: 'bool std::operator !=(const std::vector<_Ty,_Alloc> &,const std::vector<_Ty,_Alloc> &)' : could not deduce template argument for 'const std::vector<_Ty,_Alloc> &' from 'int'
+                 D:\Programs\Microsoft Visual Studio 9.0\VC\include\vector(1312) : see declaration of 'std::operator !='
+     1>ArmyManager.cpp(87): error C2784: 'bool std::operator !=(const std::list<_Ty,_Ax> &,const std::list<_Ty,_Ax> &)' : could not deduce template argument for 'const std::list<_Ty,_Ax> &' from 'int'
+                 D:\Programs\Microsoft Visual Studio 9.0\VC\include\list(1302) : see declaration of 'std::operator !='
+     1>ArmyManager.cpp(87): error C2784: 'bool std::operator !=(const std::_Tree<_Traits> &,const std::_Tree<_Traits> &)' : could not deduce template argument for 'const std::_Tree<_Traits> &' from 'int'
+                 D:\Programs\Microsoft Visual Studio 9.0\VC\include\xtree(1460) : see declaration of 'std::operator !='
+     1>ArmyManager.cpp(87): error C2784: 'bool std::operator !=(const std::istream_iterator<_Ty,_Elem,_Traits,_Diff> &,const std::istream_iterator<_Ty,_Elem,_Traits,_Diff> &)' : could not deduce template argument for 'const std::istream_iterator<_Ty,_Elem,_Traits,_Diff> &' from 'int'
+                 D:\Programs\Microsoft Visual Studio 9.0\VC\include\iterator(277) : see declaration of 'std::operator !='
+     1>ArmyManager.cpp(87): error C2784: 'bool std::operator !=(const std::basic_string<_Elem,_Traits,_Alloc> &,const _Elem *)' : could not deduce template argument for 'const std::basic_string<_Elem,_Traits,_Alloc> &' from 'int'
+                 D:\Programs\Microsoft Visual Studio 9.0\VC\include\string(120) : see declaration of 'std::operator !='
+     1>ArmyManager.cpp(87): error C2784: 'bool std::operator !=(const _Elem *,const std::basic_string<_Elem,_Traits,_Alloc> &)' : could not deduce template argument for 'const _Elem *' from 'int'
+                 D:\Programs\Microsoft Visual Studio 9.0\VC\include\string(110) : see declaration of 'std::operator !='
+     1>ArmyManager.cpp(87): error C2784: 'bool std::operator !=(const std::basic_string<_Elem,_Traits,_Alloc> &,const std::basic_string<_Elem,_Traits,_Alloc> &)' : could not deduce template argument for 'const std::basic_string<_Elem,_Traits,_Alloc> &' from 'int'
+                 D:\Programs\Microsoft Visual Studio 9.0\VC\include\string(100) : see declaration of 'std::operator !='
+     1>ArmyManager.cpp(87): error C2784: 'bool std::operator !=(const std::istreambuf_iterator<_Elem,_Traits> &,const std::istreambuf_iterator<_Elem,_Traits> &)' : could not deduce template argument for 'const std::istreambuf_iterator<_Elem,_Traits> &' from 'int'
+                 D:\Programs\Microsoft Visual Studio 9.0\VC\include\streambuf(557) : see declaration of 'std::operator !='
+     1>ArmyManager.cpp(87): error C2784: 'bool std::operator !=(const std::allocator<_Ty> &,const std::allocator<_Other> &) throw()' : could not deduce template argument for 'const std::allocator<_Ty> &' from 'int'
+                 D:\Programs\Microsoft Visual Studio 9.0\VC\include\xmemory(180) : see declaration of 'std::operator !='
+     1>ArmyManager.cpp(87): error C2784: 'bool std::operator !=(const std::reverse_iterator<_RanIt> &,const std::reverse_iterator<_RanIt2> &)' : could not deduce template argument for 'const std::reverse_iterator<_RanIt> &' from 'int'
+                 D:\Programs\Microsoft Visual Studio 9.0\VC\include\xutility(2228) : see declaration of 'std::operator !='
+     1>ArmyManager.cpp(87): error C2784: 'bool std::operator !=(const std::_Revranit<_RanIt,_Base> &,const std::_Revranit<_RanIt2,_Base2> &)' : could not deduce template argument for 'const std::_Revranit<_RanIt,_Base> &' from 'int'
+                 D:\Programs\Microsoft Visual Studio 9.0\VC\include\xutility(2035) : see declaration of 'std::operator !='
+     1>ArmyManager.cpp(87): error C2784: 'bool std::operator !=(const std::pair<_Ty1,_Ty2> &,const std::pair<_Ty1,_Ty2> &)' : could not deduce template argument for 'const std::pair<_Ty1,_Ty2> &' from 'int'
+                 D:\Programs\Microsoft Visual Studio 9.0\VC\include\utility(76) : see declaration of 'std::operator !='
+     1>ArmyManager.cpp(87): error C2677: binary '!=' : no global operator found which takes type 'std::_Tree<_Traits>::iterator' (or there is no acceptable conversion)
+                 with
+                 [
+                     _Traits=std::_Tset_traits<BWAPI::Unit *,std::less<BWAPI::Unit *>,std::allocator<BWAPI::Unit *>,false>
+                 ]
+     1>ArmyManager.cpp(87): fatal error C1903: unable to recover from previous error(s); stopping compilation
+         Dll.cpp
+     1>d:\bachelor\starcraftaiclient\starcraftaimodule\Reconnoiter.h(10): error C2864: 'Reconnoiter::MINIMUM_WORKERS' : only static const integral data members can be initialized within a class
+     1>d:\bachelor\starcraftaiclient\starcraftaimodule\Economist.h(14): error C2864: 'Economist::PROTOSS_WORKER' : only static const integral data members can be initialized within a class
+     1>d:\bachelor\starcraftaiclient\starcraftaimodule\ArmyManager.h(13): error C2864: 'ArmyManager::INFANTRY_FACTORY' : only static const integral data members can be initialized within a class
+     1>d:\bachelor\starcraftaiclient\starcraftaimodule\ArmyManager.h(14): error C2864: 'ArmyManager::INFANTRY_UNIT' : only static const integral data members can be initialized within a class
+         Economist.cpp
+     1>d:\bachelor\starcraftaiclient\starcraftaimodule\Economist.h(14): error C2864: 'Economist::PROTOSS_WORKER' : only static const integral data members can be initialized within a class
+     1>Economist.cpp(36): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+     1>Economist.cpp(36): error C2440: 'initializing' : cannot convert from 'std::_Tree<_Traits>::iterator' to 'int'
+                 with
+                 [
+                     _Traits=std::_Tset_traits<BWAPI::Unit *,std::less<BWAPI::Unit *>,std::allocator<BWAPI::Unit *>,false>
+                 ]
+                 No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
+     1>Economist.cpp(37): error C2784: 'bool std::operator !=(const std::vector<_Ty,_Alloc> &,const std::vector<_Ty,_Alloc> &)' : could not deduce template argument for 'const std::vector<_Ty,_Alloc> &' from 'int'
+                 D:\Programs\Microsoft Visual Studio 9.0\VC\include\vector(1312) : see declaration of 'std::operator !='
+     1>Economist.cpp(37): error C2784: 'bool std::operator !=(const std::list<_Ty,_Ax> &,const std::list<_Ty,_Ax> &)' : could not deduce template argument for 'const std::list<_Ty,_Ax> &' from 'int'
+                 D:\Programs\Microsoft Visual Studio 9.0\VC\include\list(1302) : see declaration of 'std::operator !='
+     1>Economist.cpp(37): error C2784: 'bool std::operator !=(const std::_Tree<_Traits> &,const std::_Tree<_Traits> &)' : could not deduce template argument for 'const std::_Tree<_Traits> &' from 'int'
+                 D:\Programs\Microsoft Visual Studio 9.0\VC\include\xtree(1460) : see declaration of 'std::operator !='
+     1>Economist.cpp(37): error C2784: 'bool std::operator !=(const std::istream_iterator<_Ty,_Elem,_Traits,_Diff> &,const std::istream_iterator<_Ty,_Elem,_Traits,_Diff> &)' : could not deduce template argument for 'const std::istream_iterator<_Ty,_Elem,_Traits,_Diff> &' from 'int'
+                 D:\Programs\Microsoft Visual Studio 9.0\VC\include\iterator(277) : see declaration of 'std::operator !='
+     1>Economist.cpp(37): error C2784: 'bool std::operator !=(const std::basic_string<_Elem,_Traits,_Alloc> &,const _Elem *)' : could not deduce template argument for 'const std::basic_string<_Elem,_Traits,_Alloc> &' from 'int'
+                 D:\Programs\Microsoft Visual Studio 9.0\VC\include\string(120) : see declaration of 'std::operator !='
+     1>Economist.cpp(37): error C2784: 'bool std::operator !=(const _Elem *,const std::basic_string<_Elem,_Traits,_Alloc> &)' : could not deduce template argument for 'const _Elem *' from 'int'
+                 D:\Programs\Microsoft Visual Studio 9.0\VC\include\string(110) : see declaration of 'std::operator !='
+     1>Economist.cpp(37): error C2784: 'bool std::operator !=(const std::basic_string<_Elem,_Traits,_Alloc> &,const std::basic_string<_Elem,_Traits,_Alloc> &)' : could not deduce template argument for 'const std::basic_string<_Elem,_Traits,_Alloc> &' from 'int'
+                 D:\Programs\Microsoft Visual Studio 9.0\VC\include\string(100) : see declaration of 'std::operator !='
+     1>Economist.cpp(37): error C2784: 'bool std::operator !=(const std::istreambuf_iterator<_Elem,_Traits> &,const std::istreambuf_iterator<_Elem,_Traits> &)' : could not deduce template argument for 'const std::istreambuf_iterator<_Elem,_Traits> &' from 'int'
+                 D:\Programs\Microsoft Visual Studio 9.0\VC\include\streambuf(557) : see declaration of 'std::operator !='
+     1>Economist.cpp(37): error C2784: 'bool std::operator !=(const std::allocator<_Ty> &,const std::allocator<_Other> &) throw()' : could not deduce template argument for 'const std::allocator<_Ty> &' from 'int'
+                 D:\Programs\Microsoft Visual Studio 9.0\VC\include\xmemory(180) : see declaration of 'std::operator !='
+     1>Economist.cpp(37): error C2784: 'bool std::operator !=(const std::reverse_iterator<_RanIt> &,const std::reverse_iterator<_RanIt2> &)' : could not deduce template argument for 'const std::reverse_iterator<_RanIt> &' from 'int'
+                 D:\Programs\Microsoft Visual Studio 9.0\VC\include\xutility(2228) : see declaration of 'std::operator !='
+     1>Economist.cpp(37): error C2784: 'bool std::operator !=(const std::_Revranit<_RanIt,_Base> &,const std::_Revranit<_RanIt2,_Base2> &)' : could not deduce template argument for 'const std::_Revranit<_RanIt,_Base> &' from 'int'
+                 D:\Programs\Microsoft Visual Studio 9.0\VC\include\xutility(2035) : see declaration of 'std::operator !='
+     1>Economist.cpp(37): error C2784: 'bool std::operator !=(const std::pair<_Ty1,_Ty2> &,const std::pair<_Ty1,_Ty2> &)' : could not deduce template argument for 'const std::pair<_Ty1,_Ty2> &' from 'int'
+                 D:\Programs\Microsoft Visual Studio 9.0\VC\include\utility(76) : see declaration of 'std::operator !='
+     1>Economist.cpp(37): error C2677: binary '!=' : no global operator found which takes type 'std::_Tree<_Traits>::iterator' (or there is no acceptable conversion)
+                 with
+                 [
+                     _Traits=std::_Tset_traits<BWAPI::Unit *,std::less<BWAPI::Unit *>,std::allocator<BWAPI::Unit *>,false>
+                 ]
+     1>Economist.cpp(37): fatal error C1903: unable to recover from previous error(s); stopping compilation
+         Primary.cpp
+     1>d:\bachelor\starcraftaiclient\starcraftaimodule\Reconnoiter.h(10): error C2864: 'Reconnoiter::MINIMUM_WORKERS' : only static const integral data members can be initialized within a class
+     1>d:\bachelor\starcraftaiclient\starcraftaimodule\Economist.h(14): error C2864: 'Economist::PROTOSS_WORKER' : only static const integral data members can be initialized within a class
+     1>d:\bachelor\starcraftaiclient\starcraftaimodule\ArmyManager.h(13): error C2864: 'ArmyManager::INFANTRY_FACTORY' : only static const integral data members can be initialized within a class
+     1>d:\bachelor\starcraftaiclient\starcraftaimodule\ArmyManager.h(14): error C2864: 'ArmyManager::INFANTRY_UNIT' : only static const integral data members can be initialized within a class
+     1>Primary.cpp(24): error C2143: syntax error : missing ',' before ':'
+     1>Primary.cpp(24): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+     1>Primary.cpp(25): error C2143: syntax error : missing ';' before '{'
+     1>Primary.cpp(26): error C2227: left of '->getPlayer' must point to class/struct/union/generic type
+                 type is 'int'
+     1>Primary.cpp(27): error C2664: 'Primary::designateUnit' : cannot convert parameter 1 from 'int' to 'BWAPI::Unit *'
+                 Conversion from integral type to pointer type requires reinterpret_cast, C-style cast or function-style cast
+     1>Primary.cpp(309): error C2065: 'nullptr' : undeclared identifier
+     1>Primary.cpp(310): error C2065: 'nullptr' : undeclared identifier
+     1>Primary.cpp(311): error C2065: 'nullptr' : undeclared identifier
+     1>Primary.cpp(439): error C3867: 'BWAPI::TilePosition::x': function call missing argument list; use '&BWAPI::TilePosition::x' to create a pointer to member
+     1>Primary.cpp(439): error C3867: 'BWAPI::TilePosition::y': function call missing argument list; use '&BWAPI::TilePosition::y' to create a pointer to member
+     1>Primary.cpp(439): error C3867: 'BWAPI::TilePosition::x': function call missing argument list; use '&BWAPI::TilePosition::x' to create a pointer to member
+     1>Primary.cpp(439): error C3867: 'BWAPI::TilePosition::y': function call missing argument list; use '&BWAPI::TilePosition::y' to create a pointer to member
+     1>Primary.cpp(441): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+     1>Primary.cpp(441): error C2440: 'initializing' : cannot convert from 'BWTA::BaseLocation *const ' to 'int'
+                 There is no context in which this conversion is possible
+     1>Primary.cpp(444): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+     1>Primary.cpp(444): error C2440: 'initializing' : cannot convert from 'std::_Tree<_Traits>::const_iterator' to 'int'
+                 with
+                 [
+                     _Traits=std::_Tset_traits<BWAPI::Unit *,std::less<BWAPI::Unit *>,std::allocator<BWAPI::Unit *>,false>
+                 ]
+                 No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
+     1>Primary.cpp(444): error C2678: binary '!=' : no operator found which takes a left-hand operand of type 'int' (or there is no acceptable conversion)
+                 C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\include\guiddef.h(197): could be 'int operator !=(const GUID &,const GUID &)'
+                 while trying to match the argument list '(int, std::_Tree<_Traits>::const_iterator)'
+                 with
+                 [
+                     _Traits=std::_Tset_traits<BWAPI::Unit *,std::less<BWAPI::Unit *>,std::allocator<BWAPI::Unit *>,false>
+                 ]
+     1>Primary.cpp(446): error C2100: illegal indirection
+     1>Primary.cpp(446): error C2227: left of '->getInitialPosition' must point to class/struct/union/generic type
+                 type is 'int'
+     1>Primary.cpp(447): error C3867: 'BWAPI::Position::x': function call missing argument list; use '&BWAPI::Position::x' to create a pointer to member
+     1>Primary.cpp(447): error C3867: 'BWAPI::Position::y': function call missing argument list; use '&BWAPI::Position::y' to create a pointer to member
+     1>Primary.cpp(451): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+     1>Primary.cpp(451): error C2440: 'initializing' : cannot convert from 'std::_Tree<_Traits>::const_iterator' to 'int'
+                 with
+                 [
+                     _Traits=std::_Tset_traits<BWAPI::Unit *,std::less<BWAPI::Unit *>,std::allocator<BWAPI::Unit *>,false>
+                 ]
+                 No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
+     1>Primary.cpp(451): error C2678: binary '!=' : no operator found which takes a left-hand operand of type 'int' (or there is no acceptable conversion)
+                 C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\include\guiddef.h(197): could be 'int operator !=(const GUID &,const GUID &)'
+                 while trying to match the argument list '(int, std::_Tree<_Traits>::const_iterator)'
+                 with
+                 [
+                     _Traits=std::_Tset_traits<BWAPI::Unit *,std::less<BWAPI::Unit *>,std::allocator<BWAPI::Unit *>,false>
+                 ]
+     1>Primary.cpp(453): error C2100: illegal indirection
+     1>Primary.cpp(453): error C2227: left of '->getInitialTilePosition' must point to class/struct/union/generic type
+                 type is 'int'
+     1>Primary.cpp(454): error C3867: 'BWAPI::TilePosition::x': function call missing argument list; use '&BWAPI::TilePosition::x' to create a pointer to member
+     1>Primary.cpp(454): error C3867: 'BWAPI::TilePosition::y': function call missing argument list; use '&BWAPI::TilePosition::y' to create a pointer to member
+     1>Primary.cpp(454): error C3867: 'BWAPI::TilePosition::x': function call missing argument list; use '&BWAPI::TilePosition::x' to create a pointer to member
+     1>Primary.cpp(454): error C3867: 'BWAPI::TilePosition::y': function call missing argument list; use '&BWAPI::TilePosition::y' to create a pointer to member
+     1>Primary.cpp(459): error C3867: 'BWAPI::Position::x': function call missing argument list; use '&BWAPI::Position::x' to create a pointer to member
+     1>Primary.cpp(459): error C3867: 'BWAPI::Position::y': function call missing argument list; use '&BWAPI::Position::y' to create a pointer to member
+     1>Primary.cpp(470): error C3867: 'BWAPI::Position::x': function call missing argument list; use '&BWAPI::Position::x' to create a pointer to member
+     1>Primary.cpp(470): error C3867: 'BWAPI::Position::y': function call missing argument list; use '&BWAPI::Position::y' to create a pointer to member
+     1>Primary.cpp(470): error C3867: 'BWAPI::Position::x': function call missing argument list; use '&BWAPI::Position::x' to create a pointer to member
+     1>Primary.cpp(470): error C3867: 'BWAPI::Position::y': function call missing argument list; use '&BWAPI::Position::y' to create a pointer to member
+     1>Primary.cpp(481): error C3867: 'BWAPI::Position::x': function call missing argument list; use '&BWAPI::Position::x' to create a pointer to member
+     1>Primary.cpp(481): error C3867: 'BWAPI::Position::y': function call missing argument list; use '&BWAPI::Position::y' to create a pointer to member
+     1>Primary.cpp(481): error C3867: 'BWAPI::Position::x': function call missing argument list; use '&BWAPI::Position::x' to create a pointer to member
+     1>Primary.cpp(481): error C3867: 'BWAPI::Position::y': function call missing argument list; use '&BWAPI::Position::y' to create a pointer to member
+         Producer.cpp
+     1>Producer.cpp(23): error C2065: 'nullptr' : undeclared identifier
+     1>Producer.cpp(99): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+     1>Producer.cpp(99): error C2440: 'initializing' : cannot convert from 'std::_Tree<_Traits>::iterator' to 'int'
+                 with
+                 [
+                     _Traits=std::_Tset_traits<BWAPI::Unit *,std::less<BWAPI::Unit *>,std::allocator<BWAPI::Unit *>,false>
+                 ]
+                 No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
+     1>Producer.cpp(100): error C2784: 'bool std::operator !=(const std::vector<_Ty,_Alloc> &,const std::vector<_Ty,_Alloc> &)' : could not deduce template argument for 'const std::vector<_Ty,_Alloc> &' from 'int'
+                 D:\Programs\Microsoft Visual Studio 9.0\VC\include\vector(1312) : see declaration of 'std::operator !='
+     1>Producer.cpp(100): error C2784: 'bool std::operator !=(const std::list<_Ty,_Ax> &,const std::list<_Ty,_Ax> &)' : could not deduce template argument for 'const std::list<_Ty,_Ax> &' from 'int'
+                 D:\Programs\Microsoft Visual Studio 9.0\VC\include\list(1302) : see declaration of 'std::operator !='
+     1>Producer.cpp(100): error C2784: 'bool std::operator !=(const std::_Tree<_Traits> &,const std::_Tree<_Traits> &)' : could not deduce template argument for 'const std::_Tree<_Traits> &' from 'int'
+                 D:\Programs\Microsoft Visual Studio 9.0\VC\include\xtree(1460) : see declaration of 'std::operator !='
+     1>Producer.cpp(100): error C2784: 'bool std::operator !=(const std::istream_iterator<_Ty,_Elem,_Traits,_Diff> &,const std::istream_iterator<_Ty,_Elem,_Traits,_Diff> &)' : could not deduce template argument for 'const std::istream_iterator<_Ty,_Elem,_Traits,_Diff> &' from 'int'
+                 D:\Programs\Microsoft Visual Studio 9.0\VC\include\iterator(277) : see declaration of 'std::operator !='
+     1>Producer.cpp(100): error C2784: 'bool std::operator !=(const std::basic_string<_Elem,_Traits,_Alloc> &,const _Elem *)' : could not deduce template argument for 'const std::basic_string<_Elem,_Traits,_Alloc> &' from 'int'
+                 D:\Programs\Microsoft Visual Studio 9.0\VC\include\string(120) : see declaration of 'std::operator !='
+     1>Producer.cpp(100): error C2784: 'bool std::operator !=(const _Elem *,const std::basic_string<_Elem,_Traits,_Alloc> &)' : could not deduce template argument for 'const _Elem *' from 'int'
+                 D:\Programs\Microsoft Visual Studio 9.0\VC\include\string(110) : see declaration of 'std::operator !='
+     1>Producer.cpp(100): error C2784: 'bool std::operator !=(const std::basic_string<_Elem,_Traits,_Alloc> &,const std::basic_string<_Elem,_Traits,_Alloc> &)' : could not deduce template argument for 'const std::basic_string<_Elem,_Traits,_Alloc> &' from 'int'
+                 D:\Programs\Microsoft Visual Studio 9.0\VC\include\string(100) : see declaration of 'std::operator !='
+     1>Producer.cpp(100): error C2784: 'bool std::operator !=(const std::istreambuf_iterator<_Elem,_Traits> &,const std::istreambuf_iterator<_Elem,_Traits> &)' : could not deduce template argument for 'const std::istreambuf_iterator<_Elem,_Traits> &' from 'int'
+                 D:\Programs\Microsoft Visual Studio 9.0\VC\include\streambuf(557) : see declaration of 'std::operator !='
+     1>Producer.cpp(100): error C2784: 'bool std::operator !=(const std::allocator<_Ty> &,const std::allocator<_Other> &) throw()' : could not deduce template argument for 'const std::allocator<_Ty> &' from 'int'
+                 D:\Programs\Microsoft Visual Studio 9.0\VC\include\xmemory(180) : see declaration of 'std::operator !='
+     1>Producer.cpp(100): error C2784: 'bool std::operator !=(const std::reverse_iterator<_RanIt> &,const std::reverse_iterator<_RanIt2> &)' : could not deduce template argument for 'const std::reverse_iterator<_RanIt> &' from 'int'
+                 D:\Programs\Microsoft Visual Studio 9.0\VC\include\xutility(2228) : see declaration of 'std::operator !='
+     1>Producer.cpp(100): error C2784: 'bool std::operator !=(const std::_Revranit<_RanIt,_Base> &,const std::_Revranit<_RanIt2,_Base2> &)' : could not deduce template argument for 'const std::_Revranit<_RanIt,_Base> &' from 'int'
+                 D:\Programs\Microsoft Visual Studio 9.0\VC\include\xutility(2035) : see declaration of 'std::operator !='
+     1>Producer.cpp(100): error C2784: 'bool std::operator !=(const std::pair<_Ty1,_Ty2> &,const std::pair<_Ty1,_Ty2> &)' : could not deduce template argument for 'const std::pair<_Ty1,_Ty2> &' from 'int'
+                 D:\Programs\Microsoft Visual Studio 9.0\VC\include\utility(76) : see declaration of 'std::operator !='
+     1>Producer.cpp(100): error C2677: binary '!=' : no global operator found which takes type 'std::_Tree<_Traits>::iterator' (or there is no acceptable conversion)
+                 with
+                 [
+                     _Traits=std::_Tset_traits<BWAPI::Unit *,std::less<BWAPI::Unit *>,std::allocator<BWAPI::Unit *>,false>
+                 ]
+     1>Producer.cpp(100): fatal error C1903: unable to recover from previous error(s); stopping compilation
+         Reconnoiter.cpp
+     1>d:\bachelor\starcraftaiclient\starcraftaimodule\Reconnoiter.h(10): error C2864: 'Reconnoiter::MINIMUM_WORKERS' : only static const integral data members can be initialized within a class
+     1>Reconnoiter.cpp(4): error C2758: 'Reconnoiter::MINIMUM_WORKERS' : must be initialized in constructor base/member initializer list
+                 d:\bachelor\starcraftaiclient\starcraftaimodule\Reconnoiter.h(10) : see declaration of 'Reconnoiter::MINIMUM_WORKERS'
+     1>Reconnoiter.cpp(18): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+     1>Reconnoiter.cpp(18): error C2440: 'initializing' : cannot convert from 'std::set<_Kty>' to 'int'
+                 with
+                 [
+                     _Kty=BWAPI::TilePosition
+                 ]
+                 No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
+     1>Reconnoiter.cpp(19): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+     1>Reconnoiter.cpp(19): error C2228: left of '.begin' must have class/struct/union
+                 type is 'int'
+     1>Reconnoiter.cpp(20): error C2228: left of '.end' must have class/struct/union
+                 type is 'int'
+     1>Reconnoiter.cpp(20): fatal error C1903: unable to recover from previous error(s); stopping compilation
+         WorkerManager.cpp
+     1>WorkerManager.cpp(28): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+     1>WorkerManager.cpp(28): error C2440: 'initializing' : cannot convert from 'std::_Tree<_Traits>::iterator' to 'int'
+                 with
+                 [
+                     _Traits=std::_Tset_traits<BWAPI::Unit *,std::less<BWAPI::Unit *>,std::allocator<BWAPI::Unit *>,false>
+                 ]
+                 No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
+     1>WorkerManager.cpp(29): error C2784: 'bool std::operator !=(const std::vector<_Ty,_Alloc> &,const std::vector<_Ty,_Alloc> &)' : could not deduce template argument for 'const std::vector<_Ty,_Alloc> &' from 'int'
+                 D:\Programs\Microsoft Visual Studio 9.0\VC\include\vector(1312) : see declaration of 'std::operator !='
+     1>WorkerManager.cpp(29): error C2784: 'bool std::operator !=(const std::list<_Ty,_Ax> &,const std::list<_Ty,_Ax> &)' : could not deduce template argument for 'const std::list<_Ty,_Ax> &' from 'int'
+                 D:\Programs\Microsoft Visual Studio 9.0\VC\include\list(1302) : see declaration of 'std::operator !='
+     1>WorkerManager.cpp(29): error C2784: 'bool std::operator !=(const std::_Tree<_Traits> &,const std::_Tree<_Traits> &)' : could not deduce template argument for 'const std::_Tree<_Traits> &' from 'int'
+                 D:\Programs\Microsoft Visual Studio 9.0\VC\include\xtree(1460) : see declaration of 'std::operator !='
+     1>WorkerManager.cpp(29): error C2784: 'bool std::operator !=(const std::istream_iterator<_Ty,_Elem,_Traits,_Diff> &,const std::istream_iterator<_Ty,_Elem,_Traits,_Diff> &)' : could not deduce template argument for 'const std::istream_iterator<_Ty,_Elem,_Traits,_Diff> &' from 'int'
+                 D:\Programs\Microsoft Visual Studio 9.0\VC\include\iterator(277) : see declaration of 'std::operator !='
+     1>WorkerManager.cpp(29): error C2784: 'bool std::operator !=(const std::basic_string<_Elem,_Traits,_Alloc> &,const _Elem *)' : could not deduce template argument for 'const std::basic_string<_Elem,_Traits,_Alloc> &' from 'int'
+                 D:\Programs\Microsoft Visual Studio 9.0\VC\include\string(120) : see declaration of 'std::operator !='
+     1>WorkerManager.cpp(29): error C2784: 'bool std::operator !=(const _Elem *,const std::basic_string<_Elem,_Traits,_Alloc> &)' : could not deduce template argument for 'const _Elem *' from 'int'
+                 D:\Programs\Microsoft Visual Studio 9.0\VC\include\string(110) : see declaration of 'std::operator !='
+     1>WorkerManager.cpp(29): error C2784: 'bool std::operator !=(const std::basic_string<_Elem,_Traits,_Alloc> &,const std::basic_string<_Elem,_Traits,_Alloc> &)' : could not deduce template argument for 'const std::basic_string<_Elem,_Traits,_Alloc> &' from 'int'
+                 D:\Programs\Microsoft Visual Studio 9.0\VC\include\string(100) : see declaration of 'std::operator !='
+     1>WorkerManager.cpp(29): error C2784: 'bool std::operator !=(const std::istreambuf_iterator<_Elem,_Traits> &,const std::istreambuf_iterator<_Elem,_Traits> &)' : could not deduce template argument for 'const std::istreambuf_iterator<_Elem,_Traits> &' from 'int'
+                 D:\Programs\Microsoft Visual Studio 9.0\VC\include\streambuf(557) : see declaration of 'std::operator !='
+     1>WorkerManager.cpp(29): error C2784: 'bool std::operator !=(const std::allocator<_Ty> &,const std::allocator<_Other> &) throw()' : could not deduce template argument for 'const std::allocator<_Ty> &' from 'int'
+                 D:\Programs\Microsoft Visual Studio 9.0\VC\include\xmemory(180) : see declaration of 'std::operator !='
+     1>WorkerManager.cpp(29): error C2784: 'bool std::operator !=(const std::reverse_iterator<_RanIt> &,const std::reverse_iterator<_RanIt2> &)' : could not deduce template argument for 'const std::reverse_iterator<_RanIt> &' from 'int'
+                 D:\Programs\Microsoft Visual Studio 9.0\VC\include\xutility(2228) : see declaration of 'std::operator !='
+     1>WorkerManager.cpp(29): error C2784: 'bool std::operator !=(const std::_Revranit<_RanIt,_Base> &,const std::_Revranit<_RanIt2,_Base2> &)' : could not deduce template argument for 'const std::_Revranit<_RanIt,_Base> &' from 'int'
+                 D:\Programs\Microsoft Visual Studio 9.0\VC\include\xutility(2035) : see declaration of 'std::operator !='
+     1>WorkerManager.cpp(29): error C2784: 'bool std::operator !=(const std::pair<_Ty1,_Ty2> &,const std::pair<_Ty1,_Ty2> &)' : could not deduce template argument for 'const std::pair<_Ty1,_Ty2> &' from 'int'
+                 D:\Programs\Microsoft Visual Studio 9.0\VC\include\utility(76) : see declaration of 'std::operator !='
+     1>WorkerManager.cpp(29): error C2677: binary '!=' : no global operator found which takes type 'std::_Tree<_Traits>::iterator' (or there is no acceptable conversion)
+                 with
+                 [
+                     _Traits=std::_Tset_traits<BWAPI::Unit *,std::less<BWAPI::Unit *>,std::allocator<BWAPI::Unit *>,false>
+                 ]
+     1>WorkerManager.cpp(29): fatal error C1903: unable to recover from previous error(s); stopping compilation
      1>Done Building Project "D:\Bachelor\StarcraftAIClient\StarcraftAIModule\StarcraftAIModule.vcxproj" (Build target(s)) -- FAILED.
 
 Build FAILED.
 
-Time Elapsed 00:00:04.11
+Time Elapsed 00:00:01.93

@@ -5,7 +5,7 @@
 #include "Architect.h"
 
 using namespace BWAPI;
-using namespace Filter;
+//using namespace Filter;
 
 class Economist
 {
@@ -17,10 +17,11 @@ private:
 	Producer * producer;
 	Architect * architect; // This is currently unused! Planned for assimilator construction.
 	// Local
-	BWAPI::Unit depot;
+	std::set<BWAPI::Unit*> minerals;
+	BWAPI::Unit * depot;
 public:
 	Economist(WorkerManager * workerManager, Producer * producer, Architect * architect);
 	~Economist();
-	void setDepot(BWAPI::Unit depot);
+	void setDepot(BWAPI::Unit * depot);
 	void update();
 };

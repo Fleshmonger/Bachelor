@@ -21,7 +21,7 @@ void Primary::onStart()
 	armyManager = new ArmyManager(producer, architect);
 
 	// Designate all starting units.
-	for (auto &u : Broodwar->self()->getUnits())
+	for (auto u : Broodwar->self()->getUnits())
 	{
 		if (u->getPlayer() == Broodwar->self()) // Make this a method
 			designateUnit(u);
@@ -56,8 +56,9 @@ void Primary::onFrame()
 	drawTerrainData();
 	if (analysis_just_finished)
 	{
-	Broodwar << "Finished analyzing map." << std::endl;;
-	analysis_just_finished = false;
+		Broodwar->printf("Finished analyzing map.");
+		//Broodwar << "Finished analyzing map." << std::endl;;
+		analysis_just_finished = false;
 	}
 
 	// Return if the game is a replay or is paused
@@ -201,7 +202,9 @@ void Primary::onSendText(std::string text)
 	{
 		if (analyzed = false)
 		{
-			Broodwar << "Analyzing map... this may take a minute" << std::endl;;
+			Broodwar->printf("Analyzing map... this may take a minute");
+			Broodwar->sendText("Analyzing map... this may take a minute");
+			//Broodwar << "Analyzing map... this may take a minute" << std::endl;;
 			CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)AnalyzeThread, NULL, 0, NULL);
 		}
 	}
@@ -214,13 +217,13 @@ void Primary::onSendText(std::string text)
 	// otherwise you may run into problems when you use the %(percent) character!
 }
 
-void Primary::onReceiveText(BWAPI::Player player, std::string text)
+void Primary::onReceiveText(BWAPI::Player * player, std::string text)
 {
 	// Parse the received text
-	Broodwar << player->getName() << " said \"" << text << "\"" << std::endl;
+	//Broodwar << player->getName() << " said \"" << text << "\"" << std::endl;
 }
 
-void Primary::onPlayerLeft(BWAPI::Player player)
+void Primary::onPlayerLeft(BWAPI::Player * player)
 {
 	// Interact verbally with the other players in the game by
 	// announcing that the other player has left.
@@ -233,7 +236,7 @@ void Primary::onNukeDetect(BWAPI::Position target)
 	if (target)
 	{
 		// if so, print the location of the nuclear strike target
-		Broodwar << "Nuclear Launch Detected at " << target << std::endl;
+		//Broodwar << "Nuclear Launch Detected at " << target << std::endl;
 	}
 	else
 	{
@@ -244,19 +247,20 @@ void Primary::onNukeDetect(BWAPI::Position target)
 	// You can also retrieve all the nuclear missile targets using Broodwar->getNukeDots()!
 }
 
-void Primary::onUnitDiscover(BWAPI::Unit unit)
+void Primary::onUnitDiscover(BWAPI::Unit * unit)
 {
 }
 
-void Primary::onUnitEvade(BWAPI::Unit unit)
+void Primary::onUnitEvade(BWAPI::Unit * unit)
 {
 }
 
 // Fired when a unit previously obscured is seen by the bot.
 // Notice, this also fires when a unit is being constructed!
-void Primary::onUnitShow(BWAPI::Unit unit)
+void Primary::onUnitShow(BWAPI::Unit * unit)
 {
-	DEBUG_OUT("Unit Show: " + unit->getType().getName());
+	//Broodwar->printf("Unit Show: %s", unit->getType().getName());
+	//DEBUG_OUT("Unit Show: %s", unit->getType().getName());
 	// Determine if enemy.
 	if (isEnemy(unit))
 	{
@@ -268,13 +272,13 @@ void Primary::onUnitShow(BWAPI::Unit unit)
 	}
 }
 
-void Primary::onUnitHide(BWAPI::Unit unit)
+void Primary::onUnitHide(BWAPI::Unit * unit)
 {
 }
 
-void Primary::onUnitCreate(BWAPI::Unit unit)
+void Primary::onUnitCreate(BWAPI::Unit * unit)
 {
-	DEBUG_OUT("Unit Create: " + unit->getType().getName());
+	//DEBUG_OUT("Unit Create: " + unit->getType().getName());
 	// Monitor the construction of the unit.
 	if (isOwned(unit))
 	{
@@ -288,9 +292,9 @@ void Primary::onUnitCreate(BWAPI::Unit unit)
 
 // Fired when a visible unit is destroyed.
 // TODO code duplication with designate
-void Primary::onUnitDestroy(BWAPI::Unit unit)
+void Primary::onUnitDestroy(BWAPI::Unit * unit)
 {
-	DEBUG_OUT("Unit Destroy: " + unit->getType().getName());
+	//DEBUG_OUT("Unit Destroy: " + unit->getType().getName());
 	// Determine owner.
 	if (isOwned(unit))
 	{
@@ -330,7 +334,7 @@ void Primary::onUnitDestroy(BWAPI::Unit unit)
 	}
 }
 
-void Primary::onUnitMorph(BWAPI::Unit unit)
+void Primary::onUnitMorph(BWAPI::Unit * unit)
 {
 	// OLD.
 	if (Broodwar->isReplay())
@@ -346,19 +350,19 @@ void Primary::onUnitMorph(BWAPI::Unit unit)
 	}
 }
 
-void Primary::onUnitRenegade(BWAPI::Unit unit)
+void Primary::onUnitRenegade(BWAPI::Unit * unit)
 {
 }
 
 void Primary::onSaveGame(std::string gameName)
 {
 	// OLD.
-	Broodwar << "The game was saved to \"" << gameName << "\"" << std::endl;
+	//Broodwar << "The game was saved to \"" << gameName << "\"" << std::endl;
 }
 
-void Primary::onUnitComplete(BWAPI::Unit unit)
+void Primary::onUnitComplete(BWAPI::Unit * unit)
 {
-	DEBUG_OUT("Unit Complete: " + unit->getType().getName());
+	//DEBUG_OUT("Unit Complete: " + unit->getType().getName());
 	// Determine owner.
 	if (isOwned(unit))
 	{
@@ -375,7 +379,7 @@ void Primary::onUnitComplete(BWAPI::Unit unit)
 
 // Delivers a unit to managers who needs it.
 // Assumes the unit is owned.
-void Primary::designateUnit(BWAPI::Unit unit)
+void Primary::designateUnit(BWAPI::Unit * unit)
 {
 	// Determine type.
 	BWAPI::UnitType unitType = unit->getType();
@@ -401,7 +405,7 @@ void Primary::designateUnit(BWAPI::Unit unit)
 // Returns true if the unit is owned and false otherwise.
 // TODO Move this to some unit monitor class?
 // TODO This can probably be done cheaper.
-bool Primary::isOwned(BWAPI::Unit unit)
+bool Primary::isOwned(BWAPI::Unit * unit)
 {
 	return unit->getPlayer() == Broodwar->self();
 }
@@ -409,7 +413,7 @@ bool Primary::isOwned(BWAPI::Unit unit)
 // Returns true if the unit is owned by an enemy and false otherwise.
 // TODO Move this to some unit monitor class?
 // TODO This can probably be done cheaper.
-bool Primary::isEnemy(BWAPI::Unit unit)
+bool Primary::isEnemy(BWAPI::Unit * unit)
 {
 	return Broodwar->self()->isEnemy(unit->getPlayer());
 }
@@ -434,15 +438,17 @@ void Primary::drawTerrainData()
 		//draw outline of center location
 		Broodwar->drawBoxMap(p.x * 32, p.y * 32, p.x * 32 + 4 * 32, p.y * 32 + 3 * 32, Colors::Blue);
 
+		auto test = *i;
+
 		//draw a circle at each mineral patch
-		for (Unitset::iterator j = (*i)->getStaticMinerals().begin(); j != (*i)->getStaticMinerals().end(); j++)
+		for (auto j = (*i)->getStaticMinerals().begin(); j != (*i)->getStaticMinerals().end(); j++)
 		{
 			Position q = (*j)->getInitialPosition();
 			Broodwar->drawCircleMap(q.x, q.y, 30, Colors::Cyan);
 		}
 
 		//draw the outlines of vespene geysers
-		for (Unitset::iterator j = (*i)->getGeysers().begin(); j != (*i)->getGeysers().end(); j++)
+		for (auto j = (*i)->getGeysers().begin(); j != (*i)->getGeysers().end(); j++)
 		{
 			TilePosition q = (*j)->getInitialTilePosition();
 			Broodwar->drawBoxMap(q.x * 32, q.y * 32, q.x * 32 + 4 * 32, q.y * 32 + 2 * 32, Colors::Orange);
@@ -450,7 +456,7 @@ void Primary::drawTerrainData()
 
 		//if this is an island expansion, draw a yellow circle around the base location
 		if ((*i)->isIsland())
-			Broodwar->drawCircleMap(c, 80, Colors::Yellow);
+			Broodwar->drawCircleMap(c.x, c.y, 80, Colors::Yellow);
 	}
 
 	//we will iterate through all the regions and draw the polygon outline of it in green.
@@ -461,7 +467,7 @@ void Primary::drawTerrainData()
 		{
 			Position point1 = p[j];
 			Position point2 = p[(j + 1) % p.size()];
-			Broodwar->drawLineMap(point1, point2, Colors::Green);
+			Broodwar->drawLineMap(point1.x, point1.y, point2.x, point2.y, Colors::Green);
 		}
 	}
 
@@ -472,7 +478,7 @@ void Primary::drawTerrainData()
 		{
 			Position point1 = (*c)->getSides().first;
 			Position point2 = (*c)->getSides().second;
-			Broodwar->drawLineMap(point1, point2, Colors::Red);
+			Broodwar->drawLineMap(point1.x, point1.y, point2.x, point2.y, Colors::Red);
 		}
 	}
 }

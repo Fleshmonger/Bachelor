@@ -3,6 +3,7 @@
 //In the future needs access to Architect for refinery construction.
 Economist::Economist(WorkerManager * workerManager, Producer * producer, Architect * architect)
 {
+	// Managers
 	this->workerManager = workerManager;
 	this->producer = producer;
 	this->architect = architect;
@@ -14,7 +15,7 @@ Economist::~Economist()
 }
 
 // Designates the current depot used for cargo return.
-void Economist::setDepot(BWAPI::Unit depot)
+void Economist::setDepot(BWAPI::Unit * depot)
 {
 	this->depot = depot;
 }
@@ -26,7 +27,7 @@ void Economist::update()
 	producer->trainUnit(PROTOSS_WORKER);
 
 	// Get all available workers;
-	BWAPI::Unitset * workers = workerManager->getWorkers();
+	std::set<Unit*> * workers = workerManager->getWorkers();
 
 	// Harvest resources; This should be done at the end.
 	if (depot)
@@ -37,7 +38,7 @@ void Economist::update()
 		{
 			// Check if it exists.
 			// This should be unecessary.
-			BWAPI::Unit harvester = *it;
+			BWAPI::Unit * harvester = *it;
 			if (!harvester->exists())
 				it = workers->erase(it);
 			else
@@ -47,7 +48,6 @@ void Economist::update()
 					harvester->isMaelstrommed() ||
 					harvester->isStasised() || // Ignore the unit if it has one of the following status ailments
 					harvester->isLoaded() ||
-					!harvester->isPowered() ||
 					harvester->isStuck())) // Ignore the unit if it is in one of the following states
 				{
 					// if our worker is idle
@@ -62,7 +62,7 @@ void Economist::update()
 						else if (!harvester->getPowerUp())  // The worker cannot harvest anything if it
 						{                             // is carrying a powerup such as a flag
 							// Harvest from the nearest mineral patch or gas refinery
-							harvester->gather(harvester->getClosestUnit(IsMineralField || IsRefinery));
+							//harvester->gather(harvester->getClosestUnit(IsMineralField || IsRefinery));
 						} // closure: has no powerup
 					} // closure: if idle
 				} // closure: is desirable

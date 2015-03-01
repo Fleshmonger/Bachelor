@@ -6,12 +6,9 @@ Architect::Architect(WorkerManager * workerManager, Accountant * accountant)
 	this->workerManager = workerManager;
 	this->accountant = accountant;
 	// Local
-	buildSchedule = new std::multimap < BWAPI::UnitType, std::pair<BWAPI::Unit,BWAPI::TilePosition> > ;
-	constructSchedule = new std::multimap < BWAPI::UnitType, BWAPI::Unit > ;
-	pylons = new BWAPI::Unitset();
-
-	std::multimap<BWAPI::UnitType, int> test;
-	test.insert(std::pair<BWAPI::UnitType, int>(BWAPI::UnitTypes::Protoss_Arbiter,5));
+	buildSchedule = new std::multimap < BWAPI::UnitType, std::pair<BWAPI::Unit*,BWAPI::TilePosition> > ;
+	constructSchedule = new std::multimap < BWAPI::UnitType, BWAPI::Unit* > ;
+	pylons = new std::set<Unit*>();
 }
 
 //Unused deconstructor
@@ -51,15 +48,16 @@ bool Architect::scheduleBuild(BWAPI::UnitType buildingType)
 				else
 					return false;
 			}
-			buildTarget = Broodwar->getBuildLocation(buildingType, buildOrigin);
+			//buildTarget = Broodwar->getBuildLocation(buildingType, buildOrigin);
+			buildTarget = getBuildLocation(buildingType, buildOrigin);
 			if (buildTarget)
 			{
 				// Find a builder.
-				BWAPI::Unit builder = workerManager->takeWorker();
+				BWAPI::Unit * builder = workerManager->takeWorker();
 				if (builder)
 				{
 					// Order the construction.
-					builder->build(buildingType, buildTarget);
+					builder->build(buildTarget, buildingType);
 					buildSchedule->insert(std::make_pair(buildingType, std::make_pair(builder, buildTarget)));
 					accountant->allocUnit(buildingType);
 					return true;
@@ -71,25 +69,54 @@ bool Architect::scheduleBuild(BWAPI::UnitType buildingType)
 }
 
 // Constructs a new building.
-void Architect::scheduleConstruct(BWAPI::Unit building)
+void Architect::scheduleConstruct(BWAPI::Unit * building)
 {
 	BWAPI::UnitType buildingType = building->getType();
 	constructSchedule->insert(std::make_pair(buildingType, building));
 }
 
+/*
 // Removes an iterator from the build schedule.
-void Architect::removeBuild(std::map<BWAPI::UnitType, std::pair<BWAPI::Unit, BWAPI::TilePosition>>::iterator it)
+void Architect::removeBuild(std::map<BWAPI::UnitType, std::pair<BWAPI::Unit*, BWAPI::TilePosition>>::const_iterator it)
 {
 	auto build = *it;
-	BWAPI::Unit builder = build.second.first;
+	BWAPI::Unit * builder = build.second.first;
 	if (builder && builder->exists())
 		workerManager->addWorker(builder);
 	accountant->deallocUnit(build.first);
 	buildSchedule->erase(it);
 }
+*/
 
 // Removes a build order from the build schedule.
-void Architect::removeBuild(BWAPI::Unit building)
+void Architect::removeBuild(BWAPI::UnitType buildingType, BWAPI::TilePosition buildTarget)
+{
+	//BWAPI::UnitType buildingType = building->getType();
+	auto range = buildSchedule->equal_range(buildingType);
+	auto it = range.first, end = range.second;
+	while (it != end)
+	{
+		BWAPI::TilePosition location = (*it).second.second;
+		//if (location == building->getTilePosition())
+		if (location == buildTarget)
+		{
+			auto build = *it;
+			BWAPI::Unit * builder = build.second.first;
+			if (builder && builder->exists())
+				workerManager->addWorker(builder);
+			accountant->deallocUnit(build.first);
+			buildSchedule->erase(it);
+			//removeBuild(it);
+			return;
+		}
+		else
+			++it;
+	}
+}
+
+/*
+// Removes a build order from the build schedule.
+void Architect::removeBuild(BWAPI::Unit * building)
 {
 	BWAPI::UnitType buildingType = building->getType();
 	auto range = buildSchedule->equal_range(buildingType);
@@ -99,31 +126,41 @@ void Architect::removeBuild(BWAPI::Unit building)
 		BWAPI::TilePosition location = (*it).second.second;
 		if (location == building->getTilePosition())
 		{
-			removeBuild(it);
+			auto build = *it;
+			BWAPI::Unit * builder = build.second.first;
+			if (builder && builder->exists())
+				workerManager->addWorker(builder);
+			accountant->deallocUnit(build.first);
+			buildSchedule->erase(it);
+			//removeBuild(it);
 			return;
 		}
 		else
 			++it;
 	}
 }
+*/
 
+/*
 // Removes an iterator from the construct schedule.
-void Architect::removeConstruct(std::map<BWAPI::UnitType, BWAPI::Unit>::iterator it)
+void Architect::removeConstruct(std::map<BWAPI::UnitType, BWAPI::Unit*>::iterator it)
 {
 	constructSchedule->erase(it);
 }
+*/
 
 // Removes a construction order from the construct schedule.
-void Architect::removeConstruct(BWAPI::Unit building)
+void Architect::removeConstruct(BWAPI::Unit * building)
 {
 	auto range = constructSchedule->equal_range(building->getType());
 	auto it = range.first, end = range.second;
 	while (it != end)
 	{
-		BWAPI::Unit construct = (*it).second;
+		BWAPI::Unit * construct = (*it).second;
 		if (construct == building)
 		{
-			removeConstruct(it);
+			constructSchedule->erase(it);
+			//removeConstruct(it);
 			return;
 		}
 		else
@@ -132,14 +169,15 @@ void Architect::removeConstruct(BWAPI::Unit building)
 }
 
 // Identifies a building as built.
-void Architect::completeBuild(BWAPI::Unit building) // Rename this.
+void Architect::completeBuild(BWAPI::Unit * building) // Rename this.
 {
-	removeBuild(building);
+	removeBuild(building->getType(), building->getTilePosition());
+	//removeBuild(building);
 	scheduleConstruct(building);
 }
 
 // Identifies a building as constructed.
-void Architect::completeConstruct(BWAPI::Unit building) // Rename this.
+void Architect::completeConstruct(BWAPI::Unit * building) // Rename this.
 {
 	removeConstruct(building);
 }
@@ -152,20 +190,20 @@ int Architect::scheduled(BWAPI::UnitType buildingType)
 
 // Adds a pylon to the pylon pool.
 // Used for placing Protoss buildings.
-void Architect::addPylon(BWAPI::Unit pylon)
+void Architect::addPylon(BWAPI::Unit * pylon)
 {
 	pylons->insert(pylon);
 }
 
 // Removes a pylon to the pylon pool.
 // Used for placing Protoss buildings.
-void Architect::removePylon(BWAPI::Unit pylon)
+void Architect::removePylon(BWAPI::Unit * pylon)
 {
 	pylons->erase(pylon);
 }
 
 // Designates the current base position.
-void Architect::setDepot(BWAPI::Unit depot)
+void Architect::setDepot(BWAPI::Unit * depot)
 {
 	this->depot = depot;
 }
@@ -184,18 +222,22 @@ void Architect::update()
 		while (it != buildSchedule->end())
 		{
 			BWAPI::UnitType buildingType = it->first;
-			BWAPI::Unit builder = it->second.first;
+			BWAPI::Unit * builder = it->second.first;
 			BWAPI::TilePosition buildTarget = it->second.second;
 			if (builder &&
 				builder->exists() &&
-				Broodwar->canBuildHere(buildTarget, buildingType) &&
-				Broodwar->canMake(buildingType, builder))
+				Broodwar->canBuildHere(builder, buildTarget, buildingType) &&
+				Broodwar->canMake(builder, buildingType))
 			{
-				builder->build(buildingType, buildTarget);
+				builder->build(buildTarget, buildingType);
 				++it;
 			}
 			else
-				removeBuild(it++);
+			{
+				++it;
+				removeBuild(buildingType, buildTarget);
+				//removeBuild(it++);
+			}
 		}
 	}
 	// Remove all invalid construction orders.
@@ -203,11 +245,23 @@ void Architect::update()
 		auto it = constructSchedule->begin();
 		while (it != constructSchedule->end())
 		{
-			BWAPI::Unit building = it->second;
+			BWAPI::Unit * building = it->second;
 			if (!building || !building->exists())
-				removeConstruct(it++);
+			{
+				removeConstruct(building);
+				++it;
+				//removeConstruct(it++);
+			}
 			else
 				++it;
 		}
 	}
+}
+
+BWAPI::TilePosition getBuildLocation(BWAPI::UnitType buildingType, BWAPI::TilePosition desiredPosition)
+{
+	if (Broodwar->canBuildHere(nullptr, desiredPosition, buildingType))
+		return desiredPosition;
+	else
+		return BWAPI::TilePositions::None;
 }

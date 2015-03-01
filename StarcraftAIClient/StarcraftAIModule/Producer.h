@@ -10,17 +10,17 @@ private:
 	// Managers
 	Accountant * accountant;
 	// Local
-	BWAPI::Unit depot;
-	BWAPI::Unitset * incompleteUnits, * infantryFacilities, * idleInfantryFacilities;
+	BWAPI::Unit * depot;
+	std::set<Unit*> * incompleteUnits, * infantryFacilities, * idleInfantryFacilities;
 public:
 	Producer(Accountant * accountant);
 	~Producer();
 	bool trainUnit(BWAPI::UnitType unitType);
-	void incompleteUnit(BWAPI::Unit unit);
-	void completeUnit(BWAPI::Unit unit);
+	void incompleteUnit(BWAPI::Unit * unit);
+	void completeUnit(BWAPI::Unit * unit);
 	//int totalInfantryFacilities();
-	void addInfantryFacility(BWAPI::Unit facility);
-	void removeInfantryFacility(BWAPI::Unit facility);
-	void setDepot(BWAPI::Unit depot);
+	void addInfantryFacility(BWAPI::Unit * facility);
+	void removeInfantryFacility(BWAPI::Unit * facility);
+	void setDepot(BWAPI::Unit * depot);
 	void update();
 };

@@ -2,12 +2,14 @@
 
 ArmyManager::ArmyManager(Producer * producer, Architect * architect)
 {
+	// Managers
 	this->producer = producer;
 	this->architect = architect;
-	troops = new Unitset();
-	enemyTroops = new Unitset();
-	enemyBuildings = new Unitset();
-	enemyPositions = new std::map<BWAPI::Unit, BWAPI::Position>();
+	// Local
+	troops = new std::set<Unit*>();
+	enemyTroops = new std::set<Unit*>();
+	enemyBuildings = new std::set<Unit*>();
+	enemyPositions = new std::map<BWAPI::Unit*, BWAPI::Position>();
 }
 
 // Unused deconstructor
@@ -15,38 +17,38 @@ ArmyManager::~ArmyManager()
 {
 }
 
-void ArmyManager::addEnemyBuilding(BWAPI::Unit unit)
+void ArmyManager::addEnemyBuilding(BWAPI::Unit * unit)
 {
 	enemyBuildings->insert(unit);
 	enemyPositions->insert(std::make_pair(unit, unit->getPosition()));
 }
 
-void ArmyManager::removeEnemyBuilding(BWAPI::Unit unit)
+void ArmyManager::removeEnemyBuilding(BWAPI::Unit * unit)
 {
 	enemyBuildings->erase(unit);
 	enemyPositions->erase(unit);
 }
 
-void ArmyManager::addEnemyTroop(BWAPI::Unit unit)
+void ArmyManager::addEnemyTroop(BWAPI::Unit * unit)
 {
 	enemyTroops->insert(unit);
 	enemyPositions->insert(std::make_pair(unit,unit->getPosition()));
 }
 
-void ArmyManager::removeEnemyTroop(BWAPI::Unit unit)
+void ArmyManager::removeEnemyTroop(BWAPI::Unit * unit)
 {
 	enemyTroops->erase(unit);
 	enemyPositions->erase(unit);
 }
 
 // Adds a unit to the troop pool.
-void ArmyManager::addUnit(BWAPI::Unit unit)
+void ArmyManager::addUnit(BWAPI::Unit * unit)
 {
 	troops->insert(unit);
 }
 
 // Removes a unit from the troop pool.
-void ArmyManager::removeUnit(BWAPI::Unit unit)
+void ArmyManager::removeUnit(BWAPI::Unit * unit)
 {
 	troops->erase(unit);
 }
@@ -80,11 +82,11 @@ void ArmyManager::update()
 	// Order existing troops around
 	if (!enemyBuildings->empty())
 	{
-		BWAPI::Position attackTarget = enemyPositions->at(*enemyBuildings->begin());
+		BWAPI::Position attackTarget = (*enemyBuildings->begin())->getPosition();
 		auto it = troops->begin();
 		while (it != troops->end())
 		{
-			BWAPI::Unit unit = *it;
+			BWAPI::Unit * unit = *it;
 			if (unit->exists())
 			{
 				if (unit->isIdle())
@@ -97,10 +99,8 @@ void ArmyManager::update()
 	}
 }
 
-void ArmyManager::updatePos(BWAPI::Unit unit)
+void ArmyManager::updatePos(BWAPI::Unit * unit)
 {
 	if (unit->isVisible())
-	{
-		enemyPositions->at(unit) = unit->getPosition();
-	}
+		(*enemyPositions)[unit] = unit->getPosition();
 }
