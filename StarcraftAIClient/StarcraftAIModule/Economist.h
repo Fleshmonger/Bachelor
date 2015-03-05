@@ -23,5 +23,6 @@ public:
 	Economist(WorkerManager * workerManager, Producer * producer, Architect * architect);
 	~Economist();
 	void setDepot(BWAPI::Unit * depot);
+	void setMinerals(std::set<BWAPI::Unit*> minerals);
 	void update();
 };

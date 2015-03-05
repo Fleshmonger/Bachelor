@@ -20,6 +20,11 @@ void Economist::setDepot(BWAPI::Unit * depot)
 	this->depot = depot;
 }
 
+void Economist::setMinerals(std::set<BWAPI::Unit*> minerals)
+{
+	this->minerals = minerals;
+}
+
 // Simulate the architect AI. Creates pylons and commands builders.
 void Economist::update()
 {

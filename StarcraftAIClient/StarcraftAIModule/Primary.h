@@ -37,7 +37,6 @@ private:
 	Reconnoiter * reconnoiter;
 	Economist * economist;
 	ArmyManager * armyManager;
-	// Local
 public:
 	// Virtual functions for callbacks, leave these as they are.
 	virtual void onStart();

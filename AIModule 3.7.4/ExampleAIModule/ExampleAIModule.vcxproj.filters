@@ -15,12 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\Dll.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Primary.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Accountant.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -33,11 +27,23 @@
     <ClCompile Include="Architect.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Economist.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ArmyManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Reconnoiter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Primary.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Dll.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\Primary.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Accountant.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -48,6 +54,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Architect.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Economist.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ArmyManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Reconnoiter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Primary.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

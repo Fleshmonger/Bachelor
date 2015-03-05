@@ -97,16 +97,22 @@
   <ItemGroup>
     <ClCompile Include="Accountant.cpp" />
     <ClCompile Include="Architect.cpp" />
+    <ClCompile Include="ArmyManager.cpp" />
+    <ClCompile Include="Dll.cpp" />
+    <ClCompile Include="Economist.cpp" />
+    <ClCompile Include="Primary.cpp" />
     <ClCompile Include="Producer.cpp" />
-    <ClCompile Include="Source\Dll.cpp" />
-    <ClCompile Include="Source\Primary.cpp" />
+    <ClCompile Include="Reconnoiter.cpp" />
     <ClCompile Include="WorkerManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Accountant.h" />
     <ClInclude Include="Architect.h" />
+    <ClInclude Include="ArmyManager.h" />
+    <ClInclude Include="Economist.h" />
+    <ClInclude Include="Primary.h" />
     <ClInclude Include="Producer.h" />
-    <ClInclude Include="Source\Primary.h" />
+    <ClInclude Include="Reconnoiter.h" />
     <ClInclude Include="WorkerManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

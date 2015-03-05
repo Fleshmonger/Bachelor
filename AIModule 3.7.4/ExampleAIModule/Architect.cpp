@@ -14,15 +14,47 @@ Architect::Architect(WorkerManager * workerManager, Accountant * accountant)
 //Unused deconstructor
 Architect::~Architect()
 {
-
 }
 
+// Returns the nearest tileposition which is buildable.
+// Incomplete!
 BWAPI::TilePosition Architect::getBuildLocation(BWAPI::Unit * builder, BWAPI::UnitType buildingType, BWAPI::TilePosition desiredLocation)
 {
-	if (Broodwar->canBuildHere(builder, desiredLocation, buildingType))
-		return desiredLocation;
-	else
-		return BWAPI::TilePositions::None;
+	if (buildingType && desiredLocation)
+	{
+		// Check in a spiral pattern.
+		bool horizontal = false;
+		int x = 0, y = 0, length = 1, step = 1;
+		BWAPI::TilePosition tile = desiredLocation;
+		while (length < Broodwar->mapWidth())
+		{
+			// Check the current tile.
+			if (tile.isValid() && Broodwar->canBuildHere(builder, tile, buildingType))
+				return tile;
+			// Find next tile.
+			int n;
+			if (x == y && x == length)
+				length++;
+			if (horizontal)
+			{
+				x += step;
+				//tile.x += step;
+				if (x == length * step)
+					horizontal = false;
+			}
+			else
+			{
+				y += step;
+				if (y == length * step)
+				{
+					horizontal = true;
+					step *= -1;
+				}
+			}
+			tile = BWAPI::TilePosition::TilePosition(x, y);
+		}
+	}
+	return BWAPI::TilePositions::None;
 }
 
 // Attempt to build a new building. Returns true if it succeeds, otherwise returns false.
@@ -38,25 +70,14 @@ bool Architect::scheduleBuild(BWAPI::UnitType buildingType)
 			if (builder)
 			{
 				TilePosition desiredBuildLocation, targetBuildLocation;
-				if (buildingType == BWAPI::UnitTypes::Protoss_Pylon)
-				{
-					// Build the pylon around the depot.
-					if (depot)
-						desiredBuildLocation = depot->getTilePosition();
-					else
-						return false;
-				}
-				else
+				if (buildingType == BWAPI::UnitTypes::Protoss_Pylon && depot)
+					desiredBuildLocation = depot->getTilePosition();
+				else if (!pylons->empty())
 				{
 					// Find a pylon to build near.
-					if (!pylons->empty())
-					{
-						// TODO go through all pylons if no position has been found!
-						std::set<Unit*>::iterator it = pylons->begin();
-						desiredBuildLocation = (*it)->getTilePosition();
-					}
-					else
-						return false;
+					std::set<Unit*>::iterator it = pylons->begin();
+					desiredBuildLocation = (*it)->getTilePosition();
+					// TODO go through all pylons if no position has been found!
 				}
 				targetBuildLocation = getBuildLocation(builder, buildingType, desiredBuildLocation);
 				if (targetBuildLocation)
@@ -99,7 +120,7 @@ buildSchedule->erase(it);
 // Removes a build order from the build schedule.
 void Architect::removeBuild(BWAPI::UnitType buildingType, BWAPI::TilePosition buildTarget)
 {
-	std::pair<std::multimap <BWAPI::UnitType, std::pair<BWAPI::Unit*, BWAPI::TilePosition>>::iterator, std::multimap <BWAPI::UnitType, std::pair<BWAPI::Unit*, BWAPI::TilePosition>>::iterator> range = buildSchedule->equal_range(buildingType);
+	std::pair<std::multimap<BWAPI::UnitType, std::pair<BWAPI::Unit*, BWAPI::TilePosition>>::iterator, std::multimap<BWAPI::UnitType, std::pair<BWAPI::Unit*, BWAPI::TilePosition>>::iterator> range = buildSchedule->equal_range(buildingType);
 	std::multimap <BWAPI::UnitType, std::pair<BWAPI::Unit*, BWAPI::TilePosition>>::iterator it = range.first, end = range.second;
 	while (it != end)
 	{
@@ -159,9 +180,10 @@ constructSchedule->erase(it);
 // Removes a construction order from the construct schedule.
 void Architect::removeConstruct(BWAPI::Unit * building)
 {
-	/*
-	auto range = constructSchedule->equal_range(building->getType());
-	auto it = range.first, end = range.second;
+	std::pair<std::multimap<BWAPI::UnitType, BWAPI::Unit*>::iterator, std::multimap<BWAPI::UnitType, BWAPI::Unit*>::iterator> range = constructSchedule->equal_range(building->getType());
+	std::multimap<BWAPI::UnitType, BWAPI::Unit*>::iterator it = range.first, end = range.second;
+	//auto range = constructSchedule->equal_range(building->getType());
+	//auto it = range.first, end = range.second;
 	while (it != end)
 	{
 		BWAPI::Unit * construct = (*it).second;
@@ -174,7 +196,6 @@ void Architect::removeConstruct(BWAPI::Unit * building)
 		else
 			++it;
 	}
-	*/
 }
 
 // Identifies a building as built.
@@ -221,50 +242,38 @@ void Architect::setDepot(BWAPI::Unit * depot)
 // Creates pylons, validates orders and commands builders.
 void Architect::update()
 {
-	/*
 	// Order a supply building if more supply is needed, and none are being constructed.
 	if (Broodwar->self()->supplyTotal() - Broodwar->self()->supplyUsed() == 0 &&
 		scheduled(SUPPLY) == 0)
 		scheduleBuild(SUPPLY);
 	// Remove invalid build orders and continue valid orders.
 	{
-		auto it = buildSchedule->begin();
+		std::multimap <BWAPI::UnitType, std::pair<BWAPI::Unit*, BWAPI::TilePosition>>::iterator it = buildSchedule->begin();
 		while (it != buildSchedule->end())
 		{
 			BWAPI::UnitType buildingType = it->first;
 			BWAPI::Unit * builder = it->second.first;
 			BWAPI::TilePosition buildTarget = it->second.second;
+			++it;
 			if (builder &&
 				builder->exists() &&
 				Broodwar->canBuildHere(builder, buildTarget, buildingType) &&
 				Broodwar->canMake(builder, buildingType))
-			{
 				builder->build(buildTarget, buildingType);
-				++it;
-			}
 			else
-			{
-				++it;
 				removeBuild(buildingType, buildTarget);
-				//removeBuild(it++);
-			}
 		}
 	}
 	// Remove all invalid construction orders.
 	{
-		auto it = constructSchedule->begin();
+		std::multimap<BWAPI::UnitType, BWAPI::Unit*>::iterator it = constructSchedule->begin();
 		while (it != constructSchedule->end())
 		{
 			BWAPI::Unit * building = it->second;
+			++it;
 			if (!building || !building->exists())
-			{
 				removeConstruct(building);
-				++it;
-				//removeConstruct(it++);
-			}
-			else
-				++it;
 		}
 	}
-	*/
+
 }

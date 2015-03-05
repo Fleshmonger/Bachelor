@@ -20,7 +20,7 @@ Producer::~Producer()
 bool Producer::trainUnit(BWAPI::UnitType unitType)
 {
 	// Find the appropriate facility.
-	BWAPI::Unit * facility;
+	BWAPI::Unit * facility = NULL;
 	if (accountant->isAffordable(unitType) && !unitType.isBuilding())
 	{
 		if (unitType.isWorker())
@@ -33,7 +33,7 @@ bool Producer::trainUnit(BWAPI::UnitType unitType)
 		else if (!idleInfantryFacilities->empty()) // Assume it is infantry
 		{
 			facility = *idleInfantryFacilities->begin();
-			idleInfantryFacilities->erase(idleInfantryFacilities->begin());
+			idleInfantryFacilities->erase(facility);
 			//BWAPI::Unit facility = *idleInfantryFacilities->erase(idleInfantryFacilities->begin());
 		}
 	}

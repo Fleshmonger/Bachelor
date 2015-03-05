@@ -27,6 +27,7 @@ void Primary::onStart()
 			designateUnit(u);
 	}
 
+
 	// BWTA initialization
 	BWTA::readMap();
 	analyzed = false;
