@@ -24,34 +24,33 @@ BWAPI::TilePosition Architect::getBuildLocation(BWAPI::Unit * builder, BWAPI::Un
 	{
 		// Check in a spiral pattern.
 		bool horizontal = false;
-		int x = 0, y = 0, length = 1, step = 1;
-		BWAPI::TilePosition tile = desiredLocation;
-		while (length < Broodwar->mapWidth())
+		int dx = 0, dy = 0, length = 0, step = 1;
+		while (length < Broodwar->mapWidth() || length < Broodwar->mapHeight())
 		{
 			// Check the current tile.
+			BWAPI::TilePosition tile = BWAPI::TilePosition::TilePosition(desiredLocation.x() + dx, desiredLocation.y() + dy);
 			if (tile.isValid() && Broodwar->canBuildHere(builder, tile, buildingType))
 				return tile;
 			// Find next tile.
-			int n;
-			if (x == y && x == length)
+			if (dx == dy)
 				length++;
 			if (horizontal)
 			{
-				x += step;
+				dx += step;
 				//tile.x += step;
-				if (x == length * step)
+				if (dx == length * step)
 					horizontal = false;
 			}
 			else
 			{
-				y += step;
-				if (y == length * step)
+				dy += step;
+				if (dy == length * step)
 				{
 					horizontal = true;
 					step *= -1;
 				}
 			}
-			tile = BWAPI::TilePosition::TilePosition(x, y);
+
 		}
 	}
 	return BWAPI::TilePositions::None;

@@ -34,6 +34,8 @@ void Economist::update()
 	// Order more workers.
 	producer->trainUnit(PROTOSS_WORKER);
 
+	/*
+	// OLD: Moved to WORKERMANAGER
 	// Verify minerals.
 
 	// Harvest resources.
@@ -78,4 +80,5 @@ void Economist::update()
 			} // closure: exists
 		} // closure: while end
 	} // closure: has depot
+	*/
 }

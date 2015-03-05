@@ -29,7 +29,7 @@ void Reconnoiter::update()
 	if (target)
 	{
 		// Retrieving Scout
-		if ((!scout || !scout->exists()) && workerManager->getWorkers()->size() >= MINIMUM_WORKERS)
+		if ((!scout || !scout->exists()) && workerManager->workers() >= MINIMUM_WORKERS)
 			scout = workerManager->takeWorker();
 		// Commanding Scout
 		if (scout)

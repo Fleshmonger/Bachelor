@@ -21,6 +21,7 @@ void Primary::onStart()
 	//read map information into BWTA so terrain analysis can be done in another thread
 	BWTA::readMap();
 	analyzed = false;
+
 	/*
 	analysis_just_finished=false;
 
@@ -29,13 +30,14 @@ void Primary::onStart()
 	*/
 
 	// Managers Initialization
-	workerManager = new WorkerManager();
 	accountant = new Accountant();
+	workerManager = new WorkerManager();
 	reconnoiter = new Reconnoiter(workerManager);
 	producer = new Producer(accountant);
 	architect = new Architect(workerManager, accountant);
-	economist = new Economist(workerManager, producer, architect);
+	//economist = new Economist(workerManager, producer, architect);
 	armyManager = new ArmyManager(producer, architect);
+
 
 	// Designate all starting units.
 	BOOST_FOREACH (BWAPI::Unit * u, Broodwar->self()->getUnits())
@@ -113,8 +115,8 @@ void Primary::onFrame()
 	if (Broodwar->getFrameCount() == 0)
 	{
 		BWTA::analyze();
-		BOOST_FOREACH (BWAPI::Unit * mineral, BWTA::getStartLocation(BWAPI::Broodwar->self())->getStaticMinerals())
-			economist->addMineral(mineral);
+		BOOST_FOREACH(BWAPI::Unit * mineral, BWTA::getStartLocation(BWAPI::Broodwar->self())->getStaticMinerals())
+			workerManager->addMineral(mineral);
 	}
 	/*
 	// BWTA draw
@@ -138,10 +140,11 @@ void Primary::onFrame()
 
 	// Manager updatíng
 	producer->update();
-	architect->update();
-	reconnoiter->update();
-	economist->update();
+	//architect->update();
+	//reconnoiter->update();
+	//economist->update();
 	armyManager->update();
+	workerManager->update();
 
 	/*
   if (show_visibility_data)
@@ -195,86 +198,30 @@ void Primary::onFrame()
 
 void Primary::onSendText(std::string text)
 {
-	/*
-	// OLD
-	if (text=="/show bullets")
-	{
-		show_bullets = !show_bullets;
-	}
-	else if (text=="/show players")
-	{
-		showPlayers();
-	}
-	else if (text=="/show forces")
-	{
-		showForces();
-	}
-	else if (text=="/show visibility")
-	{
-		show_visibility_data=!show_visibility_data;
-	}
-	else if (text=="/analyze")
-	{
-		if (analyzed == false)
-		{
-			Broodwar->printf("Analyzing map... this may take a minute");
-			CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)AnalyzeThread, NULL, 0, NULL);
-		}
-	}
-	else
-	{
-		Broodwar->printf("You typed '%s'!",text.c_str());
-		Broodwar->sendText("%s",text.c_str());
-	}
-	*/
 }
 
 void Primary::onReceiveText(BWAPI::Player* player, std::string text)
 {
-	/*
-	Broodwar->printf("%s said '%s'", player->getName().c_str(), text.c_str());
-	*/
 }
 
 void Primary::onPlayerLeft(BWAPI::Player* player)
 {
-	/*
-	Broodwar->sendText("%s left the game.",player->getName().c_str());
-	*/
 }
 
 void Primary::onNukeDetect(BWAPI::Position target)
 {
-	/*
-	if (target!=Positions::Unknown)
-		Broodwar->printf("Nuclear Launch Detected at (%d,%d)",target.x(),target.y());
-	else
-		Broodwar->printf("Nuclear Launch Detected");
-	*/
 }
 
 void Primary::onUnitDiscover(BWAPI::Unit* unit)
 {
-	/*
-	if (!Broodwar->isReplay() && Broodwar->getFrameCount()>1)
-		Broodwar->sendText("A %s [%x] has been discovered at (%d,%d)",unit->getType().getName().c_str(),unit,unit->getPosition().x(),unit->getPosition().y());
-	*/
 }
 
 void Primary::onUnitEvade(BWAPI::Unit* unit)
 {
-	/*
-	if (!Broodwar->isReplay() && Broodwar->getFrameCount()>1)
-		Broodwar->sendText("A %s [%x] was last accessible at (%d,%d)",unit->getType().getName().c_str(),unit,unit->getPosition().x(),unit->getPosition().y());
-	*/
 }
 
 void Primary::onUnitShow(BWAPI::Unit* unit)
 {
-	/*
-	if (!Broodwar->isReplay() && Broodwar->getFrameCount()>1)
-		Broodwar->sendText("A %s [%x] has been spotted at (%d,%d)",unit->getType().getName().c_str(),unit,unit->getPosition().x(),unit->getPosition().y());
-	*/
 	if (isEnemy(unit))
 	{
 		// Add to knowledgebase.
@@ -287,16 +234,13 @@ void Primary::onUnitShow(BWAPI::Unit* unit)
 
 void Primary::onUnitHide(BWAPI::Unit* unit)
 {
-	/*
-	if (!Broodwar->isReplay() && Broodwar->getFrameCount()>1)
-		Broodwar->sendText("A %s [%x] was last seen at (%d,%d)",unit->getType().getName().c_str(),unit,unit->getPosition().x(),unit->getPosition().y());
-	*/
 }
 
 void Primary::onUnitCreate(BWAPI::Unit* unit)
 {
 	//DEBUG_OUT("Unit Create: " + unit->getType().getName());
 	// Monitor the construction of the unit.
+	/*
 	if (isOwned(unit))
 	{
 		BWAPI::UnitType unitType = unit->getType();
@@ -305,6 +249,7 @@ void Primary::onUnitCreate(BWAPI::Unit* unit)
 		else
 			producer->incompleteUnit(unit);
 	}
+	*/
 	/*
 	if (Broodwar->getFrameCount()>1)
 	{
@@ -328,6 +273,7 @@ void Primary::onUnitCreate(BWAPI::Unit* unit)
 
 void Primary::onUnitDestroy(BWAPI::Unit* unit)
 {
+	/*
 	//DEBUG_OUT("Unit Destroy: " + unit->getType().getName());
 	// Determine owner.
 	if (isOwned(unit))
@@ -341,8 +287,9 @@ void Primary::onUnitDestroy(BWAPI::Unit* unit)
 			{
 				// TODO What should happen here?
 				architect->setDepot(NULL);
-				economist->setDepot(NULL);
+				//economist->setDepot(NULL);
 				producer->setDepot(NULL);
+				workerManager->setDepot(NULL);
 			}
 			else if (unitType == BWAPI::UnitTypes::Protoss_Pylon)
 				architect->removePylon(unit);
@@ -394,19 +341,15 @@ void Primary::onUnitMorph(BWAPI::Unit* unit)
 
 void Primary::onUnitRenegade(BWAPI::Unit* unit)
 {
-	/*
-	if (!Broodwar->isReplay())
-		Broodwar->sendText("A %s [%x] is now owned by %s",unit->getType().getName().c_str(),unit,unit->getPlayer()->getName().c_str());
-	*/
 }
 
 void Primary::onSaveGame(std::string gameName)
 {
-	//Broodwar->printf("The game was saved to \"%s\".", gameName.c_str());
 }
 
 void Primary::onUnitComplete(BWAPI::Unit *unit)
 {
+	/*
 	//DEBUG_OUT("Unit Complete: " + unit->getType().getName());
 	// Determine owner.
 	if (isOwned(unit))
@@ -426,47 +369,6 @@ void Primary::onUnitComplete(BWAPI::Unit *unit)
 	*/
 }
 
-/*
-DWORD WINAPI AnalyzeThread()
-{
-	BWTA::analyze();
-	// self start location only available if the map has base locations
-	if (BWTA::getStartLocation(BWAPI::Broodwar->self()) != NULL)
-		home = BWTA::getStartLocation(BWAPI::Broodwar->self())->getRegion();
-	// enemy start location only available if Complete Map Information is enabled.
-	if (BWTA::getStartLocation(BWAPI::Broodwar->enemy()) != NULL)
-		enemy_base = BWTA::getStartLocation(BWAPI::Broodwar->enemy())->getRegion();
-	analyzed = true;
-	analysis_just_finished = true;
-	return 0;
-}
-*/
-
-// Delivers a unit to managers who needs it.
-// Assumes the unit is owned.
-void Primary::designateUnit(BWAPI::Unit * unit)
-{
-	// Determine type.
-	BWAPI::UnitType unitType = unit->getType();
-	if (unitType.isBuilding())
-	{
-		if (unitType.isResourceDepot())
-		{
-			architect->setDepot(unit);
-			economist->setDepot(unit);
-			producer->setDepot(unit);
-		}
-		else if (unitType == BWAPI::UnitTypes::Protoss_Pylon)
-			architect->addPylon(unit);
-		else if (unitType == BWAPI::UnitTypes::Protoss_Gateway) // TODO Make generic
-			producer->addInfantryFacility(unit);
-	}
-	else if (unitType.isWorker())
-		workerManager->addWorker(unit);
-	else // Must be a combat unit
-		armyManager->addUnit(unit);
-}
-
 // Returns true if the unit is owned and false otherwise.
 // TODO Move this to some unit monitor class?
 // TODO This can probably be done cheaper.
@@ -483,142 +385,28 @@ bool Primary::isEnemy(BWAPI::Unit * unit)
 	return Broodwar->self()->isEnemy(unit->getPlayer());
 }
 
-/*
-void Primary::drawStats()
+// Delivers a unit to managers who needs it.
+// Assumes the unit is owned.
+void Primary::designateUnit(BWAPI::Unit * unit)
 {
-	std::set<Unit*> myUnits = Broodwar->self()->getUnits();
-	Broodwar->drawTextScreen(5,0,"I have %d units:",myUnits.size());
-	std::map<UnitType, int> unitTypeCounts;
-	for(std::set<Unit*>::iterator i=myUnits.begin();i!=myUnits.end();i++)
+	// Determine type.
+	BWAPI::UnitType unitType = unit->getType();
+	if (unitType.isBuilding())
 	{
-		if (unitTypeCounts.find((*i)->getType())==unitTypeCounts.end())
+		if (unitType.isResourceDepot())
 		{
-			unitTypeCounts.insert(std::make_pair((*i)->getType(),0));
+			architect->setDepot(unit);
+			//economist->setDepot(unit);
+			producer->setDepot(unit);
+			workerManager->setDepot(unit);
 		}
-		unitTypeCounts.find((*i)->getType())->second++;
+		else if (unitType == BWAPI::UnitTypes::Protoss_Pylon)
+			architect->addPylon(unit);
+		else if (unitType == BWAPI::UnitTypes::Protoss_Gateway) // TODO Make generic
+			producer->addInfantryFacility(unit);
 	}
-	int line=1;
-	for(std::map<UnitType,int>::iterator i=unitTypeCounts.begin();i!=unitTypeCounts.end();i++)
-	{
-		Broodwar->drawTextScreen(5,16*line,"- %d %ss",(*i).second, (*i).first.getName().c_str());
-		line++;
-	}
+	else if (unitType.isWorker())
+		workerManager->addWorker(unit);
+	else // Must be a combat unit
+		armyManager->addUnit(unit);
 }
-
-void Primary::drawBullets()
-{
-	std::set<Bullet*> bullets = Broodwar->getBullets();
-	for(std::set<Bullet*>::iterator i=bullets.begin();i!=bullets.end();i++)
-	{
-		Position p=(*i)->getPosition();
-		double velocityX = (*i)->getVelocityX();
-		double velocityY = (*i)->getVelocityY();
-		if ((*i)->getPlayer()==Broodwar->self())
-		{
-			Broodwar->drawLineMap(p.x(),p.y(),p.x()+(int)velocityX,p.y()+(int)velocityY,Colors::Green);
-			Broodwar->drawTextMap(p.x(),p.y(),"\x07%s",(*i)->getType().getName().c_str());
-		}
-		else
-		{
-			Broodwar->drawLineMap(p.x(),p.y(),p.x()+(int)velocityX,p.y()+(int)velocityY,Colors::Red);
-			Broodwar->drawTextMap(p.x(),p.y(),"\x06%s",(*i)->getType().getName().c_str());
-		}
-	}
-}
-
-void Primary::drawVisibilityData()
-{
-	for(int x=0;x<Broodwar->mapWidth();x++)
-	{
-		for(int y=0;y<Broodwar->mapHeight();y++)
-		{
-			if (Broodwar->isExplored(x,y))
-			{
-			if (Broodwar->isVisible(x,y))
-				Broodwar->drawDotMap(x*32+16,y*32+16,Colors::Green);
-			else
-				Broodwar->drawDotMap(x*32+16,y*32+16,Colors::Blue);
-			}
-			else
-				Broodwar->drawDotMap(x*32+16,y*32+16,Colors::Red);
-		}
-	}
-}
-
-void Primary::drawTerrainData()
-{
-	//we will iterate through all the base locations, and draw their outlines.
-	for(std::set<BWTA::BaseLocation*>::const_iterator i=BWTA::getBaseLocations().begin();i!=BWTA::getBaseLocations().end();i++)
-	{
-		TilePosition p=(*i)->getTilePosition();
-		Position c=(*i)->getPosition();
-
-		//draw outline of center location
-		Broodwar->drawBox(CoordinateType::Map,p.x()*32,p.y()*32,p.x()*32+4*32,p.y()*32+3*32,Colors::Blue,false);
-
-		//draw a circle at each mineral patch
-		for(std::set<BWAPI::Unit*>::const_iterator j=(*i)->getStaticMinerals().begin();j!=(*i)->getStaticMinerals().end();j++)
-		{
-			Position q=(*j)->getInitialPosition();
-			Broodwar->drawCircle(CoordinateType::Map,q.x(),q.y(),30,Colors::Cyan,false);
-		}
-
-		//draw the outlines of vespene geysers
-		for(std::set<BWAPI::Unit*>::const_iterator j=(*i)->getGeysers().begin();j!=(*i)->getGeysers().end();j++)
-		{
-			TilePosition q=(*j)->getInitialTilePosition();
-			Broodwar->drawBox(CoordinateType::Map,q.x()*32,q.y()*32,q.x()*32+4*32,q.y()*32+2*32,Colors::Orange,false);
-		}
-
-		//if this is an island expansion, draw a yellow circle around the base location
-		if ((*i)->isIsland())
-			Broodwar->drawCircle(CoordinateType::Map,c.x(),c.y(),80,Colors::Yellow,false);
-	}
-
-	//we will iterate through all the regions and draw the polygon outline of it in green.
-	for(std::set<BWTA::Region*>::const_iterator r=BWTA::getRegions().begin();r!=BWTA::getRegions().end();r++)
-	{
-		BWTA::Polygon p=(*r)->getPolygon();
-		for(int j=0;j<(int)p.size();j++)
-		{
-			Position point1=p[j];
-			Position point2=p[(j+1) % p.size()];
-			Broodwar->drawLine(CoordinateType::Map,point1.x(),point1.y(),point2.x(),point2.y(),Colors::Green);
-		}
-	}
-
-	//we will visualize the chokepoints with red lines
-	for(std::set<BWTA::Region*>::const_iterator r=BWTA::getRegions().begin();r!=BWTA::getRegions().end();r++)
-	{
-		for(std::set<BWTA::Chokepoint*>::const_iterator c=(*r)->getChokepoints().begin();c!=(*r)->getChokepoints().end();c++)
-		{
-			Position point1=(*c)->getSides().first;
-			Position point2=(*c)->getSides().second;
-			Broodwar->drawLine(CoordinateType::Map,point1.x(),point1.y(),point2.x(),point2.y(),Colors::Red);
-		}
-	}
-}
-
-void Primary::showPlayers()
-{
-	std::set<Player*> players=Broodwar->getPlayers();
-	for(std::set<Player*>::iterator i=players.begin();i!=players.end();i++)
-	{
-		Broodwar->printf("Player [%d]: %s is in force: %s",(*i)->getID(),(*i)->getName().c_str(), (*i)->getForce()->getName().c_str());
-	}
-}
-
-void Primary::showForces()
-{
-	std::set<Force*> forces=Broodwar->getForces();
-	for(std::set<Force*>::iterator i=forces.begin();i!=forces.end();i++)
-	{
-		std::set<Player*> players=(*i)->getPlayers();
-		Broodwar->printf("Force %s has the following players:",(*i)->getName().c_str());
-		for(std::set<Player*>::iterator j=players.begin();j!=players.end();j++)
-		{
-			Broodwar->printf("  - Player [%d]: %s",(*j)->getID(),(*j)->getName().c_str());
-		}
-	}
-}
-*/
