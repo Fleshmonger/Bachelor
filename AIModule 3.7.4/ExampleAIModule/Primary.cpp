@@ -11,13 +11,6 @@ void Primary::onStart()
 {
 	Broodwar->enableFlag(Flag::UserInput);
 
-	// Debugging display.
-	//DEBUG_SCREEN(200, 0, "FPS: %d", Broodwar->getFPS());
-	//DEBUG_SCREEN(200, 20, "Average FPS: %f", Broodwar->getAverageFPS());
-	//DEBUG_SCREEN(200, 20, "Unallocated Minerals: %d", accountant->minerals());
-	//DEBUG_SCREEN(200, 20, "Scheduled Gateways: %d", architect->scheduled(BWAPI::UnitTypes::Protoss_Gateway));
-	//DEBUG_SCREEN(200, 40, "APM: %d", Broodwar->getAPM());
-
 	//read map information into BWTA so terrain analysis can be done in another thread
 	BWTA::readMap();
 	analyzed = false;
@@ -112,6 +105,13 @@ void Primary::onEnd(bool isWinner)
 
 void Primary::onFrame()
 {
+	// Debugging display.
+	DEBUG_SCREEN(200, 0, "FPS: %d", Broodwar->getFPS());
+	//DEBUG_SCREEN(200, 20, "Average FPS: %f", Broodwar->getAverageFPS());
+	//DEBUG_SCREEN(200, 20, "Unallocated Minerals: %d", accountant->minerals());
+	//DEBUG_SCREEN(200, 20, "Scheduled Gateways: %d", architect->scheduled(BWAPI::UnitTypes::Protoss_Gateway));
+	DEBUG_SCREEN(200, 20, "Workers: %d", workerManager->workers());
+	DEBUG_SCREEN(200, 40, "APM: %d", Broodwar->getAPM());
 	if (Broodwar->getFrameCount() == 0)
 	{
 		BWTA::analyze();

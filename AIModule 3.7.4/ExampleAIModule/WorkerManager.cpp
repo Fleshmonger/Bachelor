@@ -1,11 +1,27 @@
 #include "WorkerManager.h"
 
+// Private
+
+void WorkerManager::insertField(int amount, BWAPI::Unit * mineral)
+{
+	fields.push_back(std::make_pair(amount, mineral));
+	std::push_heap(fields.begin(), fields.end(), Field_Comp());
+}
+
+void WorkerManager::popField()
+{
+	std::pop_heap(fields.begin(), fields.end(), Field_Comp());
+	fields.pop_back();
+}
+
+// Public
+
 WorkerManager::WorkerManager()
 {
 	// Local
 	depot = NULL;
 	fields = std::vector<Field>();
-	std::make_heap(fields.begin(), fields.end()); // Possibly unneeded?
+	std::make_heap(fields.begin(), fields.end(), Field_Comp()); // Possibly unneeded?
 	idle = std::set<Unit*>();
 	harvesters = std::map<BWAPI::Unit*, BWAPI::Unit*>();
 	//fields = new std::priority_queue<Field, std::vector<Field>, Field_Comp>();
@@ -25,8 +41,7 @@ void WorkerManager::setDepot(BWAPI::Unit * depot)
 // Adds a harvestable mineral to the list of fields.
 void WorkerManager::addMineral(BWAPI::Unit * mineral)
 {
-	fields.push_back(std::make_pair(0, mineral));
-	std::push_heap(fields.begin(), fields.end());
+	insertField(0, mineral);
 }
 
 // Adds a new worker and assigns it.
@@ -60,10 +75,8 @@ bool WorkerManager::assignWorker(BWAPI::Unit * worker)
 			// Update the container.
 			int amount = field.first + 1;
 			BWAPI::Unit * mineral = field.second;
-			std::pop_heap(fields.begin(), fields.end());
-			fields.pop_back();
-			fields.push_back(std::make_pair(amount, mineral));
-			std::push_heap(fields.begin(), fields.end());
+			popField();
+			insertField(amount, mineral);
 			return true;
 		}
 	}
@@ -145,10 +158,10 @@ void WorkerManager::update()
 			if (mineral->exists())
 				++it;
 			else
-				it = fields.erase(it);
+				it = fields.erase(it); // TODO Does this ruin the heap sorting?
 		}
 	}
-
+	// Harvest
 	if (depot)
 	{
 		// Verify harvesters.

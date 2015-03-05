@@ -10,9 +10,11 @@ class WorkerManager
 {
 	// Mineral Fields
 	typedef std::pair<int, BWAPI::Unit*> Field;
-	struct Field_Comp{
-		bool operator()(Field const & lhs, Field const & rhs){
-			return lhs.first < rhs.first;
+	struct Field_Comp
+	{
+		bool operator()(const Field & lhs, const Field & rhs) const
+		{
+			return lhs.first > rhs.first;
 		}
 	};
 	private:
@@ -23,6 +25,9 @@ class WorkerManager
 		std::set<BWAPI::Unit*> idle;
 		std::map<BWAPI::Unit*, BWAPI::Unit*> harvesters;
 		//std::priority_queue<Field, std::vector<Field>, Field_Comp> * fields;
+
+		void insertField(int amount, BWAPI::Unit * mineral);
+		void popField();
 	public:
 		WorkerManager();
 		~WorkerManager();
