@@ -15,10 +15,10 @@ private:
 	WorkerManager * workerManager;
 	Accountant * accountant;
 	// Local
-	std::multimap < BWAPI::UnitType, std::pair<BWAPI::Unit*, BWAPI::TilePosition> >  * buildSchedule;
-	std::multimap < BWAPI::UnitType, BWAPI::Unit* > * constructSchedule;
-	std::set<Unit*> * pylons;
 	BWAPI::Unit * depot;
+	std::set<Unit*> * pylons;
+	std::multimap < BWAPI::UnitType, BWAPI::Unit* > * constructSchedule;
+	std::multimap < BWAPI::UnitType, std::pair<BWAPI::Unit*, BWAPI::TilePosition> >  * buildSchedule;
 public:
 	Architect(WorkerManager * workerManager, Accountant * accountant);
 	~Architect();

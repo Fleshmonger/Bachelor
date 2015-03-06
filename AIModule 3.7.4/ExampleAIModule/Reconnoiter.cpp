@@ -4,6 +4,9 @@ Reconnoiter::Reconnoiter(WorkerManager * workerManager)
 {
 	// Managers
 	this->workerManager = workerManager;
+	// Local
+	scout = NULL;
+	target = BWAPI::TilePositions::None;
 }
 
 // Unused deconstructor

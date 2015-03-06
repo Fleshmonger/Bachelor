@@ -6,9 +6,10 @@ Architect::Architect(WorkerManager * workerManager, Accountant * accountant)
 	this->workerManager = workerManager;
 	this->accountant = accountant;
 	// Local
-	buildSchedule = new std::multimap < BWAPI::UnitType, std::pair<BWAPI::Unit*, BWAPI::TilePosition> >;
-	constructSchedule = new std::multimap < BWAPI::UnitType, BWAPI::Unit* >;
+	depot = NULL;
 	pylons = new std::set<Unit*>();
+	constructSchedule = new std::multimap < BWAPI::UnitType, BWAPI::Unit* >;
+	buildSchedule = new std::multimap < BWAPI::UnitType, std::pair<BWAPI::Unit*, BWAPI::TilePosition> >;
 }
 
 //Unused deconstructor
@@ -87,8 +88,7 @@ bool Architect::scheduleBuild(BWAPI::UnitType buildingType)
 					accountant->allocUnit(buildingType);
 					return true;
 				} // Closure: location
-				else
-					workerManager->addWorker(builder);
+				workerManager->addWorker(builder);
 			} // Closure: builder.
 		} // Closure: affordable.
 	} // Closure: is building.

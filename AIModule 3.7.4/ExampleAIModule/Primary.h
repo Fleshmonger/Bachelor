@@ -8,7 +8,7 @@
 #include "Reconnoiter.h"
 #include "Producer.h"
 #include "Architect.h"
-//#include "Economist.h"
+#include "Economist.h"
 #include "ArmyManager.h"
 
 using namespace BWAPI;
@@ -33,7 +33,7 @@ private:
 	WorkerManager * workerManager;
 	Architect * architect;
 	Reconnoiter * reconnoiter;
-	//Economist * economist;
+	Economist * economist;
 	ArmyManager * armyManager;
 	// Local
 	bool analyzed;

@@ -5,6 +5,7 @@ Producer::Producer(Accountant * accountant)
 	// Managers
 	this->accountant = accountant;
 	// Local
+	depot = NULL;
 	incompleteUnits = new std::set<Unit*>();
 	infantryFacilities = new std::set<Unit*>();
 	idleInfantryFacilities = new std::set<Unit*>();

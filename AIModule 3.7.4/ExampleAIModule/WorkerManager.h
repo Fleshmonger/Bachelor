@@ -1,10 +1,11 @@
 #pragma once
 #include <BWAPI.h>
 #include <queue>
+#include <boost/foreach.hpp>
 
 using namespace BWAPI;
 
-const int MAX_FIELD_HARVESTERS = 3; // Maximum harvesters on a single mineral field.
+const int MAX_FIELD_HARVESTERS = 10; // Maximum harvesters on a single mineral field.
 
 class WorkerManager
 {
@@ -18,27 +19,26 @@ class WorkerManager
 		}
 	};
 	private:
-		std::set<int> test;
-		// Local
 		BWAPI::Unit * depot;
 		std::vector<Field> fields;
 		std::set<BWAPI::Unit*> idle;
 		std::map<BWAPI::Unit*, BWAPI::Unit*> harvesters;
-		//std::priority_queue<Field, std::vector<Field>, Field_Comp> * fields;
 
 		void insertField(int amount, BWAPI::Unit * mineral);
 		void popField();
+		//int removeField(BWAPI::Unit * mineral);
 	public:
 		WorkerManager();
 		~WorkerManager();
+		int testHarvesters();
 		void setDepot(BWAPI::Unit * depot);
+		int harvesterMax();
+		int workers();
 		void addWorker(BWAPI::Unit * worker);
 		void removeWorker(BWAPI::Unit * worker);
-		bool assignWorker(BWAPI::Unit * worker);
-		int workers();
-		int harvesterMax();
 		//std::set<Unit*> * getWorkers();
-		void addMineral(BWAPI::Unit * mineral);
+		bool assignWorker(BWAPI::Unit * worker);
 		BWAPI::Unit * takeWorker();
+		void addMineral(BWAPI::Unit * mineral);
 		void update();
 };

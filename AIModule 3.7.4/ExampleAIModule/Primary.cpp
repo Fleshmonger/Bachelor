@@ -28,17 +28,19 @@ void Primary::onStart()
 	reconnoiter = new Reconnoiter(workerManager);
 	producer = new Producer(accountant);
 	architect = new Architect(workerManager, accountant);
-	//economist = new Economist(workerManager, producer, architect);
+	economist = new Economist(workerManager, producer, architect);
 	armyManager = new ArmyManager(producer, architect);
 
 
 	// Designate all starting units.
+	// This is already done; unitComplete is called on all starting units.
+	/*
 	BOOST_FOREACH (BWAPI::Unit * u, Broodwar->self()->getUnits())
 	{
 		if (isOwned(u))
 			designateUnit(u);
 	}
-
+	*/
   /*
   // OLD
   if (Broodwar->isReplay())
@@ -111,7 +113,8 @@ void Primary::onFrame()
 	//DEBUG_SCREEN(200, 20, "Unallocated Minerals: %d", accountant->minerals());
 	//DEBUG_SCREEN(200, 20, "Scheduled Gateways: %d", architect->scheduled(BWAPI::UnitTypes::Protoss_Gateway));
 	DEBUG_SCREEN(200, 20, "Workers: %d", workerManager->workers());
-	DEBUG_SCREEN(200, 40, "APM: %d", Broodwar->getAPM());
+	DEBUG_SCREEN(200, 40, "Harvesters: %d", workerManager->testHarvesters());
+	DEBUG_SCREEN(200, 60, "APM: %d", Broodwar->getAPM());
 	if (Broodwar->getFrameCount() == 0)
 	{
 		BWTA::analyze();
@@ -140,9 +143,9 @@ void Primary::onFrame()
 
 	// Manager updatíng
 	producer->update();
-	//architect->update();
-	//reconnoiter->update();
-	//economist->update();
+	architect->update();
+	reconnoiter->update();
+	economist->update();
 	armyManager->update();
 	workerManager->update();
 
@@ -240,7 +243,6 @@ void Primary::onUnitCreate(BWAPI::Unit* unit)
 {
 	//DEBUG_OUT("Unit Create: " + unit->getType().getName());
 	// Monitor the construction of the unit.
-	/*
 	if (isOwned(unit))
 	{
 		BWAPI::UnitType unitType = unit->getType();
@@ -249,31 +251,10 @@ void Primary::onUnitCreate(BWAPI::Unit* unit)
 		else
 			producer->incompleteUnit(unit);
 	}
-	*/
-	/*
-	if (Broodwar->getFrameCount()>1)
-	{
-		if (!Broodwar->isReplay())
-			Broodwar->sendText("A %s [%x] has been created at (%d,%d)",unit->getType().getName().c_str(),unit,unit->getPosition().x(),unit->getPosition().y());
-		else
-		{
-			// if we are in a replay, then we will print out the build order
-			// (just of the buildings, not the units).
-			if (unit->getType().isBuilding() && unit->getPlayer()->isNeutral()==false)
-			{
-				int seconds=Broodwar->getFrameCount()/24;
-				int minutes=seconds/60;
-				seconds%=60;
-				Broodwar->sendText("%.2d:%.2d: %s creates a %s",minutes,seconds,unit->getPlayer()->getName().c_str(),unit->getType().getName().c_str());
-			}
-		}
-	}
-	*/
 }
 
 void Primary::onUnitDestroy(BWAPI::Unit* unit)
 {
-	/*
 	//DEBUG_OUT("Unit Destroy: " + unit->getType().getName());
 	// Determine owner.
 	if (isOwned(unit))
@@ -313,10 +294,6 @@ void Primary::onUnitDestroy(BWAPI::Unit* unit)
 		else
 			armyManager->removeEnemyTroop(unit);
 	}
-	/*
-	if (!Broodwar->isReplay() && Broodwar->getFrameCount()>1)
-		Broodwar->sendText("A %s [%x] has been destroyed at (%d,%d)",unit->getType().getName().c_str(),unit,unit->getPosition().x(),unit->getPosition().y());
-	*/
 }
 
 void Primary::onUnitMorph(BWAPI::Unit* unit)
@@ -349,8 +326,7 @@ void Primary::onSaveGame(std::string gameName)
 
 void Primary::onUnitComplete(BWAPI::Unit *unit)
 {
-	/*
-	//DEBUG_OUT("Unit Complete: " + unit->getType().getName());
+	//DEBUG_OUT("Unit Complete: %s", unit->getType().getName());
 	// Determine owner.
 	if (isOwned(unit))
 	{
@@ -363,10 +339,6 @@ void Primary::onUnitComplete(BWAPI::Unit *unit)
 		// Designate the new unit.
 		designateUnit(unit);
 	}
-	/*
-	if (!Broodwar->isReplay() && Broodwar->getFrameCount()>1)
-		Broodwar->sendText("A %s [%x] has been completed at (%d,%d)", unit->getType().getName().c_str(), unit, unit->getPosition().x(), unit->getPosition().y());
-	*/
 }
 
 // Returns true if the unit is owned and false otherwise.

@@ -14,14 +14,12 @@ private:
 	// Managers
 	WorkerManager * workerManager;
 	Producer * producer;
-	Architect * architect; // This is currently unused! Planned for assimilator construction.
+	Architect * architect; // TODO This is currently unused! Planned for assimilator construction.
 	// Local
-	std::set<BWAPI::Unit*> * minerals;
-	BWAPI::Unit * depot;
+	//BWAPI::Unit * depot;
 public:
 	Economist(WorkerManager * workerManager, Producer * producer, Architect * architect);
 	~Economist();
-	void addMineral(BWAPI::Unit * mineral);
-	void setDepot(BWAPI::Unit * depot);
+	//void setDepot(BWAPI::Unit * depot);
 	void update();
 };
