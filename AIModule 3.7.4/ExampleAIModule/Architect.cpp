@@ -67,8 +67,6 @@ bool Architect::scheduleBuild(BWAPI::UnitType buildingType)
 		if (accountant->isAffordable(buildingType))
 		//if (buildingType.mineralPrice() <= Broodwar->self()->minerals())
 		{
-			Broodwar->printf("We can afford %s.", buildingType.getName().c_str());
-			Broodwar->printf("It costs %d and we have %d.", buildingType.mineralPrice(), accountant->minerals());
 			BWAPI::Unit * builder = workerManager->takeWorker();
 			if (builder)
 			{

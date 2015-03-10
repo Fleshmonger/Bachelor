@@ -1,14 +1,13 @@
 #include "Producer.h"
 
-Producer::Producer(Accountant * accountant)
+Producer::Producer(Accountant * accountant) :
+	accountant(accountant),
+	depot(NULL),
+	scheduledUnits(std::multiset<BWAPI::UnitType>()),
+	incompleteUnits(std::set<BWAPI::Unit*>()),
+	infantryFacilities(std::set<BWAPI::Unit*>()),
+	idleInfantryFacilities(std::set<BWAPI::Unit*>())
 {
-	// Managers
-	this->accountant = accountant;
-	// Local
-	depot = NULL;
-	incompleteUnits = new std::set<Unit*>();
-	infantryFacilities = new std::set<Unit*>();
-	idleInfantryFacilities = new std::set<Unit*>();
 }
 
 // Unused deconstructor
@@ -33,10 +32,10 @@ bool Producer::trainUnit(BWAPI::UnitType unitType)
 					depot->isCompleted())
 					facility = depot;
 			}
-			else if (!idleInfantryFacilities->empty()) // Assume it is infantry
+			else if (!idleInfantryFacilities.empty()) // Assume it is infantry
 			{
-				facility = *idleInfantryFacilities->begin();
-				idleInfantryFacilities->erase(facility);
+				facility = *idleInfantryFacilities.begin();
+				idleInfantryFacilities.erase(facility);
 			}
 		}
 		// Train the unit at the found facility (if any).
@@ -44,6 +43,7 @@ bool Producer::trainUnit(BWAPI::UnitType unitType)
 		{
 			facility->train(unitType);
 			accountant->allocUnit(unitType);
+			scheduledUnits.insert(unitType);
 			return true;
 		}
 	}
@@ -53,37 +53,33 @@ bool Producer::trainUnit(BWAPI::UnitType unitType)
 // Add a unit in production to the incomplete pool.
 void Producer::incompleteUnit(BWAPI::Unit * unit)
 {
-	incompleteUnits->insert(unit);
-	accountant->deallocUnit(unit->getType());
+	BWAPI::UnitType unitType = unit->getType();
+	if (scheduledUnits.count(unitType) > 0)
+	{
+		scheduledUnits.erase(unitType);
+		incompleteUnits.insert(unit);
+		accountant->deallocUnit(unitType);
+	}
 }
 
 // Remove a complete unit from the incomplete pool.
 void Producer::completeUnit(BWAPI::Unit * unit)
 {
-	incompleteUnits->erase(unit);
+	incompleteUnits.erase(unit);
 }
-
-/*
-// Returns the amount of designated infantry constructing facilities.
-// Move to some base building controller (Architect?) which monitors structures.
-int Producer::totalInfantryFacilities()
-{
-return infantryFacilities->size();
-}
-*/
 
 // Designates an infantry constructing facility.
 void Producer::addInfantryFacility(BWAPI::Unit * facility)
 {
-	infantryFacilities->insert(facility);
-	idleInfantryFacilities->insert(facility);
+	infantryFacilities.insert(facility);
+	idleInfantryFacilities.insert(facility);
 }
 
 // Undesignates an infantry constructing facility.
 void Producer::removeInfantryFacility(BWAPI::Unit * facility)
 {
-	infantryFacilities->erase(facility);
-	idleInfantryFacilities->erase(facility);
+	infantryFacilities.erase(facility);
+	idleInfantryFacilities.erase(facility);
 }
 
 // Designates the current worker producing facility.
@@ -96,33 +92,36 @@ void Producer::setDepot(BWAPI::Unit * depot)
 // Updates the current pool of idle infantry facilities.
 void Producer::update()
 {
+	// TODO check scheduled units?
+
 	// Remove invalid unit constructions
-	std::set<Unit*>::iterator it = incompleteUnits->begin();
-	while (it != incompleteUnits->end())
+	std::set<Unit*>::iterator it = incompleteUnits.begin();
+	while (it != incompleteUnits.end())
 	{
 		BWAPI::Unit * unit = *it;
 		if (unit->exists() && unit->isBeingConstructed())
 			++it;
 		else
-			it = incompleteUnits->erase(it);
+			it = incompleteUnits.erase(it);
 	}
+
 	// Find all idle infantry facilities and remove invalid ones.
 	// TODO: Search only non-idle facilities.
-	it = infantryFacilities->begin();
-	while (it != infantryFacilities->end())
+	it = infantryFacilities.begin();
+	while (it != infantryFacilities.end())
 	{
 		BWAPI::Unit * facility = *it;
 		if (facility && facility->exists())
 		{
 			if (facility->isCompleted() && // This should be unecessary
 				facility->isIdle())
-				idleInfantryFacilities->insert(facility);
+				idleInfantryFacilities.insert(facility);
 			++it;
 		}
 		else
 		{
-			it = infantryFacilities->erase(it);
-			idleInfantryFacilities->erase(facility);
+			it = infantryFacilities.erase(it);
+			idleInfantryFacilities.erase(facility);
 		}
 
 	}

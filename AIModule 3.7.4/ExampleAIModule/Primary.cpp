@@ -236,6 +236,7 @@ void Primary::onUnitHide(BWAPI::Unit* unit)
 {
 }
 
+// Called on initially created units
 void Primary::onUnitCreate(BWAPI::Unit* unit)
 {
 	//DEBUG_OUT("Unit Create: " + unit->getType().getName());
