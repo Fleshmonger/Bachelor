@@ -20,33 +20,34 @@ Producer::~Producer()
 // Returns true if it succeeds and false otherwise.
 bool Producer::trainUnit(BWAPI::UnitType unitType)
 {
-	// Find the appropriate facility.
-	BWAPI::Unit * facility = NULL;
-	if (accountant->isAffordable(unitType) && !unitType.isBuilding())
+	if (!unitType.isBuilding())
 	{
-		if (unitType.isWorker())
+		// Find the appropriate facility.
+		BWAPI::Unit * facility = NULL;
+		if (accountant->isAffordable(unitType))
 		{
-			if (depot &&
-				depot->isIdle() &&
-				depot->isCompleted())
-				facility = depot;
+			if (unitType.isWorker())
+			{
+				if (depot &&
+					depot->isIdle() &&
+					depot->isCompleted())
+					facility = depot;
+			}
+			else if (!idleInfantryFacilities->empty()) // Assume it is infantry
+			{
+				facility = *idleInfantryFacilities->begin();
+				idleInfantryFacilities->erase(facility);
+			}
 		}
-		else if (!idleInfantryFacilities->empty()) // Assume it is infantry
+		// Train the unit at the found facility (if any).
+		if (facility)
 		{
-			facility = *idleInfantryFacilities->begin();
-			idleInfantryFacilities->erase(facility);
-			//BWAPI::Unit facility = *idleInfantryFacilities->erase(idleInfantryFacilities->begin());
+			facility->train(unitType);
+			accountant->allocUnit(unitType);
+			return true;
 		}
 	}
-	// Train the unit at the found facility (if any).
-	if (facility)
-	{
-		facility->train(unitType);
-		accountant->allocUnit(unitType);
-		return true;
-	}
-	else
-		return false;
+	return false;
 }
 
 // Add a unit in production to the incomplete pool.

@@ -30,7 +30,6 @@ class WorkerManager
 	public:
 		WorkerManager();
 		~WorkerManager();
-		int testHarvesters();
 		void setDepot(BWAPI::Unit * depot);
 		int harvesterMax();
 		int workers();

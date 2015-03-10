@@ -109,12 +109,11 @@ void Primary::onFrame()
 {
 	// Debugging display.
 	DEBUG_SCREEN(200, 0, "FPS: %d", Broodwar->getFPS());
-	//DEBUG_SCREEN(200, 20, "Average FPS: %f", Broodwar->getAverageFPS());
-	//DEBUG_SCREEN(200, 20, "Unallocated Minerals: %d", accountant->minerals());
-	//DEBUG_SCREEN(200, 20, "Scheduled Gateways: %d", architect->scheduled(BWAPI::UnitTypes::Protoss_Gateway));
-	DEBUG_SCREEN(200, 20, "Workers: %d", workerManager->workers());
-	DEBUG_SCREEN(200, 40, "Harvesters: %d", workerManager->testHarvesters());
-	DEBUG_SCREEN(200, 60, "APM: %d", Broodwar->getAPM());
+	DEBUG_SCREEN(200, 20, "APM: %d", Broodwar->getAPM());
+	//DEBUG_SCREEN(200, 40, "Average FPS: %f", Broodwar->getAverageFPS());
+	//DEBUG_SCREEN(200, 40, "Unallocated Minerals: %d", accountant->minerals());
+	//DEBUG_SCREEN(200, 40, "Scheduled Gateways: %d", architect->scheduled(BWAPI::UnitTypes::Protoss_Gateway));
+	//DEBUG_SCREEN(200, 40, "Workers: %d", workerManager->workers());
 	if (Broodwar->getFrameCount() == 0)
 	{
 		BWTA::analyze();

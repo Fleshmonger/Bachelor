@@ -30,15 +30,6 @@ WorkerManager::~WorkerManager()
 {
 }
 
-//Test function
-int WorkerManager::testHarvesters()
-{
-	int n = 0;
-	BOOST_FOREACH(Field f, fields)
-		n += f.first;
-	return n;
-}
-
 // Designates the current depot for returning cargo
 void WorkerManager::setDepot(BWAPI::Unit * depot)
 {
@@ -118,7 +109,6 @@ bool WorkerManager::assignWorker(BWAPI::Unit * worker)
 		Field field = fields.front();
 		if (field.first < MAX_FIELD_HARVESTERS)
 		{
-			Broodwar->printf("Worker was succesfully assigned!");
 			// Add the worker to harvesters.
 			BWAPI::Unit * mineral = field.second;
 			harvesters.insert(std::make_pair(worker, mineral));
@@ -137,6 +127,7 @@ bool WorkerManager::assignWorker(BWAPI::Unit * worker)
 // TODO: Remove code repetition.
 BWAPI::Unit * WorkerManager::takeWorker()
 {
+	/*
 	if (idle.size() > 0)
 	{
 		BWAPI::Unit * worker = *idle.begin();
@@ -152,8 +143,7 @@ BWAPI::Unit * WorkerManager::takeWorker()
 	}
 	else
 		return NULL;
-
-	/*
+	*/
 	// Find the worker in the idle pool.
 	{
 		std::set<BWAPI::Unit*>::iterator it = idle.begin(), end = idle.end();
@@ -190,7 +180,6 @@ BWAPI::Unit * WorkerManager::takeWorker()
 	}
 	// No available workers was found.
 	return NULL;
-	*/
 }
 
 // Gathers resources with all available workers.
