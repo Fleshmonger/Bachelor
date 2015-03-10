@@ -29,7 +29,7 @@ void Primary::onStart()
 	producer = new Producer(accountant);
 	architect = new Architect(workerManager, accountant);
 	economist = new Economist(workerManager, producer, architect);
-	armyManager = new ArmyManager(producer, architect);
+	armyManager = new ArmyManager(workerManager, producer, architect);
 
 
 	// Designate all starting units.
@@ -216,6 +216,8 @@ void Primary::onNukeDetect(BWAPI::Position target)
 
 void Primary::onUnitDiscover(BWAPI::Unit* unit)
 {
+	if (isEnemy(unit))
+		armyManager->addEnemy(unit);
 }
 
 void Primary::onUnitEvade(BWAPI::Unit* unit)
@@ -224,14 +226,6 @@ void Primary::onUnitEvade(BWAPI::Unit* unit)
 
 void Primary::onUnitShow(BWAPI::Unit* unit)
 {
-	if (isEnemy(unit))
-	{
-		// Add to knowledgebase.
-		if (unit->getType().isBuilding())
-			armyManager->addEnemyBuilding(unit);
-		else
-			armyManager->addEnemyTroop(unit);
-	}
 }
 
 void Primary::onUnitHide(BWAPI::Unit* unit)
@@ -286,13 +280,7 @@ void Primary::onUnitDestroy(BWAPI::Unit* unit)
 		// TODO if unit was incomplete, remove it from the producer.
 	}
 	else if (isEnemy(unit))
-	{
-		// Remove the enemy from the knowledge base.
-		if (unit->getType().isBuilding())
-			armyManager->removeEnemyBuilding(unit);
-		else
-			armyManager->removeEnemyTroop(unit);
-	}
+		armyManager->removeEnemy(unit);
 }
 
 void Primary::onUnitMorph(BWAPI::Unit* unit)

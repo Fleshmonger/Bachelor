@@ -9,8 +9,8 @@ const int MAX_FIELD_HARVESTERS = 10; // Maximum harvesters on a single mineral f
 
 class WorkerManager
 {
-	// Mineral Fields
 	typedef std::pair<int, BWAPI::Unit*> Field;
+
 	struct Field_Comp
 	{
 		bool operator()(const Field & lhs, const Field & rhs) const
@@ -18,6 +18,7 @@ class WorkerManager
 			return lhs.first > rhs.first;
 		}
 	};
+
 	private:
 		BWAPI::Unit * depot;
 		std::vector<Field> fields;
@@ -27,6 +28,7 @@ class WorkerManager
 		void insertField(int amount, BWAPI::Unit * mineral);
 		void popField();
 		//int removeField(BWAPI::Unit * mineral);
+
 	public:
 		WorkerManager();
 		~WorkerManager();

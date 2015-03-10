@@ -1,6 +1,7 @@
 #pragma once
 #include <BWAPI.h>
 #include <boost/foreach.hpp>
+#include "workerManager.h"
 #include "producer.h"
 #include "architect.h"
 
@@ -14,20 +15,21 @@ class ArmyManager
 {
 private:
 	// Managers
+	WorkerManager * workerManager;
 	Producer * producer;
 	Architect * architect;
+
 	// Local
-	std::set<BWAPI::Unit*> * troops, *enemyTroops, *enemyBuildings;
-	std::map<BWAPI::Unit*, BWAPI::Position> * enemyPositions;
+	std::set<BWAPI::Unit*> troops, enemyTroops, enemyBuildings;
+	std::map<BWAPI::Unit*, BWAPI::Position> enemyPositions;
+
 public:
-	ArmyManager(Producer * producer, Architect * architect);
+	ArmyManager(WorkerManager * workerManager, Producer * producer, Architect * architect);
 	~ArmyManager();
-	void addEnemyTroop(BWAPI::Unit * unit);
-	void removeEnemyTroop(BWAPI::Unit * unit);
-	void addEnemyBuilding(BWAPI::Unit * unit);
-	void removeEnemyBuilding(BWAPI::Unit * unit);
+	void addEnemy(BWAPI::Unit * unit);
+	void removeEnemy(BWAPI::Unit * unit);
+	void setEnemyPos(BWAPI::Unit * unit);
 	void addUnit(BWAPI::Unit * unit);
 	void removeUnit(BWAPI::Unit * unit);
 	void update();
-	void updatePos(BWAPI::Unit * unit); // Rename this
 };

@@ -1,15 +1,14 @@
 #include "ArmyManager.h"
 
-ArmyManager::ArmyManager(Producer * producer, Architect * architect)
+ArmyManager::ArmyManager(WorkerManager * workerManager, Producer * producer, Architect * architect) :
+	workerManager(workerManager),
+	producer(producer),
+	architect(architect),
+	troops(std::set<BWAPI::Unit*>()),
+	enemyTroops(std::set<BWAPI::Unit*>()),
+	enemyBuildings(std::set<Unit*>()),
+	enemyPositions(std::map<BWAPI::Unit*, BWAPI::Position>())
 {
-	// Managers
-	this->producer = producer;
-	this->architect = architect;
-	// Local
-	troops = new std::set<Unit*>();
-	enemyTroops = new std::set<Unit*>();
-	enemyBuildings = new std::set<Unit*>();
-	enemyPositions = new std::map<BWAPI::Unit*, BWAPI::Position>();
 }
 
 // Unused deconstructor
@@ -17,90 +16,75 @@ ArmyManager::~ArmyManager()
 {
 }
 
-void ArmyManager::addEnemyBuilding(BWAPI::Unit * unit)
+// Adds an enemy unit from the knowledge pool.
+void ArmyManager::addEnemy(BWAPI::Unit * unit)
 {
-	enemyBuildings->insert(unit);
-	enemyPositions->insert(std::make_pair(unit, unit->getPosition()));
+	if (unit->getType().isBuilding())
+		enemyBuildings.insert(unit);
+	else
+		enemyTroops.insert(unit);
+	setEnemyPos(unit);
 }
 
-void ArmyManager::removeEnemyBuilding(BWAPI::Unit * unit)
+// Removes an enemy unit from the knowledge pool.
+void ArmyManager::removeEnemy(BWAPI::Unit * unit)
 {
-	enemyBuildings->erase(unit);
-	enemyPositions->erase(unit);
+	if (unit->getType().isBuilding())
+		enemyBuildings.erase(unit);
+	else
+		enemyTroops.erase(unit);
+	enemyPositions.erase(unit);
 }
 
-void ArmyManager::addEnemyTroop(BWAPI::Unit * unit)
+// Updates the position of a visible enemy.
+void ArmyManager::setEnemyPos(BWAPI::Unit * unit)
 {
-	enemyTroops->insert(unit);
-	enemyPositions->insert(std::make_pair(unit, unit->getPosition()));
-}
-
-void ArmyManager::removeEnemyTroop(BWAPI::Unit * unit)
-{
-	enemyTroops->erase(unit);
-	enemyPositions->erase(unit);
+	if (unit->isVisible())
+		enemyPositions[unit] = unit->getPosition();
 }
 
 // Adds a unit to the troop pool.
 void ArmyManager::addUnit(BWAPI::Unit * unit)
 {
-	troops->insert(unit);
+	troops.insert(unit);
 }
 
 // Removes a unit from the troop pool.
 void ArmyManager::removeUnit(BWAPI::Unit * unit)
 {
-	troops->erase(unit);
+	troops.erase(unit);
 }
 
 // Simulate the army manager AI, ordering, creating and upgrading troops.
 void ArmyManager::update()
 {
-	// Create new troops
-	/*
-	if (producer->totalInfantryFacilities() > 0) // Check if we can produce troops
-	{
-	producer->orderInfantry(INFANTRY_UNIT);
-	}
-	*/
-	//while (producer->orderInfantry(INFANTRY_UNIT));
+	// Train new troops
 	producer->trainUnit(INFANTRY_UNIT);
 	architect->scheduleBuild(INFANTRY_FACTORY);
-	/*
-	else // Order a troop facility
-	{
-	architect->orderBuilding(INFANTRY_FACTORY);
-	}
-	*/
+
 
 	// Update enemy positions
-	BOOST_FOREACH(BWAPI::Unit * u, *enemyTroops)
-		updatePos(u);
-	BOOST_FOREACH(BWAPI::Unit * u, *enemyBuildings)
-		updatePos(u);
+	BOOST_FOREACH(BWAPI::Unit * u, enemyTroops)
+		setEnemyPos(u);
+	BOOST_FOREACH(BWAPI::Unit * u, enemyBuildings)
+		setEnemyPos(u);
 
-	// Order existing troops around
-	if (!enemyBuildings->empty())
+	// Command troops
+	if (!enemyBuildings.empty())
 	{
-		BWAPI::Position attackTarget = (*enemyBuildings->begin())->getPosition();
-		std::set<BWAPI::Unit*>::iterator it = troops->begin();
-		while (it != troops->end())
+		BWAPI::Position attackTarget = (*enemyBuildings.begin())->getPosition();
+		std::set<BWAPI::Unit*>::iterator it = troops.begin(), end = troops.end();
+		while (it != end)
 		{
 			BWAPI::Unit * unit = *it;
 			if (unit->exists())
 			{
 				if (unit->isIdle())
-					unit->attack(attackTarget); // Some of these units are probably not completed!
+					unit->attack(attackTarget);
 				++it;
 			}
 			else
-				it = troops->erase(it);
+				it = troops.erase(it);
 		}
 	}
-}
-
-void ArmyManager::updatePos(BWAPI::Unit * unit)
-{
-	if (unit->isVisible())
-		(*enemyPositions)[unit] = unit->getPosition();
 }

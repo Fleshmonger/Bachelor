@@ -1,5 +1,19 @@
 #include "WorkerManager.h"
 
+WorkerManager::WorkerManager()
+{
+	depot = NULL;
+	fields = std::vector<Field>();
+	std::make_heap(fields.begin(), fields.end(), Field_Comp()); // Possibly unneeded?
+	idle = std::set<Unit*>();
+	harvesters = std::map<BWAPI::Unit*, BWAPI::Unit*>();
+}
+
+//Unused deconstructor
+WorkerManager::~WorkerManager()
+{
+}
+
 // Private
 // Inserts the field into the heap.
 void WorkerManager::insertField(int amount, BWAPI::Unit * mineral)
@@ -14,20 +28,6 @@ void WorkerManager::popField()
 {
 	std::pop_heap(fields.begin(), fields.end(), Field_Comp());
 	fields.pop_back();
-}
-
-WorkerManager::WorkerManager()
-{
-	depot = NULL;
-	fields = std::vector<Field>();
-	std::make_heap(fields.begin(), fields.end(), Field_Comp()); // Possibly unneeded?
-	idle = std::set<Unit*>();
-	harvesters = std::map<BWAPI::Unit*, BWAPI::Unit*>();
-}
-
-//Unused deconstructor
-WorkerManager::~WorkerManager()
-{
 }
 
 // Designates the current depot for returning cargo
