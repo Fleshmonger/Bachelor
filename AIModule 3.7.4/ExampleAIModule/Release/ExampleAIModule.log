@@ -1,4 +1,4 @@
-﻿Build started 10-03-2015 14:49:54.
+﻿Build started 10-03-2015 17:43:57.
      1>Project "D:\Bachelor\AIModule 3.7.4\ExampleAIModule\ExampleAIModule.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
          D:\Programs\Microsoft Visual Studio 9.0\VC\bin\CL.exe /c /I../Source /I"D:\Programs\BWAPI 3.7.4/include" /ID:\Tools\boost_1_57_0 /I/include /I/include /I/include/freetype2 /I/include /Zi /nologo /W3 /WX- /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _WINDOWS /D _USRDLL /D EXAMPLEAIMODULE_EXPORTS /D _WINDLL /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc90.pdb" /Gd /TP /analyze- /errorReport:prompt Primary.cpp
@@ -24,4 +24,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:02.02
+Time Elapsed 00:00:02.31

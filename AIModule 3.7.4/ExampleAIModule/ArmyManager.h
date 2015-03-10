@@ -1,5 +1,6 @@
 #pragma once
 #include <BWAPI.h>
+#include <BWTA.h>
 #include <boost/foreach.hpp>
 #include "workerManager.h"
 #include "producer.h"
@@ -20,6 +21,8 @@ private:
 	Architect * architect;
 
 	// Local
+	BWAPI::Unit * defender;
+	BWTA::Region * homeRegion;
 	std::set<BWAPI::Unit*> troops, enemyTroops, enemyBuildings;
 	std::map<BWAPI::Unit*, BWAPI::Position> enemyPositions;
 
@@ -29,6 +32,7 @@ public:
 	void addEnemy(BWAPI::Unit * unit);
 	void removeEnemy(BWAPI::Unit * unit);
 	void setEnemyPos(BWAPI::Unit * unit);
+	void setHomeRegion(BWTA::Region * region);
 	void addUnit(BWAPI::Unit * unit);
 	void removeUnit(BWAPI::Unit * unit);
 	void update();

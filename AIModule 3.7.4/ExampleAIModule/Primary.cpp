@@ -117,8 +117,12 @@ void Primary::onFrame()
 	if (Broodwar->getFrameCount() == 0)
 	{
 		BWTA::analyze();
-		BOOST_FOREACH(BWAPI::Unit * mineral, BWTA::getStartLocation(BWAPI::Broodwar->self())->getStaticMinerals())
+		// TODO Move this to the coming intelligence manager.
+		// Add new information to managers.
+		BOOST_FOREACH(BWAPI::Unit * mineral, BWTA::getStartLocation(Broodwar->self())->getStaticMinerals())
 			workerManager->addMineral(mineral);
+
+		armyManager->setHomeRegion(BWTA::getStartLocation(Broodwar->self())->getRegion());
 	}
 	/*
 	// BWTA draw
