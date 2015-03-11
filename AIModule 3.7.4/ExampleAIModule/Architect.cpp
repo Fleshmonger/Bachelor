@@ -4,7 +4,8 @@
 Architect::Architect(WorkerManager * workerManager, Accountant * accountant) :
 	workerManager(workerManager),
 	accountant(accountant),
-	resources(Zone(BWAPI::TilePositions::None, 0, 0)),
+	harvestingDefined(false),
+	harvesting(Zone(0, 0, 0, 0)),
 	depot(NULL),
 	pylons(std::set<BWAPI::Unit*>()),
 	constructSchedule(std::multimap<BWAPI::UnitType, BWAPI::Unit*>()),
@@ -59,7 +60,7 @@ BWAPI::TilePosition Architect::getBuildLocation(BWAPI::Unit * builder, BWAPI::Ti
 // Returns whether or not a given building type can be built at a given location.
 bool Architect::validBuildLocation(BWAPI::Unit * builder, BWAPI::TilePosition location, BWAPI::UnitType buildingType)
 {
-	return location.isValid() && !resources.contains(location) && Broodwar->canBuildHere(builder, location, buildingType);
+	return location.isValid() && !harvesting.contains(location, buildingType) && Broodwar->canBuildHere(builder, location, buildingType);
 }
 
 // Attempt to build a new building. Returns true if it succeeds, otherwise returns false.
@@ -175,17 +176,24 @@ int Architect::scheduled(BWAPI::UnitType buildingType)
 	return buildSchedule.count(buildingType) + constructSchedule.count(buildingType);
 }
 
-// Resizes the resource zone to include the given unit.
-void Architect::includeResource(BWAPI::Unit * resource)
+// Resizes the harvesting zone to include the given unit.
+void Architect::expandHarvesting(BWAPI::Unit * resource)
 {
 	BWAPI::TilePosition pos = resource->getTilePosition();
 	BWAPI::UnitType type = resource->getType();
-	int left = std::min(resources.origin.x(), pos.x()),
-		top = std::min(resources.origin.y(), pos.y()),
-		right = std::max(resources.origin.x() + resources.width, pos.x() + type.tileWidth()),
-		bottom = std::max(resources.origin.y() + resources.height, pos.y() + type.tileHeight());
-	resources = Zone(BWAPI::TilePosition(left, top), right - left, bottom - top);
-	//resources = Zone(pos, type.tileWidth(), type.tileHeight());
+	if (harvestingDefined)
+	{
+		int left = std::min(harvesting.left, pos.x()),
+			top = std::min(harvesting.top, pos.y()),
+			right = std::max(harvesting.right, pos.x() + type.tileWidth()),
+			bottom = std::max(harvesting.bottom, pos.y() + type.tileHeight());
+		harvesting = Zone(left, top, right, bottom);
+	}
+	else
+	{
+		harvesting = Zone(pos.x(), pos.y(), pos.x() + type.tileWidth(), pos.y() + type.tileHeight());
+		harvestingDefined = true;
+	}
 }
 
 // Adds a pylon to the pylon pool.
@@ -206,6 +214,7 @@ void Architect::removePylon(BWAPI::Unit * pylon)
 void Architect::setDepot(BWAPI::Unit * depot)
 {
 	this->depot = depot;
+	expandHarvesting(depot);
 }
 
 // Simulate the architect AI.

@@ -122,23 +122,23 @@ void Primary::onFrame()
 		BOOST_FOREACH(BWAPI::Unit * mineral, BWTA::getStartLocation(Broodwar->self())->getStaticMinerals())
 		{
 			workerManager->addMineral(mineral);
-			architect->includeResource(mineral);
+			architect->expandHarvesting(mineral);
 		}
 		BOOST_FOREACH(BWAPI::Unit * geyser, BWTA::getStartLocation(Broodwar->self())->getGeysers())
-			architect->includeResource(geyser);
+			architect->expandHarvesting(geyser);
 
 		armyManager->setHomeRegion(BWTA::getStartLocation(Broodwar->self())->getRegion());
 	}
 
 	// DEBUG
-	Zone test = architect->resources;
+	Zone test = architect->harvesting;
 	//Zone test = Zone(BWAPI::TilePosition(5, 5), 1, 2);
 	Broodwar->drawBox(
 		CoordinateType::Map,
-		test.origin.x() * 32,
-		test.origin.y() * 32,
-		(test.origin.x() + test.width) * 32,
-		(test.origin.y() + test.height) * 32,
+		test.left * 32,
+		test.top * 32,
+		test.right * 32,
+		test.bottom * 32,
 		Colors::Blue,
 		false);
 

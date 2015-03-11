@@ -5,23 +5,29 @@
 #include "Accountant.h"
 
 struct Zone {
-	BWAPI::TilePosition origin;
-	int width, height;
+	int left, top, right, bottom;
 
-	Zone(BWAPI::TilePosition origin, int width, int height) :
-		origin(origin),
-		width(width),
-		height(height)
+	Zone(int left, int top, int right, int bottom) :
+		left(left), top(top), right(right), bottom(bottom)
 	{
 	}
 
-	bool Zone::contains(BWAPI::TilePosition tile)
+	bool Zone::contains(int x, int y)
 	{
 		return
-			origin.x() <= tile.x() &&
-			origin.x() + width > tile.x() &&
-			origin.y() <= tile.y() &&
-			origin.y() + height > tile.y();
+			left <= x &&
+			top <= y &&
+			right > x &&
+			bottom > y;
+	}
+
+	bool Zone::contains(BWAPI::TilePosition pos, BWAPI::UnitType unitType)
+	{
+		for (int x = pos.x(); x < pos.x() + unitType.tileWidth(); x++)
+			for (int y = pos.y(); y < pos.y() + unitType.tileHeight(); y++)
+				if (contains(x, y))
+					return true;
+		return false;
 	}
 };
 
@@ -35,13 +41,14 @@ private:
 	Accountant * accountant;
 
 	// Local
+	bool harvestingDefined; // Temporary stupid solution, change when information manager is introduced.
 	BWAPI::Unit * depot;
 	std::set<BWAPI::Unit*> pylons;
 	std::multimap<BWAPI::UnitType, BWAPI::Unit*> constructSchedule;
 	std::multimap<BWAPI::UnitType, std::pair<BWAPI::Unit*, BWAPI::TilePosition>>  buildSchedule;
 
 public:
-	Zone resources;
+	Zone harvesting; //TODO Move to private.
 
 	Architect(WorkerManager * workerManager, Accountant * accountant);
 	~Architect();
@@ -54,7 +61,7 @@ public:
 	void completeBuild(BWAPI::Unit * building);
 	void completeConstruct(BWAPI::Unit * building);
 	int scheduled(BWAPI::UnitType buildingType);
-	void includeResource(BWAPI::Unit * resource);
+	void expandHarvesting(BWAPI::Unit * resource);
 	void addPylon(BWAPI::Unit * pylon);
 	void removePylon(BWAPI::Unit * pylon);
 	void setDepot(BWAPI::Unit * depot);
