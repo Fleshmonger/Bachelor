@@ -7,6 +7,10 @@
 #include "producer.h"
 #include "architect.h"
 
+const BWAPI::UnitType
+	INFANTRY_FACTORY = BWAPI::UnitTypes::Protoss_Gateway,
+	INFANTRY_UNIT = BWAPI::UnitTypes::Protoss_Zealot;
+
 class ArmyManager
 {
 private:
@@ -15,6 +19,7 @@ private:
 	WorkerManager * workerManager;
 	Producer * producer;
 	Architect * architect;
+
 	// Local
 	BWAPI::Unit * defender;
 	std::set<BWAPI::Unit*> troops;

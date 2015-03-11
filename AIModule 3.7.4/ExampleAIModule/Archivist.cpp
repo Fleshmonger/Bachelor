@@ -7,6 +7,7 @@ Archivist::Archivist() :
 	troops(std::set<BWAPI::Unit*>()),
 	buildings(std::set<BWAPI::Unit*>()),
 	invaders(std::set<BWAPI::Unit*>()),
+	depots(std::set<BWAPI::Unit*>()),
 	positions(std::map<BWAPI::Unit*, BWAPI::Position>())
 {
 }
@@ -19,23 +20,33 @@ Archivist::~Archivist()
 // Inserts a unit to the knowledge pool.
 void Archivist::recordUnit(BWAPI::Unit * unit)
 {
+	BWAPI::UnitType unitType = unit->getType();
 	units.insert(unit);
-	if (unit->getType().isBuilding())
+	recordUnitPosition(unit);
+	if (unitType.isBuilding())
+	{
 		buildings.insert(unit);
+		if (unitType.isResourceDepot())
+			depots.insert(unit);
+	}
 	else
 		troops.insert(unit);
-	recordUnitPosition(unit);
 }
 
 // Removes a unit from the knowledge pool.
 void Archivist::clearUnit(BWAPI::Unit * unit)
 {
+	BWAPI::UnitType unitType = unit->getType();
 	units.erase(unit);
-	if (unit->getType().isBuilding())
+	positions.erase(unit);
+	if (unitType.isBuilding())
+	{
 		buildings.erase(unit);
+		if (unitType.isResourceDepot())
+			depots.erase(unit);
+	}
 	else
 		troops.erase(unit);
-	positions.erase(unit);
 }
 
 // Updates the position of a unit if it is visible.
@@ -58,20 +69,16 @@ void Archivist::update()
 {
 	// Clear invaders
 	invaders.clear();
+
 	// Inspect all recorded units and remove if invalid.
-	std::set<BWAPI::Unit*>::iterator it = units.begin();
-	while (it != units.end())
+	BOOST_FOREACH(BWAPI::Unit * unit, units)
 	{
-		BWAPI::Unit * unit = *it;
-		++it;
-		if (unit->exists())
+		if (unit->isVisible())
 		{
 			recordUnitPosition(unit);
 			if (BWTA::getRegion(positions[unit]) == homeRegion)
 				invaders.insert(unit);
 		}
-		else
-			clearUnit(unit);
 	}
 }
 
@@ -100,4 +107,10 @@ std::set<BWAPI::Unit*> Archivist::getBuildings()
 std::set<BWAPI::Unit*> Archivist::getInvaders()
 {
 	return invaders;
+}
+
+// Returns a copy of recorded depots.
+std::set<BWAPI::Unit*> Archivist::getDepots()
+{
+	return depots;
 }

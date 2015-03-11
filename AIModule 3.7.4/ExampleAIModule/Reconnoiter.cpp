@@ -1,7 +1,8 @@
 #include "Reconnoiter.h"
 
 // Constructor
-Reconnoiter::Reconnoiter(WorkerManager * workerManager) :
+Reconnoiter::Reconnoiter(Archivist * archivist, WorkerManager * workerManager) :
+	archivist(archivist),
 	workerManager(workerManager),
 	scout(NULL),
 	target(BWAPI::TilePositions::None)
@@ -27,8 +28,9 @@ void Reconnoiter::update()
 			target = tile;
 		++it;
 	}
+
 	// Scouting
-	if (target)
+	if (target && archivist->getDepots().empty())
 	{
 		// Retrieving Scout
 		if ((!scout || !scout->exists()) && workerManager->workers() >= MINIMUM_WORKERS)

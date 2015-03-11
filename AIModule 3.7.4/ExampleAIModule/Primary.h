@@ -6,10 +6,10 @@
 #include "Accountant.h"
 #include "Archivist.h"
 #include "WorkerManager.h"
-#include "Reconnoiter.h"
 #include "Producer.h"
 #include "Architect.h"
 #include "Economist.h"
+#include "Reconnoiter.h"
 #include "ArmyManager.h"
 
 using namespace BWAPI;

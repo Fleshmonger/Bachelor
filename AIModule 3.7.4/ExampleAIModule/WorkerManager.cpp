@@ -127,23 +127,6 @@ bool WorkerManager::assignWorker(BWAPI::Unit * worker)
 // TODO: Remove code repetition.
 BWAPI::Unit * WorkerManager::takeWorker()
 {
-	/*
-	if (idle.size() > 0)
-	{
-		BWAPI::Unit * worker = *idle.begin();
-		idle.erase(worker);
-		//removeWorker(worker);
-		return worker;
-	}
-	else if (harvesters.size() > 0)
-	{
-		BWAPI::Unit * worker = (*harvesters.begin()).first;
-		removeWorker(worker);
-		return worker;
-	}
-	else
-		return NULL;
-	*/
 	// Find the worker in the idle pool.
 	{
 		std::set<BWAPI::Unit*>::iterator it = idle.begin();

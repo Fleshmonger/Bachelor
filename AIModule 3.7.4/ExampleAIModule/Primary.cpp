@@ -27,10 +27,10 @@ void Primary::onStart()
 	accountant = new Accountant();
 	archivist = new Archivist();
 	workerManager = new WorkerManager();
-	reconnoiter = new Reconnoiter(workerManager);
 	producer = new Producer(accountant);
 	architect = new Architect(workerManager, accountant);
 	economist = new Economist(workerManager, producer, architect);
+	reconnoiter = new Reconnoiter(archivist, workerManager);
 	armyManager = new ArmyManager(archivist, workerManager, producer, architect);
 
 
@@ -168,12 +168,13 @@ void Primary::onFrame()
 		return;
 
 	// Manager updatíng
+	archivist->update();
 	producer->update();
 	architect->update();
-	reconnoiter->update();
 	economist->update();
+	reconnoiter->update();
 	armyManager->update();
-	workerManager->update();
+	workerManager->update(); // Workermanager is last because it commands all leftover workers.
 
 	/*
   if (show_visibility_data)
