@@ -6,8 +6,6 @@
 #include "producer.h"
 #include "architect.h"
 
-using namespace BWAPI;
-
 const BWAPI::UnitType
 	INFANTRY_FACTORY = BWAPI::UnitTypes::Protoss_Gateway,
 	INFANTRY_UNIT = BWAPI::UnitTypes::Protoss_Zealot;

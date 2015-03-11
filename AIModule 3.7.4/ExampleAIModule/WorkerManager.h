@@ -3,8 +3,6 @@
 #include <queue>
 #include <boost/foreach.hpp>
 
-using namespace BWAPI;
-
 const int MAX_FIELD_HARVESTERS = 10; // Maximum harvesters on a single mineral field.
 
 class WorkerManager

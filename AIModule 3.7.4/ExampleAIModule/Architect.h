@@ -1,12 +1,31 @@
 #pragma once
 #include <BWAPI.h>
+#include <algorithm>
 #include "WorkerManager.h"
 #include "Accountant.h"
 
-//using namespace BWAPI;
-//using namespace Filter;
+struct Zone {
+	BWAPI::TilePosition origin;
+	int width, height;
 
-static const BWAPI::UnitType SUPPLY = BWAPI::UnitTypes::Protoss_Pylon;
+	Zone(BWAPI::TilePosition origin, int width, int height) :
+		origin(origin),
+		width(width),
+		height(height)
+	{
+	}
+
+	bool Zone::contains(BWAPI::TilePosition tile)
+	{
+		return
+			origin.x() <= tile.x() &&
+			origin.x() + width > tile.x() &&
+			origin.y() <= tile.y() &&
+			origin.y() + height > tile.y();
+	}
+};
+
+static const BWAPI::UnitType BUILD_SUPPLY = BWAPI::UnitTypes::Protoss_Pylon;
 
 class Architect
 {
@@ -22,6 +41,8 @@ private:
 	std::multimap<BWAPI::UnitType, std::pair<BWAPI::Unit*, BWAPI::TilePosition>>  buildSchedule;
 
 public:
+	Zone resources;
+
 	Architect(WorkerManager * workerManager, Accountant * accountant);
 	~Architect();
 	BWAPI::TilePosition getBuildLocation(BWAPI::Unit * builder, BWAPI::TilePosition desiredLocation, BWAPI::UnitType buildingType);
@@ -33,6 +54,7 @@ public:
 	void completeBuild(BWAPI::Unit * building);
 	void completeConstruct(BWAPI::Unit * building);
 	int scheduled(BWAPI::UnitType buildingType);
+	void includeResource(BWAPI::Unit * resource);
 	void addPylon(BWAPI::Unit * pylon);
 	void removePylon(BWAPI::Unit * pylon);
 	void setDepot(BWAPI::Unit * depot);

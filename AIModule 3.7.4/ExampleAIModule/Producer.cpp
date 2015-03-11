@@ -42,7 +42,7 @@ bool Producer::trainUnit(BWAPI::UnitType unitType)
 		if (facility)
 		{
 			facility->train(unitType);
-			accountant->allocUnit(unitType);
+			accountant->allocate(unitType);
 			scheduledUnits.insert(unitType);
 			return true;
 		}
@@ -58,7 +58,7 @@ void Producer::incompleteUnit(BWAPI::Unit * unit)
 	{
 		scheduledUnits.erase(unitType);
 		incompleteUnits.insert(unit);
-		accountant->deallocUnit(unitType);
+		accountant->deallocate(unitType);
 	}
 }
 

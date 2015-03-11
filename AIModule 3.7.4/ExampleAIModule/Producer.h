@@ -2,8 +2,6 @@
 #include <BWAPI.h>
 #include "Accountant.h"
 
-using namespace BWAPI;
-
 class Producer
 {
 private:

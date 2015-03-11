@@ -4,6 +4,7 @@
 Architect::Architect(WorkerManager * workerManager, Accountant * accountant) :
 	workerManager(workerManager),
 	accountant(accountant),
+	resources(Zone(BWAPI::TilePositions::None, 0, 0)),
 	depot(NULL),
 	pylons(std::set<BWAPI::Unit*>()),
 	constructSchedule(std::multimap<BWAPI::UnitType, BWAPI::Unit*>()),
@@ -11,7 +12,7 @@ Architect::Architect(WorkerManager * workerManager, Accountant * accountant) :
 {
 }
 
-//Unused deconstructor
+// Unused deconstructor
 Architect::~Architect()
 {
 }
@@ -28,7 +29,7 @@ BWAPI::TilePosition Architect::getBuildLocation(BWAPI::Unit * builder, BWAPI::Ti
 		{
 			// Check the current tile.
 			BWAPI::TilePosition tile = BWAPI::TilePosition::TilePosition(desiredLocation.x() + dx, desiredLocation.y() + dy);
-			if (tile.isValid() && validBuildLocation(builder, tile, buildingType))
+			if (validBuildLocation(builder, tile, buildingType))
 				return tile;
 			// Find next tile.
 			if (dx == dy)
@@ -58,7 +59,7 @@ BWAPI::TilePosition Architect::getBuildLocation(BWAPI::Unit * builder, BWAPI::Ti
 // Returns whether or not a given building type can be built at a given location.
 bool Architect::validBuildLocation(BWAPI::Unit * builder, BWAPI::TilePosition location, BWAPI::UnitType buildingType)
 {
-	return Broodwar->canBuildHere(builder, location, buildingType);
+	return location.isValid() && !resources.contains(location) && Broodwar->canBuildHere(builder, location, buildingType);
 }
 
 // Attempt to build a new building. Returns true if it succeeds, otherwise returns false.
@@ -90,7 +91,7 @@ bool Architect::scheduleBuild(BWAPI::UnitType buildingType)
 					// Order the construction.
 					builder->build(targetBuildLocation, buildingType);
 					buildSchedule.insert(std::make_pair(buildingType, std::make_pair(builder, targetBuildLocation)));
-					accountant->allocUnit(buildingType);
+					accountant->allocate(buildingType);
 					return true;
 				} // Closure: location
 				workerManager->addWorker(builder);
@@ -123,7 +124,7 @@ void Architect::removeBuild(BWAPI::UnitType buildingType, BWAPI::TilePosition bu
 			BWAPI::Unit * builder = build.second.first;
 			if (builder && builder->exists())
 				workerManager->addWorker(builder);
-			accountant->deallocUnit(build.first);
+			accountant->deallocate(build.first);
 			buildSchedule.erase(it);
 			//removeBuild(it);
 			return;
@@ -174,6 +175,19 @@ int Architect::scheduled(BWAPI::UnitType buildingType)
 	return buildSchedule.count(buildingType) + constructSchedule.count(buildingType);
 }
 
+// Resizes the resource zone to include the given unit.
+void Architect::includeResource(BWAPI::Unit * resource)
+{
+	BWAPI::TilePosition pos = resource->getTilePosition();
+	BWAPI::UnitType type = resource->getType();
+	int left = std::min(resources.origin.x(), pos.x()),
+		top = std::min(resources.origin.y(), pos.y()),
+		right = std::max(resources.origin.x() + resources.width, pos.x() + type.tileWidth()),
+		bottom = std::max(resources.origin.y() + resources.height, pos.y() + type.tileHeight());
+	resources = Zone(BWAPI::TilePosition(left, top), right - left, bottom - top);
+	//resources = Zone(pos, type.tileWidth(), type.tileHeight());
+}
+
 // Adds a pylon to the pylon pool.
 // Used for placing Protoss buildings.
 void Architect::addPylon(BWAPI::Unit * pylon)
@@ -200,8 +214,8 @@ void Architect::update()
 {
 	// Order a supply building if more supply is needed, and none are being constructed.
 	if (Broodwar->self()->supplyTotal() - Broodwar->self()->supplyUsed() == 0 &&
-		scheduled(SUPPLY) == 0)
-		scheduleBuild(SUPPLY);
+		scheduled(BUILD_SUPPLY) == 0)
+		scheduleBuild(BUILD_SUPPLY);
 	// Remove invalid build orders and continue valid orders.
 	{
 		std::multimap <BWAPI::UnitType, std::pair<BWAPI::Unit*, BWAPI::TilePosition>>::iterator it = buildSchedule.begin();

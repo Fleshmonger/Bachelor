@@ -6,16 +6,17 @@ using namespace BWAPI;
 class Accountant
 {
 private:
-	int mineralsAlloc, gasAlloc, supplyAlloc; // How much of each resource that has been allocated.
+	int
+		allocatedMinerals,
+		allocatedGas,
+		allocatedSupply;
 public:
 	Accountant();
 	~Accountant();
 	bool isAffordable(BWAPI::UnitType unitType);
-	void allocUnit(BWAPI::UnitType unitType);
-	void deallocUnit(BWAPI::UnitType unitType);
-	int minerals();
-	/*
-	int gas();
-	int supply();
-	*/
+	void allocate(BWAPI::UnitType unitType);
+	void deallocate(BWAPI::UnitType unitType);
+	//int minerals();
+	//int gas();
+	//int supply();
 };

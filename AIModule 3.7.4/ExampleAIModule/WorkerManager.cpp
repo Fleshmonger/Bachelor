@@ -1,15 +1,15 @@
 #include "WorkerManager.h"
 
-WorkerManager::WorkerManager()
+WorkerManager::WorkerManager() :
+	depot(NULL),
+	fields(std::vector<Field>()),
+	idle(std::set<BWAPI::Unit*>()),
+	harvesters(std::map<BWAPI::Unit*, BWAPI::Unit*>())
 {
-	depot = NULL;
-	fields = std::vector<Field>();
-	std::make_heap(fields.begin(), fields.end(), Field_Comp()); // Possibly unneeded?
-	idle = std::set<Unit*>();
-	harvesters = std::map<BWAPI::Unit*, BWAPI::Unit*>();
+	std::make_heap(fields.begin(), fields.end(), Field_Comp());
 }
 
-//Unused deconstructor
+// Unused deconstructor
 WorkerManager::~WorkerManager()
 {
 }

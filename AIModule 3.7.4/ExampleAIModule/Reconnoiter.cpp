@@ -1,12 +1,11 @@
 #include "Reconnoiter.h"
 
-Reconnoiter::Reconnoiter(WorkerManager * workerManager)
+// Constructor
+Reconnoiter::Reconnoiter(WorkerManager * workerManager) :
+	workerManager(workerManager),
+	scout(NULL),
+	target(BWAPI::TilePositions::None)
 {
-	// Managers
-	this->workerManager = workerManager;
-	// Local
-	scout = NULL;
-	target = BWAPI::TilePositions::None;
 }
 
 // Unused deconstructor
@@ -36,7 +35,7 @@ void Reconnoiter::update()
 			scout = workerManager->takeWorker();
 		// Commanding Scout
 		if (scout)
-			scout->move(Position(target));
+			scout->move(BWAPI::Position(target));
 	}
 	else
 	{
