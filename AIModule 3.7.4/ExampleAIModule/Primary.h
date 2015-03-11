@@ -35,8 +35,6 @@ private:
 	Reconnoiter * reconnoiter;
 	Economist * economist;
 	ArmyManager * armyManager;
-	// Local
-	bool analyzed;
 public:
 	// Callbacks
 	virtual void onStart();

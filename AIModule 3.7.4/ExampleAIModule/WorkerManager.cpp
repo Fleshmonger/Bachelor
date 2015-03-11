@@ -146,8 +146,8 @@ BWAPI::Unit * WorkerManager::takeWorker()
 	*/
 	// Find the worker in the idle pool.
 	{
-		std::set<BWAPI::Unit*>::iterator it = idle.begin(), end = idle.end();
-		while (it != end)
+		std::set<BWAPI::Unit*>::iterator it = idle.begin();
+		while (it != idle.end())
 		{
 			BWAPI::Unit * worker = *it;
 			if (worker->exists() && // Should be unecessary
@@ -163,8 +163,8 @@ BWAPI::Unit * WorkerManager::takeWorker()
 	}
 	// Find the worker in the harvester pool.
 	{
-		std::map<BWAPI::Unit*, BWAPI::Unit*>::iterator it = harvesters.begin(), end = harvesters.end();
-		while (it != end)
+		std::map<BWAPI::Unit*, BWAPI::Unit*>::iterator it = harvesters.begin();
+		while (it != harvesters.end())
 		{
 			BWAPI::Unit * worker = (*it).first, * mineral = (*it).second;
 			if (worker->exists() && // Should be unecessary
@@ -187,8 +187,8 @@ void WorkerManager::update()
 {
 	// Verify minerals.
 	{
-		std::vector<Field>::iterator it = fields.begin(), end = fields.end();
-		while (it != end)
+		std::vector<Field>::iterator it = fields.begin();
+		while (it != fields.end())
 		{
 			BWAPI::Unit * mineral = (*it).second;
 			if (mineral->exists())
@@ -205,8 +205,8 @@ void WorkerManager::update()
 	{
 		// Update harvesters
 		{
-			std::map<BWAPI::Unit*, BWAPI::Unit*>::iterator it = harvesters.begin(), end = harvesters.end();
-			while (it != end)
+			std::map<BWAPI::Unit*, BWAPI::Unit*>::iterator it = harvesters.begin();
+			while (it != harvesters.end())
 			{
 				BWAPI::Unit * harvester = (*it).first;
 				BWAPI::Unit * mineral = (*it).second;
@@ -232,8 +232,8 @@ void WorkerManager::update()
 		}
 		// Assign new harvesters.
 		{
-			std::set<BWAPI::Unit*>::iterator it = idle.begin(), end = idle.end();
-			while (it != end)
+			std::set<BWAPI::Unit*>::iterator it = idle.begin();
+			while (it != idle.end())
 			{
 				BWAPI::Unit * worker = *it;
 				if (worker &&

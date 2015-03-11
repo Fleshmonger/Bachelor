@@ -16,7 +16,7 @@ public:
 	bool isAffordable(BWAPI::UnitType unitType);
 	void allocate(BWAPI::UnitType unitType);
 	void deallocate(BWAPI::UnitType unitType);
-	//int minerals();
+	int minerals();
 	//int gas();
 	//int supply();
 };

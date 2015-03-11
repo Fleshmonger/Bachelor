@@ -40,14 +40,13 @@ void Accountant::deallocate(BWAPI::UnitType unitType)
 	allocatedSupply -= unitType.supplyRequired();
 }
 
-/*
 // Returns the amount of unallocated minerals.
 int Accountant::minerals()
 {
 	return Broodwar->self()->minerals() - allocatedMinerals;
 }
 
-
+/*
 // Returns the amount of unallocated gas.
 int Accountant::gas()
 {

@@ -10,10 +10,11 @@ BWTA::Region* enemy_base;
 void Primary::onStart()
 {
 	Broodwar->enableFlag(Flag::UserInput);
+	Broodwar->setLocalSpeed(0);
 
 	//read map information into BWTA so terrain analysis can be done in another thread
 	BWTA::readMap();
-	analyzed = false;
+	BWTA::analyze();
 
 	/*
 	analysis_just_finished=false;
@@ -31,6 +32,18 @@ void Primary::onStart()
 	economist = new Economist(workerManager, producer, architect);
 	armyManager = new ArmyManager(workerManager, producer, architect);
 
+
+	// TODO Move this to the coming intelligence manager.
+	// Add new information to managers.
+	BOOST_FOREACH(BWAPI::Unit * mineral, BWTA::getStartLocation(Broodwar->self())->getStaticMinerals())
+	{
+		workerManager->addMineral(mineral);
+		architect->expandHarvesting(mineral);
+	}
+	BOOST_FOREACH(BWAPI::Unit * geyser, BWTA::getStartLocation(Broodwar->self())->getGeysers())
+		architect->expandHarvesting(geyser);
+
+	armyManager->setHomeRegion(BWTA::getStartLocation(Broodwar->self())->getRegion());
 
 	// Designate all starting units.
 	// This is already done; unitComplete is called on all starting units.
@@ -107,13 +120,7 @@ void Primary::onEnd(bool isWinner)
 
 void Primary::onFrame()
 {
-	// Debugging display.
-	DEBUG_SCREEN(200, 0, "FPS: %d", Broodwar->getFPS());
-	DEBUG_SCREEN(200, 20, "APM: %d", Broodwar->getAPM());
-	//DEBUG_SCREEN(200, 40, "Average FPS: %f", Broodwar->getAverageFPS());
-	//DEBUG_SCREEN(200, 40, "Unallocated Minerals: %d", accountant->minerals());
-	//DEBUG_SCREEN(200, 40, "Scheduled Gateways: %d", architect->scheduled(BWAPI::UnitTypes::Protoss_Gateway));
-	//DEBUG_SCREEN(200, 40, "Workers: %d", workerManager->workers());
+	/*
 	if (Broodwar->getFrameCount() == 0)
 	{
 		BWTA::analyze();
@@ -129,10 +136,10 @@ void Primary::onFrame()
 
 		armyManager->setHomeRegion(BWTA::getStartLocation(Broodwar->self())->getRegion());
 	}
+	*/
 
 	// DEBUG
 	Zone test = architect->harvesting;
-	//Zone test = Zone(BWAPI::TilePosition(5, 5), 1, 2);
 	Broodwar->drawBox(
 		CoordinateType::Map,
 		test.left * 32,
@@ -141,6 +148,14 @@ void Primary::onFrame()
 		test.bottom * 32,
 		Colors::Blue,
 		false);
+
+	// Debugging display.
+	DEBUG_SCREEN(200, 0, "FPS: %d", Broodwar->getFPS());
+	DEBUG_SCREEN(200, 20, "APM: %d", Broodwar->getAPM());
+	//DEBUG_SCREEN(200, 40, "Average FPS: %f", Broodwar->getAverageFPS());
+	DEBUG_SCREEN(200, 40, "Unallocated Minerals: %d", accountant->minerals());
+	//DEBUG_SCREEN(200, 40, "Scheduled Gateways: %d", architect->scheduled(BWAPI::UnitTypes::Protoss_Gateway));
+	//DEBUG_SCREEN(200, 40, "Workers: %d", workerManager->workers());
 
 	// Return if the game is a replay or is paused
 	if (Broodwar->isReplay() || Broodwar->isPaused() || !Broodwar->self())

@@ -179,20 +179,23 @@ int Architect::scheduled(BWAPI::UnitType buildingType)
 // Resizes the harvesting zone to include the given unit.
 void Architect::expandHarvesting(BWAPI::Unit * resource)
 {
-	BWAPI::TilePosition pos = resource->getTilePosition();
-	BWAPI::UnitType type = resource->getType();
-	if (harvestingDefined)
+	if (resource && resource->exists())
 	{
-		int left = std::min(harvesting.left, pos.x()),
-			top = std::min(harvesting.top, pos.y()),
-			right = std::max(harvesting.right, pos.x() + type.tileWidth()),
-			bottom = std::max(harvesting.bottom, pos.y() + type.tileHeight());
-		harvesting = Zone(left, top, right, bottom);
-	}
-	else
-	{
-		harvesting = Zone(pos.x(), pos.y(), pos.x() + type.tileWidth(), pos.y() + type.tileHeight());
-		harvestingDefined = true;
+		BWAPI::TilePosition pos = resource->getTilePosition();
+		BWAPI::UnitType type = resource->getType();
+		if (harvestingDefined)
+		{
+			int left = std::min(harvesting.left, pos.x()),
+				top = std::min(harvesting.top, pos.y()),
+				right = std::max(harvesting.right, pos.x() + type.tileWidth()),
+				bottom = std::max(harvesting.bottom, pos.y() + type.tileHeight());
+			harvesting = Zone(left, top, right, bottom);
+		}
+		else
+		{
+			harvesting = Zone(pos.x(), pos.y(), pos.x() + type.tileWidth(), pos.y() + type.tileHeight());
+			harvestingDefined = true;
+		}
 	}
 }
 
@@ -214,7 +217,8 @@ void Architect::removePylon(BWAPI::Unit * pylon)
 void Architect::setDepot(BWAPI::Unit * depot)
 {
 	this->depot = depot;
-	expandHarvesting(depot);
+	if (depot)
+		expandHarvesting(depot);
 }
 
 // Simulate the architect AI.
