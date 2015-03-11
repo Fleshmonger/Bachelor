@@ -76,6 +76,7 @@ bool Architect::scheduleBuild(BWAPI::UnitType buildingType)
 			BWAPI::Unit * builder = workerManager->takeWorker();
 			if (builder)
 			{
+				/*
 				TilePosition desiredBuildLocation, targetBuildLocation;
 				if (buildingType == BWAPI::UnitTypes::Protoss_Pylon && depot)
 					desiredBuildLocation = depot->getTilePosition();
@@ -87,11 +88,13 @@ bool Architect::scheduleBuild(BWAPI::UnitType buildingType)
 					// TODO go through all pylons if no position has been found!
 				}
 				targetBuildLocation = getBuildLocation(builder, desiredBuildLocation, buildingType);
-				if (targetBuildLocation)
+				*/
+				BWAPI::TilePosition location = getBuildLocation(builder, depot->getTilePosition(), buildingType);
+				if (location)
 				{
 					// Order the construction.
-					builder->build(targetBuildLocation, buildingType);
-					buildSchedule.insert(std::make_pair(buildingType, std::make_pair(builder, targetBuildLocation)));
+					builder->build(location, buildingType);
+					buildSchedule.insert(std::make_pair(buildingType, std::make_pair(builder, location)));
 					accountant->allocate(buildingType);
 					return true;
 				} // Closure: location

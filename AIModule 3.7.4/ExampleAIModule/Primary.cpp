@@ -25,12 +25,13 @@ void Primary::onStart()
 
 	// Managers Initialization
 	accountant = new Accountant();
+	archivist = new Archivist();
 	workerManager = new WorkerManager();
 	reconnoiter = new Reconnoiter(workerManager);
 	producer = new Producer(accountant);
 	architect = new Architect(workerManager, accountant);
 	economist = new Economist(workerManager, producer, architect);
-	armyManager = new ArmyManager(workerManager, producer, architect);
+	armyManager = new ArmyManager(archivist, workerManager, producer, architect);
 
 
 	// TODO Move this to the coming intelligence manager.
@@ -43,7 +44,7 @@ void Primary::onStart()
 	BOOST_FOREACH(BWAPI::Unit * geyser, BWTA::getStartLocation(Broodwar->self())->getGeysers())
 		architect->expandHarvesting(geyser);
 
-	armyManager->setHomeRegion(BWTA::getStartLocation(Broodwar->self())->getRegion());
+	archivist->setHomeRegion(BWTA::getStartLocation(Broodwar->self())->getRegion());
 
 	// Designate all starting units.
 	// This is already done; unitComplete is called on all starting units.
@@ -153,7 +154,7 @@ void Primary::onFrame()
 	DEBUG_SCREEN(200, 0, "FPS: %d", Broodwar->getFPS());
 	DEBUG_SCREEN(200, 20, "APM: %d", Broodwar->getAPM());
 	//DEBUG_SCREEN(200, 40, "Average FPS: %f", Broodwar->getAverageFPS());
-	DEBUG_SCREEN(200, 40, "Unallocated Minerals: %d", accountant->minerals());
+	//DEBUG_SCREEN(200, 40, "Unallocated Minerals: %d", accountant->minerals());
 	//DEBUG_SCREEN(200, 40, "Scheduled Gateways: %d", architect->scheduled(BWAPI::UnitTypes::Protoss_Gateway));
 	//DEBUG_SCREEN(200, 40, "Workers: %d", workerManager->workers());
 
@@ -243,7 +244,7 @@ void Primary::onNukeDetect(BWAPI::Position target)
 void Primary::onUnitDiscover(BWAPI::Unit* unit)
 {
 	if (isEnemy(unit))
-		armyManager->addEnemy(unit);
+		archivist->recordUnit(unit);
 }
 
 void Primary::onUnitEvade(BWAPI::Unit* unit)
@@ -307,7 +308,7 @@ void Primary::onUnitDestroy(BWAPI::Unit* unit)
 		// TODO if unit was incomplete, remove it from the producer.
 	}
 	else if (isEnemy(unit))
-		armyManager->removeEnemy(unit);
+		archivist->clearUnit(unit);
 }
 
 void Primary::onUnitMorph(BWAPI::Unit* unit)

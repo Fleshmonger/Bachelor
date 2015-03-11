@@ -3,8 +3,9 @@
 #include <BWTA.h>
 #include <windows.h>
 #include <boost/foreach.hpp>
-#include "WorkerManager.h"
 #include "Accountant.h"
+#include "Archivist.h"
+#include "WorkerManager.h"
 #include "Reconnoiter.h"
 #include "Producer.h"
 #include "Architect.h"
@@ -15,9 +16,7 @@ using namespace BWAPI;
 
 class Primary : public BWAPI::AIModule
 {
-
 #define DEBUG
-
 #ifdef DEBUG
 #define DEBUG_OUT(s) Broodwar->printf(s);
 #define DEBUG_SCREEN(x, y, s, d) Broodwar->drawTextScreen(x, y, s, d);
@@ -29,12 +28,14 @@ class Primary : public BWAPI::AIModule
 private:
 	// Managers
 	Accountant * accountant;
+	Archivist * archivist;
 	Producer * producer;
 	WorkerManager * workerManager;
 	Architect * architect;
 	Reconnoiter * reconnoiter;
 	Economist * economist;
 	ArmyManager * armyManager;
+
 public:
 	// Callbacks
 	virtual void onStart();
@@ -54,6 +55,7 @@ public:
 	virtual void onUnitRenegade(BWAPI::Unit* unit);
 	virtual void onSaveGame(std::string gameName);
 	virtual void onUnitComplete(BWAPI::Unit *unit);
+
 	// Auxillary
 	bool isOwned(BWAPI::Unit * unit);
 	bool isEnemy(BWAPI::Unit * unit);
