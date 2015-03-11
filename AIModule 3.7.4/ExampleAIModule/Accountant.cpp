@@ -52,10 +52,10 @@ int Accountant::gas()
 {
 	return Broodwar->self()->gas() - allocatedGas;
 }
+*/
 
 // Returns the amount of unallocated supply.
 int Accountant::supply()
 {
 	return Broodwar->self()->supplyTotal() - Broodwar->self()->supplyUsed() - allocatedSupply;
 }
-*/

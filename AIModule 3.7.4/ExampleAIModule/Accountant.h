@@ -19,5 +19,5 @@ public:
 	void deallocate(BWAPI::UnitType unitType);
 	//int minerals();
 	//int gas();
-	//int supply();
+	int supply();
 };

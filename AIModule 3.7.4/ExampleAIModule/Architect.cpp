@@ -229,7 +229,7 @@ void Architect::setDepot(BWAPI::Unit * depot)
 void Architect::update()
 {
 	// Order a supply building if more supply is needed, and none are being constructed.
-	if (Broodwar->self()->supplyTotal() - Broodwar->self()->supplyUsed() == 0 &&
+	if (accountant->supply() < MIN_SUPPLY &&
 		scheduled(BUILD_SUPPLY) == 0)
 		scheduleBuild(BUILD_SUPPLY);
 	// Remove invalid build orders and continue valid orders.

@@ -97,6 +97,12 @@ BWAPI::Position Archivist::getPosition(BWAPI::Unit * unit)
 		return BWAPI::Positions::None;
 }
 
+// Returns a copy of recorded troops.
+std::set<BWAPI::Unit*> Archivist::getTroops()
+{
+	return troops;
+}
+
 // Returns a copy of recorded buildings.
 std::set<BWAPI::Unit*> Archivist::getBuildings()
 {

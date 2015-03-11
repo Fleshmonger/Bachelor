@@ -17,7 +17,7 @@ private:
 	WorkerManager * workerManager;
 
 	// Local
-	BWAPI::TilePosition target;
+	BWAPI::Position target;
 	BWAPI::Unit * scout;
 
 public:

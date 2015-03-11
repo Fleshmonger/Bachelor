@@ -31,6 +31,7 @@ struct Zone {
 	}
 };
 
+static const int MIN_SUPPLY = 10;
 static const BWAPI::UnitType BUILD_SUPPLY = BWAPI::UnitTypes::Protoss_Pylon;
 
 class Architect

@@ -43,9 +43,9 @@ void ArmyManager::update()
 	if (!invaders.empty())
 	{
 		// Scout defense.
-		if (!defender)
+		if (!defender || !defender->exists())
 			defender = workerManager->takeWorker();
-		if (defender)
+		if (defender && defender->exists() && !defender->isAttacking())
 			defender->attack(*invaders.begin());
 	}
 	else if (defender)

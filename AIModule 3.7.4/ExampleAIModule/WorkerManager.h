@@ -31,14 +31,13 @@ class WorkerManager
 	public:
 		WorkerManager();
 		~WorkerManager();
-		void setDepot(BWAPI::Unit * depot);
-		int harvesterMax();
-		int workers();
 		void addWorker(BWAPI::Unit * worker);
 		void removeWorker(BWAPI::Unit * worker);
-		//std::set<Unit*> * getWorkers();
-		bool assignWorker(BWAPI::Unit * worker);
-		BWAPI::Unit * takeWorker();
 		void addMineral(BWAPI::Unit * mineral);
+		void setDepot(BWAPI::Unit * depot);
 		void update();
+		bool assignWorker(BWAPI::Unit * worker);
+		int harvesterMax();
+		int workers();
+		BWAPI::Unit * takeWorker();
 };

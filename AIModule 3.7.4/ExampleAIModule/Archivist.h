@@ -24,6 +24,7 @@ public:
 	bool isArchived(BWAPI::Unit * unit);
 
 	BWAPI::Position getPosition(BWAPI::Unit * unit);
+	std::set<BWAPI::Unit*> getTroops();
 	std::set<BWAPI::Unit*> getBuildings();
 	std::set<BWAPI::Unit*> getInvaders();
 	std::set<BWAPI::Unit*> getDepots();
