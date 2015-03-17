@@ -9,21 +9,14 @@ BWTA::Region* enemy_base;
 
 void Primary::onStart()
 {
-	Broodwar->enableFlag(Flag::UserInput);
-	Broodwar->setLocalSpeed(0);
+	//Broodwar->enableFlag(Flag::UserInput);
+	//Broodwar->setLocalSpeed(0);
 
-	//read map information into BWTA so terrain analysis can be done in another thread
+	// Read map information.
 	BWTA::readMap();
 	BWTA::analyze();
 
-	/*
-	analysis_just_finished=false;
-
-	show_bullets=false;
-	show_visibility_data=false;
-	*/
-
-	// Managers Initialization
+	// Manager initialization.
 	accountant = new Accountant();
 	archivist = new Archivist();
 	workerManager = new WorkerManager();
@@ -139,20 +132,9 @@ void Primary::onFrame()
 	}
 	*/
 
-	// DEBUG
-	Zone test = architect->harvesting;
-	Broodwar->drawBox(
-		CoordinateType::Map,
-		test.left * 32,
-		test.top * 32,
-		test.right * 32,
-		test.bottom * 32,
-		Colors::Blue,
-		false);
-
 	// Debugging display.
-	DEBUG_SCREEN(200, 0, "FPS: %d", Broodwar->getFPS());
-	DEBUG_SCREEN(200, 20, "APM: %d", Broodwar->getAPM());
+	//DEBUG_SCREEN(200, 0, "FPS: %d", Broodwar->getFPS());
+	//DEBUG_SCREEN(200, 20, "APM: %d", Broodwar->getAPM());
 	//DEBUG_SCREEN(200, 40, "Average FPS: %f", Broodwar->getAverageFPS());
 	//DEBUG_SCREEN(200, 40, "Unallocated Minerals: %d", accountant->minerals());
 	//DEBUG_SCREEN(200, 40, "Scheduled Gateways: %d", architect->scheduled(BWAPI::UnitTypes::Protoss_Gateway));
@@ -277,6 +259,7 @@ void Primary::onUnitCreate(BWAPI::Unit* unit)
 
 void Primary::onUnitDestroy(BWAPI::Unit* unit)
 {
+	//Broodwar->printf("%s was destroyed", unit->getType().getName().c_str());
 	//DEBUG_OUT("Unit Destroy: " + unit->getType().getName());
 	// Determine owner.
 	if (isOwned(unit))
@@ -304,7 +287,7 @@ void Primary::onUnitDestroy(BWAPI::Unit* unit)
 		}
 		else if (unitType.isWorker())
 			workerManager->removeWorker(unit);
-		else // Must be a combat unit // TODO Could be some spawned unit, like fighters or larva?
+		else // Must be a combat unit
 			armyManager->removeUnit(unit);
 		// TODO if unit was incomplete, remove it from the producer.
 	}

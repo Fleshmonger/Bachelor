@@ -8,15 +8,15 @@ class Archivist
 {
 private:
 	BWTA::Region * homeRegion;
-	std::set<BWAPI::Unit*> units, troops, buildings, invaders, depots;
+	std::set<BWAPI::Unit*> units, buildings, depots, refineries, troops;
 	std::map<BWAPI::Unit*, BWAPI::Position> positions;
 
 public:
 	Archivist();
 	~Archivist();
 
-	void recordUnit(BWAPI::Unit * unit);
 	void clearUnit(BWAPI::Unit * unit);
+	void recordUnit(BWAPI::Unit * unit);
 	void recordUnitPosition(BWAPI::Unit * unit);
 	void setHomeRegion(BWTA::Region * region);
 	void update();
@@ -24,8 +24,9 @@ public:
 	bool isArchived(BWAPI::Unit * unit);
 
 	BWAPI::Position getPosition(BWAPI::Unit * unit);
-	std::set<BWAPI::Unit*> getTroops();
+
+	std::set<BWAPI::Unit*> invaders();
 	std::set<BWAPI::Unit*> getBuildings();
-	std::set<BWAPI::Unit*> getInvaders();
 	std::set<BWAPI::Unit*> getDepots();
+	std::set<BWAPI::Unit*> getTroops();
 };
