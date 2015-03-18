@@ -52,20 +52,27 @@ void ArmyManager::update()
 		if (invaders.count(invader) == 0)
 			invaders[invader] = 0;
 
-	// Validate invaders.
+	// Validate and intercept invaders.
 	{
 		std::map<BWAPI::Unit*, int>::iterator it = invaders.begin();
 		while (it != invaders.end())
 		{
 			BWAPI::Unit * invader = (*it).first;
 			++it;
-			// Check validity.
+			// Validate.
 			if (invader &&
 				(!invader->isVisible() || invader->exists()) &&
 				archivist->getPosition(invader))
 			{
-				// Assign required defenders.
-				while (invaders[invader] < DEFENDERS_PER_INVADER)
+				// Determine amount of needed defenders.
+				int requiredDefenders;
+				if (invader->getType().isWorker())
+					requiredDefenders = DEFENDERS_PER_SCOUT;
+				else
+					requiredDefenders = DEFENDERS_PER_ATTACKER;
+
+				// Attempt to assign required defenders.
+				while (invaders[invader] < requiredDefenders)
 				{
 					BWAPI::Unit * defender = workerManager->takeWorker();
 					if (defender &&
@@ -80,7 +87,7 @@ void ArmyManager::update()
 			}
 			else
 			{
-				// Clear invader.
+				// Clear invalid invader.
 				invaders.erase(invader);
 			}
 		}
@@ -94,7 +101,7 @@ void ArmyManager::update()
 			BWAPI::Unit * defender = (*it).first;
 			BWAPI::Unit * invader = (*it).second;
 			++it;
-			// Check validity.
+			// Validate.
 			if (defender &&
 				defender->exists() &&
 				invaders.count(invader) > 0)
@@ -104,7 +111,7 @@ void ArmyManager::update()
 			}
 			else
 			{
-				// Unassign defender.
+				// Relieve invalid defender.
 				defenders.erase(defender);
 				if (defender &&
 					defender->exists() &&
@@ -114,24 +121,6 @@ void ArmyManager::update()
 			}
 		}
 	}
-
-	/*
-	// Command defense.
-	if (!invaders.empty())
-	{
-		// Scout defense.
-		if (!defender || !defender->exists())
-			defender = workerManager->takeWorker();
-		if (defender && defender->exists() && !defender->isAttacking())
-			defender->attack(*invaders.begin());
-	}
-	else if (defender)
-	{
-		// Relieve defender.
-		workerManager->addWorker(defender);
-		defender = NULL;
-	}
-	*/
 
 	// Command attackers.
 	if (!enemyBuildings.empty())

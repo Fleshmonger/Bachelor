@@ -7,7 +7,10 @@
 #include "producer.h"
 #include "architect.h"
 
-const int DEFENDERS_PER_INVADER = 1;
+const int
+	DEFENDERS_PER_SCOUT = 1,
+	DEFENDERS_PER_ATTACKER = 3;
+
 //TODO Move somewhere else?
 const BWAPI::UnitType
 	INFANTRY_FACTORY = BWAPI::UnitTypes::Protoss_Gateway,

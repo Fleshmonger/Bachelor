@@ -3,12 +3,12 @@
 #include <BWTA.h>
 #include <boost/foreach.hpp>
 
-// Manages battlefield information.
+// Collects battlefield information, mostly about opponents.
 class Archivist
 {
 private:
 	BWTA::Region * homeRegion;
-	std::set<BWAPI::Unit*> units, buildings, depots, refineries, troops;
+	std::set<BWAPI::Unit*> units, buildings, depots, refineries, workers, troops;
 	std::map<BWAPI::Unit*, BWAPI::Position> positions;
 
 public:
@@ -28,5 +28,6 @@ public:
 	std::set<BWAPI::Unit*> invaders();
 	std::set<BWAPI::Unit*> getBuildings();
 	std::set<BWAPI::Unit*> getDepots();
+	std::set<BWAPI::Unit*> getWorkers();
 	std::set<BWAPI::Unit*> getTroops();
 };

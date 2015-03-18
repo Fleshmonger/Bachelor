@@ -4,10 +4,11 @@
 Archivist::Archivist() :
 	homeRegion(NULL),
 	units(std::set<BWAPI::Unit*>()),
-	troops(std::set<BWAPI::Unit*>()),
 	buildings(std::set<BWAPI::Unit*>()),
 	depots(std::set<BWAPI::Unit*>()),
 	refineries(std::set<BWAPI::Unit*>()),
+	workers(std::set<BWAPI::Unit*>()),
+	troops(std::set<BWAPI::Unit*>()),
 	positions(std::map<BWAPI::Unit*, BWAPI::Position>())
 {
 }
@@ -18,6 +19,7 @@ Archivist::~Archivist()
 }
 
 // Removes a unit from the knowledge pool.
+// TODO Code duplication with recordUnit.
 void Archivist::clearUnit(BWAPI::Unit * unit)
 {
 	BWAPI::UnitType unitType = unit->getType();
@@ -31,6 +33,8 @@ void Archivist::clearUnit(BWAPI::Unit * unit)
 		else if (unitType.isRefinery())
 			refineries.erase(unit);
 	}
+	else if (unitType.isWorker())
+		workers.erase(unit);
 	else
 		troops.erase(unit);
 }
@@ -49,6 +53,8 @@ void Archivist::recordUnit(BWAPI::Unit * unit)
 		else if (unitType.isRefinery())
 			refineries.insert(unit);
 	}
+	else if (unitType.isWorker())
+		workers.erase(unit);
 	else
 		troops.insert(unit);
 }
@@ -124,6 +130,12 @@ std::set<BWAPI::Unit*> Archivist::getBuildings()
 std::set<BWAPI::Unit*> Archivist::getDepots()
 {
 	return depots;
+}
+
+// Returns a copy of recorded workers.
+std::set<BWAPI::Unit*> Archivist::getWorkers()
+{
+	return workers;
 }
 
 // Returns a copy of recorded troops.
