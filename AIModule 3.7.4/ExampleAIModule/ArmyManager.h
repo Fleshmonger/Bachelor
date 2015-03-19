@@ -17,6 +17,7 @@ const BWAPI::UnitType
 	INFANTRY_UNIT = BWAPI::UnitTypes::Protoss_Zealot;
 
 // Commands attacking and defending troops.
+// TODO Rename to non-manager.
 class ArmyManager
 {
 private:
@@ -25,17 +26,23 @@ private:
 	Producer * producer;
 	Architect * architect;
 
-	//BWAPI::Unit * defender;
-	std::set<BWAPI::Unit*> troops;
+	std::set<BWAPI::Unit*> troops, attackers, idle;
 	std::map<BWAPI::Unit*, int> invaders;
 	std::map<BWAPI::Unit*, BWAPI::Unit*> defenders;
 
 public:
+	int toughness(std::set<BWAPI::Unit*> units); // TODO Rename; move; make private
+	double TTK(std::set<BWAPI::Unit*> attackers, std::set<BWAPI::Unit*> defenders); // TODO Rename; move; make private
+	double damage(std::set<BWAPI::Unit*> units); // TODO Rename; move; make private
+
 	ArmyManager(Archivist * archivist, WorkerManager * workerManager, Producer * producer, Architect * architect);
 	~ArmyManager();
 
 	void addUnit(BWAPI::Unit * unit);
 	void removeUnit(BWAPI::Unit * unit);
-	void assignDefender(BWAPI::Unit * defender, BWAPI::Unit * invader);
 	void update();
+
+	bool canAttack(); // TODO rename
+
+	std::set<BWAPI::Unit*> getTroops();
 };

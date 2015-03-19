@@ -26,7 +26,6 @@ void Primary::onStart()
 	reconnoiter = new Reconnoiter(archivist, workerManager);
 	armyManager = new ArmyManager(archivist, workerManager, producer, architect);
 
-
 	// TODO Move this to the coming intelligence manager.
 	// Add new information to managers.
 	BOOST_FOREACH(BWAPI::Unit * mineral, BWTA::getStartLocation(Broodwar->self())->getStaticMinerals())
@@ -139,6 +138,16 @@ void Primary::onFrame()
 	//DEBUG_SCREEN(200, 40, "Unallocated Minerals: %d", accountant->minerals());
 	//DEBUG_SCREEN(200, 40, "Scheduled Gateways: %d", architect->scheduled(BWAPI::UnitTypes::Protoss_Gateway));
 	//DEBUG_SCREEN(200, 40, "Workers: %d", workerManager->workers());
+
+	std::set<BWAPI::Unit*> troops = armyManager->getTroops(), enemies = archivist->getTroops(), enemyTurrets = archivist->getTurrets();
+	enemies.insert(enemyTurrets.begin(), enemyTurrets.end());
+	int enemyToughness = armyManager->toughness(enemies);
+	double damage = armyManager->damage(troops), TTK = armyManager->TTK(troops, enemies), enemyTTK = armyManager->TTK(enemies, troops);
+
+	DEBUG_SCREEN(200, 0, "Damage: %f", damage);
+	DEBUG_SCREEN(200, 20, "Enemy Toughness: %d", enemyToughness);
+	DEBUG_SCREEN(200, 40, "TKK: %f", TTK);
+	DEBUG_SCREEN(200, 60, "Enemy TKK: %f", enemyTTK);
 
 	// Return if the game is a replay or is paused
 	if (Broodwar->isReplay() || Broodwar->isPaused() || !Broodwar->self())

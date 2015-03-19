@@ -7,15 +7,43 @@ Archivist::Archivist() :
 	buildings(std::set<BWAPI::Unit*>()),
 	depots(std::set<BWAPI::Unit*>()),
 	refineries(std::set<BWAPI::Unit*>()),
+	turrets(std::set<BWAPI::Unit*>()),
 	workers(std::set<BWAPI::Unit*>()),
 	troops(std::set<BWAPI::Unit*>()),
-	positions(std::map<BWAPI::Unit*, BWAPI::Position>())
+	positions(std::map<BWAPI::Unit*, BWAPI::Position>()),
+	types(std::map<BWAPI::Unit*, BWAPI::UnitType>())
 {
 }
 
 // Deconstructor
 Archivist::~Archivist()
 {
+}
+
+// Private
+// Determines whether unit is a special case such as overlord or larvae
+bool Archivist::isMisc(BWAPI::UnitType unitType)
+{
+	return
+		unitType == BWAPI::UnitTypes::Zerg_Larva ||
+		unitType == BWAPI::UnitTypes::Zerg_Overlord ||
+		unitType == BWAPI::UnitTypes::Zerg_Egg ||
+		unitType == BWAPI::UnitTypes::Zerg_Lurker_Egg ||
+		unitType == BWAPI::UnitTypes::Terran_Nuclear_Missile ||
+		unitType == BWAPI::UnitTypes::Protoss_Scarab ||
+		unitType == BWAPI::UnitTypes::Spell_Scanner_Sweep ||
+		unitType == BWAPI::UnitTypes::Spell_Dark_Swarm ||
+		unitType == BWAPI::UnitTypes::Spell_Disruption_Web;
+}
+
+// Private
+// Determines whether a unit is a defensive structure.
+// TODO Unneeded?
+// TODO Excludes bunkers - is this behavior wished?
+bool Archivist::isTurret(BWAPI::UnitType unitType)
+{
+	return
+		unitType.isBuilding() && unitType.canAttack();
 }
 
 // Removes a unit from the knowledge pool.
@@ -25,6 +53,7 @@ void Archivist::clearUnit(BWAPI::Unit * unit)
 	BWAPI::UnitType unitType = unit->getType();
 	units.erase(unit);
 	positions.erase(unit);
+	types.erase(unit);
 	if (unitType.isBuilding())
 	{
 		buildings.erase(unit);
@@ -32,10 +61,12 @@ void Archivist::clearUnit(BWAPI::Unit * unit)
 			depots.erase(unit);
 		else if (unitType.isRefinery())
 			refineries.erase(unit);
+		else if (isTurret(unitType))
+			turrets.erase(unit);
 	}
 	else if (unitType.isWorker())
 		workers.erase(unit);
-	else
+	else if (!isMisc(unitType))
 		troops.erase(unit);
 }
 
@@ -45,6 +76,7 @@ void Archivist::recordUnit(BWAPI::Unit * unit)
 	BWAPI::UnitType unitType = unit->getType();
 	units.insert(unit);
 	recordUnitPosition(unit);
+	recordUnitType(unit);
 	if (unitType.isBuilding())
 	{
 		buildings.insert(unit);
@@ -52,10 +84,12 @@ void Archivist::recordUnit(BWAPI::Unit * unit)
 			depots.insert(unit);
 		else if (unitType.isRefinery())
 			refineries.insert(unit);
+		else if (isTurret(unitType))
+			turrets.insert(unit);
 	}
 	else if (unitType.isWorker())
 		workers.erase(unit);
-	else
+	else if (!isMisc(unitType))
 		troops.insert(unit);
 }
 
@@ -66,6 +100,15 @@ void Archivist::recordUnitPosition(BWAPI::Unit * unit)
 		positions[unit] = unit->getPosition();
 	else if (!isArchived(unit) || BWAPI::Broodwar->isVisible(BWAPI::TilePosition(positions[unit])))
 		positions[unit] = BWAPI::Positions::None;
+}
+
+// Updates the type of a unit if it is visible.
+void Archivist::recordUnitType(BWAPI::Unit * unit)
+{
+	if (unit->isVisible())
+		types[unit] = unit->getType();
+	else
+		types[unit] = BWAPI::UnitTypes::None;
 }
 
 // Designates the home region.
@@ -82,7 +125,7 @@ void Archivist::update()
 		if (unit->isVisible())
 			recordUnitPosition(unit);
 
-	// Ensure refineries haven't been destroyed.
+	// Validate refineries haven't become geysers.
 	{
 		std::set<BWAPI::Unit*>::iterator it = refineries.begin();
 		while (it != refineries.end())
@@ -110,6 +153,15 @@ BWAPI::Position Archivist::getPosition(BWAPI::Unit * unit)
 		return BWAPI::Positions::None;
 }
 
+// Returns the type an enemy was last seen as.
+BWAPI::UnitType Archivist::getType(BWAPI::Unit * unit)
+{
+	if (isArchived(unit))
+		return types[unit];
+	else
+		return BWAPI::UnitTypes::None;
+}
+
 // Finds and returns all invaders.
 std::set<BWAPI::Unit*> Archivist::invaders()
 {
@@ -130,6 +182,13 @@ std::set<BWAPI::Unit*> Archivist::getBuildings()
 std::set<BWAPI::Unit*> Archivist::getDepots()
 {
 	return depots;
+}
+
+// Returns a copy of recorded turrets.
+// This includes 
+std::set<BWAPI::Unit*> Archivist::getTurrets()
+{
+	return turrets;
 }
 
 // Returns a copy of recorded workers.

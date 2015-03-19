@@ -2,14 +2,15 @@
 
 // Constructor
 ArmyManager::ArmyManager(Archivist * archivist, WorkerManager * workerManager, Producer * producer, Architect * architect) :
-archivist(archivist),
-workerManager(workerManager),
-producer(producer),
-architect(architect),
-//defender(NULL),
-troops(std::set<BWAPI::Unit*>()),
-invaders(std::map<BWAPI::Unit*, int>()),
-defenders(std::map<BWAPI::Unit*, BWAPI::Unit*>())
+	archivist(archivist),
+	workerManager(workerManager),
+	producer(producer),
+	architect(architect),
+	troops(std::set<BWAPI::Unit*>()),
+	attackers(std::set<BWAPI::Unit*>()),
+	idle(std::set<BWAPI::Unit*>()),
+	invaders(std::map<BWAPI::Unit*, int>()),
+	defenders(std::map<BWAPI::Unit*, BWAPI::Unit*>())
 {
 }
 
@@ -18,22 +19,55 @@ ArmyManager::~ArmyManager()
 {
 }
 
+// Calculates the total hitpoints and shields a set of units has.
+int ArmyManager::toughness(std::set<BWAPI::Unit*> units)
+{
+	int toughness = 0;
+	BOOST_FOREACH(BWAPI::Unit * unit, units)
+	{
+		BWAPI::UnitType unitType = unit->getType();
+		toughness += unitType.maxHitPoints() + unitType.maxShields();
+	}
+	return toughness;
+}
+
+// Calculates the total damage a set of units deal per time unit.
+double ArmyManager::damage(std::set<BWAPI::Unit*> units)
+{
+	double damage = 0;
+	BOOST_FOREACH(BWAPI::Unit * unit, units)
+	{
+		BWAPI::WeaponType weapon = unit->getType().groundWeapon();
+		if (weapon != BWAPI::WeaponTypes::None)
+			damage += ((double) weapon.damageAmount()) / (double) weapon.damageCooldown();
+	}
+	return damage;
+}
+
+// Calculates the time-to-kill for the attackers versus defenders.
+double ArmyManager::TTK(std::set<BWAPI::Unit*> attackers, std::set<BWAPI::Unit*> defenders)
+{
+	int toughness = this->toughness(defenders);
+	double damage = this->damage(attackers);
+	if (damage <= 0)
+		return -1;
+	else
+		return toughness / damage;
+}
+
 // Adds a unit to the troop pool.
 void ArmyManager::addUnit(BWAPI::Unit * unit)
 {
 	troops.insert(unit);
+	idle.insert(unit);
 }
 
 // Removes a unit from the troop pool.
 void ArmyManager::removeUnit(BWAPI::Unit * unit)
 {
-	troops.erase(unit);
-}
-
-// Assigns a defender to attack a specific invader
-void ArmyManager::assignDefender(BWAPI::Unit * defender, BWAPI::Unit * invader)
-{
-
+	troops.insert(unit);
+	attackers.erase(unit);
+	idle.erase(unit);
 }
 
 // Simulate the army manager AI, ordering, creating and upgrading troops.
@@ -122,22 +156,52 @@ void ArmyManager::update()
 		}
 	}
 
+	// Calculate attack.
+	if (canAttack())
+		attackers.insert(idle.begin(), idle.end());
+
 	// Command attackers.
 	if (!enemyBuildings.empty())
 	{
 		BWAPI::Position attackTarget = archivist->getPosition(*enemyBuildings.begin());
-		std::set<BWAPI::Unit*>::iterator it = troops.begin();
-		while (it != troops.end())
+		std::set<BWAPI::Unit*>::iterator it = attackers.begin();
+		while (it != attackers.end())
 		{
-			BWAPI::Unit * unit = *it;
-			if (unit->exists())
+			BWAPI::Unit * attacker = *it;
+			++it;
+			if (attacker &&
+				attacker->exists())
 			{
-				if (unit->isIdle())
-					unit->attack(attackTarget);
-				++it;
+				if (attacker->isIdle())
+					attacker->attack(attackTarget);
 			}
 			else
-				it = troops.erase(it);
+				removeUnit(attacker);
 		}
 	}
+}
+
+// Returns whether or not we would win an attack.
+// TODO Does not account for losing troops during combat.
+// TODO Does not account for enemy upgrades.
+// TODO Does not account for current enemy unit stats.
+// TODO Does not account for armor.
+// TODO Does not account for distance and range.
+// TODO Does not account for maneuvering into attacking range.
+// TODO Does not account for damage types.
+// TODO Does not account for splash damage.
+// TODO Does not account for abilities.
+bool ArmyManager::canAttack()
+{
+	std::set<BWAPI::Unit*> enemies = archivist->getTroops(), enemyTurrets = archivist->getTurrets();
+	enemies.insert(enemyTurrets.begin(), enemyTurrets.end());
+	return
+		!troops.empty() &&
+		(enemies.empty() || TTK(troops, enemies) < TTK(enemies, troops));
+}
+
+// TEMPORARY used for testing.
+std::set<BWAPI::Unit*> ArmyManager::getTroops()
+{
+	return troops;
 }
