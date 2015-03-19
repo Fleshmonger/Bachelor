@@ -25,7 +25,12 @@ int ArmyManager::toughness(std::set<BWAPI::Unit*> units)
 	int toughness = 0;
 	BOOST_FOREACH(BWAPI::Unit * unit, units)
 	{
-		BWAPI::UnitType unitType = unit->getType();
+		// TODO Simplify this or merge the method.
+		BWAPI::UnitType unitType;
+		if (unit->getPlayer() == Broodwar->self())
+			unitType = unit->getType();
+		else
+			unitType = archivist->getType(unit);
 		toughness += unitType.maxHitPoints() + unitType.maxShields();
 	}
 	return toughness;
@@ -37,7 +42,13 @@ double ArmyManager::damage(std::set<BWAPI::Unit*> units)
 	double damage = 0;
 	BOOST_FOREACH(BWAPI::Unit * unit, units)
 	{
-		BWAPI::WeaponType weapon = unit->getType().groundWeapon();
+		// TODO Simplify this or merge the method.
+		BWAPI::UnitType unitType;
+		if (unit->getPlayer() == Broodwar->self())
+			unitType = unit->getType();
+		else
+			unitType = archivist->getType(unit);
+		BWAPI::WeaponType weapon = unitType.groundWeapon();
 		if (weapon != BWAPI::WeaponTypes::None)
 			damage += ((double) weapon.damageAmount()) / (double) weapon.damageCooldown();
 	}
