@@ -1,12 +1,6 @@
 #include "Primary.h"
 
-// Local
-/*
-bool analysis_just_finished;
-BWTA::Region* home;
-BWTA::Region* enemy_base;
-*/
-
+// Fired on starting the game.
 void Primary::onStart()
 {
 	//Broodwar->enableFlag(Flag::UserInput);
@@ -26,7 +20,7 @@ void Primary::onStart()
 	reconnoiter = new Reconnoiter(archivist, workerManager);
 	armyManager = new ArmyManager(archivist, workerManager, producer, architect);
 
-	// TODO Move this to the coming intelligence manager.
+	// TODO Move this to the coming terrain analyzer manager.
 	// Add new information to managers.
 	BOOST_FOREACH(BWAPI::Unit * mineral, BWTA::getStartLocation(Broodwar->self())->getStaticMinerals())
 	{
@@ -35,102 +29,16 @@ void Primary::onStart()
 	}
 	BOOST_FOREACH(BWAPI::Unit * geyser, BWTA::getStartLocation(Broodwar->self())->getGeysers())
 		architect->expandHarvesting(geyser);
-
 	archivist->setHomeRegion(BWTA::getStartLocation(Broodwar->self())->getRegion());
-
-	// Designate all starting units.
-	// This is already done; unitComplete is called on all starting units.
-	/*
-	BOOST_FOREACH (BWAPI::Unit * u, Broodwar->self()->getUnits())
-	{
-		if (isOwned(u))
-			designateUnit(u);
-	}
-	*/
-  /*
-  // OLD
-  if (Broodwar->isReplay())
-  {
-    Broodwar->printf("The following players are in this replay:");
-    for(std::set<Player*>::iterator p=Broodwar->getPlayers().begin();p!=Broodwar->getPlayers().end();p++)
-    {
-      if (!(*p)->getUnits().empty() && !(*p)->isNeutral())
-      {
-        Broodwar->printf("%s, playing as a %s",(*p)->getName().c_str(),(*p)->getRace().getName().c_str());
-      }
-    }
-  }
-  else
-  {
-    Broodwar->printf("The match up is %s v %s",
-      Broodwar->self()->getRace().getName().c_str(),
-      Broodwar->enemy()->getRace().getName().c_str());
-
-
-    //send each worker to the mineral field that is closest to it
-    for(std::set<Unit*>::const_iterator i=Broodwar->self()->getUnits().begin();i!=Broodwar->self()->getUnits().end();i++)
-    {
-      if ((*i)->getType().isWorker())
-      {
-        Unit* closestMineral=NULL;
-        for(std::set<Unit*>::iterator m=Broodwar->getMinerals().begin();m!=Broodwar->getMinerals().end();m++)
-        {
-          if (closestMineral==NULL || (*i)->getDistance(*m)<(*i)->getDistance(closestMineral))
-            closestMineral=*m;
-        }
-        if (closestMineral!=NULL)
-          (*i)->rightClick(closestMineral);
-      }
-      else if ((*i)->getType().isResourceDepot())
-      {
-        //if this is a center, tell it to build the appropiate type of worker
-        if ((*i)->getType().getRace()!=Races::Zerg)
-        {
-          (*i)->train(Broodwar->self()->getRace().getWorker());
-        }
-        else //if we are Zerg, we need to select a larva and morph it into a drone
-        {
-          std::set<Unit*> myLarva=(*i)->getLarva();
-          if (myLarva.size()>0)
-          {
-            Unit* larva=*myLarva.begin();
-            larva->morph(UnitTypes::Zerg_Drone);
-          }
-        }
-      }
-    }
-  }
-  */
 }
 
 void Primary::onEnd(bool isWinner)
 {
-	if (isWinner)
-	{
-		//log win to file
-	}
 }
 
+// Fired at the start of a new frame.
 void Primary::onFrame()
 {
-	/*
-	if (Broodwar->getFrameCount() == 0)
-	{
-		BWTA::analyze();
-		// TODO Move this to the coming intelligence manager.
-		// Add new information to managers.
-		BOOST_FOREACH(BWAPI::Unit * mineral, BWTA::getStartLocation(Broodwar->self())->getStaticMinerals())
-		{
-			workerManager->addMineral(mineral);
-			architect->expandHarvesting(mineral);
-		}
-		BOOST_FOREACH(BWAPI::Unit * geyser, BWTA::getStartLocation(Broodwar->self())->getGeysers())
-			architect->expandHarvesting(geyser);
-
-		armyManager->setHomeRegion(BWTA::getStartLocation(Broodwar->self())->getRegion());
-	}
-	*/
-
 	// Debugging display.
 	//DEBUG_SCREEN(200, 0, "FPS: %d", Broodwar->getFPS());
 	//DEBUG_SCREEN(200, 20, "APM: %d", Broodwar->getAPM());
@@ -139,15 +47,10 @@ void Primary::onFrame()
 	//DEBUG_SCREEN(200, 40, "Scheduled Gateways: %d", architect->scheduled(BWAPI::UnitTypes::Protoss_Gateway));
 	//DEBUG_SCREEN(200, 40, "Workers: %d", workerManager->workers());
 
-	std::set<BWAPI::Unit*> troops = armyManager->getTroops(), enemies = archivist->getTroops(), enemyTurrets = archivist->getTurrets();
-	enemies.insert(enemyTurrets.begin(), enemyTurrets.end());
-	int enemyToughness = armyManager->toughness(enemies);
-	double damage = armyManager->damage(troops), TTK = armyManager->TTK(troops, enemies), enemyTTK = armyManager->TTK(enemies, troops);
-
-	DEBUG_SCREEN(200, 0, "Damage: %f", damage);
-	DEBUG_SCREEN(200, 20, "Enemy Toughness: %d", enemyToughness);
-	DEBUG_SCREEN(200, 40, "TKK: %f", TTK);
-	DEBUG_SCREEN(200, 60, "Enemy TKK: %f", enemyTTK);
+	// Testing
+	double strength = armyManager->strength(armyManager->getArmy()), enemyStrength = armyManager->strength(archivist->getTroops());
+	DEBUG_SCREEN(200, 0, "Strength: %f", strength);
+	DEBUG_SCREEN(200, 20, "Enemy Strength: %f", enemyStrength);
 
 	// Return if the game is a replay or is paused
 	if (Broodwar->isReplay() || Broodwar->isPaused() || !Broodwar->self())
@@ -159,62 +62,14 @@ void Primary::onFrame()
 		return;
 
 	// Manager updatíng
+	// TODO Workermanager is last because it commands all leftover workers. Fix this by splitting it in two.
 	archivist->update();
 	producer->update();
 	architect->update();
 	economist->update();
 	reconnoiter->update();
 	armyManager->update();
-	workerManager->update(); // Workermanager is last because it commands all leftover workers.
-
-	/*
-  if (show_visibility_data)
-    drawVisibilityData();
-
-  if (show_bullets)
-    drawBullets();
-
-  if (Broodwar->isReplay())
-    return;
-
-  drawStats();
-  if (analyzed && Broodwar->getFrameCount()%30==0)
-  {
-    //order one of our workers to guard our chokepoint.
-    for(std::set<Unit*>::const_iterator i=Broodwar->self()->getUnits().begin();i!=Broodwar->self()->getUnits().end();i++)
-    {
-      if ((*i)->getType().isWorker())
-      {
-        //get the chokepoints linked to our home region
-        std::set<BWTA::Chokepoint*> chokepoints= home->getChokepoints();
-        double min_length=10000;
-        BWTA::Chokepoint* choke=NULL;
-
-        //iterate through all chokepoints and look for the one with the smallest gap (least width)
-        for(std::set<BWTA::Chokepoint*>::iterator c=chokepoints.begin();c!=chokepoints.end();c++)
-        {
-          double length=(*c)->getWidth();
-          if (length<min_length || choke==NULL)
-          {
-            min_length=length;
-            choke=*c;
-          }
-        }
-
-        //order the worker to move to the center of the gap
-        (*i)->rightClick(choke->getCenter());
-        break;
-      }
-    }
-  }
-  if (analyzed)
-    drawTerrainData();
-
-  if (analysis_just_finished)
-  {
-    Broodwar->printf("Finished analyzing map.");
-    analysis_just_finished=false;
-  }*/
+	workerManager->update();
 }
 
 void Primary::onSendText(std::string text)
@@ -233,6 +88,7 @@ void Primary::onNukeDetect(BWAPI::Position target)
 {
 }
 
+// Fired when a unit is shown for the first time.
 void Primary::onUnitDiscover(BWAPI::Unit* unit)
 {
 	if (isEnemy(unit))
@@ -243,6 +99,7 @@ void Primary::onUnitEvade(BWAPI::Unit* unit)
 {
 }
 
+// Fired when an invisible unit becomes visible.
 void Primary::onUnitShow(BWAPI::Unit* unit)
 {
 }
@@ -251,7 +108,8 @@ void Primary::onUnitHide(BWAPI::Unit* unit)
 {
 }
 
-// Called on initially created units
+// Fired when a unit is created.
+// Units under construction triggers this.
 void Primary::onUnitCreate(BWAPI::Unit* unit)
 {
 	//DEBUG_OUT("Unit Create: " + unit->getType().getName());
@@ -266,6 +124,8 @@ void Primary::onUnitCreate(BWAPI::Unit* unit)
 	}
 }
 
+// Fired when a unit dies or is destroyed.
+// TODO Do refineries trigger this?
 void Primary::onUnitDestroy(BWAPI::Unit* unit)
 {
 	//Broodwar->printf("%s was destroyed", unit->getType().getName().c_str());
@@ -282,7 +142,6 @@ void Primary::onUnitDestroy(BWAPI::Unit* unit)
 			{
 				// TODO What should happen here?
 				architect->setDepot(NULL);
-				//economist->setDepot(NULL);
 				producer->setDepot(NULL);
 				workerManager->setDepot(NULL);
 			}
@@ -304,24 +163,10 @@ void Primary::onUnitDestroy(BWAPI::Unit* unit)
 		archivist->clearUnit(unit);
 }
 
+// Fires when a unit changes type.
+// TODO Does building geyser emplacements trigger this?
 void Primary::onUnitMorph(BWAPI::Unit* unit)
 {
-	/*
-	if (!Broodwar->isReplay())
-		Broodwar->sendText("A %s [%x] has been morphed at (%d,%d)",unit->getType().getName().c_str(),unit,unit->getPosition().x(),unit->getPosition().y());
-	else
-	{
-		//if we are in a replay, then we will print out the build order
-		//(just of the buildings, not the units).
-		if (unit->getType().isBuilding() && unit->getPlayer()->isNeutral()==false)
-		{
-			int seconds=Broodwar->getFrameCount()/24;
-			int minutes=seconds/60;
-			seconds%=60;
-			Broodwar->sendText("%.2d:%.2d: %s morphs a %s",minutes,seconds,unit->getPlayer()->getName().c_str(),unit->getType().getName().c_str());
-		}
-	}
-	*/
 }
 
 void Primary::onUnitRenegade(BWAPI::Unit* unit)
@@ -332,6 +177,8 @@ void Primary::onSaveGame(std::string gameName)
 {
 }
 
+// Fires when a unit has finished construction.
+// Both units and buildings trigger this.
 void Primary::onUnitComplete(BWAPI::Unit *unit)
 {
 	//DEBUG_OUT("Unit Complete: %s", unit->getType().getName());
@@ -349,24 +196,9 @@ void Primary::onUnitComplete(BWAPI::Unit *unit)
 	}
 }
 
-// Returns true if the unit is owned and false otherwise.
-// TODO Move this to some unit monitor class?
-// TODO This can probably be done cheaper.
-bool Primary::isOwned(BWAPI::Unit * unit)
-{
-	return unit->getPlayer() == Broodwar->self();
-}
-
-// Returns true if the unit is owned by an enemy and false otherwise.
-// TODO Move this to some unit monitor class?
-// TODO This can probably be done cheaper.
-bool Primary::isEnemy(BWAPI::Unit * unit)
-{
-	return Broodwar->self()->isEnemy(unit->getPlayer());
-}
-
 // Delivers a unit to managers who needs it.
 // Assumes the unit is owned.
+// TODO Remove this assumption.
 void Primary::designateUnit(BWAPI::Unit * unit)
 {
 	// Determine type.
@@ -389,4 +221,20 @@ void Primary::designateUnit(BWAPI::Unit * unit)
 		workerManager->addWorker(unit);
 	else // Must be a combat unit
 		armyManager->addUnit(unit);
+}
+
+// Returns true if the unit is owned and false otherwise.
+// TODO Move this to some unit monitor class?
+// TODO This can probably be done cheaper.
+bool Primary::isOwned(BWAPI::Unit * unit)
+{
+	return unit->getPlayer() == Broodwar->self();
+}
+
+// Returns true if the unit is owned by an enemy and false otherwise.
+// TODO Move this to some unit monitor class?
+// TODO This can probably be done cheaper.
+bool Primary::isEnemy(BWAPI::Unit * unit)
+{
+	return Broodwar->self()->isEnemy(unit->getPlayer());
 }

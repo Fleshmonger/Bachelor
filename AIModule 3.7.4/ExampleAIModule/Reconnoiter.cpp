@@ -18,15 +18,16 @@ Reconnoiter::~Reconnoiter()
 // Retrieves, returns and commands the scout.
 void Reconnoiter::update()
 {
+	// Enemy base spotted check.
 	if (archivist->getDepots().empty())
 	{
 		// Finding Target.
-		std::set<BWAPI::TilePosition> points = Broodwar->getStartLocations();
+		std::set<BWAPI::TilePosition> points = BWAPI::Broodwar->getStartLocations();
 		std::set<BWAPI::TilePosition>::iterator it = points.begin();
-		while ((!target || Broodwar->isExplored(BWAPI::TilePosition(target))) && it != points.end())
+		while ((!target || BWAPI::Broodwar->isExplored(BWAPI::TilePosition(target))) && it != points.end())
 		{
 			BWAPI::TilePosition tile = *it;
-			if (!Broodwar->isExplored(tile))
+			if (!BWAPI::Broodwar->isExplored(tile))
 				target = BWAPI::Position(tile);
 			++it;
 		}
@@ -38,9 +39,7 @@ void Reconnoiter::update()
 				scout = workerManager->takeWorker();
 			// Commanding Scout
 			if (scout && scout->getOrderTargetPosition() != target)
-			{
-				scout->move(target);
-			}
+				utilUnit::orderUnit(scout, BWAPI::UnitCommandTypes::Move, target);
 		}
 	}
 	else if (scout && scout->exists())
@@ -48,7 +47,7 @@ void Reconnoiter::update()
 		// Harassing
 		std::set<BWAPI::Unit*> troops = archivist->getTroops();
 		if (!troops.empty() && !scout->isAttacking())
-			scout->attack(archivist->getPosition(*troops.begin()));
+			utilUnit::orderUnit(scout, BWAPI::UnitCommandTypes::Attack_Move, archivist->getPosition(*troops.begin()));
 	}
 	else
 		scout = NULL;

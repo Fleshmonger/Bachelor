@@ -2,6 +2,7 @@
 #include <BWAPI.h>
 #include <BWTA.h>
 #include <boost/foreach.hpp>
+#include "UtilUnit.h"
 
 // Collects battlefield information, mostly about opponents.
 // TODO Does not account for morphed creatures (important with drones for example!)
@@ -17,6 +18,7 @@ private:
 
 	bool isMisc(BWAPI::UnitType unitType); // TODO Rename? Or move zerg stuff elsewhere?
 	bool isTurret(BWAPI::UnitType unitType);
+
 public:
 	Archivist();
 	~Archivist();

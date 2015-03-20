@@ -3,6 +3,7 @@
 
 using namespace BWAPI;
 
+// Tracks reserved resources currently scheduled for use.
 class Accountant
 {
 private:
@@ -14,10 +15,13 @@ private:
 public:
 	Accountant();
 	~Accountant();
-	bool isAffordable(BWAPI::UnitType unitType);
+
 	void allocate(BWAPI::UnitType unitType);
 	void deallocate(BWAPI::UnitType unitType);
-	//int minerals();
-	//int gas();
+
+	bool isAffordable(BWAPI::UnitType unitType);
+
+	int minerals();
+	int gas();
 	int supply();
 };

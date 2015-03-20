@@ -147,19 +147,29 @@ bool Archivist::isArchived(BWAPI::Unit * unit)
 // Returns the position an enemy was last seen.
 BWAPI::Position Archivist::getPosition(BWAPI::Unit * unit)
 {
-	if (isArchived(unit))
-		return positions[unit];
+	if (utilUnit::isOwned(unit))
+		return unit->getPosition();
 	else
-		return BWAPI::Positions::None;
+	{
+		if (isArchived(unit))
+			return positions[unit];
+		else
+			return BWAPI::Positions::None;
+	}
 }
 
 // Returns the type an enemy was last seen as.
 BWAPI::UnitType Archivist::getType(BWAPI::Unit * unit)
 {
-	if (isArchived(unit))
-		return types[unit];
+	if (utilUnit::isOwned(unit))
+		return unit->getType();
 	else
-		return BWAPI::UnitTypes::None;
+	{
+		if (isArchived(unit))
+			return types[unit];
+		else
+			return BWAPI::UnitTypes::None;
+	}
 }
 
 // Finds and returns all invaders.

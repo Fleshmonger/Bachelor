@@ -26,7 +26,6 @@ class Primary : public BWAPI::AIModule
 #endif
 
 private:
-	// Managers
 	Accountant * accountant;
 	Archivist * archivist;
 	Producer * producer;
@@ -37,7 +36,6 @@ private:
 	ArmyManager * armyManager;
 
 public:
-	// Callbacks
 	virtual void onStart();
 	virtual void onEnd(bool isWinner);
 	virtual void onFrame();
@@ -56,8 +54,8 @@ public:
 	virtual void onSaveGame(std::string gameName);
 	virtual void onUnitComplete(BWAPI::Unit *unit);
 
-	// Auxillary
+	void designateUnit(BWAPI::Unit * unit);
+
 	bool isOwned(BWAPI::Unit * unit);
 	bool isEnemy(BWAPI::Unit * unit);
-	void designateUnit(BWAPI::Unit * unit);
 };
