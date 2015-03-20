@@ -36,9 +36,6 @@ private:
 public:
 	double strength(BWAPI::Unit* unit);
 	double strength(std::set<BWAPI::Unit*> units);
-	//int toughness(std::set<BWAPI::Unit*> units); // TODO Rename; move; make private
-	//double TTK(std::set<BWAPI::Unit*> attackers, std::set<BWAPI::Unit*> defenders); // TODO Rename; move; make private
-	//double damage(std::set<BWAPI::Unit*> units); // TODO Rename; move; make private
 
 	ArmyManager(Archivist * archivist, WorkerManager * workerManager, Producer * producer, Architect * architect);
 	~ArmyManager();

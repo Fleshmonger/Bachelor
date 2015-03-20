@@ -2,8 +2,9 @@
 #include <BWAPI.h>
 #include <queue>
 #include <boost/foreach.hpp>
+#include "UtilUnit.h"
 
-const int MAX_FIELD_HARVESTERS = 10; // Maximum harvesters on a single mineral field.
+const int MAX_FIELD_HARVESTERS = 3; // Maximum harvesters on a single mineral field.
 
 class WorkerManager
 {

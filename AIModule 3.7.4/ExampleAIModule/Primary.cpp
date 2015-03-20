@@ -3,8 +3,8 @@
 // Fired on starting the game.
 void Primary::onStart()
 {
-	//Broodwar->enableFlag(Flag::UserInput);
-	Broodwar->setLocalSpeed(0);
+	Broodwar->enableFlag(Flag::UserInput);
+	//Broodwar->setLocalSpeed(0);
 
 	// Read map information.
 	BWTA::readMap();
@@ -40,17 +40,13 @@ void Primary::onEnd(bool isWinner)
 void Primary::onFrame()
 {
 	// Debugging display.
-	//DEBUG_SCREEN(200, 0, "FPS: %d", Broodwar->getFPS());
-	//DEBUG_SCREEN(200, 20, "APM: %d", Broodwar->getAPM());
-	//DEBUG_SCREEN(200, 40, "Average FPS: %f", Broodwar->getAverageFPS());
-	//DEBUG_SCREEN(200, 40, "Unallocated Minerals: %d", accountant->minerals());
-	//DEBUG_SCREEN(200, 40, "Scheduled Gateways: %d", architect->scheduled(BWAPI::UnitTypes::Protoss_Gateway));
-	//DEBUG_SCREEN(200, 40, "Workers: %d", workerManager->workers());
+	DEBUG_SCREEN(200, 0, "FPS: %d", Broodwar->getFPS());
+	DEBUG_SCREEN(200, 20, "APM: %d", Broodwar->getAPM());
 
 	// Testing
 	double strength = armyManager->strength(armyManager->getArmy()), enemyStrength = armyManager->strength(archivist->getTroops());
-	DEBUG_SCREEN(200, 0, "Strength: %f", strength);
-	DEBUG_SCREEN(200, 20, "Enemy Strength: %f", enemyStrength);
+	DEBUG_SCREEN(200, 40, "Strength: %f", strength);
+	DEBUG_SCREEN(200, 60, "Enemy Strength: %f", enemyStrength);
 
 	// Return if the game is a replay or is paused
 	if (Broodwar->isReplay() || Broodwar->isPaused() || !Broodwar->self())
@@ -91,7 +87,7 @@ void Primary::onNukeDetect(BWAPI::Position target)
 // Fired when a unit is shown for the first time.
 void Primary::onUnitDiscover(BWAPI::Unit* unit)
 {
-	if (isEnemy(unit))
+	if (utilUnit::isEnemy(unit))
 		archivist->recordUnit(unit);
 }
 
@@ -114,7 +110,7 @@ void Primary::onUnitCreate(BWAPI::Unit* unit)
 {
 	//DEBUG_OUT("Unit Create: " + unit->getType().getName());
 	// Monitor the construction of the unit.
-	if (isOwned(unit))
+	if (utilUnit::isOwned(unit))
 	{
 		BWAPI::UnitType unitType = unit->getType();
 		if (unitType.isBuilding())
@@ -131,7 +127,7 @@ void Primary::onUnitDestroy(BWAPI::Unit* unit)
 	//Broodwar->printf("%s was destroyed", unit->getType().getName().c_str());
 	//DEBUG_OUT("Unit Destroy: " + unit->getType().getName());
 	// Determine owner.
-	if (isOwned(unit))
+	if (utilUnit::isOwned(unit))
 	{
 		// Undesignate the destroyed unit.
 		BWAPI::UnitType unitType = unit->getType();
@@ -159,7 +155,7 @@ void Primary::onUnitDestroy(BWAPI::Unit* unit)
 			armyManager->removeUnit(unit);
 		// TODO if unit was incomplete, remove it from the producer.
 	}
-	else if (isEnemy(unit))
+	else if (utilUnit::isEnemy(unit))
 		archivist->clearUnit(unit);
 }
 
@@ -183,7 +179,7 @@ void Primary::onUnitComplete(BWAPI::Unit *unit)
 {
 	//DEBUG_OUT("Unit Complete: %s", unit->getType().getName());
 	// Determine owner.
-	if (isOwned(unit))
+	if (utilUnit::isOwned(unit))
 	{
 		// Update construction status.
 		BWAPI::UnitType unitType = unit->getType();
@@ -221,20 +217,4 @@ void Primary::designateUnit(BWAPI::Unit * unit)
 		workerManager->addWorker(unit);
 	else // Must be a combat unit
 		armyManager->addUnit(unit);
-}
-
-// Returns true if the unit is owned and false otherwise.
-// TODO Move this to some unit monitor class?
-// TODO This can probably be done cheaper.
-bool Primary::isOwned(BWAPI::Unit * unit)
-{
-	return unit->getPlayer() == Broodwar->self();
-}
-
-// Returns true if the unit is owned by an enemy and false otherwise.
-// TODO Move this to some unit monitor class?
-// TODO This can probably be done cheaper.
-bool Primary::isEnemy(BWAPI::Unit * unit)
-{
-	return Broodwar->self()->isEnemy(unit->getPlayer());
 }

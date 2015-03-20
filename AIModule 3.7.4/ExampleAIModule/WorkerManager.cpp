@@ -45,15 +45,17 @@ void WorkerManager::removeWorker(BWAPI::Unit * worker)
 		idle.erase(worker);
 	else if (harvesters.count(worker) == 1)
 	{
-		BWAPI::Unit * mineral = harvesters[worker];
+		BWAPI::Unit * targetMineral = harvesters[worker];
 		harvesters.erase(worker);
 		// Update the fields.
-		std::vector<Field>::iterator it = fields.begin(), end = fields.end();
-		while (it != end)
+		std::vector<Field>::iterator it = fields.begin();
+		while (it != fields.end())
 		{
-			if ((*it).second = mineral)
+			Field field = *it;
+			int amount = field.first;
+			BWAPI::Unit * mineral = field.second;
+			if (mineral == targetMineral)
 			{
-				int amount = (*it).first;
 				fields.erase(it);
 				std::sort_heap(fields.begin(), fields.end(), Field_Comp());
 				insertField(amount - 1, mineral);
@@ -113,13 +115,10 @@ void WorkerManager::update()
 					mineral->exists())
 				{
 					// Harvester AI
-					if (harvester->isIdle())
-					{
-						if (harvester->isCarryingMinerals() || harvester->isCarryingGas())
-							harvester->returnCargo();
-						else
-							harvester->gather(mineral);
-					}
+					if (harvester->isCarryingMinerals() || harvester->isCarryingGas())
+						utilUnit::command(harvester, BWAPI::UnitCommandTypes::Return_Cargo, depot);
+					else
+						utilUnit::command(harvester, BWAPI::UnitCommandTypes::Gather, mineral);
 				}
 				else
 					removeWorker(harvester);
@@ -174,7 +173,7 @@ bool WorkerManager::assignWorker(BWAPI::Unit * worker)
 			int amount = field.first;
 			popField();
 			insertField(amount + 1, mineral);
-			worker->gather(mineral);
+			utilUnit::command(worker, BWAPI::UnitCommandTypes::Gather, mineral);
 			return true;
 		}
 	}

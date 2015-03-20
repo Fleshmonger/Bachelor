@@ -51,55 +51,6 @@ double ArmyManager::strength(std::set<BWAPI::Unit*> units)
 	return unitsStrength;
 }
 
-/*
-// Calculates the total hitpoints and shields a set of units has.
-int ArmyManager::toughness(std::set<BWAPI::Unit*> units)
-{
-	int toughness = 0;
-	BOOST_FOREACH(BWAPI::Unit * unit, units)
-	{
-		// TODO Simplify this or merge the method.
-		BWAPI::UnitType unitType;
-		if (unit->getPlayer() == Broodwar->self())
-			unitType = unit->getType();
-		else
-			unitType = archivist->getType(unit);
-		toughness += unitType.maxHitPoints() + unitType.maxShields();
-	}
-	return toughness;
-}
-
-// Calculates the total damage a set of units deal per time unit.
-double ArmyManager::damage(std::set<BWAPI::Unit*> units)
-{
-	double damage = 0;
-	BOOST_FOREACH(BWAPI::Unit * unit, units)
-	{
-		// TODO Simplify this or merge the method.
-		BWAPI::UnitType unitType;
-		if (unit->getPlayer() == Broodwar->self())
-			unitType = unit->getType();
-		else
-			unitType = archivist->getType(unit);
-		BWAPI::WeaponType weapon = unitType.groundWeapon();
-		if (weapon != BWAPI::WeaponTypes::None)
-			damage += ((double) weapon.damageAmount()) / (double) weapon.damageCooldown();
-	}
-	return damage;
-}
-
-// Calculates the time-to-kill for the attackers versus defenders.
-double ArmyManager::TTK(std::set<BWAPI::Unit*> attackers, std::set<BWAPI::Unit*> defenders)
-{
-	int toughness = this->toughness(defenders);
-	double damage = this->damage(attackers);
-	if (damage <= 0)
-		return -1;
-	else
-		return toughness / damage;
-}
-*/
-
 // Adds a unit to the troop pool.
 void ArmyManager::addUnit(BWAPI::Unit * unit)
 {
@@ -118,6 +69,7 @@ void ArmyManager::removeUnit(BWAPI::Unit * unit)
 }
 
 // Simulate the army manager AI, ordering, creating and upgrading troops.
+// TODO Simplify defense
 void ArmyManager::update()
 {
 	// Initialize.
@@ -179,20 +131,27 @@ void ArmyManager::update()
 		std::map<BWAPI::Unit*, BWAPI::Unit*>::iterator it = defenderTargets.begin();
 		while (it != defenderTargets.end())
 		{
-			BWAPI::Unit * defender = (*it).first;
-			BWAPI::Unit * invader = (*it).second;
+			std::pair<BWAPI::Unit*, BWAPI::Unit*> entry = *it;
+			BWAPI::Unit
+				* defender = entry.first,
+				* target = entry.second;
 			++it;
-			// Validate.
+			// Validate defender entry.
 			if (defender &&
 				defender->exists() &&
-				invaderDefense.count(invader) > 0)
+				target &&
+				target->exists() &&
+				invaderDefense.count(target) > 0)
 			{
-				// Intercept invader.
-				defender->attack(archivist->getPosition(invader));
+				// Intercept intruder.
+				if (target->isVisible())
+					utilUnit::command(defender, BWAPI::UnitCommandTypes::Attack_Unit, target);
+				else
+					utilUnit::command(defender, BWAPI::UnitCommandTypes::Attack_Move, archivist->getPosition(target));
 			}
 			else
 			{
-				// Relieve invalid defender.
+				// Clear invalid entry.
 				defenderTargets.erase(defender);
 				if (defender &&
 					defender->exists())
@@ -202,7 +161,7 @@ void ArmyManager::update()
 					else
 						addUnit(defender);
 				}
-				--invaderDefense[invader];
+				--invaderDefense[target];
 			}
 		}
 	}
@@ -224,7 +183,7 @@ void ArmyManager::update()
 				attacker->exists())
 			{
 				if (attacker->isIdle())
-					utilUnit::orderUnit(attacker, BWAPI::UnitCommandTypes::Attack_Move, attackLocation);
+					utilUnit::command(attacker, BWAPI::UnitCommandTypes::Attack_Move, attackLocation);
 					//attacker->attack(attackTarget);
 			}
 			else

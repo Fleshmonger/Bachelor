@@ -3,6 +3,7 @@
 #include <BWTA.h>
 #include <windows.h>
 #include <boost/foreach.hpp>
+#include "UtilUnit.h"
 #include "Accountant.h"
 #include "Archivist.h"
 #include "WorkerManager.h"
@@ -55,7 +56,4 @@ public:
 	virtual void onUnitComplete(BWAPI::Unit *unit);
 
 	void designateUnit(BWAPI::Unit * unit);
-
-	bool isOwned(BWAPI::Unit * unit);
-	bool isEnemy(BWAPI::Unit * unit);
 };

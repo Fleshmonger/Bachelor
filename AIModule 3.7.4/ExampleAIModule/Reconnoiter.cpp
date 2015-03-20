@@ -9,7 +9,7 @@ Reconnoiter::Reconnoiter(Archivist * archivist, WorkerManager * workerManager) :
 {
 }
 
-// Unused deconstructor
+// Deconstructor
 Reconnoiter::~Reconnoiter()
 {
 }
@@ -39,7 +39,7 @@ void Reconnoiter::update()
 				scout = workerManager->takeWorker();
 			// Commanding Scout
 			if (scout && scout->getOrderTargetPosition() != target)
-				utilUnit::orderUnit(scout, BWAPI::UnitCommandTypes::Move, target);
+				utilUnit::command(scout, BWAPI::UnitCommandTypes::Move, target);
 		}
 	}
 	else if (scout && scout->exists())
@@ -47,7 +47,7 @@ void Reconnoiter::update()
 		// Harassing
 		std::set<BWAPI::Unit*> troops = archivist->getTroops();
 		if (!troops.empty() && !scout->isAttacking())
-			utilUnit::orderUnit(scout, BWAPI::UnitCommandTypes::Attack_Move, archivist->getPosition(*troops.begin()));
+			utilUnit::command(scout, BWAPI::UnitCommandTypes::Attack_Move, archivist->getPosition(*troops.begin()));
 	}
 	else
 		scout = NULL;

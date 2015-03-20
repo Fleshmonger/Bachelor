@@ -5,7 +5,9 @@
 // TODO Rename both files and namespace?
 namespace utilUnit
 {
-	void orderUnit(BWAPI::Unit * unit, BWAPI::UnitCommandType commandType, BWAPI::Position location);
+	void command(BWAPI::Unit * unit, BWAPI::UnitCommandType commandType, BWAPI::Unit * target);
+	void command(BWAPI::Unit * unit, BWAPI::UnitCommandType commandType, BWAPI::Position position);
+	void command(BWAPI::Unit * unit, BWAPI::UnitCommandType commandType, BWAPI::Unit * target, BWAPI::Position position);
 
 	bool isEnemy(BWAPI::Unit * unit);
 	bool isOwned(BWAPI::Unit * unit);
