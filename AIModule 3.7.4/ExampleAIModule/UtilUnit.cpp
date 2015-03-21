@@ -12,7 +12,7 @@ void utilUnit::command(BWAPI::Unit * unit, BWAPI::UnitCommandType commandType, B
 	command(unit, commandType, NULL, position);
 }
 
-// Orders a unit with a given order type with either target or position or both.
+// Commands a unit with a given command type with either target or position or both.
 // TODO What is the last argument in unitCommand used for?
 void utilUnit::command(BWAPI::Unit * unit, BWAPI::UnitCommandType commandType, BWAPI::Unit * target, BWAPI::Position position)
 {
@@ -24,8 +24,29 @@ void utilUnit::command(BWAPI::Unit * unit, BWAPI::UnitCommandType commandType, B
 		{
 			// Ensure the current unit command is not identical to the new one.
 			BWAPI::UnitCommand lastCommand = unit->getLastCommand();
-			if (lastCommand.getType() != commandType || lastCommand.getTargetPosition() != position || lastCommand.getTarget() != target)
+			if (lastCommand.getType() != commandType ||
+				lastCommand.getTargetPosition() != position ||
+				lastCommand.getTarget() != target)
 				unit->issueCommand(BWAPI::UnitCommand(unit, commandType, target, position.x(), position.y(), 0));
+		} // Closure: Already commanded.
+	} // Closure: Invalid unit.
+}
+
+// Commands a unit to build at a location.
+// TODO Merge with command somehow.
+void utilUnit::commandBuild(BWAPI::Unit * unit, BWAPI::TilePosition location, BWAPI::UnitType buildingType)
+{
+	// Validate the unit.
+	if (unit && unit->exists() && isOwned(unit))
+	{
+		// Ensure the unit has not recieved a command this frame.
+		if (unit->getLastCommandFrame() < BWAPI::Broodwar->getFrameCount())
+		{
+			// Ensure the current unit command is not identical to the new one.
+			BWAPI::UnitCommand lastCommand = unit->getLastCommand();
+			if (lastCommand.getType() != BWAPI::UnitCommandTypes::Build ||
+				lastCommand.getTargetPosition() != location)
+				unit->build(location, buildingType);
 		} // Closure: Already commanded.
 	} // Closure: Invalid unit.
 }

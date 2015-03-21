@@ -1,0 +1,28 @@
+\documentclass[11pt]{article}
+\usepackage{fullpage}
+\usepackage{amsmath, amsfonts}
+\usepackage[utf8]{inputenc}
+
+\begin{document}
+\begin{center}
+{{\Large \sc A StarCraft Bot}}
+\end{center}
+\section*{StarCraft}
+
+\section*{BWAPI}
+"The Brood War Application Programming Interface (BWAPI) is a free and open source C++ framework that is used to interact with the popular Real Time Strategy (RTS) game StarCraft: Broodwar. Using BWAPI, students, researchers, and hobbyists can create Artificial Intelligence (AI) agents that play the game."
+
+Written by Adam Heinermann
+
+Since its debut, BWAPI has been a popular choice with AI research in commercial RTS games. Different organisations hold AI tournaments between the bots designed with BWAPI. The AIIDE StarCraft AI Competition held its first tournament in 2010. It is organized by Michael Buro and David Churchill who also created the successful UAlberta bot, winner of AIIDE 2013. SSCAI is hosted by Krasimir Krystev, creator of Krasi0 bot and contributor to BWAPI.
+
+\section*{BWTA}
+The \emph{Broodwar Terrain Analyzer} is a library addition to BWAPI, used almost universally by all BWAPI bots and recommended by SSCAI itself. It analyzes tournament maps such as the ones employed by SSCAI, detecting expansion locations, a collision map and dividing the map into regions with borders.
+
+While it is not mandatory to use BWTA, it's apparent that all bots do. The tools provided are indispensable at higher levels of play, and the preprocessing nature of the terrain analyzer helpfully increases performance.
+
+The terrain analyzer reduces the map into regions, between which there are defined choke points. The region could be used for defining base building, ensuring ones structures are all only reachable by the same entrances and detecting when enemies have intruded the base. Choke points are bottlenecks between regions, usually used for guarding passage into the base, or sometimes even blocked completely with the wall-in strategy.
+
+\section*{BWSAL}
+
+\end{document}

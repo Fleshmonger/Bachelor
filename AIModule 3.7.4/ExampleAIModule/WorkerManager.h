@@ -6,10 +6,11 @@
 
 const int MAX_FIELD_HARVESTERS = 3; // Maximum harvesters on a single mineral field.
 
+typedef std::pair<int, BWAPI::Unit*> Field;
+
 class WorkerManager
 {
 	//TODO Make the whole queue a struct?
-	typedef std::pair<int, BWAPI::Unit*> Field;
 
 	struct Field_Comp
 	{
@@ -32,13 +33,19 @@ class WorkerManager
 	public:
 		WorkerManager();
 		~WorkerManager();
+
 		void addWorker(BWAPI::Unit * worker);
 		void removeWorker(BWAPI::Unit * worker);
 		void addMineral(BWAPI::Unit * mineral);
 		void setDepot(BWAPI::Unit * depot);
 		void update();
+
 		bool assignWorker(BWAPI::Unit * worker);
+
 		int harvesterMax();
 		int workers();
+
 		BWAPI::Unit * takeWorker();
+
+		std::vector<Field> getFields();
 };

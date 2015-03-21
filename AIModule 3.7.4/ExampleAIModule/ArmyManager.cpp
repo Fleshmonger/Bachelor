@@ -32,7 +32,7 @@ ArmyManager::~ArmyManager()
 // TODO Does not account for abilities.
 double ArmyManager::strength(BWAPI::Unit * unit)
 {
-	if (unit && unit->exists())
+	if (unit)
 	{
 		BWAPI::UnitType unitType = archivist->getType(unit);
 		BWAPI::WeaponType weaponType = unitType.groundWeapon();

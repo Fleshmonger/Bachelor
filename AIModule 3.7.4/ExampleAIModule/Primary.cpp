@@ -39,6 +39,16 @@ void Primary::onEnd(bool isWinner)
 // Fired at the start of a new frame.
 void Primary::onFrame()
 {
+	// Draw fields and amount of workers assigned
+	BOOST_FOREACH(Field field, workerManager->getFields())
+	{
+		int amount = field.first;
+		BWAPI::Unit * mineral = field.second;
+		BWAPI::Position pos = mineral->getPosition();
+		BWAPI::Broodwar->drawCircleMap(pos.x(), pos.y(), 32, BWAPI::Colors::Blue, false);
+		BWAPI::Broodwar->drawTextMap(pos.x(), pos.y(), "%d", amount);
+	}
+
 	// Debugging display.
 	DEBUG_SCREEN(200, 0, "FPS: %d", Broodwar->getFPS());
 	DEBUG_SCREEN(200, 20, "APM: %d", Broodwar->getAPM());

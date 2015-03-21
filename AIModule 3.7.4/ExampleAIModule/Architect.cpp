@@ -38,7 +38,6 @@ BWAPI::TilePosition Architect::getBuildLocation(BWAPI::Unit * builder, BWAPI::Ti
 			if (horizontal)
 			{
 				dx += step;
-				//tile.x += step;
 				if (dx == length * step)
 					horizontal = false;
 			}
@@ -71,29 +70,16 @@ bool Architect::scheduleBuild(BWAPI::UnitType buildingType)
 	{
 		// Check if we have the resources.
 		if (accountant->isAffordable(buildingType))
-		//if (buildingType.mineralPrice() <= Broodwar->self()->minerals())
 		{
 			BWAPI::Unit * builder = workerManager->takeWorker();
 			if (builder)
 			{
-				/*
-				TilePosition desiredBuildLocation, targetBuildLocation;
-				if (buildingType == BWAPI::UnitTypes::Protoss_Pylon && depot)
-					desiredBuildLocation = depot->getTilePosition();
-				else if (!pylons.empty())
-				{
-					// Find a pylon to build near.
-					std::set<Unit*>::iterator it = pylons.begin();
-					desiredBuildLocation = (*it)->getTilePosition();
-					// TODO go through all pylons if no position has been found!
-				}
-				targetBuildLocation = getBuildLocation(builder, desiredBuildLocation, buildingType);
-				*/
 				BWAPI::TilePosition location = getBuildLocation(builder, depot->getTilePosition(), buildingType);
 				if (location)
 				{
 					// Order the construction.
-					builder->build(location, buildingType);
+					utilUnit::commandBuild(builder, location, buildingType);
+					//builder->build(location, buildingType);
 					buildSchedule.insert(std::make_pair(buildingType, std::make_pair(builder, location)));
 					accountant->allocate(buildingType);
 					return true;
@@ -101,7 +87,7 @@ bool Architect::scheduleBuild(BWAPI::UnitType buildingType)
 				workerManager->addWorker(builder);
 			} // Closure: builder.
 		} // Closure: affordable.
-	} // Closure: is building.
+	} // Closure: type.
 	// Attempt unsuccessful.
 	return false;
 }

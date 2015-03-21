@@ -1,0 +1,22 @@
+\documentclass[12pt]{book}
+
+\usepackage{a4}
+\usepackage{tabularx}
+\usepackage{epigraph}
+\setlength\epigraphwidth{8cm}
+\setlength\epigraphrule{0pt}
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd{\epigraph}{\@epitext{#1}}{\itshape\@epitext{#1}}{}{}
+\makeatother
+
+\begin{document}
+  %\input{Title}
+  %\input{Introduction}
+  %\input{Characters}
+  %\input{Classes}
+  %\input{Skills}
+  %\input{Feats}
+  \input{Equipment}
+  %\input{Combat}
+\end{document}

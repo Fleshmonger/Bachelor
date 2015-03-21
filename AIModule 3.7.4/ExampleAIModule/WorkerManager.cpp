@@ -221,3 +221,8 @@ BWAPI::Unit * WorkerManager::takeWorker()
 	// No available workers was found.
 	return NULL;
 }
+
+std::vector<Field> WorkerManager::getFields()
+{
+	return fields;
+}
