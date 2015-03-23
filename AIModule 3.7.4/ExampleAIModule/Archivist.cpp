@@ -138,6 +138,12 @@ void Archivist::update()
 	}
 }
 
+// Returns whether a unit is within a given region.
+bool Archivist::inRegion(BWAPI::Unit * unit, BWTA::Region * region)
+{
+	return region && BWTA::getRegion(getPosition(unit)) == region;
+}
+
 // Returns whether or not the unit exists in the knowledge pool.
 bool Archivist::isArchived(BWAPI::Unit * unit)
 {
@@ -177,9 +183,15 @@ std::set<BWAPI::Unit*> Archivist::invaders()
 {
 	std::set<BWAPI::Unit*> invaders;
 	BOOST_FOREACH(BWAPI::Unit * unit, units)
-		if (BWTA::getRegion(positions[unit]) == homeRegion)
+		if (utilUnit::isEnemy(unit) && inRegion(unit, homeRegion))
 			invaders.insert(unit);
 	return invaders;
+}
+
+// Returns the recorded home region.
+BWTA::Region * Archivist::getHomeRegion()
+{
+	return homeRegion;
 }
 
 // Returns a copy of recorded buildings.

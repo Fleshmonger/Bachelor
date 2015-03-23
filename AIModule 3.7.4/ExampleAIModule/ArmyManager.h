@@ -29,9 +29,9 @@ private:
 
 	double armyStrength;
 
-	std::set<BWAPI::Unit*> army, attackers, idle;
-	std::map<BWAPI::Unit*, int> invaderDefense;
-	std::map<BWAPI::Unit*, BWAPI::Unit*> defenderTargets;
+	std::set<BWAPI::Unit*> army, attackers, defenders, idle, invaders;
+	//std::map<BWAPI::Unit*, int> invaderDefense;
+	//std::map<BWAPI::Unit*, BWAPI::Unit*> defenderTargets;
 
 public:
 	double strength(BWAPI::Unit* unit);

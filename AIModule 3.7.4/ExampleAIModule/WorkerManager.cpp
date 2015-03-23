@@ -149,7 +149,7 @@ int WorkerManager::harvesterMax()
 }
 
 // Returns the amount of workers.
-int WorkerManager::workers()
+int WorkerManager::getWorkersSize()
 {
 	return idle.size() + harvesters.size();
 }

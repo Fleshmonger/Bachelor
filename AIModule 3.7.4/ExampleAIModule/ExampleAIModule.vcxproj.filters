@@ -1,84 +1,72 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    <Filter Include="Utility">
+      <UniqueIdentifier>{759fa372-58ca-4bf5-8408-8e21a556f1c8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
-    </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
+    <Filter Include="Managers">
+      <UniqueIdentifier>{c8eb25fb-1c69-478a-bc1a-976cb778235a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Accountant.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="UtilUnit.cpp">
+      <Filter>Utility</Filter>
     </ClCompile>
     <ClCompile Include="WorkerManager.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Managers</Filter>
     </ClCompile>
     <ClCompile Include="Producer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Architect.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Economist.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ArmyManager.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Managers</Filter>
     </ClCompile>
     <ClCompile Include="Reconnoiter.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Managers</Filter>
     </ClCompile>
-    <ClCompile Include="Primary.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Economist.cpp">
+      <Filter>Managers</Filter>
     </ClCompile>
-    <ClCompile Include="Dll.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="ArmyManager.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Accountant.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Architect.cpp">
+      <Filter>Managers</Filter>
     </ClCompile>
     <ClCompile Include="Archivist.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Managers</Filter>
     </ClCompile>
-    <ClCompile Include="UtilUnit.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
+    <ClCompile Include="Primary.cpp" />
+    <ClCompile Include="Dll.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Accountant.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="UtilUnit.h">
+      <Filter>Utility</Filter>
     </ClInclude>
     <ClInclude Include="WorkerManager.h">
-      <Filter>Header Files</Filter>
+      <Filter>Managers</Filter>
     </ClInclude>
     <ClInclude Include="Producer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Architect.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Economist.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ArmyManager.h">
-      <Filter>Header Files</Filter>
+      <Filter>Managers</Filter>
     </ClInclude>
     <ClInclude Include="Reconnoiter.h">
-      <Filter>Header Files</Filter>
+      <Filter>Managers</Filter>
     </ClInclude>
-    <ClInclude Include="Primary.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Economist.h">
+      <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Accountant.h">
+      <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Architect.h">
+      <Filter>Managers</Filter>
     </ClInclude>
     <ClInclude Include="Archivist.h">
-      <Filter>Header Files</Filter>
+      <Filter>Managers</Filter>
     </ClInclude>
-    <ClInclude Include="UtilUnit.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="ArmyManager.h">
+      <Filter>Managers</Filter>
     </ClInclude>
+    <ClInclude Include="Primary.h" />
   </ItemGroup>
 </Project>

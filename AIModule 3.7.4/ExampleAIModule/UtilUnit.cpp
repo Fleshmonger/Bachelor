@@ -47,8 +47,8 @@ void utilUnit::commandBuild(BWAPI::Unit * unit, BWAPI::TilePosition location, BW
 			if (lastCommand.getType() != BWAPI::UnitCommandTypes::Build ||
 				lastCommand.getTargetPosition() != location)
 				unit->build(location, buildingType);
-		} // Closure: Already commanded.
-	} // Closure: Invalid unit.
+		} // Closure: Uniqueness
+	} // Closure: Validity
 }
 
 // Returns true if the unit is owned by an enemy and false otherwise.

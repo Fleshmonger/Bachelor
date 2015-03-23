@@ -9,9 +9,11 @@ ArmyManager::ArmyManager(Archivist * archivist, WorkerManager * workerManager, P
 	armyStrength(0),
 	army(std::set<BWAPI::Unit*>()),
 	attackers(std::set<BWAPI::Unit*>()),
+	defenders(std::set<BWAPI::Unit*>()),
 	idle(std::set<BWAPI::Unit*>()),
-	invaderDefense(std::map<BWAPI::Unit*, int>()),
-	defenderTargets(std::map<BWAPI::Unit*, BWAPI::Unit*>())
+	invaders(std::set<BWAPI::Unit*>())
+	//invaderDefense(std::map<BWAPI::Unit*, int>()),
+	//defenderTargets(std::map<BWAPI::Unit*, BWAPI::Unit*>())
 {
 }
 
@@ -79,6 +81,73 @@ void ArmyManager::update()
 	producer->trainUnit(INFANTRY_UNIT);
 	architect->scheduleBuild(INFANTRY_FACTORY);
 
+	// Validate invaders.
+	{
+		std::set<BWAPI::Unit*>::iterator it = invaders.begin();
+		while (it != invaders.end())
+		{
+			BWAPI::Unit * invader = *it;
+			++it;
+			if (invader ||
+				(invader->isVisible() && !invader->exists()) ||
+				BWTA::getRegion(archivist->getPosition(invader)) != archivist->getHomeRegion())
+				invaders.erase(invader);
+		}
+	}
+
+	// Identify new invaders.
+	std::set<BWAPI::Unit*> newInvaders = archivist->invaders();
+	invaders.insert(newInvaders.begin(), newInvaders.end());
+
+	// Invasion check.
+	if (!invaders.empty())
+	{
+		// Conscript defenders.
+		defenders.insert(idle.begin(), idle.end());
+
+		// Conscript workers if we are too weak.
+		double defenseStrength = strength(defenders), invaderStrength = strength(invaders);
+		while (defenseStrength < invaderStrength)
+		{
+			BWAPI::Unit * worker = workerManager->takeWorker();
+			if (worker &&
+				worker->exists())
+			{
+				defenseStrength += strength(worker);
+				defenders.insert(worker);
+			}
+			else
+				break;
+		}
+
+		BWAPI::Unit * target = *invaders.begin();
+		// Command defense
+		BOOST_FOREACH(BWAPI::Unit * defender, defenders)
+		{
+			if (target->isVisible())
+				utilUnit::command(defender, BWAPI::UnitCommandTypes::Attack_Unit, target);
+			else
+				utilUnit::command(defender, BWAPI::UnitCommandTypes::Attack_Move, archivist->getPosition(target));
+		}
+	}
+	else
+	{
+		// Relieve defenders.
+		BOOST_FOREACH(BWAPI::Unit * defender, defenders)
+		{
+			if (defender &&
+				defender->exists())
+			{
+				if (defender->getType().isWorker())
+					workerManager->addWorker(defender);
+				else
+					idle.insert(defender);
+			}
+		}
+		defenders.clear();
+	}
+
+	/**
 	// Add new invaders.
 	std::set<BWAPI::Unit*> newInvaders = archivist->invaders();
 	BOOST_FOREACH(BWAPI::Unit * invader, newInvaders)
@@ -165,6 +234,7 @@ void ArmyManager::update()
 			}
 		}
 	}
+	*/
 
 	// Calculate attack.
 	if (canAttack())

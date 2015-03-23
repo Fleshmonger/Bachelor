@@ -4,14 +4,17 @@
 #include <boost/foreach.hpp>
 #include "UtilUnit.h"
 
-const int MAX_FIELD_HARVESTERS = 3; // Maximum harvesters on a single mineral field.
+const int MAX_FIELD_HARVESTERS = 10; // Maximum harvesters on a single mineral field.
 
 typedef std::pair<int, BWAPI::Unit*> Field;
 
+// Contains and handles all workers, assigning idle ones to harvesting.
+// TODO Split harvesting to separate class?
+// TODO Harvesting assignment is broken!
+// TODO Needs a cleanup.
 class WorkerManager
 {
 	//TODO Make the whole queue a struct?
-
 	struct Field_Comp
 	{
 		bool operator()(const Field & lhs, const Field & rhs) const
@@ -28,7 +31,6 @@ class WorkerManager
 
 		void insertField(int amount, BWAPI::Unit * mineral);
 		void popField();
-		//int removeField(BWAPI::Unit * mineral);
 
 	public:
 		WorkerManager();
@@ -43,9 +45,9 @@ class WorkerManager
 		bool assignWorker(BWAPI::Unit * worker);
 
 		int harvesterMax();
-		int workers();
+		int getWorkersSize();
 
-		BWAPI::Unit * takeWorker();
+		BWAPI::Unit * takeWorker(); // TODO Rename 'take'
 
 		std::vector<Field> getFields();
 };
