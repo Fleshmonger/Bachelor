@@ -7,11 +7,11 @@ ArmyManager::ArmyManager(Archivist * archivist, WorkerManager * workerManager, P
 	producer(producer),
 	architect(architect),
 	armyStrength(0),
-	army(std::set<BWAPI::Unit*>()),
-	attackers(std::set<BWAPI::Unit*>()),
-	defenders(std::set<BWAPI::Unit*>()),
-	idle(std::set<BWAPI::Unit*>()),
-	invaders(std::set<BWAPI::Unit*>())
+	army(utilUnit::UnitSet()),
+	attackers(utilUnit::UnitSet()),
+	defenders(utilUnit::UnitSet()),
+	idle(utilUnit::UnitSet()),
+	invaders(utilUnit::UnitSet())
 	//invaderDefense(std::map<BWAPI::Unit*, int>()),
 	//defenderTargets(std::map<BWAPI::Unit*, BWAPI::Unit*>())
 {
@@ -45,7 +45,7 @@ double ArmyManager::strength(BWAPI::Unit * unit)
 }
 
 // Returns the interpreted strength of an army as a value.
-double ArmyManager::strength(std::set<BWAPI::Unit*> units)
+double ArmyManager::strength(utilUnit::UnitSet units)
 {
 	double unitsStrength = 0;
 	BOOST_FOREACH(BWAPI::Unit * unit, units)
@@ -75,7 +75,7 @@ void ArmyManager::removeUnit(BWAPI::Unit * unit)
 void ArmyManager::update()
 {
 	// Initialize.
-	std::set<BWAPI::Unit*> enemyBuildings = archivist->getBuildings();
+	utilUnit::UnitSet enemyBuildings = archivist->getBuildings();
 
 	// Train new troops.
 	producer->trainUnit(INFANTRY_UNIT);
@@ -83,7 +83,7 @@ void ArmyManager::update()
 
 	// Validate invaders.
 	{
-		std::set<BWAPI::Unit*>::iterator it = invaders.begin();
+		utilUnit::UnitSet::iterator it = invaders.begin();
 		while (it != invaders.end())
 		{
 			BWAPI::Unit * invader = *it;
@@ -96,7 +96,7 @@ void ArmyManager::update()
 	}
 
 	// Identify new invaders.
-	std::set<BWAPI::Unit*> newInvaders = archivist->invaders();
+	utilUnit::UnitSet newInvaders = archivist->invaders();
 	invaders.insert(newInvaders.begin(), newInvaders.end());
 
 	// Invasion check.
@@ -244,7 +244,7 @@ void ArmyManager::update()
 	if (!enemyBuildings.empty())
 	{
 		BWAPI::Position attackLocation = archivist->getPosition(*enemyBuildings.begin());
-		std::set<BWAPI::Unit*>::iterator it = attackers.begin();
+		utilUnit::UnitSet::iterator it = attackers.begin();
 		while (it != attackers.end())
 		{
 			BWAPI::Unit * attacker = *it;
@@ -265,13 +265,13 @@ void ArmyManager::update()
 // Returns whether or not we would win an attack based on army strength.
 bool ArmyManager::canAttack()
 {
-	std::set<BWAPI::Unit*> enemies = archivist->getTroops(), enemyTurrets = archivist->getTurrets();
+	utilUnit::UnitSet enemies = archivist->getTroops(), enemyTurrets = archivist->getTurrets();
 	enemies.insert(enemyTurrets.begin(), enemyTurrets.end());
 	return armyStrength > strength(enemies);
 }
 
 // TEMPORARY used for testing.
-std::set<BWAPI::Unit*> ArmyManager::getArmy()
+utilUnit::UnitSet ArmyManager::getArmy()
 {
 	return army;
 }

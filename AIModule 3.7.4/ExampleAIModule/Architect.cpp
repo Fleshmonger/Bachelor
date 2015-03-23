@@ -7,59 +7,15 @@ Architect::Architect(WorkerManager * workerManager, Accountant * accountant) :
 	harvestingDefined(false),
 	harvesting(Zone(0, 0, 0, 0)),
 	depot(NULL),
-	pylons(std::set<BWAPI::Unit*>()),
+	pylons(utilUnit::UnitSet()),
 	constructSchedule(std::multimap<BWAPI::UnitType, BWAPI::Unit*>()),
 	buildSchedule(std::multimap<BWAPI::UnitType, std::pair<BWAPI::Unit*, BWAPI::TilePosition>>())
 {
 }
 
-// Unused deconstructor
+// Deconstructor
 Architect::~Architect()
 {
-}
-
-// Returns the nearest tileposition in a spiral pattern which is buildable.
-BWAPI::TilePosition Architect::getBuildLocation(BWAPI::Unit * builder, BWAPI::TilePosition desiredLocation, BWAPI::UnitType buildingType)
-{
-	if (buildingType && desiredLocation)
-	{
-		// Check in a spiral pattern.
-		bool horizontal = false;
-		int dx = 0, dy = 0, length = 0, step = 1;
-		while (length < Broodwar->mapWidth() || length < Broodwar->mapHeight())
-		{
-			// Check the current tile.
-			BWAPI::TilePosition tile = BWAPI::TilePosition::TilePosition(desiredLocation.x() + dx, desiredLocation.y() + dy);
-			if (validBuildLocation(builder, tile, buildingType))
-				return tile;
-			// Find next tile.
-			if (dx == dy)
-				length++;
-			if (horizontal)
-			{
-				dx += step;
-				if (dx == length * step)
-					horizontal = false;
-			}
-			else
-			{
-				dy += step;
-				if (dy == length * step)
-				{
-					horizontal = true;
-					step *= -1;
-				}
-			}
-
-		}
-	}
-	return BWAPI::TilePositions::None;
-}
-
-// Returns whether or not a given building type can be built at a given location.
-bool Architect::validBuildLocation(BWAPI::Unit * builder, BWAPI::TilePosition location, BWAPI::UnitType buildingType)
-{
-	return location.isValid() && !harvesting.contains(location, buildingType) && Broodwar->canBuildHere(builder, location, buildingType);
 }
 
 // Attempt to build a new building. Returns true if it succeeds, otherwise returns false.
@@ -79,7 +35,6 @@ bool Architect::scheduleBuild(BWAPI::UnitType buildingType)
 				{
 					// Order the construction.
 					utilUnit::commandBuild(builder, location, buildingType);
-					//builder->build(location, buildingType);
 					buildSchedule.insert(std::make_pair(buildingType, std::make_pair(builder, location)));
 					accountant->allocate(buildingType);
 					return true;
@@ -102,67 +57,64 @@ void Architect::scheduleConstruct(BWAPI::Unit * building)
 // Removes a build order from the build schedule.
 void Architect::removeBuild(BWAPI::UnitType buildingType, BWAPI::TilePosition buildTarget)
 {
-	std::pair<std::multimap<BWAPI::UnitType, std::pair<BWAPI::Unit*, BWAPI::TilePosition>>::iterator, std::multimap<BWAPI::UnitType, std::pair<BWAPI::Unit*, BWAPI::TilePosition>>::iterator> range = buildSchedule.equal_range(buildingType);
-	std::multimap <BWAPI::UnitType, std::pair<BWAPI::Unit*, BWAPI::TilePosition>>::iterator it = range.first, end = range.second;
-	while (it != end)
+	if (buildingType.isBuilding())
 	{
-		BWAPI::TilePosition location = (*it).second.second;
-		//if (location == building->getTilePosition())
-		if (location == buildTarget)
+		std::pair<std::multimap<BWAPI::UnitType, std::pair<BWAPI::Unit*, BWAPI::TilePosition>>::iterator, std::multimap<BWAPI::UnitType, std::pair<BWAPI::Unit*, BWAPI::TilePosition>>::iterator> range = buildSchedule.equal_range(buildingType);
+		std::multimap <BWAPI::UnitType, std::pair<BWAPI::Unit*, BWAPI::TilePosition>>::iterator it = range.first, end = range.second;
+		while (it != end)
 		{
-			std::pair<BWAPI::UnitType, std::pair<BWAPI::Unit*, BWAPI::TilePosition>> build = *it;
-			BWAPI::Unit * builder = build.second.first;
-			if (builder && builder->exists())
-				workerManager->addWorker(builder);
-			accountant->deallocate(build.first);
-			buildSchedule.erase(it);
-			//removeBuild(it);
-			return;
+			BWAPI::TilePosition location = (*it).second.second;
+			if (location == buildTarget)
+			{
+				std::pair<BWAPI::UnitType, std::pair<BWAPI::Unit*, BWAPI::TilePosition>> build = *it;
+				BWAPI::Unit * builder = build.second.first;
+				if (builder && builder->exists())
+					workerManager->addWorker(builder);
+				accountant->deallocate(build.first);
+				buildSchedule.erase(it);
+				return;
+			}
+			else
+				++it;
 		}
-		else
-			++it;
 	}
 }
 
 // Removes a construction order from the construct schedule.
 void Architect::removeConstruct(BWAPI::Unit * building)
 {
-	std::pair<std::multimap<BWAPI::UnitType, BWAPI::Unit*>::iterator, std::multimap<BWAPI::UnitType, BWAPI::Unit*>::iterator> range = constructSchedule.equal_range(building->getType());
-	std::multimap<BWAPI::UnitType, BWAPI::Unit*>::iterator it = range.first, end = range.second;
-	//auto range = constructSchedule->equal_range(building->getType());
-	//auto it = range.first, end = range.second;
-	while (it != end)
+	if (building &&
+		building->exists() &&
+		utilUnit::isOwned(building) &&
+		building->getType().isBuilding())
 	{
-		BWAPI::Unit * construct = (*it).second;
-		if (construct == building)
+		std::pair<std::multimap<BWAPI::UnitType, BWAPI::Unit*>::iterator, std::multimap<BWAPI::UnitType, BWAPI::Unit*>::iterator> range = constructSchedule.equal_range(building->getType());
+		std::multimap<BWAPI::UnitType, BWAPI::Unit*>::iterator it = range.first, end = range.second;
+		while (it != end)
 		{
-			constructSchedule.erase(it);
-			//removeConstruct(it);
-			return;
+			BWAPI::Unit * construct = (*it).second;
+			if (construct == building)
+			{
+				constructSchedule.erase(it);
+				return;
+			}
+			else
+				++it;
 		}
-		else
-			++it;
 	}
 }
 
 // Identifies a building as built.
-void Architect::completeBuild(BWAPI::Unit * building) // Rename this.
+void Architect::completeBuild(BWAPI::Unit * building)
 {
 	removeBuild(building->getType(), building->getTilePosition());
-	//removeBuild(building);
 	scheduleConstruct(building);
 }
 
 // Identifies a building as constructed.
-void Architect::completeConstruct(BWAPI::Unit * building) // Rename this.
+void Architect::completeConstruct(BWAPI::Unit * building)
 {
 	removeConstruct(building);
-}
-
-// Returns the amount of oders of a specific building type currently scheduled.
-int Architect::scheduled(BWAPI::UnitType buildingType)
-{
-	return buildSchedule.count(buildingType) + constructSchedule.count(buildingType);
 }
 
 // Resizes the harvesting zone to include the given unit.
@@ -210,7 +162,6 @@ void Architect::setDepot(BWAPI::Unit * depot)
 		expandHarvesting(depot);
 }
 
-// Simulate the architect AI.
 // Creates pylons, validates orders and commands builders.
 void Architect::update()
 {
@@ -248,4 +199,54 @@ void Architect::update()
 		}
 	}
 
+}
+
+// Returns whether or not a given building type can be built at a given location.
+bool Architect::validBuildLocation(BWAPI::Unit * builder, BWAPI::TilePosition location, BWAPI::UnitType buildingType)
+{
+	return location.isValid() && !harvesting.contains(location, buildingType) && Broodwar->canBuildHere(builder, location, buildingType);
+}
+
+// Returns the amount of oders of a specific building type currently scheduled.
+int Architect::scheduled(BWAPI::UnitType buildingType)
+{
+	return buildSchedule.count(buildingType) + constructSchedule.count(buildingType);
+}
+
+// Returns the nearest tileposition in a spiral pattern which is buildable.
+BWAPI::TilePosition Architect::getBuildLocation(BWAPI::Unit * builder, BWAPI::TilePosition desiredLocation, BWAPI::UnitType buildingType)
+{
+	if (buildingType && desiredLocation)
+	{
+		// Check in a spiral pattern.
+		bool horizontal = false;
+		int dx = 0, dy = 0, length = 0, step = 1;
+		while (length < Broodwar->mapWidth() || length < Broodwar->mapHeight())
+		{
+			// Check the current tile.
+			BWAPI::TilePosition tile = BWAPI::TilePosition::TilePosition(desiredLocation.x() + dx, desiredLocation.y() + dy);
+			if (validBuildLocation(builder, tile, buildingType))
+				return tile;
+			// Find next tile.
+			if (dx == dy)
+				length++;
+			if (horizontal)
+			{
+				dx += step;
+				if (dx == length * step)
+					horizontal = false;
+			}
+			else
+			{
+				dy += step;
+				if (dy == length * step)
+				{
+					horizontal = true;
+					step *= -1;
+				}
+			}
+
+		}
+	}
+	return BWAPI::TilePositions::None;
 }

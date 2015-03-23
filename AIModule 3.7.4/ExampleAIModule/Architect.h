@@ -1,6 +1,7 @@
 #pragma once
 #include <BWAPI.h>
 #include <algorithm>
+#include "UtilUnit.h"
 #include "WorkerManager.h"
 #include "Accountant.h"
 
@@ -37,34 +38,38 @@ static const BWAPI::UnitType BUILD_SUPPLY = BWAPI::UnitTypes::Protoss_Pylon;
 class Architect
 {
 private:
-	// Managers
+
 	WorkerManager * workerManager;
 	Accountant * accountant;
 
-	// Local
 	bool harvestingDefined; // Temporary stupid solution, change when information manager is introduced.
+
 	BWAPI::Unit * depot;
-	std::set<BWAPI::Unit*> pylons;
+	utilUnit::UnitSet pylons;
 	std::multimap<BWAPI::UnitType, BWAPI::Unit*> constructSchedule;
 	std::multimap<BWAPI::UnitType, std::pair<BWAPI::Unit*, BWAPI::TilePosition>>  buildSchedule;
 
-public:
-	Zone harvesting; //TODO Move to private.
+	Zone harvesting;
 
+public:
 	Architect(WorkerManager * workerManager, Accountant * accountant);
 	~Architect();
-	BWAPI::TilePosition getBuildLocation(BWAPI::Unit * builder, BWAPI::TilePosition desiredLocation, BWAPI::UnitType buildingType);
-	bool validBuildLocation(BWAPI::Unit * builder, BWAPI::TilePosition location, BWAPI::UnitType buildingType);
-	bool scheduleBuild(BWAPI::UnitType buildingType);
+
+	bool scheduleBuild(BWAPI::UnitType buildingType); // TODO Not symmetrical signature with scheduleConstruct
 	void scheduleConstruct(BWAPI::Unit * building);
 	void removeBuild(BWAPI::UnitType buildingType, BWAPI::TilePosition buildLocation);
 	void removeConstruct(BWAPI::Unit * building);
 	void completeBuild(BWAPI::Unit * building);
 	void completeConstruct(BWAPI::Unit * building);
-	int scheduled(BWAPI::UnitType buildingType);
 	void expandHarvesting(BWAPI::Unit * resource);
 	void addPylon(BWAPI::Unit * pylon);
 	void removePylon(BWAPI::Unit * pylon);
 	void setDepot(BWAPI::Unit * depot);
 	void update();
+
+	bool validBuildLocation(BWAPI::Unit * builder, BWAPI::TilePosition location, BWAPI::UnitType buildingType);
+
+	int scheduled(BWAPI::UnitType buildingType);
+
+	BWAPI::TilePosition getBuildLocation(BWAPI::Unit * builder, BWAPI::TilePosition desiredLocation, BWAPI::UnitType buildingType);
 };

@@ -29,13 +29,13 @@ private:
 
 	double armyStrength;
 
-	std::set<BWAPI::Unit*> army, attackers, defenders, idle, invaders;
+	utilUnit::UnitSet army, attackers, defenders, idle, militia, invaders;
 	//std::map<BWAPI::Unit*, int> invaderDefense;
 	//std::map<BWAPI::Unit*, BWAPI::Unit*> defenderTargets;
 
 public:
 	double strength(BWAPI::Unit* unit);
-	double strength(std::set<BWAPI::Unit*> units);
+	double strength(utilUnit::UnitSet units);
 
 	ArmyManager(Archivist * archivist, WorkerManager * workerManager, Producer * producer, Architect * architect);
 	~ArmyManager();
@@ -46,5 +46,5 @@ public:
 
 	bool canAttack(); // TODO rename
 
-	std::set<BWAPI::Unit*> getArmy();
+	utilUnit::UnitSet getArmy();
 };

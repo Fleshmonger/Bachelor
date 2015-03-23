@@ -26,7 +26,7 @@ class WorkerManager
 	private:
 		BWAPI::Unit * depot;
 		std::vector<Field> fields;
-		std::set<BWAPI::Unit*> idle;
+		utilUnit::UnitSet idle;
 		std::map<BWAPI::Unit*, BWAPI::Unit*> harvesters;
 
 		void insertField(int amount, BWAPI::Unit * mineral);

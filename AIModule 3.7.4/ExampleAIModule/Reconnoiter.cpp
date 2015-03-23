@@ -45,7 +45,7 @@ void Reconnoiter::update()
 	else if (scout && scout->exists())
 	{
 		// Harassing
-		std::set<BWAPI::Unit*> troops = archivist->getTroops();
+		utilUnit::UnitSet troops = archivist->getTroops();
 		if (!troops.empty() && !scout->isAttacking())
 			utilUnit::command(scout, BWAPI::UnitCommandTypes::Attack_Move, archivist->getPosition(*troops.begin()));
 	}

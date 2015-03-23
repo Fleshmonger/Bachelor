@@ -4,7 +4,7 @@
 WorkerManager::WorkerManager() :
 	depot(NULL),
 	fields(std::vector<Field>()),
-	idle(std::set<BWAPI::Unit*>()),
+	idle(utilUnit::UnitSet()),
 	harvesters(std::map<BWAPI::Unit*, BWAPI::Unit*>())
 {
 	std::make_heap(fields.begin(), fields.end(), Field_Comp());
@@ -126,7 +126,7 @@ void WorkerManager::update()
 		}
 		// Assign new harvesters.
 		{
-			std::set<BWAPI::Unit*>::iterator it = idle.begin();
+			utilUnit::UnitSet::iterator it = idle.begin();
 			while (it != idle.end())
 			{
 				BWAPI::Unit * worker = *it;
@@ -186,7 +186,7 @@ BWAPI::Unit * WorkerManager::takeWorker()
 {
 	// Find the worker in the idle pool.
 	{
-		std::set<BWAPI::Unit*>::iterator it = idle.begin();
+		utilUnit::UnitSet::iterator it = idle.begin();
 		while (it != idle.end())
 		{
 			BWAPI::Unit * worker = *it;

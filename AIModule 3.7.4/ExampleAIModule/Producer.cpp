@@ -1,53 +1,19 @@
 #include "Producer.h"
 
+// Constructor
 Producer::Producer(Accountant * accountant) :
 	accountant(accountant),
 	depot(NULL),
 	scheduledUnits(std::multiset<BWAPI::UnitType>()),
-	incompleteUnits(std::set<BWAPI::Unit*>()),
-	infantryFacilities(std::set<BWAPI::Unit*>()),
-	idleInfantryFacilities(std::set<BWAPI::Unit*>())
+	incompleteUnits(utilUnit::UnitSet()),
+	infantryFacilities(utilUnit::UnitSet()),
+	idleInfantryFacilities(utilUnit::UnitSet())
 {
 }
 
-// Unused deconstructor
+// Deconstructor
 Producer::~Producer()
 {
-}
-
-// Attempt to produce an infantry unit at an available facility.
-// Returns true if it succeeds and false otherwise.
-bool Producer::trainUnit(BWAPI::UnitType unitType)
-{
-	if (!unitType.isBuilding())
-	{
-		// Find the appropriate facility.
-		BWAPI::Unit * facility = NULL;
-		if (accountant->isAffordable(unitType))
-		{
-			if (unitType.isWorker())
-			{
-				if (depot &&
-					depot->isIdle() &&
-					depot->isCompleted())
-					facility = depot;
-			}
-			else if (!idleInfantryFacilities.empty()) // Assume it is infantry
-			{
-				facility = *idleInfantryFacilities.begin();
-				idleInfantryFacilities.erase(facility);
-			}
-		}
-		// Train the unit at the found facility (if any).
-		if (facility)
-		{
-			facility->train(unitType);
-			accountant->allocate(unitType);
-			scheduledUnits.insert(unitType);
-			return true;
-		}
-	}
-	return false;
 }
 
 // Add a unit in production to the incomplete pool.
@@ -88,14 +54,11 @@ void Producer::setDepot(BWAPI::Unit * depot)
 	this->depot = depot;
 }
 
-// Simulates the Producer AI.
 // Updates the current pool of idle infantry facilities.
 void Producer::update()
 {
-	// TODO check scheduled units?
-
 	// Remove invalid unit constructions
-	std::set<Unit*>::iterator it = incompleteUnits.begin();
+	utilUnit::UnitSet::iterator it = incompleteUnits.begin();
 	while (it != incompleteUnits.end())
 	{
 		BWAPI::Unit * unit = *it;
@@ -125,4 +88,39 @@ void Producer::update()
 		}
 
 	}
+}
+
+// Attempt to produce an infantry unit at an available facility and returns true if successful.
+bool Producer::trainUnit(BWAPI::UnitType unitType)
+{
+	// Validate order.
+	if (!unitType.isBuilding())
+	{
+		// Find the appropriate facility.
+		BWAPI::Unit * facility = NULL;
+		if (accountant->isAffordable(unitType))
+		{
+			if (unitType.isWorker())
+			{
+				if (depot &&
+					depot->isIdle() &&
+					depot->isCompleted())
+					facility = depot;
+			}
+			else if (!idleInfantryFacilities.empty()) // Assume it is infantry
+			{
+				facility = *idleInfantryFacilities.begin();
+				idleInfantryFacilities.erase(facility);
+			}
+		}
+		// Train the unit at the found facility (if any).
+		if (facility)
+		{
+			facility->train(unitType);
+			accountant->allocate(unitType);
+			scheduledUnits.insert(unitType);
+			return true;
+		}
+	}
+	return false;
 }
