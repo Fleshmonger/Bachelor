@@ -5,6 +5,7 @@
 namespace utilUnit
 {
 	typedef std::set<BWAPI::Unit*> UnitSet;
+	typedef std::list<BWAPI::Unit*> UnitList;
 
 	void command(BWAPI::Unit * unit, BWAPI::UnitCommandType commandType, BWAPI::Unit * target);
 	void command(BWAPI::Unit * unit, BWAPI::UnitCommandType commandType, BWAPI::Position position);

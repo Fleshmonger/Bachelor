@@ -1,12 +1,12 @@
 #pragma once
 #include <BWAPI.h>
-#include <queue>
+#include <queue> //TODO Remove?
 #include <boost/foreach.hpp>
 #include "UtilUnit.h"
 
-const int MAX_FIELD_HARVESTERS = 10; // Maximum harvesters on a single mineral field.
+const int MINERAL_SATURATION_MAX = 10; // Maximum harvesters on a single mineral field.
 
-typedef std::pair<int, BWAPI::Unit*> Field;
+//typedef std::pair<int, BWAPI::Unit*> Field;
 
 // Contains and handles all workers, assigning idle ones to harvesting.
 // TODO Split harvesting to separate class?
@@ -14,6 +14,7 @@ typedef std::pair<int, BWAPI::Unit*> Field;
 // TODO Needs a cleanup.
 class WorkerManager
 {
+	/*
 	//TODO Make the whole queue a struct?
 	struct Field_Comp
 	{
@@ -22,15 +23,18 @@ class WorkerManager
 			return lhs.first > rhs.first;
 		}
 	};
+	*/
 
 	private:
 		BWAPI::Unit * depot;
-		std::vector<Field> fields;
+		//std::vector<Field> fields;
+		utilUnit::UnitList minerals;
+		std::map<BWAPI::Unit*, int> mineralSaturation;
 		utilUnit::UnitSet idle;
 		std::map<BWAPI::Unit*, BWAPI::Unit*> harvesters;
 
-		void insertField(int amount, BWAPI::Unit * mineral);
-		void popField();
+		//void insertField(int amount, BWAPI::Unit * mineral);
+		//void popField();
 
 	public:
 		WorkerManager();
@@ -44,10 +48,13 @@ class WorkerManager
 
 		bool assignWorker(BWAPI::Unit * worker);
 
-		int harvesterMax();
+		int saturationMax();
 		int getWorkersSize();
 
 		BWAPI::Unit * takeWorker(); // TODO Rename 'take'
 
-		std::vector<Field> getFields();
+		//std::vector<Field> getFields();
+		utilUnit::UnitList getMinerals(); //TEMP
+		std::map<BWAPI::Unit*, int> getMineralSaturation(); //TEMP
+
 };

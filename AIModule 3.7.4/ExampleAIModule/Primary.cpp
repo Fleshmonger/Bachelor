@@ -40,6 +40,7 @@ void Primary::onEnd(bool isWinner)
 void Primary::onFrame()
 {
 	// Draw fields and amount of workers assigned
+	/*
 	BOOST_FOREACH(Field field, workerManager->getFields())
 	{
 		int amount = field.first;
@@ -47,6 +48,14 @@ void Primary::onFrame()
 		BWAPI::Position pos = mineral->getPosition();
 		BWAPI::Broodwar->drawCircleMap(pos.x(), pos.y(), 32, BWAPI::Colors::Blue, false);
 		BWAPI::Broodwar->drawTextMap(pos.x(), pos.y(), "%d", amount);
+	}
+	*/
+	std::map<BWAPI::Unit*, int> mineralSaturation = workerManager->getMineralSaturation();
+	BOOST_FOREACH(BWAPI::Unit * mineral, workerManager->getMinerals())
+	{
+		BWAPI::Position pos = mineral->getPosition();
+		BWAPI::Broodwar->drawCircleMap(pos.x(), pos.y(), 32, BWAPI::Colors::Blue, false);
+		BWAPI::Broodwar->drawTextMap(pos.x(), pos.y(), "%d", mineralSaturation[mineral]);
 	}
 
 	// Debugging display.
