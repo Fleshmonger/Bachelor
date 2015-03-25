@@ -29,6 +29,6 @@ void Economist::update()
 	// Order more workers.
 	// TODO Make it count workers currently constructing or repairing.
 	//if (workerManager->getWorkersSize() < workerManager->harvesterMax())
-	if (workerManager->getWorkersSize() < workerManager->saturationMax())
+	if (workerManager->workers() < workerManager->maxMiners())
 		producer->trainUnit(PROTOSS_WORKER);
 }

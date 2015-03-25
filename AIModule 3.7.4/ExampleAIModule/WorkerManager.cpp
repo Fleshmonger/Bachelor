@@ -3,13 +3,12 @@
 // Constructor
 WorkerManager::WorkerManager() :
 	depot(NULL),
-	//fields(std::vector<Field>()),
 	minerals(utilUnit::UnitList()),
-	mineralSaturation(std::map<BWAPI::Unit*, int>()),
 	idle(utilUnit::UnitSet()),
-	harvesters(std::map<BWAPI::Unit*, BWAPI::Unit*>())
+	miners(utilUnit::UnitSet()),
+	mining(std::map<BWAPI::Unit*, BWAPI::Unit*>()),
+	mineralMiners(std::map<BWAPI::Unit*, utilUnit::UnitSet>())
 {
-	//std::make_heap(fields.begin(), fields.end(), Field_Comp());
 }
 
 // Deconstructor
@@ -17,29 +16,11 @@ WorkerManager::~WorkerManager()
 {
 }
 
-/*
-// Private
-// Inserts the field into the heap.
-void WorkerManager::insertField(int amount, BWAPI::Unit * mineral)
-{
-	fields.push_back(std::make_pair(amount, mineral));
-	std::push_heap(fields.begin(), fields.end(), Field_Comp());
-}
-
-// Private
-// Removes the top field.
-void WorkerManager::popField()
-{
-	std::pop_heap(fields.begin(), fields.end(), Field_Comp());
-	fields.pop_back();
-}
-*/
-
 // Adds a new worker and assigns it.
+// TODO merge with assign worker.
 void WorkerManager::addWorker(BWAPI::Unit * worker)
 {
-	if (!assignWorker(worker))
-		idle.insert(worker);
+	assignWorker(worker);
 }
 
 // Removes a worker from the worker pool.
@@ -47,42 +28,54 @@ void WorkerManager::removeWorker(BWAPI::Unit * worker)
 {
 	if (idle.count(worker) == 1)
 		idle.erase(worker);
-	else if (harvesters.count(worker) == 1)
+	else if (miners.count(worker) == 1)
+		removeMiner(worker);
+}
+
+void WorkerManager::removeMiner(BWAPI::Unit * miner)
+{
+	// Validate miner.
+	if (miner)
 	{
-		BWAPI::Unit * targetMineral = harvesters[worker];
-		harvesters.erase(worker);
-		// Update the fields.
-		//std::vector<Field>::iterator it = fields.begin();
-		utilUnit::UnitList::iterator it = minerals.begin();
-		//while (it != fields.end())
-		while (it != minerals.end())
+		// Validate mineral.
+		BWAPI::Unit * mineral = mining[miner];
+		if (mineral)
 		{
-			//Field field = *it;
-			//int amount = field.first;
-			//BWAPI::Unit * mineral = field.second;
-			BWAPI::Unit * mineral = *it;
-			if (mineral == targetMineral)
+			// Update minerals.
+			utilUnit::UnitList::iterator it = minerals.begin();
+			while (it != minerals.end())
 			{
-				//fields.erase(it);
-				//std::sort_heap(fields.begin(), fields.end(), Field_Comp());
-				//insertField(amount - 1, mineral);
-				--mineralSaturation[mineral];
-				minerals.erase(it);
-				minerals.push_front(mineral);
-				return;
+				if (*it == mineral)
+				{
+					minerals.erase(it);
+					break;
+				}
+				else
+					++it;
 			}
-			else
-				++it;
-		}
-	}
+			minerals.push_front(mineral);
+			mineralMiners[mineral].erase(miner);
+			//--mineralSaturation[mineral];
+			// Even miner distribution.
+			if (mineralMiners[mineral].size() < mineralMiners[minerals.back()].size() - 1)
+			{
+				BWAPI::Unit * newMiner = *mineralMiners[minerals.back()].begin();
+				mineralMiners[minerals.back()].erase(newMiner);
+				mineralMiners[mineral].insert(newMiner);
+			} // Closure: Even distribution.
+		} // Closure: Valid mineral.
+		// Remove miner.
+		miners.erase(miner);
+		mining.erase(miner);
+	} // Closure: Valid miner.
 }
 
 // Adds a harvestable mineral to the list of fields.
 void WorkerManager::addMineral(BWAPI::Unit * mineral)
 {
-	//insertField(0, mineral);
 	minerals.push_front(mineral);
-	mineralSaturation[mineral] = 0;
+	//mineralSaturation[mineral] = 0;
+	mineralMiners[mineral] = utilUnit::UnitSet();
 }
 
 // Designates the current depot for returning cargo
@@ -94,111 +87,114 @@ void WorkerManager::setDepot(BWAPI::Unit * depot)
 // Gathers resources with all available workers.
 void WorkerManager::update()
 {
-	// Verify minerals.
+	// Validate minerals.
 	{
-		//std::vector<Field>::iterator it = fields.begin();
 		utilUnit::UnitList::iterator it = minerals.begin();
-		//while (it != fields.end())
 		while (it != minerals.end())
 		{
-			//BWAPI::Unit * mineral = (*it).second;
 			BWAPI::Unit * mineral = *it;
-			if (mineral &&
-				mineral->exists())
-				++it;
-			else
-			{
-				//it = fields.erase(it);
-				//std::sort_heap(fields.begin(), fields.end(), Field_Comp()); // TODO This may be unneeded?
+			if (!mineral ||
+				!mineral->exists())
 				it = minerals.erase(it);
-			}
+			else
+				++it;
 		}
 	}
-	// Harvest
+
+	// Command mining.
 	if (depot)
 	{
-		// Update harvesters
+		// Command miners.
 		{
-			std::map<BWAPI::Unit*, BWAPI::Unit*>::iterator it = harvesters.begin();
-			while (it != harvesters.end())
+			utilUnit::UnitSet::iterator it = miners.begin();
+			while (it != miners.end())
 			{
-				BWAPI::Unit * harvester = (*it).first;
-				BWAPI::Unit * mineral = (*it).second;
+				BWAPI::Unit * miner = *it;
+				BWAPI::Unit * mineral = mining[miner];
 				++it;
-				// Verify the harvester
-				if (harvester &&
-					harvester->exists() &&
+				// Validate miner.
+				if (miner &&
+					miner->exists() &&
 					mineral &&
 					mineral->exists())
 				{
-					// Harvester AI
-					if (harvester->isCarryingMinerals() || harvester->isCarryingGas())
-						utilUnit::command(harvester, BWAPI::UnitCommandTypes::Return_Cargo, depot);
+					// Command miner.
+					if (miner->isCarryingMinerals() || miner->isCarryingGas())
+						utilUnit::command(miner, BWAPI::UnitCommandTypes::Return_Cargo, depot);
 					else
-						utilUnit::command(harvester, BWAPI::UnitCommandTypes::Gather, mineral);
+						utilUnit::command(miner, BWAPI::UnitCommandTypes::Gather, mineral);
 				}
 				else
-					removeWorker(harvester);
+				{
+					removeMiner(miner);
+				}
 			}
 		}
-		// Assign new harvesters.
+		// Assign idle workers.
 		{
 			utilUnit::UnitSet::iterator it = idle.begin();
 			while (it != idle.end())
 			{
 				BWAPI::Unit * worker = *it;
+				++it;
+				// Validate idle.
 				if (worker &&
-					worker->exists() &&
-					!assignWorker(worker))
-					++it;
+					worker->exists())
+				{
+					// Assign to mining.
+					if (miners.size() < MINERAL_SATURATION_MAX * minerals.size())
+					{
+						idle.erase(worker);
+						assignWorker(worker);
+					}
+				}
 				else
-					it = idle.erase(it);
+					idle.erase(worker);
 			}
 		}
 	}
 	// TODO: Else unassign harvesters?
 }
 
-// Returns the maximum amount of harvesters
-int WorkerManager::saturationMax()
+// Returns the maximum amount of miners.
+int WorkerManager::maxMiners()
 {
-	//return fields.size() * MINERAL_SATURATION_MAX;
-	return minerals.size() * MINERAL_SATURATION_MAX;
+	return MINERAL_SATURATION_MAX * minerals.size();
 }
 
 // Returns the amount of workers.
-int WorkerManager::getWorkersSize()
+int WorkerManager::workers()
 {
-	return idle.size() + harvesters.size();
+	return idle.size() + mining.size();
 }
 
-// Attempts to assign a worker to harvest and returns whether successful.
-// TODO remove field if it does not exist.
-// TODO Search through until valid field is found.
+// Attempts to assign a worker and returns whether successful.
 bool WorkerManager::assignWorker(BWAPI::Unit * worker)
 {
+	// Validate worker.
 	if (worker &&
-		worker->exists() &&
-		//!fields.empty())
-		!minerals.empty())
+		worker->exists())
 	{
-		//Field field = fields.front();
+		// Validate prioritized mineral.
 		BWAPI::Unit * mineral = minerals.front();
-		//if (field.first < MINERAL_SATURATION_MAX)
-		if (mineralSaturation[mineral] < MINERAL_SATURATION_MAX)
+		if (mineral &&
+			mineral->exists() &&
+			//mineralSaturation[mineral] < MINERAL_SATURATION_MAX)
+			mineralMiners[mineral].size() < MINERAL_SATURATION_MAX)
 		{
-			// Add the worker to harvesters.
-			//BWAPI::Unit * mineral = field.second;
-			harvesters.insert(std::make_pair(worker, mineral));
-			// Update the field
-			//int amount = field.first;
-			//popField();
-			//insertField(amount + 1, mineral);
 			minerals.pop_front();
 			minerals.push_back(mineral);
-			++mineralSaturation[mineral];
+			miners.insert(worker);
+			mining[worker] = mineral;
+			//++mineralSaturation[mineral];
+			mineralMiners[mineral].insert(worker);
 			utilUnit::command(worker, BWAPI::UnitCommandTypes::Gather, mineral);
 			return true;
+		}
+		else
+		{
+			idle.insert(worker);
+			return false;
 		}
 	}
 	return false;
@@ -214,8 +210,8 @@ BWAPI::Unit * WorkerManager::takeWorker()
 		while (it != idle.end())
 		{
 			BWAPI::Unit * worker = *it;
-			if (worker->exists() && // Should be unecessary
-				worker->isCompleted() && // Should be unecessary
+			if (worker &&
+				worker->exists() &&
 				!worker->isCarryingMinerals() &&
 				!worker->isCarryingGas())
 			{
@@ -227,12 +223,12 @@ BWAPI::Unit * WorkerManager::takeWorker()
 	}
 	// Find the worker in the harvester pool.
 	{
-		std::map<BWAPI::Unit*, BWAPI::Unit*>::iterator it = harvesters.begin();
-		while (it != harvesters.end())
+		std::map<BWAPI::Unit*, BWAPI::Unit*>::iterator it = mining.begin();
+		while (it != mining.end())
 		{
 			BWAPI::Unit * worker = (*it).first, * mineral = (*it).second;
-			if (worker->exists() && // Should be unecessary
-				worker->isCompleted() && // Should be unecessary
+			if (worker &&
+				worker->exists() &&
 				!worker->isCarryingMinerals() &&
 				!worker->isCarryingGas())
 			{
@@ -246,19 +242,14 @@ BWAPI::Unit * WorkerManager::takeWorker()
 	return NULL;
 }
 
-/*
-std::vector<Field> WorkerManager::getFields()
-{
-	return fields;
-}
-*/
-
+// Returns a copy of the min-saturation sorted list of recorded minerals.
 utilUnit::UnitList WorkerManager::getMinerals()
 {
 	return minerals;
 }
 
-std::map<BWAPI::Unit*, int> WorkerManager::getMineralSaturation()
+// Returns a copy of the mineral miner mapping.
+std::map<BWAPI::Unit*, utilUnit::UnitSet> WorkerManager::getMineralMiners()
 {
-	return mineralSaturation;
+	return mineralMiners;
 }

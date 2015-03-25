@@ -50,12 +50,12 @@ void Primary::onFrame()
 		BWAPI::Broodwar->drawTextMap(pos.x(), pos.y(), "%d", amount);
 	}
 	*/
-	std::map<BWAPI::Unit*, int> mineralSaturation = workerManager->getMineralSaturation();
+	std::map<BWAPI::Unit*, utilUnit::UnitSet> mineralSaturation = workerManager->getMineralMiners();
 	BOOST_FOREACH(BWAPI::Unit * mineral, workerManager->getMinerals())
 	{
 		BWAPI::Position pos = mineral->getPosition();
 		BWAPI::Broodwar->drawCircleMap(pos.x(), pos.y(), 32, BWAPI::Colors::Blue, false);
-		BWAPI::Broodwar->drawTextMap(pos.x(), pos.y(), "%d", mineralSaturation[mineral]);
+		BWAPI::Broodwar->drawTextMap(pos.x(), pos.y(), "%d", mineralSaturation[mineral].size());
 	}
 
 	// Debugging display.
