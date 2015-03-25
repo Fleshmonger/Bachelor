@@ -4,7 +4,7 @@
 void Primary::onStart()
 {
 	Broodwar->enableFlag(Flag::UserInput);
-	Broodwar->setLocalSpeed(0);
+	//Broodwar->setLocalSpeed(0);
 
 	// Read map information.
 	BWTA::readMap();

@@ -37,36 +37,47 @@ void WorkerManager::removeMiner(BWAPI::Unit * miner)
 	// Validate miner.
 	if (miner)
 	{
-		// Validate mineral.
-		BWAPI::Unit * mineral = mining[miner];
-		if (mineral)
-		{
-			// Update minerals.
-			utilUnit::UnitList::iterator it = minerals.begin();
-			while (it != minerals.end())
-			{
-				if (*it == mineral)
-				{
-					minerals.erase(it);
-					break;
-				}
-				else
-					++it;
-			}
-			minerals.push_front(mineral);
-			mineralMiners[mineral].erase(miner);
-			//--mineralSaturation[mineral];
-			// Even miner distribution.
-			if (mineralMiners[mineral].size() < mineralMiners[minerals.back()].size() - 1)
-			{
-				BWAPI::Unit * newMiner = *mineralMiners[minerals.back()].begin();
-				mineralMiners[minerals.back()].erase(newMiner);
-				mineralMiners[mineral].insert(newMiner);
-			} // Closure: Even distribution.
-		} // Closure: Valid mineral.
-		// Remove miner.
 		miners.erase(miner);
-		mining.erase(miner);
+		// Validate mining.
+		if (mining.count(miner) > 0)
+		{
+			BWAPI::Unit * mineral = mining[miner];
+			mining.erase(miner);
+			// Validate mineral.
+			if (mineral)
+			{
+				// Update minerals.
+				utilUnit::UnitList::iterator it = minerals.begin();
+				while (it != minerals.end())
+				{
+					if (*it == mineral)
+					{
+						minerals.erase(it);
+						minerals.push_front(mineral);
+						break;
+					}
+					else
+						++it;
+				}
+				// Validate mineral miners.
+				if (mineralMiners.count(mineral) > 0)
+				{
+					mineralMiners[mineral].erase(miner);
+					// Even miner distribution.
+					BWAPI::Unit * mineralBack = minerals.back();
+					if (mineralBack &&
+						mineralMiners.count(mineralBack) > 0 &&
+						mineralMiners[mineral].size() < mineralMiners[mineralBack].size() - 1)
+					{
+						BWAPI::Unit * newMiner = *mineralMiners[mineralBack].begin();
+						mineralMiners[mineralBack].erase(newMiner);
+						mineralMiners[mineral].insert(newMiner);
+						minerals.pop_back();
+						minerals.push_front(mineralBack);
+					} // Closure: Even distribution.
+				} // Closure: Valid mineral miners.
+			} // Closure: Valid mineral.
+		} // Closure: Valid mining.
 	} // Closure: Valid miner.
 }
 
@@ -74,7 +85,6 @@ void WorkerManager::removeMiner(BWAPI::Unit * miner)
 void WorkerManager::addMineral(BWAPI::Unit * mineral)
 {
 	minerals.push_front(mineral);
-	//mineralSaturation[mineral] = 0;
 	mineralMiners[mineral] = utilUnit::UnitSet();
 }
 
@@ -88,71 +98,66 @@ void WorkerManager::setDepot(BWAPI::Unit * depot)
 void WorkerManager::update()
 {
 	// Validate minerals.
+	utilUnit::UnitList::iterator mineralIt = minerals.begin();
+	while (mineralIt != minerals.end())
 	{
-		utilUnit::UnitList::iterator it = minerals.begin();
-		while (it != minerals.end())
-		{
-			BWAPI::Unit * mineral = *it;
-			if (!mineral ||
-				!mineral->exists())
-				it = minerals.erase(it);
-			else
-				++it;
-		}
+		BWAPI::Unit * mineral = *mineralIt;
+		if (!mineral ||
+			!mineral->exists())
+			mineralIt = minerals.erase(mineralIt);
+		else
+			++mineralIt;
 	}
 
-	// Command mining.
-	if (depot)
+	// Validate cargo return.
+	if (depot &&
+		depot->exists())
 	{
 		// Command miners.
+		utilUnit::UnitSet::iterator minerIt = miners.begin();
+		while (minerIt != miners.end())
 		{
-			utilUnit::UnitSet::iterator it = miners.begin();
-			while (it != miners.end())
+			BWAPI::Unit * miner = *minerIt;
+			BWAPI::Unit * mineral = mining[miner];
+			++minerIt;
+			// Validate miner.
+			if (miner &&
+				miner->exists() &&
+				mineral &&
+				mineral->exists())
 			{
-				BWAPI::Unit * miner = *it;
-				BWAPI::Unit * mineral = mining[miner];
-				++it;
-				// Validate miner.
-				if (miner &&
-					miner->exists() &&
-					mineral &&
-					mineral->exists())
-				{
-					// Command miner.
-					if (miner->isCarryingMinerals() || miner->isCarryingGas())
-						utilUnit::command(miner, BWAPI::UnitCommandTypes::Return_Cargo, depot);
-					else
-						utilUnit::command(miner, BWAPI::UnitCommandTypes::Gather, mineral);
-				}
+				// Command miner.
+				if (miner->isCarryingMinerals() || miner->isCarryingGas())
+					utilUnit::command(miner, BWAPI::UnitCommandTypes::Return_Cargo, depot);
 				else
-				{
-					removeMiner(miner);
-				}
+					utilUnit::command(miner, BWAPI::UnitCommandTypes::Gather, mineral);
+			}
+			else
+			{
+				removeMiner(miner);
 			}
 		}
 		// Assign idle workers.
+		utilUnit::UnitSet::iterator idleIt = idle.begin();
+		while (idleIt != idle.end())
 		{
-			utilUnit::UnitSet::iterator it = idle.begin();
-			while (it != idle.end())
+			BWAPI::Unit * worker = *idleIt;
+			++idleIt;
+			// Validate idle.
+			if (worker &&
+				worker->exists())
 			{
-				BWAPI::Unit * worker = *it;
-				++it;
-				// Validate idle.
-				if (worker &&
-					worker->exists())
+				// Assign to mining.
+				if (miners.size() < MINERAL_SATURATION_MAX * minerals.size())
 				{
-					// Assign to mining.
-					if (miners.size() < MINERAL_SATURATION_MAX * minerals.size())
-					{
-						idle.erase(worker);
-						assignWorker(worker);
-					}
-				}
-				else
 					idle.erase(worker);
+					assignWorker(worker);
+				}
 			}
+			else
+				idle.erase(worker);
 		}
-	}
+	} // Closure: Valid depot.
 	// TODO: Else unassign harvesters?
 }
 
@@ -186,9 +191,7 @@ bool WorkerManager::assignWorker(BWAPI::Unit * worker)
 			minerals.push_back(mineral);
 			miners.insert(worker);
 			mining[worker] = mineral;
-			//++mineralSaturation[mineral];
 			mineralMiners[mineral].insert(worker);
-			utilUnit::command(worker, BWAPI::UnitCommandTypes::Gather, mineral);
 			return true;
 		}
 		else
