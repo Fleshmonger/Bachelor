@@ -20,16 +20,21 @@ WorkerManager::~WorkerManager()
 // TODO merge with assign worker.
 void WorkerManager::addWorker(BWAPI::Unit * worker)
 {
-	assignWorker(worker);
+	if (worker &&
+		worker->exists())
+		assignWorker(worker);
 }
 
 // Removes a worker from the worker pool.
 void WorkerManager::removeWorker(BWAPI::Unit * worker)
 {
-	if (idle.count(worker) == 1)
-		idle.erase(worker);
-	else if (miners.count(worker) == 1)
-		removeMiner(worker);
+	if (worker)
+	{
+		if (idle.count(worker) == 1)
+			idle.erase(worker);
+		else if (miners.count(worker) == 1)
+			removeMiner(worker);
+	}
 }
 
 void WorkerManager::removeMiner(BWAPI::Unit * miner)
@@ -84,14 +89,20 @@ void WorkerManager::removeMiner(BWAPI::Unit * miner)
 // Adds a harvestable mineral to the list of fields.
 void WorkerManager::addMineral(BWAPI::Unit * mineral)
 {
-	minerals.push_front(mineral);
-	mineralMiners[mineral] = utilUnit::UnitSet();
+	if (mineral &&
+		mineral->exists())
+	{
+		minerals.push_front(mineral);
+		mineralMiners[mineral] = utilUnit::UnitSet();
+	}
 }
 
 // Designates the current depot for returning cargo
 void WorkerManager::setDepot(BWAPI::Unit * depot)
 {
-	this->depot = depot;
+	if (depot &&
+		depot->exists())
+		this->depot = depot;
 }
 
 // Gathers resources with all available workers.
@@ -127,10 +138,15 @@ void WorkerManager::update()
 				mineral->exists())
 			{
 				// Command miner.
-				if (miner->isCarryingMinerals() || miner->isCarryingGas())
-					utilUnit::command(miner, BWAPI::UnitCommandTypes::Return_Cargo, depot);
-				else
-					utilUnit::command(miner, BWAPI::UnitCommandTypes::Gather, mineral);
+				if (miner->isIdle())
+				{
+					if (miner->isCarryingMinerals() || miner->isCarryingGas())
+						//utilUnit::command(miner, BWAPI::UnitCommandTypes::Return_Cargo, depot);
+						miner->returnCargo();
+					else
+						//utilUnit::command(miner, BWAPI::UnitCommandTypes::Gather, mineral);
+						miner->gather(mineral);
+				}
 			}
 			else
 			{
@@ -158,6 +174,8 @@ void WorkerManager::update()
 				idle.erase(worker);
 		}
 	} // Closure: Valid depot.
+	else
+		depot = NULL;
 	// TODO: Else unassign harvesters?
 }
 
@@ -178,13 +196,14 @@ bool WorkerManager::assignWorker(BWAPI::Unit * worker)
 {
 	// Validate worker.
 	if (worker &&
-		worker->exists())
+		worker->exists() &&
+		!minerals.empty())
 	{
 		// Validate prioritized mineral.
 		BWAPI::Unit * mineral = minerals.front();
 		if (mineral &&
 			mineral->exists() &&
-			//mineralSaturation[mineral] < MINERAL_SATURATION_MAX)
+			mineralMiners.count(mineral) > 0 &&
 			mineralMiners[mineral].size() < MINERAL_SATURATION_MAX)
 		{
 			minerals.pop_front();
@@ -221,7 +240,8 @@ BWAPI::Unit * WorkerManager::takeWorker()
 				idle.erase(it);
 				return worker;
 			}
-			++it;
+			else
+				++it;
 		}
 	}
 	// Find the worker in the harvester pool.
@@ -235,10 +255,11 @@ BWAPI::Unit * WorkerManager::takeWorker()
 				!worker->isCarryingMinerals() &&
 				!worker->isCarryingGas())
 			{
-				removeWorker(worker);
+				removeMiner(worker);
 				return worker;
 			}
-			++it;
+			else
+				++it;
 		}
 	}
 	// No available workers was found.

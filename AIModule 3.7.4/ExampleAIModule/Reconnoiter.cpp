@@ -39,7 +39,8 @@ void Reconnoiter::update()
 				scout = workerManager->takeWorker();
 			// Commanding Scout
 			if (scout && scout->getOrderTargetPosition() != target)
-				utilUnit::command(scout, BWAPI::UnitCommandTypes::Move, target);
+				//utilUnit::command(scout, BWAPI::UnitCommandTypes::Move, target);
+				scout->move(target);
 		}
 	}
 	else if (scout && scout->exists())
@@ -47,7 +48,8 @@ void Reconnoiter::update()
 		// Harassing
 		utilUnit::UnitSet troops = archivist->getTroops();
 		if (!troops.empty() && !scout->isAttacking())
-			utilUnit::command(scout, BWAPI::UnitCommandTypes::Attack_Move, archivist->getPosition(*troops.begin()));
+			//utilUnit::command(scout, BWAPI::UnitCommandTypes::Attack_Move, archivist->getPosition(*troops.begin()));
+			scout->attack(archivist->getPosition(*troops.begin()));
 	}
 	else
 		scout = NULL;

@@ -4,7 +4,7 @@
 void Primary::onStart()
 {
 	Broodwar->enableFlag(Flag::UserInput);
-	//Broodwar->setLocalSpeed(0);
+	Broodwar->setLocalSpeed(0);
 
 	// Read map information.
 	BWTA::readMap();
@@ -40,22 +40,17 @@ void Primary::onEnd(bool isWinner)
 void Primary::onFrame()
 {
 	// Draw fields and amount of workers assigned
-	/*
-	BOOST_FOREACH(Field field, workerManager->getFields())
-	{
-		int amount = field.first;
-		BWAPI::Unit * mineral = field.second;
-		BWAPI::Position pos = mineral->getPosition();
-		BWAPI::Broodwar->drawCircleMap(pos.x(), pos.y(), 32, BWAPI::Colors::Blue, false);
-		BWAPI::Broodwar->drawTextMap(pos.x(), pos.y(), "%d", amount);
-	}
-	*/
 	std::map<BWAPI::Unit*, utilUnit::UnitSet> mineralSaturation = workerManager->getMineralMiners();
 	BOOST_FOREACH(BWAPI::Unit * mineral, workerManager->getMinerals())
 	{
-		BWAPI::Position pos = mineral->getPosition();
-		BWAPI::Broodwar->drawCircleMap(pos.x(), pos.y(), 32, BWAPI::Colors::Blue, false);
-		BWAPI::Broodwar->drawTextMap(pos.x(), pos.y(), "%d", mineralSaturation[mineral].size());
+		if (mineral &&
+			mineral->exists() &&
+			mineralSaturation.count(mineral) > 0)
+		{
+			BWAPI::Position pos = mineral->getPosition();
+			BWAPI::Broodwar->drawCircleMap(pos.x(), pos.y(), 32, BWAPI::Colors::Blue, false);
+			BWAPI::Broodwar->drawTextMap(pos.x(), pos.y(), "%d", mineralSaturation[mineral].size());
+		}
 	}
 
 	// Debugging display.
