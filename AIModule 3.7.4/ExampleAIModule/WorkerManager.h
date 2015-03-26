@@ -26,6 +26,7 @@ class WorkerManager
 		void removeWorker(BWAPI::Unit * worker);
 		void removeMiner(BWAPI::Unit * miner);
 		void addMineral(BWAPI::Unit * mineral);
+		void removeMineral(BWAPI::Unit * mineral);
 		void setDepot(BWAPI::Unit * depot);
 		void update();
 

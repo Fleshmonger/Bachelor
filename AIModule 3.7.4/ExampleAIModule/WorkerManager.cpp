@@ -97,6 +97,35 @@ void WorkerManager::addMineral(BWAPI::Unit * mineral)
 	}
 }
 
+void WorkerManager::removeMineral(BWAPI::Unit * mineral)
+{
+	// Find mineral.
+	utilUnit::UnitList::iterator it = minerals.begin();
+	while (it != minerals.end())
+	{
+		if (*it == mineral)
+		{
+			// Update minerals.
+			minerals.erase(it);
+			// Update miners.
+			if (mineralMiners.count(mineral) > 0)
+			{
+				BOOST_FOREACH(BWAPI::Unit * miner, mineralMiners[mineral])
+				{
+					miners.erase(miner);
+					mining.erase(miner);
+					idle.insert(miner);
+				}
+			}
+			// Update mineralMiners.
+			mineralMiners.erase(mineral);
+			return;
+		}
+		else
+			it++;
+	}
+}
+
 // Designates the current depot for returning cargo
 void WorkerManager::setDepot(BWAPI::Unit * depot)
 {
@@ -113,11 +142,10 @@ void WorkerManager::update()
 	while (mineralIt != minerals.end())
 	{
 		BWAPI::Unit * mineral = *mineralIt;
+		++mineralIt;
 		if (!mineral ||
 			!mineral->exists())
-			mineralIt = minerals.erase(mineralIt);
-		else
-			++mineralIt;
+			removeMineral(mineral);
 	}
 
 	// Validate cargo return.
@@ -173,7 +201,7 @@ void WorkerManager::update()
 			else
 				idle.erase(worker);
 		}
-	} // Closure: Valid depot.
+	} // Closure: Valid cargo return.
 	else
 		depot = NULL;
 	// TODO: Else unassign harvesters?
@@ -249,7 +277,7 @@ BWAPI::Unit * WorkerManager::takeWorker()
 		std::map<BWAPI::Unit*, BWAPI::Unit*>::iterator it = mining.begin();
 		while (it != mining.end())
 		{
-			BWAPI::Unit * worker = (*it).first, * mineral = (*it).second;
+			BWAPI::Unit * worker = (*it).first;
 			if (worker &&
 				worker->exists() &&
 				!worker->isCarryingMinerals() &&
