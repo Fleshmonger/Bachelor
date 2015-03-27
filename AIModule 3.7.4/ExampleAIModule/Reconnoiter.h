@@ -4,7 +4,9 @@
 #include "Archivist.h"
 #include "WorkerManager.h"
 
+
 const unsigned int MINIMUM_WORKERS = 5; // Minimum amount of workers available before requesting a scout.
+
 
 // Scouts the map while the enemy base is hidden.
 //TODO Make the scouting activated by the future strategist manager.

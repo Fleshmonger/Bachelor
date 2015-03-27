@@ -1,5 +1,6 @@
 #include "Producer.h"
 
+
 // Constructor
 Producer::Producer(Accountant * accountant) :
 	accountant(accountant),
@@ -11,10 +12,12 @@ Producer::Producer(Accountant * accountant) :
 {
 }
 
+
 // Deconstructor
 Producer::~Producer()
 {
 }
+
 
 // Add a unit in production to the incomplete pool.
 void Producer::incompleteUnit(BWAPI::Unit * unit)
@@ -28,11 +31,13 @@ void Producer::incompleteUnit(BWAPI::Unit * unit)
 	}
 }
 
+
 // Remove a complete unit from the incomplete pool.
 void Producer::completeUnit(BWAPI::Unit * unit)
 {
 	incompleteUnits.erase(unit);
 }
+
 
 // Designates an infantry constructing facility.
 void Producer::addInfantryFacility(BWAPI::Unit * facility)
@@ -41,6 +46,7 @@ void Producer::addInfantryFacility(BWAPI::Unit * facility)
 	idleInfantryFacilities.insert(facility);
 }
 
+
 // Undesignates an infantry constructing facility.
 void Producer::removeInfantryFacility(BWAPI::Unit * facility)
 {
@@ -48,11 +54,13 @@ void Producer::removeInfantryFacility(BWAPI::Unit * facility)
 	idleInfantryFacilities.erase(facility);
 }
 
+
 // Designates the current worker producing facility.
 void Producer::setDepot(BWAPI::Unit * depot)
 {
 	this->depot = depot;
 }
+
 
 // Updates the current pool of idle infantry facilities.
 void Producer::update()
@@ -89,6 +97,7 @@ void Producer::update()
 
 	}
 }
+
 
 // Attempt to produce an infantry unit at an available facility and returns true if successful.
 bool Producer::trainUnit(BWAPI::UnitType unitType)

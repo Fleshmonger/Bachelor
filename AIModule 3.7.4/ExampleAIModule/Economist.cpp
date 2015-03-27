@@ -1,6 +1,8 @@
 #include "Economist.h"
 
-//In the future needs access to Architect for refinery construction.
+
+// Constructor.
+//TODO In the future needs access to Architect for refinery construction.
 Economist::Economist(WorkerManager * workerManager, Producer * producer, Architect * architect)
 {
 	// Managers
@@ -9,10 +11,12 @@ Economist::Economist(WorkerManager * workerManager, Producer * producer, Archite
 	this->architect = architect;
 }
 
-//Unused deconstructor.
+
+// Deconstructor.
 Economist::~Economist()
 {
 }
+
 
 /*
 // TODO This is probably needed later on.
@@ -22,6 +26,7 @@ void Economist::setDepot(BWAPI::Unit * depot)
 	this->depot = depot;
 }
 */
+
 
 // Simulate the architect AI. Creates pylons and commands builders.
 void Economist::update()

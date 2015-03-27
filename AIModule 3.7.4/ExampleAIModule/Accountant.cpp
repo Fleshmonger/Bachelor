@@ -1,5 +1,6 @@
 #include "Accountant.h"
 
+
 // Constructor
 Accountant::Accountant() :
 	allocatedMinerals(0),
@@ -8,10 +9,12 @@ Accountant::Accountant() :
 {
 }
 
+
 // Deconstructor
 Accountant::~Accountant()
 {
 }
+
 
 // Allocates the costs of building a given unit type.
 void Accountant::allocate(BWAPI::UnitType unitType)
@@ -21,6 +24,7 @@ void Accountant::allocate(BWAPI::UnitType unitType)
 	allocatedSupply += unitType.supplyRequired();
 }
 
+
 // Deallocates the cost of a given unit type.
 void Accountant::deallocate(BWAPI::UnitType unitType)
 {
@@ -29,10 +33,11 @@ void Accountant::deallocate(BWAPI::UnitType unitType)
 	allocatedSupply -= unitType.supplyRequired();
 }
 
+
 // Returns whether we can afford to build a given unit type.
 bool Accountant::isAffordable(BWAPI::UnitType unitType)
 {
-	BWAPI::Player * self = Broodwar->self();
+	BWAPI::Player * self = BWAPI::Broodwar->self();
 	return
 		unitType.mineralPrice() <= self->minerals() - allocatedMinerals &&
 		unitType.gasPrice() <= self->gas() - allocatedGas &&
@@ -40,23 +45,23 @@ bool Accountant::isAffordable(BWAPI::UnitType unitType)
 	return false;
 }
 
+
 // Returns the amount of unallocated minerals.
-// UNUSED
 int Accountant::minerals()
 {
-	return Broodwar->self()->minerals() - allocatedMinerals;
+	return BWAPI::Broodwar->self()->minerals() - allocatedMinerals;
 }
+
 
 // Returns the amount of unallocated gas.
-// UNUSED
 int Accountant::gas()
 {
-	return Broodwar->self()->gas() - allocatedGas;
+	return BWAPI::Broodwar->self()->gas() - allocatedGas;
 }
 
+
 // Returns the amount of unallocated supply.
-// UNUSED
 int Accountant::supply()
 {
-	return Broodwar->self()->supplyTotal() - Broodwar->self()->supplyUsed() - allocatedSupply;
+	return BWAPI::Broodwar->self()->supplyTotal() - BWAPI::Broodwar->self()->supplyUsed() - allocatedSupply;
 }

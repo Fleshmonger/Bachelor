@@ -1,7 +1,6 @@
 #pragma once
 #include <BWAPI.h>
 
-using namespace BWAPI;
 
 // Tracks reserved resources currently scheduled for use.
 class Accountant

@@ -1,5 +1,6 @@
 #include "Reconnoiter.h"
 
+
 // Constructor
 Reconnoiter::Reconnoiter(Archivist * archivist, WorkerManager * workerManager) :
 	archivist(archivist),
@@ -9,13 +10,14 @@ Reconnoiter::Reconnoiter(Archivist * archivist, WorkerManager * workerManager) :
 {
 }
 
+
 // Deconstructor
 Reconnoiter::~Reconnoiter()
 {
 }
 
-// Simulate the reconnoiter AI.
-// Retrieves, returns and commands the scout.
+
+// Scouts and harasses the enemy base.
 void Reconnoiter::update()
 {
 	// Enemy base spotted check.

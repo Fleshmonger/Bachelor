@@ -8,12 +8,15 @@
 #include "Archivist.h"
 #include "WorkerManager.h"
 #include "Producer.h"
+#include "CombatJudge.h"
 #include "Architect.h"
 #include "Economist.h"
 #include "Reconnoiter.h"
 #include "ArmyManager.h"
 
+
 using namespace BWAPI;
+
 
 class Primary : public BWAPI::AIModule
 {
@@ -29,6 +32,7 @@ class Primary : public BWAPI::AIModule
 private:
 	Accountant * accountant;
 	Archivist * archivist;
+	CombatJudge * combatJudge;
 	Producer * producer;
 	WorkerManager * workerManager;
 	Architect * architect;

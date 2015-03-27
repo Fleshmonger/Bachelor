@@ -4,6 +4,7 @@
 #include <boost/foreach.hpp>
 #include "UtilUnit.h"
 
+
 // Collects battlefield information, mostly about opponents.
 // TODO Only collects info about enemy - rename or restructure?
 // TODO Does not account for morphed creatures (important with drones for example!)

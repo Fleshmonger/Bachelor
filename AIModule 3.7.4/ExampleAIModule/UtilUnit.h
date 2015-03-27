@@ -1,7 +1,8 @@
 #pragma once
 #include <BWAPI.h>
 
-// Contains generally used functions for units.
+
+// Contains common functions for units.
 namespace utilUnit
 {
 	typedef std::list<BWAPI::Unit*> UnitList;

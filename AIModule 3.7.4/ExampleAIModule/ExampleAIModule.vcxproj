@@ -104,6 +104,7 @@
     <ClCompile Include="Primary.cpp" />
     <ClCompile Include="Producer.cpp" />
     <ClCompile Include="Reconnoiter.cpp" />
+    <ClCompile Include="CombatJudge.cpp" />
     <ClCompile Include="UtilUnit.cpp" />
     <ClCompile Include="WorkerManager.cpp" />
   </ItemGroup>
@@ -116,6 +117,7 @@
     <ClInclude Include="Primary.h" />
     <ClInclude Include="Producer.h" />
     <ClInclude Include="Reconnoiter.h" />
+    <ClInclude Include="CombatJudge.h" />
     <ClInclude Include="UtilUnit.h" />
     <ClInclude Include="WorkerManager.h" />
   </ItemGroup>

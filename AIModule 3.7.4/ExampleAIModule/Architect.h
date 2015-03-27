@@ -1,9 +1,14 @@
 #pragma once
 #include <BWAPI.h>
-#include <algorithm>
+#include <algorithm> //TODO Unused?
 #include "UtilUnit.h"
-#include "WorkerManager.h"
 #include "Accountant.h"
+#include "WorkerManager.h"
+
+
+static const int MIN_SUPPLY = 10;
+static const BWAPI::UnitType BUILD_SUPPLY = BWAPI::UnitTypes::Protoss_Pylon;
+
 
 struct Zone {
 	int left, top, right, bottom;
@@ -32,15 +37,12 @@ struct Zone {
 	}
 };
 
-static const int MIN_SUPPLY = 10;
-static const BWAPI::UnitType BUILD_SUPPLY = BWAPI::UnitTypes::Protoss_Pylon;
 
 class Architect
 {
 private:
-
-	WorkerManager * workerManager;
 	Accountant * accountant;
+	WorkerManager * workerManager;
 
 	bool harvestingDefined; // Temporary stupid solution, change when information manager is introduced.
 
@@ -52,7 +54,7 @@ private:
 	Zone harvesting;
 
 public:
-	Architect(WorkerManager * workerManager, Accountant * accountant);
+	Architect(Accountant * accountant, WorkerManager * workerManager);
 	~Architect();
 
 	bool scheduleBuild(BWAPI::UnitType buildingType); // TODO Not symmetrical signature with scheduleConstruct

@@ -1,5 +1,6 @@
 #include "Archivist.h"
 
+
 // Constructor
 Archivist::Archivist() :
 	homeRegion(NULL),
@@ -15,10 +16,12 @@ Archivist::Archivist() :
 {
 }
 
+
 // Deconstructor
 Archivist::~Archivist()
 {
 }
+
 
 // Private
 // Determines whether unit is a special case such as overlord or larvae
@@ -36,6 +39,7 @@ bool Archivist::isMisc(BWAPI::UnitType unitType)
 		unitType == BWAPI::UnitTypes::Spell_Disruption_Web;
 }
 
+
 // Private
 // Determines whether a unit is a defensive structure.
 // TODO Unneeded?
@@ -45,6 +49,7 @@ bool Archivist::isTurret(BWAPI::UnitType unitType)
 	return
 		unitType.isBuilding() && unitType.canAttack();
 }
+
 
 // Removes a unit from the knowledge pool.
 // TODO Code duplication with recordUnit.
@@ -70,6 +75,7 @@ void Archivist::clearUnit(BWAPI::Unit * unit)
 		troops.erase(unit);
 }
 
+
 // Inserts a unit to the knowledge pool.
 void Archivist::recordUnit(BWAPI::Unit * unit)
 {
@@ -93,6 +99,7 @@ void Archivist::recordUnit(BWAPI::Unit * unit)
 		troops.insert(unit);
 }
 
+
 // Updates the position of a unit if it is visible.
 void Archivist::recordUnitPosition(BWAPI::Unit * unit)
 {
@@ -101,6 +108,7 @@ void Archivist::recordUnitPosition(BWAPI::Unit * unit)
 	else if (!isArchived(unit) || BWAPI::Broodwar->isVisible(BWAPI::TilePosition(positions[unit])))
 		positions[unit] = BWAPI::Positions::None;
 }
+
 
 // Updates the type of a unit if it is visible.
 void Archivist::recordUnitType(BWAPI::Unit * unit)
@@ -111,11 +119,13 @@ void Archivist::recordUnitType(BWAPI::Unit * unit)
 		types[unit] = BWAPI::UnitTypes::None;
 }
 
+
 // Designates the home region.
 void Archivist::setHomeRegion(BWTA::Region * region)
 {
 	homeRegion = region;
 }
+
 
 // Revises records to match new game state.
 void Archivist::update()
@@ -138,17 +148,20 @@ void Archivist::update()
 	}
 }
 
+
 // Returns whether a unit is within a given region.
 bool Archivist::inRegion(BWAPI::Unit * unit, BWTA::Region * region)
 {
 	return region && BWTA::getRegion(getPosition(unit)) == region;
 }
 
+
 // Returns whether or not the unit exists in the knowledge pool.
 bool Archivist::isArchived(BWAPI::Unit * unit)
 {
 	return units.count(unit) > 0;
 }
+
 
 // Returns the position an enemy was last seen.
 BWAPI::Position Archivist::getPosition(BWAPI::Unit * unit)
@@ -164,6 +177,7 @@ BWAPI::Position Archivist::getPosition(BWAPI::Unit * unit)
 	}
 }
 
+
 // Returns the type an enemy was last seen as.
 BWAPI::UnitType Archivist::getType(BWAPI::Unit * unit)
 {
@@ -178,6 +192,7 @@ BWAPI::UnitType Archivist::getType(BWAPI::Unit * unit)
 	}
 }
 
+
 // Finds and returns all invaders.
 std::set<BWAPI::Unit*> Archivist::invaders()
 {
@@ -188,11 +203,13 @@ std::set<BWAPI::Unit*> Archivist::invaders()
 	return invaders;
 }
 
+
 // Returns the recorded home region.
 BWTA::Region * Archivist::getHomeRegion()
 {
 	return homeRegion;
 }
+
 
 // Returns a copy of recorded buildings.
 std::set<BWAPI::Unit*> Archivist::getBuildings()
@@ -200,24 +217,27 @@ std::set<BWAPI::Unit*> Archivist::getBuildings()
 	return buildings;
 }
 
+
 // Returns a copy of recorded depots.
 std::set<BWAPI::Unit*> Archivist::getDepots()
 {
 	return depots;
 }
 
+
 // Returns a copy of recorded turrets.
-// This includes 
 std::set<BWAPI::Unit*> Archivist::getTurrets()
 {
 	return turrets;
 }
+
 
 // Returns a copy of recorded workers.
 std::set<BWAPI::Unit*> Archivist::getWorkers()
 {
 	return workers;
 }
+
 
 // Returns a copy of recorded troops.
 std::set<BWAPI::Unit*> Archivist::getTroops()

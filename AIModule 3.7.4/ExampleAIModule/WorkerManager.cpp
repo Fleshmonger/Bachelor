@@ -1,5 +1,6 @@
 #include "WorkerManager.h"
 
+
 // Constructor
 WorkerManager::WorkerManager() :
 	depot(NULL),
@@ -11,10 +12,12 @@ WorkerManager::WorkerManager() :
 {
 }
 
+
 // Deconstructor
 WorkerManager::~WorkerManager()
 {
 }
+
 
 // Adds a worker to the pool.
 // TODO merge with assign worker.
@@ -22,6 +25,7 @@ void WorkerManager::addWorker(BWAPI::Unit * worker)
 {
 	idle.insert(worker);
 }
+
 
 // Removes a worker from the pool.
 void WorkerManager::removeWorker(BWAPI::Unit * worker)
@@ -36,6 +40,7 @@ void WorkerManager::removeWorker(BWAPI::Unit * worker)
 			removeMiner(worker);
 	}
 }
+
 
 // Adds a miner to the pool and relevant containers.
 void WorkerManager::addMiner(BWAPI::Unit * miner)
@@ -54,6 +59,7 @@ void WorkerManager::addMiner(BWAPI::Unit * miner)
 		mineralMiners[mineral].insert(miner);
 	}
 }
+
 
 // Removes a miner from the pool and relevant containers.
 // TODO Cleanup.
@@ -106,6 +112,7 @@ void WorkerManager::removeMiner(BWAPI::Unit * miner)
 	} // Closure: Valid miner.
 }
 
+
 // Adds a mineral to the mineral pool and related containers.
 void WorkerManager::addMineral(BWAPI::Unit * mineral)
 {
@@ -118,6 +125,7 @@ void WorkerManager::addMineral(BWAPI::Unit * mineral)
 		mineralMiners[mineral] = utilUnit::UnitSet();
 	}
 }
+
 
 // Removes a mineral at the position from the mineral pool and related containers.
 // TODO Remove unecessary check.
@@ -140,6 +148,7 @@ void WorkerManager::removeMineral(utilUnit::UnitList::iterator it)
 	}
 }
 
+
 // Removes a mineral from the mineral pool and related containers.
 void WorkerManager::removeMineral(BWAPI::Unit * mineral)
 {
@@ -154,6 +163,7 @@ void WorkerManager::removeMineral(BWAPI::Unit * mineral)
 	}
 }
 
+
 // Designates the current depot for returning cargo
 void WorkerManager::setDepot(BWAPI::Unit * depot)
 {
@@ -161,6 +171,7 @@ void WorkerManager::setDepot(BWAPI::Unit * depot)
 		depot->exists())
 		this->depot = depot;
 }
+
 
 // Updates mining operations.
 void WorkerManager::update()
@@ -174,6 +185,7 @@ void WorkerManager::update()
 		updateMiners();
 	}
 }
+
 
 // Verifies and assigns idle workers.
 void WorkerManager::updateIdle()
@@ -201,6 +213,7 @@ void WorkerManager::updateIdle()
 	}
 }
 
+
 // Verifies minerals.
 void WorkerManager::updateMinerals()
 {
@@ -216,6 +229,7 @@ void WorkerManager::updateMinerals()
 			removeMineral(mineral);
 	}
 }
+
 
 // Verifies and commands miners.
 // TODO Remove superfloues miners?
@@ -250,17 +264,20 @@ void WorkerManager::updateMiners()
 	}
 }
 
+
 // Returns the maximum amount of miners.
 unsigned int WorkerManager::maxMiners()
 {
 	return MINERAL_SATURATION_MAX * minerals.size();
 }
 
+
 // Returns the amount of workers.
 unsigned int WorkerManager::workers()
 {
 	return idle.size() + mining.size();
 }
+
 
 // Returns a valid worker or a null pointer if no valid workers are in the pool.
 // TODO: Remove code repetition.
@@ -306,11 +323,13 @@ BWAPI::Unit * WorkerManager::takeWorker()
 	return NULL;
 }
 
+
 // Returns a copy of the min-saturation sorted list of recorded minerals.
 utilUnit::UnitList WorkerManager::getMinerals()
 {
 	return minerals;
 }
+
 
 // Returns a copy of the mineral miner mapping.
 std::map<BWAPI::Unit*, utilUnit::UnitSet> WorkerManager::getMineralMiners()

@@ -1,12 +1,14 @@
 #include "ArmyManager.h"
 
+
 // Constructor
-ArmyManager::ArmyManager(Archivist * archivist, WorkerManager * workerManager, Producer * producer, Architect * architect) :
+ArmyManager::ArmyManager(Archivist * archivist, CombatJudge * combatJudge, WorkerManager * workerManager, Producer * producer, Architect * architect) :
 	archivist(archivist),
+	combatJudge(combatJudge),
 	workerManager(workerManager),
 	producer(producer),
 	architect(architect),
-	armyStrength(0),
+	strength(0),
 	army(utilUnit::UnitSet()),
 	attackers(utilUnit::UnitSet()),
 	defenders(utilUnit::UnitSet()),
@@ -17,49 +19,21 @@ ArmyManager::ArmyManager(Archivist * archivist, WorkerManager * workerManager, P
 {
 }
 
+
 // Deconstructor
 ArmyManager::~ArmyManager()
 {
 }
 
-// Returns the interpreted strength of unit as a value.
-// TODO Does not account for losing troops during combat.
-// TODO Does not account for enemy upgrades.
-// TODO Does not account for current enemy unit stats.
-// TODO Does not account for armor.
-// TODO Does not account for distance and range.
-// TODO Does not account for maneuvering into attacking range.
-// TODO Does not account for damage types.
-// TODO Does not account for splash damage.
-// TODO Does not account for abilities.
-double ArmyManager::strength(BWAPI::Unit * unit)
-{
-	if (unit)
-	{
-		BWAPI::UnitType unitType = archivist->getType(unit);
-		BWAPI::WeaponType weaponType = unitType.groundWeapon();
-		if (weaponType != BWAPI::WeaponTypes::None)
-			return (double)(weaponType.damageAmount() * (unitType.maxHitPoints() + unitType.maxShields())) / weaponType.damageCooldown();
-	}
-	return 0;
-}
-
-// Returns the interpreted strength of an army as a value.
-double ArmyManager::strength(utilUnit::UnitSet units)
-{
-	double unitsStrength = 0;
-	BOOST_FOREACH(BWAPI::Unit * unit, units)
-		unitsStrength += strength(unit);
-	return unitsStrength;
-}
 
 // Adds a unit to the troop pool.
 void ArmyManager::addUnit(BWAPI::Unit * unit)
 {
 	army.insert(unit);
 	idle.insert(unit);
-	armyStrength += strength(unit);
+	strength += combatJudge->strength(unit);
 }
+
 
 // Removes a unit from the troop pool.
 void ArmyManager::removeUnit(BWAPI::Unit * unit)
@@ -67,8 +41,9 @@ void ArmyManager::removeUnit(BWAPI::Unit * unit)
 	army.insert(unit);
 	attackers.erase(unit);
 	idle.erase(unit);
-	armyStrength -= strength(unit);
+	strength -= combatJudge->strength(unit);
 }
+
 
 // Simulate the army manager AI, ordering, creating and upgrading troops.
 // TODO Simplify defense
@@ -106,14 +81,14 @@ void ArmyManager::update()
 		defenders.insert(idle.begin(), idle.end());
 
 		// Conscript workers if we are too weak.
-		double defenseStrength = strength(defenders), invaderStrength = strength(invaders);
+		double defenseStrength = combatJudge->strength(defenders), invaderStrength = combatJudge->strength(invaders);
 		while (defenseStrength < invaderStrength)
 		{
 			BWAPI::Unit * worker = workerManager->takeWorker();
 			if (worker &&
 				worker->exists())
 			{
-				defenseStrength += strength(worker);
+				defenseStrength += combatJudge->strength(worker);
 				defenders.insert(worker);
 			}
 			else
@@ -267,10 +242,10 @@ bool ArmyManager::canAttack()
 {
 	utilUnit::UnitSet enemies = archivist->getTroops(), enemyTurrets = archivist->getTurrets();
 	enemies.insert(enemyTurrets.begin(), enemyTurrets.end());
-	return armyStrength > strength(enemies);
+	return strength > combatJudge->strength(enemies);
 }
 
-// TEMPORARY used for testing.
+// Returns a copy of the army.
 utilUnit::UnitSet ArmyManager::getArmy()
 {
 	return army;

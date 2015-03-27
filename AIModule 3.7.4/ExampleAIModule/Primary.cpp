@@ -1,5 +1,6 @@
 #include "Primary.h"
 
+
 // Fired on starting the game.
 void Primary::onStart()
 {
@@ -15,10 +16,11 @@ void Primary::onStart()
 	archivist = new Archivist();
 	workerManager = new WorkerManager();
 	producer = new Producer(accountant);
-	architect = new Architect(workerManager, accountant);
+	combatJudge = new CombatJudge(archivist);
+	architect = new Architect(accountant, workerManager);
 	economist = new Economist(workerManager, producer, architect);
 	reconnoiter = new Reconnoiter(archivist, workerManager);
-	armyManager = new ArmyManager(archivist, workerManager, producer, architect);
+	armyManager = new ArmyManager(archivist, combatJudge, workerManager, producer, architect);
 
 	// TODO Move this to the coming terrain analyzer manager.
 	// Add new information to managers.
@@ -32,9 +34,11 @@ void Primary::onStart()
 	archivist->setHomeRegion(BWTA::getStartLocation(Broodwar->self())->getRegion());
 }
 
+
 void Primary::onEnd(bool isWinner)
 {
 }
+
 
 // Fired at the start of a new frame.
 void Primary::onFrame()
@@ -58,7 +62,7 @@ void Primary::onFrame()
 	DEBUG_SCREEN(200, 20, "APM: %d", Broodwar->getAPM());
 
 	// Testing
-	double strength = armyManager->strength(armyManager->getArmy()), enemyStrength = armyManager->strength(archivist->getTroops());
+	double strength = combatJudge->strength(armyManager->getArmy()), enemyStrength = combatJudge->strength(archivist->getTroops());
 	DEBUG_SCREEN(200, 40, "Strength: %f", strength);
 	DEBUG_SCREEN(200, 60, "Enemy Strength: %f", enemyStrength);
 
@@ -82,21 +86,26 @@ void Primary::onFrame()
 	workerManager->update();
 }
 
+
 void Primary::onSendText(std::string text)
 {
 }
+
 
 void Primary::onReceiveText(BWAPI::Player* player, std::string text)
 {
 }
 
+
 void Primary::onPlayerLeft(BWAPI::Player* player)
 {
 }
 
+
 void Primary::onNukeDetect(BWAPI::Position target)
 {
 }
+
 
 // Fired when a unit is shown for the first time.
 void Primary::onUnitDiscover(BWAPI::Unit* unit)
@@ -105,18 +114,22 @@ void Primary::onUnitDiscover(BWAPI::Unit* unit)
 		archivist->recordUnit(unit);
 }
 
+
 void Primary::onUnitEvade(BWAPI::Unit* unit)
 {
 }
+
 
 // Fired when an invisible unit becomes visible.
 void Primary::onUnitShow(BWAPI::Unit* unit)
 {
 }
 
+
 void Primary::onUnitHide(BWAPI::Unit* unit)
 {
 }
+
 
 // Fired when a unit is created.
 // Units under construction triggers this.
@@ -133,6 +146,7 @@ void Primary::onUnitCreate(BWAPI::Unit* unit)
 			producer->incompleteUnit(unit);
 	}
 }
+
 
 // Fired when a unit dies or is destroyed.
 // TODO Do refineries trigger this?
@@ -173,19 +187,23 @@ void Primary::onUnitDestroy(BWAPI::Unit* unit)
 		archivist->clearUnit(unit);
 }
 
+
 // Fires when a unit changes type.
 // TODO Does building geyser emplacements trigger this?
 void Primary::onUnitMorph(BWAPI::Unit* unit)
 {
 }
 
+
 void Primary::onUnitRenegade(BWAPI::Unit* unit)
 {
 }
 
+
 void Primary::onSaveGame(std::string gameName)
 {
 }
+
 
 // Fires when a unit has finished construction.
 // Both units and buildings trigger this.
@@ -205,6 +223,7 @@ void Primary::onUnitComplete(BWAPI::Unit *unit)
 		designateUnit(unit);
 	}
 }
+
 
 // Delivers a unit to managers who needs it.
 // Assumes the unit is owned.

@@ -1,9 +1,10 @@
 #include "Architect.h"
 
+
 // Constructor
-Architect::Architect(WorkerManager * workerManager, Accountant * accountant) :
-	workerManager(workerManager),
+Architect::Architect(Accountant * accountant, WorkerManager * workerManager) :
 	accountant(accountant),
+	workerManager(workerManager),
 	harvestingDefined(false),
 	harvesting(Zone(0, 0, 0, 0)),
 	depot(NULL),
@@ -13,10 +14,12 @@ Architect::Architect(WorkerManager * workerManager, Accountant * accountant) :
 {
 }
 
+
 // Deconstructor
 Architect::~Architect()
 {
 }
+
 
 // Attempt to build a new building. Returns true if it succeeds, otherwise returns false.
 bool Architect::scheduleBuild(BWAPI::UnitType buildingType)
@@ -47,12 +50,14 @@ bool Architect::scheduleBuild(BWAPI::UnitType buildingType)
 	return false;
 }
 
+
 // Constructs a new building.
 void Architect::scheduleConstruct(BWAPI::Unit * building)
 {
 	BWAPI::UnitType buildingType = building->getType();
 	constructSchedule.insert(std::make_pair(buildingType, building));
 }
+
 
 // Removes a build order from the build schedule.
 void Architect::removeBuild(BWAPI::UnitType buildingType, BWAPI::TilePosition buildTarget)
@@ -80,6 +85,7 @@ void Architect::removeBuild(BWAPI::UnitType buildingType, BWAPI::TilePosition bu
 	}
 }
 
+
 // Removes a construction order from the construct schedule.
 void Architect::removeConstruct(BWAPI::Unit * building)
 {
@@ -104,6 +110,7 @@ void Architect::removeConstruct(BWAPI::Unit * building)
 	}
 }
 
+
 // Identifies a building as built.
 void Architect::completeBuild(BWAPI::Unit * building)
 {
@@ -111,11 +118,13 @@ void Architect::completeBuild(BWAPI::Unit * building)
 	scheduleConstruct(building);
 }
 
+
 // Identifies a building as constructed.
 void Architect::completeConstruct(BWAPI::Unit * building)
 {
 	removeConstruct(building);
 }
+
 
 // Resizes the harvesting zone to include the given unit.
 void Architect::expandHarvesting(BWAPI::Unit * resource)
@@ -140,12 +149,14 @@ void Architect::expandHarvesting(BWAPI::Unit * resource)
 	}
 }
 
+
 // Adds a pylon to the pylon pool.
 // Used for placing Protoss buildings.
 void Architect::addPylon(BWAPI::Unit * pylon)
 {
 	pylons.insert(pylon);
 }
+
 
 // Removes a pylon to the pylon pool.
 // Used for placing Protoss buildings.
@@ -154,6 +165,7 @@ void Architect::removePylon(BWAPI::Unit * pylon)
 	pylons.erase(pylon);
 }
 
+
 // Designates the current base position.
 void Architect::setDepot(BWAPI::Unit * depot)
 {
@@ -161,6 +173,7 @@ void Architect::setDepot(BWAPI::Unit * depot)
 	if (depot)
 		expandHarvesting(depot);
 }
+
 
 // Creates pylons, validates orders and commands builders.
 void Architect::update()
@@ -180,8 +193,8 @@ void Architect::update()
 			++it;
 			if (builder &&
 				builder->exists() &&
-				Broodwar->canBuildHere(builder, buildTarget, buildingType) &&
-				Broodwar->canMake(builder, buildingType))
+				BWAPI::Broodwar->canBuildHere(builder, buildTarget, buildingType) &&
+				BWAPI::Broodwar->canMake(builder, buildingType))
 				builder->build(buildTarget, buildingType);
 			else
 				removeBuild(buildingType, buildTarget);
@@ -201,17 +214,20 @@ void Architect::update()
 
 }
 
+
 // Returns whether or not a given building type can be built at a given location.
 bool Architect::validBuildLocation(BWAPI::Unit * builder, BWAPI::TilePosition location, BWAPI::UnitType buildingType)
 {
-	return location.isValid() && !harvesting.contains(location, buildingType) && Broodwar->canBuildHere(builder, location, buildingType);
+	return location.isValid() && !harvesting.contains(location, buildingType) && BWAPI::Broodwar->canBuildHere(builder, location, buildingType);
 }
+
 
 // Returns the amount of oders of a specific building type currently scheduled.
 int Architect::scheduled(BWAPI::UnitType buildingType)
 {
 	return buildSchedule.count(buildingType) + constructSchedule.count(buildingType);
 }
+
 
 // Returns the nearest tileposition in a spiral pattern which is buildable.
 BWAPI::TilePosition Architect::getBuildLocation(BWAPI::Unit * builder, BWAPI::TilePosition desiredLocation, BWAPI::UnitType buildingType)
@@ -221,7 +237,7 @@ BWAPI::TilePosition Architect::getBuildLocation(BWAPI::Unit * builder, BWAPI::Ti
 		// Check in a spiral pattern.
 		bool horizontal = false;
 		int dx = 0, dy = 0, length = 0, step = 1;
-		while (length < Broodwar->mapWidth() || length < Broodwar->mapHeight())
+		while (length < BWAPI::Broodwar->mapWidth() || length < BWAPI::Broodwar->mapHeight())
 		{
 			// Check the current tile.
 			BWAPI::TilePosition tile = BWAPI::TilePosition::TilePosition(desiredLocation.x() + dx, desiredLocation.y() + dy);

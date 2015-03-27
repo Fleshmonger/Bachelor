@@ -4,7 +4,9 @@
 #include <boost/foreach.hpp>
 #include "UtilUnit.h"
 
+
 const int MINERAL_SATURATION_MAX = 3; // Maximum harvesters on a single mineral field.
+
 
 // Contains and handles all workers, assigning idle ones to harvesting.
 // TODO Split harvesting to separate class?
@@ -35,12 +37,10 @@ class WorkerManager
 		void updateMinerals();
 		void updateMiners();
 
-		//bool assignWorker(BWAPI::Unit * worker);
-
 		unsigned int maxMiners();
 		unsigned int workers();
 
 		BWAPI::Unit * takeWorker(); // TODO Rename 'take'
-		utilUnit::UnitList getMinerals();
-		std::map<BWAPI::Unit*, utilUnit::UnitSet> getMineralMiners();
+		utilUnit::UnitList getMinerals(); // TEMP
+		std::map<BWAPI::Unit*, utilUnit::UnitSet> getMineralMiners(); // TEMP
 };

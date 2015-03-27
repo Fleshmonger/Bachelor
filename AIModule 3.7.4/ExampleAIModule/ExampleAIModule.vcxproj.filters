@@ -7,66 +7,81 @@
     <Filter Include="Managers">
       <UniqueIdentifier>{c8eb25fb-1c69-478a-bc1a-976cb778235a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Managers\Combat">
+      <UniqueIdentifier>{cbdab239-0038-4fed-a446-d2d42500c6d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Managers\Expansion">
+      <UniqueIdentifier>{72595dae-5b54-4a14-92aa-fd9a9c5e5783}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Managers\Intelligence">
+      <UniqueIdentifier>{c10b902b-fe4c-458a-bb3a-99b94d158053}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="UtilUnit.cpp">
       <Filter>Utility</Filter>
     </ClCompile>
-    <ClCompile Include="WorkerManager.cpp">
-      <Filter>Managers</Filter>
-    </ClCompile>
-    <ClCompile Include="Producer.cpp">
-      <Filter>Managers</Filter>
-    </ClCompile>
-    <ClCompile Include="Reconnoiter.cpp">
-      <Filter>Managers</Filter>
-    </ClCompile>
-    <ClCompile Include="Economist.cpp">
-      <Filter>Managers</Filter>
-    </ClCompile>
-    <ClCompile Include="ArmyManager.cpp">
-      <Filter>Managers</Filter>
-    </ClCompile>
-    <ClCompile Include="Accountant.cpp">
-      <Filter>Managers</Filter>
-    </ClCompile>
-    <ClCompile Include="Architect.cpp">
-      <Filter>Managers</Filter>
-    </ClCompile>
-    <ClCompile Include="Archivist.cpp">
-      <Filter>Managers</Filter>
-    </ClCompile>
     <ClCompile Include="Primary.cpp" />
     <ClCompile Include="Dll.cpp" />
+    <ClCompile Include="ArmyManager.cpp">
+      <Filter>Managers\Combat</Filter>
+    </ClCompile>
+    <ClCompile Include="CombatJudge.cpp">
+      <Filter>Managers\Combat</Filter>
+    </ClCompile>
+    <ClCompile Include="Reconnoiter.cpp">
+      <Filter>Managers\Combat</Filter>
+    </ClCompile>
+    <ClCompile Include="Architect.cpp">
+      <Filter>Managers\Expansion</Filter>
+    </ClCompile>
+    <ClCompile Include="Economist.cpp">
+      <Filter>Managers\Expansion</Filter>
+    </ClCompile>
+    <ClCompile Include="Producer.cpp">
+      <Filter>Managers\Expansion</Filter>
+    </ClCompile>
+    <ClCompile Include="WorkerManager.cpp">
+      <Filter>Managers\Expansion</Filter>
+    </ClCompile>
+    <ClCompile Include="Accountant.cpp">
+      <Filter>Managers\Intelligence</Filter>
+    </ClCompile>
+    <ClCompile Include="Archivist.cpp">
+      <Filter>Managers\Intelligence</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="UtilUnit.h">
       <Filter>Utility</Filter>
     </ClInclude>
-    <ClInclude Include="WorkerManager.h">
-      <Filter>Managers</Filter>
+    <ClInclude Include="Primary.h" />
+    <ClInclude Include="ArmyManager.h">
+      <Filter>Managers\Combat</Filter>
     </ClInclude>
-    <ClInclude Include="Producer.h">
-      <Filter>Managers</Filter>
+    <ClInclude Include="CombatJudge.h">
+      <Filter>Managers\Combat</Filter>
     </ClInclude>
     <ClInclude Include="Reconnoiter.h">
-      <Filter>Managers</Filter>
-    </ClInclude>
-    <ClInclude Include="Economist.h">
-      <Filter>Managers</Filter>
-    </ClInclude>
-    <ClInclude Include="Accountant.h">
-      <Filter>Managers</Filter>
+      <Filter>Managers\Combat</Filter>
     </ClInclude>
     <ClInclude Include="Architect.h">
-      <Filter>Managers</Filter>
+      <Filter>Managers\Expansion</Filter>
+    </ClInclude>
+    <ClInclude Include="Economist.h">
+      <Filter>Managers\Expansion</Filter>
+    </ClInclude>
+    <ClInclude Include="Producer.h">
+      <Filter>Managers\Expansion</Filter>
+    </ClInclude>
+    <ClInclude Include="WorkerManager.h">
+      <Filter>Managers\Expansion</Filter>
+    </ClInclude>
+    <ClInclude Include="Accountant.h">
+      <Filter>Managers\Intelligence</Filter>
     </ClInclude>
     <ClInclude Include="Archivist.h">
-      <Filter>Managers</Filter>
+      <Filter>Managers\Intelligence</Filter>
     </ClInclude>
-    <ClInclude Include="ArmyManager.h">
-      <Filter>Managers</Filter>
-    </ClInclude>
-    <ClInclude Include="Primary.h" />
   </ItemGroup>
 </Project>
