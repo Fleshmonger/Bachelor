@@ -10,11 +10,6 @@
 #include "Architect.h"
 
 
-const int
-	DEFENDERS_PER_SCOUT = 1,
-	DEFENDERS_PER_ATTACKER = 3;
-
-
 //TODO Move somewhere else?
 const BWAPI::UnitType
 	INFANTRY_FACTORY = BWAPI::UnitTypes::Protoss_Gateway,
@@ -32,7 +27,7 @@ private:
 	Producer * producer;
 	Architect * architect;
 
-	utilUnit::UnitSet army, attackers, defenders, idle, militia, invaders;
+	utilUnit::UnitSet army, attackers, defenders, idle, invaders;
 
 public:
 	ArmyManager(Archivist * archivist, CombatJudge * combatJudge, WorkerManager * workerManager, Producer * producer, Architect * architect);

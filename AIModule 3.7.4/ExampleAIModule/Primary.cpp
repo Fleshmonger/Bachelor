@@ -21,17 +21,6 @@ void Primary::onStart()
 	economist = new Economist(workerManager, producer, architect);
 	reconnoiter = new Reconnoiter(archivist, workerManager);
 	armyManager = new ArmyManager(archivist, combatJudge, workerManager, producer, architect);
-
-	// TODO Move this to the coming terrain analyzer manager.
-	// Add new information to managers.
-	BOOST_FOREACH(BWAPI::Unit * mineral, BWTA::getStartLocation(Broodwar->self())->getStaticMinerals())
-	{
-		workerManager->addMineral(mineral);
-		architect->expandHarvesting(mineral);
-	}
-	BOOST_FOREACH(BWAPI::Unit * geyser, BWTA::getStartLocation(Broodwar->self())->getGeysers())
-		architect->expandHarvesting(geyser);
-	archivist->setHomeRegion(BWTA::getStartLocation(Broodwar->self())->getRegion());
 }
 
 

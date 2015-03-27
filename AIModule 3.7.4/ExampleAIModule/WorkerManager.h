@@ -1,6 +1,6 @@
 #pragma once
 #include <BWAPI.h>
-#include <queue> //TODO Remove?
+#include <BWTA.h>
 #include <boost/foreach.hpp>
 #include "UtilUnit.h"
 

@@ -2,6 +2,7 @@
 
 
 // Constructor
+// TODO Simplify.
 WorkerManager::WorkerManager() :
 	depot(NULL),
 	minerals(utilUnit::UnitList()),
@@ -10,6 +11,8 @@ WorkerManager::WorkerManager() :
 	mining(std::map<BWAPI::Unit*, BWAPI::Unit*>()),
 	mineralMiners(std::map<BWAPI::Unit*, utilUnit::UnitSet>())
 {
+	BOOST_FOREACH(BWAPI::Unit * mineral, BWTA::getStartLocation(BWAPI::Broodwar->self())->getStaticMinerals())
+		addMineral(mineral);
 }
 
 

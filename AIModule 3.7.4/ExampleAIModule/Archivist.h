@@ -18,8 +18,8 @@ private:
 	std::map<BWAPI::Unit*, BWAPI::Position> positions;
 	std::map<BWAPI::Unit*, BWAPI::UnitType> types;
 
-	bool isMisc(BWAPI::UnitType unitType); // TODO Rename? Or move zerg stuff elsewhere?
-	bool isTurret(BWAPI::UnitType unitType);
+	bool isMisc(BWAPI::UnitType unitType); // TODO Rename? Or move zerg stuff elsewhere? Move function elsewhere?
+	bool isTurret(BWAPI::UnitType unitType); // TODO Move function elsewhere?
 
 public:
 	Archivist();

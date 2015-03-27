@@ -3,7 +3,7 @@
 
 // Constructor
 Archivist::Archivist() :
-	homeRegion(NULL),
+	homeRegion(BWTA::getStartLocation(BWAPI::Broodwar->self())->getRegion()),
 	units(std::set<BWAPI::Unit*>()),
 	buildings(std::set<BWAPI::Unit*>()),
 	depots(std::set<BWAPI::Unit*>()),

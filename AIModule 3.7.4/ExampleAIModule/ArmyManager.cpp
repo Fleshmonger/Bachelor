@@ -13,8 +13,6 @@ ArmyManager::ArmyManager(Archivist * archivist, CombatJudge * combatJudge, Worke
 	defenders(utilUnit::UnitSet()),
 	idle(utilUnit::UnitSet()),
 	invaders(utilUnit::UnitSet())
-	//invaderDefense(std::map<BWAPI::Unit*, int>()),
-	//defenderTargets(std::map<BWAPI::Unit*, BWAPI::Unit*>())
 {
 }
 
@@ -74,10 +72,10 @@ void ArmyManager::update()
 	// Invasion check.
 	if (!invaders.empty())
 	{
-		// Conscript defenders.
+		// Conscript troops.
 		defenders.insert(idle.begin(), idle.end());
 
-		// Conscript workers if we are too weak.
+		// Conscript workers if necessary.
 		double defenseStrength = combatJudge->strength(defenders), invaderStrength = combatJudge->strength(invaders);
 		while (defenseStrength < invaderStrength)
 		{
@@ -104,7 +102,7 @@ void ArmyManager::update()
 	}
 	else
 	{
-		// Relieve defenders.
+		// Release defenders.
 		BOOST_FOREACH(BWAPI::Unit * defender, defenders)
 		{
 			if (defender &&
@@ -118,95 +116,6 @@ void ArmyManager::update()
 		}
 		defenders.clear();
 	}
-
-	/**
-	// Add new invaders.
-	std::set<BWAPI::Unit*> newInvaders = archivist->invaders();
-	BOOST_FOREACH(BWAPI::Unit * invader, newInvaders)
-		if (invaderDefense.count(invader) == 0)
-			invaderDefense[invader] = 0;
-
-	// Validate and intercept invaders.
-	{
-		std::map<BWAPI::Unit*, int>::iterator it = invaderDefense.begin();
-		while (it != invaderDefense.end())
-		{
-			BWAPI::Unit * invader = (*it).first;
-			++it;
-			// Validate.
-			if (invader &&
-				(!invader->isVisible() || invader->exists()) &&
-				archivist->getPosition(invader))
-			{
-				// Determine amount of needed defenders.
-				int requiredDefenders;
-				if (invader->getType().isWorker())
-					requiredDefenders = DEFENDERS_PER_SCOUT;
-				else
-					requiredDefenders = DEFENDERS_PER_ATTACKER;
-
-				// Attempt to assign required defenders.
-				while (invaderDefense[invader] < requiredDefenders)
-				{
-					BWAPI::Unit * defender = workerManager->takeWorker();
-					if (defender &&
-						defender->exists())
-					{
-						defenderTargets[defender] = invader;
-						++invaderDefense[invader];
-					}
-					else
-						break;
-				}
-			}
-			else
-			{
-				// Clear invalid invader.
-				invaderDefense.erase(invader);
-			}
-		}
-	}
-
-	// Command defenders.
-	{
-		std::map<BWAPI::Unit*, BWAPI::Unit*>::iterator it = defenderTargets.begin();
-		while (it != defenderTargets.end())
-		{
-			std::pair<BWAPI::Unit*, BWAPI::Unit*> entry = *it;
-			BWAPI::Unit
-				* defender = entry.first,
-				* target = entry.second;
-			++it;
-			// Validate defender entry.
-			if (defender &&
-				defender->exists() &&
-				target &&
-				target->exists() &&
-				invaderDefense.count(target) > 0)
-			{
-				// Intercept intruder.
-				if (target->isVisible())
-					utilUnit::command(defender, BWAPI::UnitCommandTypes::Attack_Unit, target);
-				else
-					utilUnit::command(defender, BWAPI::UnitCommandTypes::Attack_Move, archivist->getPosition(target));
-			}
-			else
-			{
-				// Clear invalid entry.
-				defenderTargets.erase(defender);
-				if (defender &&
-					defender->exists())
-				{
-					if (defender->getType().isWorker())
-						workerManager->addWorker(defender);
-					else
-						addUnit(defender);
-				}
-				--invaderDefense[target];
-			}
-		}
-	}
-	*/
 
 	// Calculate attack.
 	if (canAttack())

@@ -1,6 +1,7 @@
 #pragma once
 #include <BWAPI.h>
-#include <algorithm> //TODO Unused?
+#include <BWTA.h>
+#include <boost/foreach.hpp>
 #include "UtilUnit.h"
 #include "Accountant.h"
 #include "WorkerManager.h"

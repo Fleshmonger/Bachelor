@@ -1,5 +1,6 @@
 #pragma once
 #include <BWAPI.h>
+#include <BWTA.h>
 
 
 // Contains common functions for units.
@@ -13,6 +14,7 @@ namespace utilUnit
 	void command(BWAPI::Unit * unit, BWAPI::UnitCommandType commandType, BWAPI::Unit * target, BWAPI::Position position);
 	void commandBuild(BWAPI::Unit * unit, BWAPI::TilePosition, BWAPI::UnitType buildingType);
 
+	bool inRegion(BWAPI::Position * position, BWTA::Region * region);
 	bool isEnemy(BWAPI::Unit * unit);
 	bool isOwned(BWAPI::Unit * unit);
 }
