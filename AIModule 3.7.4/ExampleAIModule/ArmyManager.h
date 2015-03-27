@@ -32,8 +32,6 @@ private:
 	Producer * producer;
 	Architect * architect;
 
-	double strength;
-
 	utilUnit::UnitSet army, attackers, defenders, idle, militia, invaders;
 
 public:

@@ -8,7 +8,6 @@ ArmyManager::ArmyManager(Archivist * archivist, CombatJudge * combatJudge, Worke
 	workerManager(workerManager),
 	producer(producer),
 	architect(architect),
-	strength(0),
 	army(utilUnit::UnitSet()),
 	attackers(utilUnit::UnitSet()),
 	defenders(utilUnit::UnitSet()),
@@ -31,17 +30,15 @@ void ArmyManager::addUnit(BWAPI::Unit * unit)
 {
 	army.insert(unit);
 	idle.insert(unit);
-	strength += combatJudge->strength(unit);
 }
 
 
 // Removes a unit from the troop pool.
 void ArmyManager::removeUnit(BWAPI::Unit * unit)
 {
-	army.insert(unit);
+	army.erase(unit);
 	attackers.erase(unit);
 	idle.erase(unit);
-	strength -= combatJudge->strength(unit);
 }
 
 
@@ -242,7 +239,7 @@ bool ArmyManager::canAttack()
 {
 	utilUnit::UnitSet enemies = archivist->getTroops(), enemyTurrets = archivist->getTurrets();
 	enemies.insert(enemyTurrets.begin(), enemyTurrets.end());
-	return strength > combatJudge->strength(enemies);
+	return combatJudge->strength(army) > combatJudge->strength(enemies);
 }
 
 // Returns a copy of the army.
