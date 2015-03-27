@@ -55,6 +55,11 @@ void utilUnit::commandBuild(BWAPI::Unit * unit, BWAPI::TilePosition location, BW
 	} // Closure: Validity
 }
 
+bool utilUnit::inRegion(BWAPI::Position pos, BWTA::Region * region)
+{
+	return region && BWTA::getRegion(pos) == region;
+}
+
 // Returns true if the unit is owned by an enemy and false otherwise.
 // TODO Can this be done more effectively?
 bool utilUnit::isEnemy(BWAPI::Unit * unit)

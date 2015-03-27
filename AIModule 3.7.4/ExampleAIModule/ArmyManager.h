@@ -27,7 +27,7 @@ private:
 	Producer * producer;
 	Architect * architect;
 
-	utilUnit::UnitSet army, attackers, defenders, idle, invaders;
+	utilUnit::UnitSet army, attackers, defenders, idle;
 
 public:
 	ArmyManager(Archivist * archivist, CombatJudge * combatJudge, WorkerManager * workerManager, Producer * producer, Architect * architect);

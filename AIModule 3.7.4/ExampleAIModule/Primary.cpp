@@ -51,7 +51,9 @@ void Primary::onFrame()
 	DEBUG_SCREEN(200, 20, "APM: %d", Broodwar->getAPM());
 
 	// Testing
-	double strength = combatJudge->strength(armyManager->getArmy()), enemyStrength = combatJudge->strength(archivist->getTroops());
+	double
+		strength = combatJudge->strength(armyManager->getArmy()),
+		enemyStrength = combatJudge->strength(archivist->getTroops()) + combatJudge->strength(archivist->getTurrets());
 	DEBUG_SCREEN(200, 40, "Strength: %f", strength);
 	DEBUG_SCREEN(200, 60, "Enemy Strength: %f", enemyStrength);
 

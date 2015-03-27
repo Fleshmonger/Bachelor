@@ -152,7 +152,7 @@ void Archivist::update()
 // Returns whether a unit is within a given region.
 bool Archivist::inRegion(BWAPI::Unit * unit, BWTA::Region * region)
 {
-	return region && BWTA::getRegion(getPosition(unit)) == region;
+	return utilUnit::inRegion(getPosition(unit), region);
 }
 
 

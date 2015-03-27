@@ -11,8 +11,7 @@ ArmyManager::ArmyManager(Archivist * archivist, CombatJudge * combatJudge, Worke
 	army(utilUnit::UnitSet()),
 	attackers(utilUnit::UnitSet()),
 	defenders(utilUnit::UnitSet()),
-	idle(utilUnit::UnitSet()),
-	invaders(utilUnit::UnitSet())
+	idle(utilUnit::UnitSet())
 {
 }
 
@@ -44,32 +43,29 @@ void ArmyManager::removeUnit(BWAPI::Unit * unit)
 // TODO Simplify defense
 void ArmyManager::update()
 {
-	// Initialize.
-	utilUnit::UnitSet enemyBuildings = archivist->getBuildings();
-
 	// Train new troops.
 	producer->trainUnit(INFANTRY_UNIT);
 	architect->scheduleBuild(INFANTRY_FACTORY);
 
+	/*
 	// Validate invaders.
 	{
 		utilUnit::UnitSet::iterator it = invaders.begin();
 		while (it != invaders.end())
 		{
 			BWAPI::Unit * invader = *it;
-			++it;
-			if (invader ||
+			if (!invader ||
 				(invader->isVisible() && !invader->exists()) ||
-				BWTA::getRegion(archivist->getPosition(invader)) != archivist->getHomeRegion())
-				invaders.erase(invader);
+				archivist->inRegion(invader, archivist->getHomeRegion()))
+				it = invaders.erase(it);
+			else
+				it++;
 		}
 	}
-
-	// Identify new invaders.
-	utilUnit::UnitSet newInvaders = archivist->invaders();
-	invaders.insert(newInvaders.begin(), newInvaders.end());
+	*/
 
 	// Invasion check.
+	utilUnit::UnitSet invaders = archivist->invaders();
 	if (!invaders.empty())
 	{
 		// Conscript troops.
@@ -122,6 +118,7 @@ void ArmyManager::update()
 		attackers.insert(idle.begin(), idle.end());
 
 	// Command attackers.
+	utilUnit::UnitSet enemyBuildings = archivist->getBuildings();
 	if (!enemyBuildings.empty())
 	{
 		BWAPI::Position attackLocation = archivist->getPosition(*enemyBuildings.begin());
@@ -146,9 +143,7 @@ void ArmyManager::update()
 // Returns whether or not we would win an attack based on army strength.
 bool ArmyManager::canAttack()
 {
-	utilUnit::UnitSet enemies = archivist->getTroops(), enemyTurrets = archivist->getTurrets();
-	enemies.insert(enemyTurrets.begin(), enemyTurrets.end());
-	return combatJudge->strength(army) > combatJudge->strength(enemies);
+	return combatJudge->strength(army) > combatJudge->strength(archivist->getTroops()) + combatJudge->strength(archivist->getTurrets());
 }
 
 // Returns a copy of the army.

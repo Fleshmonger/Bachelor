@@ -33,8 +33,7 @@ double CombatJudge::strength(BWAPI::Unit * unit)
 		if (weaponType != BWAPI::WeaponTypes::None)
 			return (double)(weaponType.damageAmount() * (unitType.maxHitPoints() + unitType.maxShields())) / weaponType.damageCooldown();
 	}
-	else
-		return 0;
+	return 0;
 }
 
 
