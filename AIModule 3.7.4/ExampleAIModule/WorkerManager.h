@@ -24,16 +24,21 @@ class WorkerManager
 
 		void addWorker(BWAPI::Unit * worker);
 		void removeWorker(BWAPI::Unit * worker);
+		void addMiner(BWAPI::Unit * miner);
 		void removeMiner(BWAPI::Unit * miner);
 		void addMineral(BWAPI::Unit * mineral);
+		void removeMineral(utilUnit::UnitList::iterator it);
 		void removeMineral(BWAPI::Unit * mineral);
 		void setDepot(BWAPI::Unit * depot);
 		void update();
+		void updateIdle();
+		void updateMinerals();
+		void updateMiners();
 
-		bool assignWorker(BWAPI::Unit * worker);
+		//bool assignWorker(BWAPI::Unit * worker);
 
-		int maxMiners();
-		int workers();
+		unsigned int maxMiners();
+		unsigned int workers();
 
 		BWAPI::Unit * takeWorker(); // TODO Rename 'take'
 		utilUnit::UnitList getMinerals();
