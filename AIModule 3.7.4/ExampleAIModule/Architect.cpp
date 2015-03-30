@@ -13,16 +13,22 @@ Architect::Architect(Accountant * accountant, WorkerManager * workerManager) :
 	constructSchedule(std::multimap<BWAPI::UnitType, BWAPI::Unit*>()),
 	buildSchedule(std::multimap<BWAPI::UnitType, std::pair<BWAPI::Unit*, BWAPI::TilePosition>>())
 {
-	BOOST_FOREACH(BWAPI::Unit * mineral, BWTA::getStartLocation(BWAPI::Broodwar->self())->getStaticMinerals())
-		expandHarvesting(mineral);
-	BOOST_FOREACH(BWAPI::Unit * geyser, BWTA::getStartLocation(BWAPI::Broodwar->self())->getGeysers())
-		expandHarvesting(geyser);
 }
 
 
 // Deconstructor
 Architect::~Architect()
 {
+}
+
+
+// Fired when the map is analyzed. Reads mineral and geyser positions.
+void Architect::analyzed()
+{
+	BOOST_FOREACH(BWAPI::Unit * mineral, BWTA::getStartLocation(BWAPI::Broodwar->self())->getStaticMinerals())
+		expandHarvesting(mineral);
+	BOOST_FOREACH(BWAPI::Unit * geyser, BWTA::getStartLocation(BWAPI::Broodwar->self())->getGeysers())
+		expandHarvesting(geyser);
 }
 
 

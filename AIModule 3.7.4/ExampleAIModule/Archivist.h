@@ -25,11 +25,11 @@ public:
 	Archivist();
 	~Archivist();
 
+	void analyzed();
 	void clearUnit(BWAPI::Unit * unit);
 	void recordUnit(BWAPI::Unit * unit);
 	void recordUnitPosition(BWAPI::Unit * unit);
 	void recordUnitType(BWAPI::Unit * unit);
-	void setHomeRegion(BWTA::Region * region); // TODO make automatic? Or move to analyzer class?
 	void update();
 
 	bool inRegion(BWAPI::Unit * unit, BWTA::Region * region);

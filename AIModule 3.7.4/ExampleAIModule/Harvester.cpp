@@ -7,11 +7,6 @@ Harvester::Harvester() :
 	minerTargets(std::map<BWAPI::Unit*, BWAPI::Unit*>()),
 	mineralMiners(std::map<BWAPI::Unit*, utilUnit::UnitSet>())
 {
-	BOOST_FOREACH(BWAPI::Unit * mineral, BWTA::getStartLocation(BWAPI::Broodwar->self())->getStaticMinerals())
-	{
-		minerals.push_front(mineral);
-		mineralMiners[mineral] = utilUnit::UnitSet();
-	}
 }
 
 
@@ -20,6 +15,17 @@ Harvester::~Harvester()
 {
 }
 
+
+// Fired when the map is analyzed. Reads mineral positions.
+// TODO Rename.
+void Harvester::analyzed()
+{
+	BOOST_FOREACH(BWAPI::Unit * mineral, BWTA::getStartLocation(BWAPI::Broodwar->self())->getStaticMinerals())
+	{
+		minerals.push_front(mineral);
+		mineralMiners[mineral] = utilUnit::UnitSet();
+	}
+}
 
 // Removes a miner from the pool.
 void Harvester::removeMiner(BWAPI::Unit * miner)

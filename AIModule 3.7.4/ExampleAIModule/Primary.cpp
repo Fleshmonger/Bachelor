@@ -1,6 +1,27 @@
 #include "Primary.h"
 
 
+// Constructor
+Primary::Primary() :
+	accountant(Accountant()),
+	archivist(Archivist()),
+	workerManager(WorkerManager()),
+	producer(Producer(&accountant)),
+	combatJudge(CombatJudge(&archivist)),
+	architect(Architect(&accountant, &workerManager)),
+	economist(Economist(&workerManager, &producer, &architect)),
+	reconnoiter(Reconnoiter(&archivist, &workerManager)),
+	armyManager(ArmyManager(&archivist, &workerManager, &producer, &architect))
+{
+}
+
+
+// Deconstructor
+Primary::~Primary()
+{
+}
+
+
 // Fired on starting the game.
 void Primary::onStart()
 {
@@ -11,16 +32,24 @@ void Primary::onStart()
 	BWTA::readMap();
 	BWTA::analyze();
 
+	archivist.analyzed();
+	workerManager.analyzed();
+	architect.analyzed();
+
+	/*
 	// Manager initialization.
-	accountant = new Accountant();
-	archivist = new Archivist();
-	workerManager = new WorkerManager();
-	producer = new Producer(accountant);
-	combatJudge = new CombatJudge(archivist);
-	architect = new Architect(accountant, workerManager);
-	economist = new Economist(workerManager, producer, architect);
-	reconnoiter = new Reconnoiter(archivist, workerManager);
-	armyManager = new ArmyManager(archivist, combatJudge, workerManager, producer, architect);
+	accountant = Accountant();
+	archivist = Archivist();
+	workerManager = WorkerManager();
+	producer = Producer(&accountant);
+	architect = Architect(&accountant, &workerManager);
+	economist = Economist(&workerManager, &producer, &architect);
+	reconnoiter = Reconnoiter(&archivist, &workerManager);
+	armyManager = ArmyManager(&archivist, &workerManager, &producer, &architect);
+
+	// TEMP Used for testing.
+	combatJudge = CombatJudge(&archivist);
+	*/
 }
 
 
@@ -38,8 +67,8 @@ void Primary::onFrame()
 
 	// Testing
 	double
-		strength = combatJudge->strength(armyManager->getArmy()),
-		enemyStrength = combatJudge->strength(archivist->getTroops()) + combatJudge->strength(archivist->getTurrets());
+		strength = combatJudge.strength(armyManager.getArmy()),
+		enemyStrength = combatJudge.strength(archivist.getTroops()) + combatJudge.strength(archivist.getTurrets());
 	DEBUG_SCREEN(200, 40, "Strength: %f", strength);
 	DEBUG_SCREEN(200, 60, "Enemy Strength: %f", enemyStrength);
 
@@ -54,13 +83,13 @@ void Primary::onFrame()
 
 	// Manager updatíng
 	// TODO Workermanager is last because it commands all leftover workers. Fix this by splitting it in two.
-	archivist->update();
-	producer->update();
-	architect->update();
-	economist->update();
-	reconnoiter->update();
-	armyManager->update();
-	workerManager->update();
+	archivist.update();
+	producer.update();
+	architect.update();
+	economist.update();
+	reconnoiter.update();
+	armyManager.update();
+	workerManager.update();
 }
 
 
@@ -88,7 +117,7 @@ void Primary::onNukeDetect(BWAPI::Position target)
 void Primary::onUnitDiscover(BWAPI::Unit* unit)
 {
 	if (utilUnit::isEnemy(unit))
-		archivist->recordUnit(unit);
+		archivist.recordUnit(unit);
 }
 
 
@@ -118,9 +147,9 @@ void Primary::onUnitCreate(BWAPI::Unit* unit)
 	{
 		BWAPI::UnitType unitType = unit->getType();
 		if (unitType.isBuilding())
-			architect->completeBuild(unit);
+			architect.completeBuild(unit);
 		else
-			producer->incompleteUnit(unit);
+			producer.incompleteUnit(unit);
 	}
 }
 
@@ -142,26 +171,26 @@ void Primary::onUnitDestroy(BWAPI::Unit* unit)
 			if (unitType.isResourceDepot())
 			{
 				// TODO What should happen here?
-				architect->setDepot(NULL);
-				producer->setDepot(NULL);
-				workerManager->setDepot(NULL);
+				architect.setDepot(NULL);
+				producer.setDepot(NULL);
+				workerManager.setDepot(NULL);
 			}
 			else if (unitType == BWAPI::UnitTypes::Protoss_Pylon)
-				architect->removePylon(unit);
+				architect.removePylon(unit);
 			else if (unitType == BWAPI::UnitTypes::Protoss_Gateway)
-				producer->removeInfantryFacility(unit);
+				producer.removeInfantryFacility(unit);
 			// Remove constructing units from the architect.
 			if (unit->isConstructing())
-				architect->removeConstruct(unit);
+				architect.removeConstruct(unit);
 		}
 		else if (unitType.isWorker())
-			workerManager->removeWorker(unit);
+			workerManager.removeWorker(unit);
 		else // Must be a combat unit
-			armyManager->removeUnit(unit);
+			armyManager.removeUnit(unit);
 		// TODO if unit was incomplete, remove it from the producer.
 	}
 	else if (utilUnit::isEnemy(unit))
-		archivist->clearUnit(unit);
+		archivist.clearUnit(unit);
 }
 
 
@@ -193,9 +222,9 @@ void Primary::onUnitComplete(BWAPI::Unit *unit)
 		// Update construction status.
 		BWAPI::UnitType unitType = unit->getType();
 		if (unitType.isBuilding())
-			architect->completeConstruct(unit);
+			architect.completeConstruct(unit);
 		else
-			producer->completeUnit(unit);
+			producer.completeUnit(unit);
 		// Designate the new unit.
 		designateUnit(unit);
 	}
@@ -205,6 +234,7 @@ void Primary::onUnitComplete(BWAPI::Unit *unit)
 // Delivers a unit to managers who needs it.
 // Assumes the unit is owned.
 // TODO Remove this assumption.
+// TODO Move to designator class.
 void Primary::designateUnit(BWAPI::Unit * unit)
 {
 	// Determine type.
@@ -213,18 +243,18 @@ void Primary::designateUnit(BWAPI::Unit * unit)
 	{
 		if (unitType.isResourceDepot())
 		{
-			architect->setDepot(unit);
+			architect.setDepot(unit);
 			//economist->setDepot(unit);
-			producer->setDepot(unit);
-			workerManager->setDepot(unit);
+			producer.setDepot(unit);
+			workerManager.setDepot(unit);
 		}
 		else if (unitType == BWAPI::UnitTypes::Protoss_Pylon)
-			architect->addPylon(unit);
+			architect.addPylon(unit);
 		else if (unitType == BWAPI::UnitTypes::Protoss_Gateway) // TODO Make generic
-			producer->addInfantryFacility(unit);
+			producer.addInfantryFacility(unit);
 	}
 	else if (unitType.isWorker())
-		workerManager->addWorker(unit);
+		workerManager.addWorker(unit);
 	else // Must be a combat unit
-		armyManager->addUnit(unit);
+		armyManager.addUnit(unit);
 }

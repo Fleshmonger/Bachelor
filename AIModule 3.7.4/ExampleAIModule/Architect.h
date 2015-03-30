@@ -58,6 +58,7 @@ public:
 	Architect(Accountant * accountant, WorkerManager * workerManager);
 	~Architect();
 
+	void analyzed();
 	bool scheduleBuild(BWAPI::UnitType buildingType); // TODO Not symmetrical signature with scheduleConstruct
 	void scheduleConstruct(BWAPI::Unit * building);
 	void removeBuild(BWAPI::UnitType buildingType, BWAPI::TilePosition buildLocation);

@@ -3,7 +3,7 @@
 
 // Constructor
 Archivist::Archivist() :
-	homeRegion(BWTA::getStartLocation(BWAPI::Broodwar->self())->getRegion()),
+	homeRegion(NULL),
 	units(std::set<BWAPI::Unit*>()),
 	buildings(std::set<BWAPI::Unit*>()),
 	depots(std::set<BWAPI::Unit*>()),
@@ -22,6 +22,12 @@ Archivist::~Archivist()
 {
 }
 
+
+// Fired when the map is analyzed. Finds the home region.
+void Archivist::analyzed()
+{
+	homeRegion = BWTA::getStartLocation(BWAPI::Broodwar->self())->getRegion();
+}
 
 // Private
 // Determines whether unit is a special case such as overlord or larvae
@@ -117,13 +123,6 @@ void Archivist::recordUnitType(BWAPI::Unit * unit)
 		types[unit] = unit->getType();
 	else
 		types[unit] = BWAPI::UnitTypes::None;
-}
-
-
-// Designates the home region.
-void Archivist::setHomeRegion(BWTA::Region * region)
-{
-	homeRegion = region;
 }
 
 

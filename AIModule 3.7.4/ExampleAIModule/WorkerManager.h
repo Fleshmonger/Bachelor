@@ -1,6 +1,5 @@
 #pragma once
 #include <BWAPI.h>
-#include <BWTA.h>
 #include <boost/foreach.hpp>
 #include "UtilUnit.h"
 #include "Harvester.h"
@@ -19,6 +18,7 @@ class WorkerManager
 		WorkerManager();
 		~WorkerManager();
 
+		void analyzed();
 		void addWorker(BWAPI::Unit * worker);
 		void removeWorker(BWAPI::Unit * worker);
 		void setDepot(BWAPI::Unit * depot);

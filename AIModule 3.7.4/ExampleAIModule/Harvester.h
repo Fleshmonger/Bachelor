@@ -18,6 +18,7 @@ public:
 	Harvester();
 	~Harvester();
 
+	void analyzed();
 	void removeMiner(BWAPI::Unit * miner);
 	void removeMineral(BWAPI::Unit * mineral);
 	void harvest(utilUnit::UnitSet miners);

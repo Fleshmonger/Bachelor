@@ -2,12 +2,12 @@
 
 
 // Constructor
-ArmyManager::ArmyManager(Archivist * archivist, CombatJudge * combatJudge, WorkerManager * workerManager, Producer * producer, Architect * architect) :
+ArmyManager::ArmyManager(Archivist * archivist, WorkerManager * workerManager, Producer * producer, Architect * architect) :
 	archivist(archivist),
-	combatJudge(combatJudge),
 	workerManager(workerManager),
 	producer(producer),
 	architect(architect),
+	combatJudge(CombatJudge(archivist)),
 	army(utilUnit::UnitSet()),
 	attackers(utilUnit::UnitSet()),
 	defenders(utilUnit::UnitSet()),
@@ -72,14 +72,14 @@ void ArmyManager::update()
 		defenders.insert(idle.begin(), idle.end());
 
 		// Conscript workers if necessary.
-		double defenseStrength = combatJudge->strength(defenders), invaderStrength = combatJudge->strength(invaders);
+		double defenseStrength = combatJudge.strength(defenders), invaderStrength = combatJudge.strength(invaders);
 		while (defenseStrength < invaderStrength)
 		{
 			BWAPI::Unit * worker = workerManager->takeWorker();
 			if (worker &&
 				worker->exists())
 			{
-				defenseStrength += combatJudge->strength(worker);
+				defenseStrength += combatJudge.strength(worker);
 				defenders.insert(worker);
 			}
 			else
@@ -143,7 +143,7 @@ void ArmyManager::update()
 // Returns whether or not we would win an attack based on army strength.
 bool ArmyManager::canAttack()
 {
-	return combatJudge->strength(army) > combatJudge->strength(archivist->getTroops()) + combatJudge->strength(archivist->getTurrets());
+	return combatJudge.strength(army) > combatJudge.strength(archivist->getTroops()) + combatJudge.strength(archivist->getTurrets());
 }
 
 // Returns a copy of the army.

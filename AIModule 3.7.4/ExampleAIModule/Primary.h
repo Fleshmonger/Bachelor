@@ -8,12 +8,11 @@
 #include "Archivist.h"
 #include "WorkerManager.h"
 #include "Producer.h"
-#include "CombatJudge.h"
+#include "CombatJudge.h" // TEMP
 #include "Architect.h"
 #include "Economist.h"
 #include "Reconnoiter.h"
 #include "ArmyManager.h"
-
 
 using namespace BWAPI;
 
@@ -30,17 +29,20 @@ class Primary : public BWAPI::AIModule
 #endif
 
 private:
-	Accountant * accountant;
-	Archivist * archivist;
-	CombatJudge * combatJudge;
-	Producer * producer;
-	WorkerManager * workerManager;
-	Architect * architect;
-	Reconnoiter * reconnoiter;
-	Economist * economist;
-	ArmyManager * armyManager;
+	Accountant accountant;
+	Archivist archivist;
+	Producer producer;
+	WorkerManager workerManager;
+	Architect architect;
+	Reconnoiter reconnoiter;
+	Economist economist;
+	ArmyManager armyManager;
 
+	CombatJudge combatJudge;
 public:
+	Primary();
+	~Primary();
+
 	virtual void onStart();
 	virtual void onEnd(bool isWinner);
 	virtual void onFrame();

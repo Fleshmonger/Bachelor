@@ -22,15 +22,16 @@ class ArmyManager
 {
 private:
 	Archivist * archivist;
-	CombatJudge * combatJudge;
 	WorkerManager * workerManager;
 	Producer * producer;
 	Architect * architect;
 
+	CombatJudge combatJudge;
+
 	utilUnit::UnitSet army, attackers, defenders, idle;
 
 public:
-	ArmyManager(Archivist * archivist, CombatJudge * combatJudge, WorkerManager * workerManager, Producer * producer, Architect * architect);
+	ArmyManager(Archivist * archivist, WorkerManager * workerManager, Producer * producer, Architect * architect);
 	~ArmyManager();
 
 	void addUnit(BWAPI::Unit * unit);

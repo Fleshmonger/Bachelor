@@ -17,6 +17,12 @@ WorkerManager::~WorkerManager()
 }
 
 
+// Fired when the map is analyzed. Calls analyzed on sub-managers.
+void WorkerManager::analyzed()
+{
+	harvester.analyzed();
+}
+
 // Adds a worker to the pool.
 void WorkerManager::addWorker(BWAPI::Unit * worker)
 {
