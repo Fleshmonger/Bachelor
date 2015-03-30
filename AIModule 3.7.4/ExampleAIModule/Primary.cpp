@@ -32,20 +32,6 @@ void Primary::onEnd(bool isWinner)
 // Fired at the start of a new frame.
 void Primary::onFrame()
 {
-	// Draw fields and amount of workers assigned
-	std::map<BWAPI::Unit*, utilUnit::UnitSet> mineralSaturation = workerManager->getMineralMiners();
-	BOOST_FOREACH(BWAPI::Unit * mineral, workerManager->getMinerals())
-	{
-		if (mineral &&
-			mineral->exists() &&
-			mineralSaturation.count(mineral) > 0)
-		{
-			BWAPI::Position pos = mineral->getPosition();
-			BWAPI::Broodwar->drawCircleMap(pos.x(), pos.y(), 32, BWAPI::Colors::Blue, false);
-			BWAPI::Broodwar->drawTextMap(pos.x(), pos.y(), "%d", mineralSaturation[mineral].size());
-		}
-	}
-
 	// Debugging display.
 	DEBUG_SCREEN(200, 0, "FPS: %d", Broodwar->getFPS());
 	DEBUG_SCREEN(200, 20, "APM: %d", Broodwar->getAPM());

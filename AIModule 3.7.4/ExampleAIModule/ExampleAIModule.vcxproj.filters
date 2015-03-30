@@ -16,6 +16,12 @@
     <Filter Include="Managers\Intelligence">
       <UniqueIdentifier>{c10b902b-fe4c-458a-bb3a-99b94d158053}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Managers\Expansion\WorkerManager">
+      <UniqueIdentifier>{bdfced3f-ade1-43ba-a5ea-0b070a43c8c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Managers\Combat\ArmyManager">
+      <UniqueIdentifier>{045b7b3e-d5ed-4d5e-9377-0ed47da12c11}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="UtilUnit.cpp">
@@ -23,12 +29,6 @@
     </ClCompile>
     <ClCompile Include="Primary.cpp" />
     <ClCompile Include="Dll.cpp" />
-    <ClCompile Include="ArmyManager.cpp">
-      <Filter>Managers\Combat</Filter>
-    </ClCompile>
-    <ClCompile Include="CombatJudge.cpp">
-      <Filter>Managers\Combat</Filter>
-    </ClCompile>
     <ClCompile Include="Reconnoiter.cpp">
       <Filter>Managers\Combat</Filter>
     </ClCompile>
@@ -41,14 +41,23 @@
     <ClCompile Include="Producer.cpp">
       <Filter>Managers\Expansion</Filter>
     </ClCompile>
-    <ClCompile Include="WorkerManager.cpp">
-      <Filter>Managers\Expansion</Filter>
-    </ClCompile>
     <ClCompile Include="Accountant.cpp">
       <Filter>Managers\Intelligence</Filter>
     </ClCompile>
     <ClCompile Include="Archivist.cpp">
       <Filter>Managers\Intelligence</Filter>
+    </ClCompile>
+    <ClCompile Include="WorkerManager.cpp">
+      <Filter>Managers\Expansion\WorkerManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Harvester.cpp">
+      <Filter>Managers\Expansion\WorkerManager</Filter>
+    </ClCompile>
+    <ClCompile Include="ArmyManager.cpp">
+      <Filter>Managers\Combat\ArmyManager</Filter>
+    </ClCompile>
+    <ClCompile Include="CombatJudge.cpp">
+      <Filter>Managers\Combat\ArmyManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -56,12 +65,6 @@
       <Filter>Utility</Filter>
     </ClInclude>
     <ClInclude Include="Primary.h" />
-    <ClInclude Include="ArmyManager.h">
-      <Filter>Managers\Combat</Filter>
-    </ClInclude>
-    <ClInclude Include="CombatJudge.h">
-      <Filter>Managers\Combat</Filter>
-    </ClInclude>
     <ClInclude Include="Reconnoiter.h">
       <Filter>Managers\Combat</Filter>
     </ClInclude>
@@ -74,14 +77,23 @@
     <ClInclude Include="Producer.h">
       <Filter>Managers\Expansion</Filter>
     </ClInclude>
-    <ClInclude Include="WorkerManager.h">
-      <Filter>Managers\Expansion</Filter>
-    </ClInclude>
     <ClInclude Include="Accountant.h">
       <Filter>Managers\Intelligence</Filter>
     </ClInclude>
     <ClInclude Include="Archivist.h">
       <Filter>Managers\Intelligence</Filter>
+    </ClInclude>
+    <ClInclude Include="WorkerManager.h">
+      <Filter>Managers\Expansion\WorkerManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Harvester.h">
+      <Filter>Managers\Expansion\WorkerManager</Filter>
+    </ClInclude>
+    <ClInclude Include="CombatJudge.h">
+      <Filter>Managers\Combat\ArmyManager</Filter>
+    </ClInclude>
+    <ClInclude Include="ArmyManager.h">
+      <Filter>Managers\Combat\ArmyManager</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
