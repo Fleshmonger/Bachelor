@@ -13,6 +13,7 @@
 #include "Reconnoiter.h"
 #include "ArmyManager.h"
 #include "Strategist.h"
+#include "Harvester.h"
 #include "Economist.h"
 
 using namespace BWAPI;
@@ -39,6 +40,7 @@ private:
 	Reconnoiter reconnoiter;
 	ArmyManager armyManager;
 	Strategist strategist;
+	Harvester harvester;
 	Economist economist;
 
 public:

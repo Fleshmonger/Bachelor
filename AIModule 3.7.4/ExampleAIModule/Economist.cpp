@@ -2,13 +2,12 @@
 
 
 // Constructor.
-//TODO In the future needs access to Architect for refinery construction.
-Economist::Economist(WorkerManager * workerManager, Producer * producer, Architect * architect)
+Economist::Economist(WorkerManager * workerManager, Producer * producer, Architect * architect, Harvester * harvester) :
+	workerManager(workerManager),
+	producer(producer),
+	architect(architect),
+	harvester(harvester)
 {
-	// Managers
-	this->workerManager = workerManager;
-	this->producer = producer;
-	this->architect = architect;
 }
 
 
@@ -19,8 +18,8 @@ Economist::~Economist()
 
 
 /*
-// TODO This is probably needed later on.
 // Designates the current depot used for cargo return.
+// TODO This is probably needed later on.
 void Economist::setDepot(BWAPI::Unit * depot)
 {
 	this->depot = depot;
@@ -31,10 +30,8 @@ void Economist::setDepot(BWAPI::Unit * depot)
 // Simulate the architect AI. Creates pylons and commands builders.
 void Economist::update()
 {
-	// Order more workers.
-	// TODO Make it count workers currently constructing or repairing.
-	//if (workerManager->getWorkersSize() < workerManager->harvesterMax())
-	//if (workerManager->workers() < workerManager->maxMiners())
-	if (workerManager->needWorkers())
+	// Verify workforce.
+	// TODO Make it count workers currently constructing or repairing?
+	if (harvester->maxMiners() > workerManager->workforce())
 		producer->trainUnit(PROTOSS_WORKER);
 }

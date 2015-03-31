@@ -9,7 +9,8 @@ Primary::Primary() :
 	reconnoiter(&archivist, &workerManager),
 	armyManager(&archivist, &workerManager),
 	strategist(&producer, &architect),
-	economist(&workerManager, &producer, &architect)
+	harvester(&workerManager),
+	economist(&workerManager, &producer, &architect, &harvester)
 {
 }
 
@@ -34,8 +35,8 @@ void Primary::onStart()
 	// Update managers
 	// TODO Move this to designator class?
 	archivist.analyzed();
-	workerManager.analyzed();
 	architect.analyzed();
+	harvester.analyzed();
 }
 
 
@@ -70,13 +71,14 @@ void Primary::onFrame()
 	// Manager updatíng
 	// TODO Workermanager is last because it commands all leftover workers. Fix this by splitting it in two?
 	archivist.update();
+	workerManager.update();
 	producer.update();
 	architect.update();
 	reconnoiter.update();
 	armyManager.update();
 	strategist.update();
 	economist.update();
-	workerManager.update();
+	harvester.update();
 }
 
 

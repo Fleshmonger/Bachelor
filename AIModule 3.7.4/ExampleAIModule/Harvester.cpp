@@ -2,10 +2,8 @@
 
 
 // Constructor.
-Harvester::Harvester() :
-	minerals(utilUnit::UnitList()),
-	minerTargets(std::map<BWAPI::Unit*, BWAPI::Unit*>()),
-	mineralMiners(std::map<BWAPI::Unit*, utilUnit::UnitSet>())
+Harvester::Harvester(WorkerManager * workerManager) :
+	workerManager(workerManager)
 {
 }
 
@@ -25,7 +23,9 @@ void Harvester::analyzed()
 		minerals.push_front(mineral);
 		mineralMiners[mineral] = utilUnit::UnitSet();
 	}
+	workerManager->setMinerQouta(maxMiners());
 }
+
 
 // Removes a miner from the pool.
 void Harvester::removeMiner(BWAPI::Unit * miner)
@@ -76,6 +76,8 @@ void Harvester::removeMineral(BWAPI::Unit * mineral)
 			}
 			// Remove the mineral miners.
 			mineralMiners.erase(mineralMinersIt);
+			// Update qouta.
+			workerManager->setMinerQouta(maxMiners());
 			return;
 		}
 		else
@@ -84,12 +86,14 @@ void Harvester::removeMineral(BWAPI::Unit * mineral)
 }
 
 
-// Verifies and commands the miners to mine minerals.
-void Harvester::commandMining(utilUnit::UnitSet miners)
+// Verifies and commands workers to mine minerals.
+void Harvester::update()
 {
 	// Verify minerals.
 	if (!minerals.empty())
 	{
+		// Aquire miners.
+		utilUnit::UnitSet miners = workerManager->getMiners();
 		// Command miners.
 		BOOST_FOREACH(BWAPI::Unit * miner, miners)
 		{
@@ -128,6 +132,7 @@ void Harvester::commandMining(utilUnit::UnitSet miners)
 		}
 	}
 }
+
 
 // Returns the maximum amount of active miners.
 unsigned int Harvester::maxMiners()

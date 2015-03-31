@@ -2,11 +2,7 @@
 
 
 // Constructor
-WorkerManager::WorkerManager() :
-	harvester(Harvester()),
-	depot(NULL),
-	idle(utilUnit::UnitSet()),
-	miners(utilUnit::UnitSet())
+WorkerManager::WorkerManager()
 {
 }
 
@@ -17,12 +13,6 @@ WorkerManager::~WorkerManager()
 }
 
 
-// Fired when the map is analyzed. Calls analyzed on sub-managers.
-void WorkerManager::analyzed()
-{
-	harvester.analyzed();
-}
-
 // Adds a worker to the pool.
 void WorkerManager::addWorker(BWAPI::Unit * worker)
 {
@@ -31,7 +21,7 @@ void WorkerManager::addWorker(BWAPI::Unit * worker)
 		worker->exists())
 	{
 		// Add worker to relevant container.
-		if (miners.size() < harvester.maxMiners())
+		if (miners.size() < minerQouta)
 			miners.insert(worker);
 		else
 			idle.insert(worker);
@@ -59,12 +49,18 @@ void WorkerManager::setDepot(BWAPI::Unit * depot)
 }
 
 
+// Sets the amount of required miners.
+void WorkerManager::setMinerQouta(unsigned int qouta)
+{
+	minerQouta = qouta;
+}
+
 // Updates mining operations.
 void WorkerManager::update()
 {
 	// Update miners.
 	utilUnit::UnitSet::iterator it = idle.begin();
-	while (it != idle.end() && miners.size() < harvester.maxMiners())
+	while (it != idle.end() && miners.size() < minerQouta)
 	{
 		// Assign more miners.
 		BWAPI::Unit * worker = *it;
@@ -78,7 +74,7 @@ void WorkerManager::update()
 			it++;
 	}
 	it = miners.begin();
-	while (it != miners.end() && miners.size() > harvester.maxMiners())
+	while (it != miners.end() && miners.size() > minerQouta)
 	{
 		// Unassign excess miners.
 		BWAPI::Unit * miner = *it;
@@ -93,22 +89,12 @@ void WorkerManager::update()
 		else
 			it++;
 	}
-
-	// Command miners.
-	harvester.commandMining(miners);
-}
-
-// Returns whether harvesting requires more workers.
-bool WorkerManager::needWorkers()
-{
-	return harvester.maxMiners() > idle.size() + miners.size();
 }
 
 
 // Returns the amount of workers.
-unsigned int WorkerManager::workers()
+unsigned int WorkerManager::workforce()
 {
-	//return idle.size() + mining.size();
 	return idle.size() + miners.size();
 }
 
@@ -152,4 +138,11 @@ BWAPI::Unit * WorkerManager::takeWorker()
 	}
 	// No available workers was found.
 	return NULL;
+}
+
+
+// Returns a copy of the miners.
+utilUnit::UnitSet WorkerManager::getMiners()
+{
+	return miners;
 }
