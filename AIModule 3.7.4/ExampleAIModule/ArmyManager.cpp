@@ -5,7 +5,8 @@
 ArmyManager::ArmyManager(Archivist * archivist, WorkerManager * workerManager) :
 	archivist(archivist),
 	workerManager(workerManager),
-	combatJudge(archivist)
+	combatJudge(archivist),
+	defender(archivist)
 {
 }
 
@@ -60,16 +61,7 @@ void ArmyManager::update()
 			else
 				break;
 		}
-
-		BWAPI::Unit * target = *invaders.begin();
-		// Command defense
-		BOOST_FOREACH(BWAPI::Unit * defender, defenders)
-		{
-			if (target->isVisible())
-				utilUnit::command(defender, BWAPI::UnitCommandTypes::Attack_Unit, target);
-			else
-				utilUnit::command(defender, BWAPI::UnitCommandTypes::Attack_Move, archivist->getPosition(target));
-		}
+		defender.commandDefense(defenders, invaders);
 	}
 	else
 	{

@@ -8,7 +8,7 @@
 // Collects battlefield information, mostly about opponents.
 // TODO Only collects info about enemy - rename or restructure?
 // TODO Does not account for morphed creatures (important with drones for example!)
-// TODO Rename to avoid confusion with architect?
+// TODO Rename to avoid confusion with architect? Sage perhaps?
 // TODO only have 1 entry for each unit; use "master sets" to contain sub-sets.
 class Archivist
 {

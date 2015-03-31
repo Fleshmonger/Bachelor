@@ -6,6 +6,7 @@
 #include "Archivist.h"
 #include "WorkerManager.h"
 #include "CombatJudge.h"
+#include "Defender.h"
 
 
 // Commands attacking and defending troops.
@@ -23,6 +24,7 @@ private:
 		idle;
 
 	CombatJudge	combatJudge;
+	Defender	defender;
 
 public:
 	ArmyManager(Archivist * archivist, WorkerManager * workerManager);

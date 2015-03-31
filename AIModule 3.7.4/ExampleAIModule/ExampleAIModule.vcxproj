@@ -99,6 +99,7 @@
     <ClCompile Include="Architect.cpp" />
     <ClCompile Include="Archivist.cpp" />
     <ClCompile Include="ArmyManager.cpp" />
+    <ClCompile Include="Defender.cpp" />
     <ClCompile Include="Dll.cpp" />
     <ClCompile Include="Economist.cpp" />
     <ClCompile Include="Harvester.cpp" />
@@ -115,6 +116,7 @@
     <ClInclude Include="Architect.h" />
     <ClInclude Include="Archivist.h" />
     <ClInclude Include="ArmyManager.h" />
+    <ClInclude Include="Defender.h" />
     <ClInclude Include="Economist.h" />
     <ClInclude Include="Harvester.h" />
     <ClInclude Include="Primary.h" />

@@ -95,7 +95,7 @@ void WorkerManager::update()
 	}
 
 	// Command miners.
-	harvester.harvest(miners);
+	harvester.commandMining(miners);
 }
 
 // Returns whether harvesting requires more workers.
