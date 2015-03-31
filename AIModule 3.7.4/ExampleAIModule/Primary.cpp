@@ -3,15 +3,13 @@
 
 // Constructor
 Primary::Primary() :
-	accountant(Accountant()),
-	archivist(Archivist()),
-	workerManager(WorkerManager()),
-	producer(Producer(&accountant)),
-	combatJudge(CombatJudge(&archivist)),
-	architect(Architect(&accountant, &workerManager)),
-	economist(Economist(&workerManager, &producer, &architect)),
-	reconnoiter(Reconnoiter(&archivist, &workerManager)),
-	armyManager(ArmyManager(&archivist, &workerManager, &producer, &architect))
+	producer(&accountant),
+	combatJudge(&archivist),
+	architect(&accountant, &workerManager),
+	reconnoiter(&archivist, &workerManager),
+	armyManager(&archivist, &workerManager),
+	strategist(&producer, &architect),
+	economist(&workerManager, &producer, &architect)
 {
 }
 
@@ -25,31 +23,19 @@ Primary::~Primary()
 // Fired on starting the game.
 void Primary::onStart()
 {
-	Broodwar->enableFlag(Flag::UserInput);
-	Broodwar->setLocalSpeed(0);
+	// BWAPI settings.
+	BWAPI::Broodwar->enableFlag(Flag::UserInput);
+	BWAPI::Broodwar->setLocalSpeed(0);
 
 	// Read map information.
 	BWTA::readMap();
 	BWTA::analyze();
 
+	// Update managers
+	// TODO Move this to designator class?
 	archivist.analyzed();
 	workerManager.analyzed();
 	architect.analyzed();
-
-	/*
-	// Manager initialization.
-	accountant = Accountant();
-	archivist = Archivist();
-	workerManager = WorkerManager();
-	producer = Producer(&accountant);
-	architect = Architect(&accountant, &workerManager);
-	economist = Economist(&workerManager, &producer, &architect);
-	reconnoiter = Reconnoiter(&archivist, &workerManager);
-	armyManager = ArmyManager(&archivist, &workerManager, &producer, &architect);
-
-	// TEMP Used for testing.
-	combatJudge = CombatJudge(&archivist);
-	*/
 }
 
 
@@ -62,8 +48,8 @@ void Primary::onEnd(bool isWinner)
 void Primary::onFrame()
 {
 	// Debugging display.
-	DEBUG_SCREEN(200, 0, "FPS: %d", Broodwar->getFPS());
-	DEBUG_SCREEN(200, 20, "APM: %d", Broodwar->getAPM());
+	DEBUG_SCREEN(200, 0, "FPS: %d", BWAPI::Broodwar->getFPS());
+	DEBUG_SCREEN(200, 20, "APM: %d", BWAPI::Broodwar->getAPM());
 
 	// Testing
 	double
@@ -73,22 +59,23 @@ void Primary::onFrame()
 	DEBUG_SCREEN(200, 60, "Enemy Strength: %f", enemyStrength);
 
 	// Return if the game is a replay or is paused
-	if (Broodwar->isReplay() || Broodwar->isPaused() || !Broodwar->self())
+	if (BWAPI::Broodwar->isReplay() || BWAPI::Broodwar->isPaused() || !BWAPI::Broodwar->self())
 		return;
 
 	// Prevent spamming by only running our onFrame once every number of latency frames.
 	// Latency frames are the number of frames before commands are processed.
-	if (Broodwar->getFrameCount() % Broodwar->getLatencyFrames() != 0)
+	if (BWAPI::Broodwar->getFrameCount() % BWAPI::Broodwar->getLatencyFrames() != 0)
 		return;
 
 	// Manager updatíng
-	// TODO Workermanager is last because it commands all leftover workers. Fix this by splitting it in two.
+	// TODO Workermanager is last because it commands all leftover workers. Fix this by splitting it in two?
 	archivist.update();
 	producer.update();
 	architect.update();
-	economist.update();
 	reconnoiter.update();
 	armyManager.update();
+	strategist.update();
+	economist.update();
 	workerManager.update();
 }
 

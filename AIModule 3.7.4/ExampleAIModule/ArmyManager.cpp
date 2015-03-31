@@ -2,16 +2,10 @@
 
 
 // Constructor
-ArmyManager::ArmyManager(Archivist * archivist, WorkerManager * workerManager, Producer * producer, Architect * architect) :
+ArmyManager::ArmyManager(Archivist * archivist, WorkerManager * workerManager) :
 	archivist(archivist),
 	workerManager(workerManager),
-	producer(producer),
-	architect(architect),
-	combatJudge(CombatJudge(archivist)),
-	army(utilUnit::UnitSet()),
-	attackers(utilUnit::UnitSet()),
-	defenders(utilUnit::UnitSet()),
-	idle(utilUnit::UnitSet())
+	combatJudge(archivist)
 {
 }
 
@@ -34,8 +28,10 @@ void ArmyManager::addUnit(BWAPI::Unit * unit)
 void ArmyManager::removeUnit(BWAPI::Unit * unit)
 {
 	army.erase(unit);
-	attackers.erase(unit);
-	idle.erase(unit);
+	if (attackers.count(unit) > 0)
+		attackers.erase(unit);
+	else
+		idle.erase(unit);
 }
 
 
@@ -43,27 +39,6 @@ void ArmyManager::removeUnit(BWAPI::Unit * unit)
 // TODO Simplify defense
 void ArmyManager::update()
 {
-	// Train new troops.
-	producer->trainUnit(INFANTRY_UNIT);
-	architect->scheduleBuild(INFANTRY_FACTORY);
-
-	/*
-	// Validate invaders.
-	{
-		utilUnit::UnitSet::iterator it = invaders.begin();
-		while (it != invaders.end())
-		{
-			BWAPI::Unit * invader = *it;
-			if (!invader ||
-				(invader->isVisible() && !invader->exists()) ||
-				archivist->inRegion(invader, archivist->getHomeRegion()))
-				it = invaders.erase(it);
-			else
-				it++;
-		}
-	}
-	*/
-
 	// Invasion check.
 	utilUnit::UnitSet invaders = archivist->invaders();
 	if (!invaders.empty())

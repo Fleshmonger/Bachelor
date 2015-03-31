@@ -59,6 +59,9 @@
     <ClCompile Include="CombatJudge.cpp">
       <Filter>Managers\Combat\ArmyManager</Filter>
     </ClCompile>
+    <ClCompile Include="Strategist.cpp">
+      <Filter>Managers\Combat\ArmyManager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="UtilUnit.h">
@@ -93,6 +96,9 @@
       <Filter>Managers\Combat\ArmyManager</Filter>
     </ClInclude>
     <ClInclude Include="ArmyManager.h">
+      <Filter>Managers\Combat\ArmyManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Strategist.h">
       <Filter>Managers\Combat\ArmyManager</Filter>
     </ClInclude>
   </ItemGroup>

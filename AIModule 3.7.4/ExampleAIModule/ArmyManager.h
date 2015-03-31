@@ -5,15 +5,7 @@
 #include "UtilUnit.h"
 #include "Archivist.h"
 #include "WorkerManager.h"
-#include "Producer.h"
 #include "CombatJudge.h"
-#include "Architect.h"
-
-
-//TODO Move somewhere else?
-const BWAPI::UnitType
-	INFANTRY_FACTORY = BWAPI::UnitTypes::Protoss_Gateway,
-	INFANTRY_UNIT = BWAPI::UnitTypes::Protoss_Zealot;
 
 
 // Commands attacking and defending troops.
@@ -21,17 +13,19 @@ const BWAPI::UnitType
 class ArmyManager
 {
 private:
-	Archivist * archivist;
-	WorkerManager * workerManager;
-	Producer * producer;
-	Architect * architect;
+	Archivist		* archivist;
+	WorkerManager	* workerManager;
 
-	CombatJudge combatJudge;
+	utilUnit::UnitSet
+		army, // Uneeded, remove this.
+		attackers,
+		defenders,
+		idle;
 
-	utilUnit::UnitSet army, attackers, defenders, idle;
+	CombatJudge	combatJudge;
 
 public:
-	ArmyManager(Archivist * archivist, WorkerManager * workerManager, Producer * producer, Architect * architect);
+	ArmyManager(Archivist * archivist, WorkerManager * workerManager);
 	~ArmyManager();
 
 	void addUnit(BWAPI::Unit * unit);
@@ -40,5 +34,5 @@ public:
 
 	bool canAttack(); // TODO rename
 
-	utilUnit::UnitSet getArmy();
+	utilUnit::UnitSet getArmy(); // TEMP
 };

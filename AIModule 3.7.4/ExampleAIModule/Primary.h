@@ -10,9 +10,10 @@
 #include "Producer.h"
 #include "CombatJudge.h" // TEMP
 #include "Architect.h"
-#include "Economist.h"
 #include "Reconnoiter.h"
 #include "ArmyManager.h"
+#include "Strategist.h"
+#include "Economist.h"
 
 using namespace BWAPI;
 
@@ -31,14 +32,15 @@ class Primary : public BWAPI::AIModule
 private:
 	Accountant accountant;
 	Archivist archivist;
-	Producer producer;
 	WorkerManager workerManager;
+	Producer producer;
+	CombatJudge combatJudge; // TEMP
 	Architect architect;
 	Reconnoiter reconnoiter;
-	Economist economist;
 	ArmyManager armyManager;
+	Strategist strategist;
+	Economist economist;
 
-	CombatJudge combatJudge;
 public:
 	Primary();
 	~Primary();

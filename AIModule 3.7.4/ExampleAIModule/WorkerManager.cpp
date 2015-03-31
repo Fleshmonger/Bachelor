@@ -42,9 +42,11 @@ void WorkerManager::addWorker(BWAPI::Unit * worker)
 // Removes a worker from the pool.
 void WorkerManager::removeWorker(BWAPI::Unit * worker)
 {
-	// Erase worker from relevant containers..
-	idle.erase(worker);
-	miners.erase(worker);
+	// Erase worker from relevant containers.
+	if (idle.count(worker) > 0)
+		idle.erase(worker);
+	else
+		miners.erase(worker);
 }
 
 
@@ -60,10 +62,11 @@ void WorkerManager::setDepot(BWAPI::Unit * depot)
 // Updates mining operations.
 void WorkerManager::update()
 {
-	// Update harvester.
+	// Update miners.
 	utilUnit::UnitSet::iterator it = idle.begin();
 	while (it != idle.end() && miners.size() < harvester.maxMiners())
 	{
+		// Assign more miners.
 		BWAPI::Unit * worker = *it;
 		if (worker &&
 			worker->exists())
@@ -77,6 +80,7 @@ void WorkerManager::update()
 	it = miners.begin();
 	while (it != miners.end() && miners.size() > harvester.maxMiners())
 	{
+		// Unassign excess miners.
 		BWAPI::Unit * miner = *it;
 		if (miner &&
 			miner->exists() &&
@@ -90,7 +94,7 @@ void WorkerManager::update()
 			it++;
 	}
 
-	// Command harvest.
+	// Command miners.
 	harvester.harvest(miners);
 }
 
