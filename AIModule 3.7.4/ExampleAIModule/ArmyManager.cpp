@@ -5,9 +5,9 @@
 ArmyManager::ArmyManager(Archivist * archivist, WorkerManager * workerManager) :
 	archivist(archivist),
 	workerManager(workerManager),
-	attacker(archivist),
 	combatJudge(archivist),
-	defender(archivist)
+	defender(archivist),
+	attacker(archivist, &combatJudge)
 {
 }
 
@@ -32,8 +32,17 @@ void ArmyManager::removeUnit(BWAPI::Unit * unit)
 	army.erase(unit);
 	if (attackers.count(unit) > 0)
 		attackers.erase(unit);
+	else if (defenders.count(unit) > 0)
+		defenders.erase(unit);
 	else
 		idle.erase(unit);
+}
+
+
+// Sets the retreat position.
+void ArmyManager::setDepot(BWAPI::Unit * depot)
+{
+	attacker.setDepot(depot);
 }
 
 
@@ -65,6 +74,9 @@ void ArmyManager::update()
 	}
 	else
 	{
+		// Conscript attackers.
+		attackers.insert(idle.begin(), idle.end());
+
 		// Release defenders.
 		BOOST_FOREACH(BWAPI::Unit * defender, defenders)
 		{
@@ -80,9 +92,11 @@ void ArmyManager::update()
 		defenders.clear();
 	}
 
+	/*
 	// Calculate attack.
 	if (canAttack())
 		attackers.insert(idle.begin(), idle.end());
+	*/
 
 	// Command attack.
 	attacker.commandAttack(attackers);

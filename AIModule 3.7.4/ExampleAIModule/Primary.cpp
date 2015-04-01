@@ -26,7 +26,7 @@ void Primary::onStart()
 {
 	// BWAPI settings.
 	BWAPI::Broodwar->enableFlag(Flag::UserInput);
-	BWAPI::Broodwar->setLocalSpeed(0);
+	//BWAPI::Broodwar->setLocalSpeed(0);
 
 	// Read map information.
 	BWTA::readMap();
@@ -236,6 +236,7 @@ void Primary::designateUnit(BWAPI::Unit * unit)
 			//economist->setDepot(unit);
 			producer.setDepot(unit);
 			workerManager.setDepot(unit);
+			armyManager.setDepot(unit);
 		}
 		else if (unitType == BWAPI::UnitTypes::Protoss_Pylon)
 			architect.addPylon(unit);

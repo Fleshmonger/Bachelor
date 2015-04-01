@@ -5,9 +5,9 @@
 #include "UtilUnit.h"
 #include "Archivist.h"
 #include "WorkerManager.h"
-#include "Attacker.h"
 #include "CombatJudge.h"
 #include "Defender.h"
+#include "Attacker.h"
 
 
 // Commands attacking and defending troops.
@@ -24,9 +24,9 @@ private:
 		defenders,
 		idle;
 
-	Attacker	attacker;
 	CombatJudge	combatJudge;
 	Defender	defender;
+	Attacker	attacker;
 
 public:
 	ArmyManager(Archivist * archivist, WorkerManager * workerManager);
@@ -34,6 +34,7 @@ public:
 
 	void addUnit(BWAPI::Unit * unit);
 	void removeUnit(BWAPI::Unit * unit);
+	void setDepot(BWAPI::Unit * depot);
 	void update();
 
 	bool canAttack(); // TODO rename
