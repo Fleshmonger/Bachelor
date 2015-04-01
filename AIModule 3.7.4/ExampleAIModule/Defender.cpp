@@ -25,9 +25,8 @@ void Defender::commandDefense(utilUnit::UnitSet guards, utilUnit::UnitSet invade
 		// Command interception.
 		BOOST_FOREACH(BWAPI::Unit * guard, guards)
 		{
-			// TODO Use utilunits command.
 			if (guard->isIdle())
-				guard->attack(archivist->getPosition(target));
+				utilUnit::command(guard, BWAPI::UnitCommandTypes::Attack_Move, archivist->getPosition(target));
 		}
 	}
 	else

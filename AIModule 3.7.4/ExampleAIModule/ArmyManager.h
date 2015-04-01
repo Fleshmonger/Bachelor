@@ -5,6 +5,7 @@
 #include "UtilUnit.h"
 #include "Archivist.h"
 #include "WorkerManager.h"
+#include "Attacker.h"
 #include "CombatJudge.h"
 #include "Defender.h"
 
@@ -23,6 +24,7 @@ private:
 		defenders,
 		idle;
 
+	Attacker attacker;
 	CombatJudge	combatJudge;
 	Defender	defender;
 

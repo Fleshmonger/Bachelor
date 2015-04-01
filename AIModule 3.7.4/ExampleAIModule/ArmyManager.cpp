@@ -5,6 +5,7 @@
 ArmyManager::ArmyManager(Archivist * archivist, WorkerManager * workerManager) :
 	archivist(archivist),
 	workerManager(workerManager),
+	attacker(archivist),
 	combatJudge(archivist),
 	defender(archivist)
 {
@@ -61,6 +62,8 @@ void ArmyManager::update()
 			else
 				break;
 		}
+
+		// Command defense.
 		defender.commandDefense(defenders, invaders);
 	}
 	else
@@ -84,27 +87,8 @@ void ArmyManager::update()
 	if (canAttack())
 		attackers.insert(idle.begin(), idle.end());
 
-	// Command attackers.
-	utilUnit::UnitSet enemyBuildings = archivist->getBuildings();
-	if (!enemyBuildings.empty())
-	{
-		BWAPI::Position attackLocation = archivist->getPosition(*enemyBuildings.begin());
-		utilUnit::UnitSet::iterator it = attackers.begin();
-		while (it != attackers.end())
-		{
-			BWAPI::Unit * attacker = *it;
-			++it;
-			if (attacker &&
-				attacker->exists())
-			{
-				if (attacker->isIdle())
-					utilUnit::command(attacker, BWAPI::UnitCommandTypes::Attack_Move, attackLocation);
-					//attacker->attack(attackTarget);
-			}
-			else
-				removeUnit(attacker);
-		}
-	}
+	// Command attack.
+	attacker.commandAttack(attackers);
 }
 
 // Returns whether or not we would win an attack based on army strength.
