@@ -62,9 +62,6 @@ void ArmyManager::update()
 			else
 				break;
 		}
-
-		// Command defense.
-		defender.commandDefense(defenders, invaders);
 	}
 	else
 	{
@@ -89,6 +86,9 @@ void ArmyManager::update()
 
 	// Command attack.
 	attacker.commandAttack(attackers);
+
+	// Command defense.
+	defender.commandDefense(defenders, invaders);
 }
 
 // Returns whether or not we would win an attack based on army strength.

@@ -17,6 +17,7 @@ void utilUnit::command(BWAPI::Unit * unit, BWAPI::UnitCommandType commandType, B
 
 // Commands a unit with a given command type with either target or position or both.
 // TODO What is the last argument in unitCommand used for?
+// TODO This is broken! Too often units stand still, because lastCommand is only used in BWAPI, not actually representative of the units CURRENT action.
 void utilUnit::command(BWAPI::Unit * unit, BWAPI::UnitCommandType commandType, BWAPI::Unit * target, BWAPI::Position position)
 {
 	// Validate the unit.

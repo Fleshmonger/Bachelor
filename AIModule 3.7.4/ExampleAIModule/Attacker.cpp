@@ -34,7 +34,7 @@ void Attacker::commandAttack(utilUnit::UnitSet attackers)
 			{
 				// Command attacker.
 				if (attacker->isIdle())
-					utilUnit::command(attacker, BWAPI::UnitCommandTypes::Attack_Move, attackLocation);
+					attacker->attack(attackLocation);
 			}
 		}
 	}

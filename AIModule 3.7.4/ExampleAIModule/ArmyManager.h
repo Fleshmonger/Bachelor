@@ -19,12 +19,12 @@ private:
 	WorkerManager	* workerManager;
 
 	utilUnit::UnitSet
-		army, // Uneeded, remove this.
+		army, // TEMP Uneeded, remove this.
 		attackers,
 		defenders,
 		idle;
 
-	Attacker attacker;
+	Attacker	attacker;
 	CombatJudge	combatJudge;
 	Defender	defender;
 
