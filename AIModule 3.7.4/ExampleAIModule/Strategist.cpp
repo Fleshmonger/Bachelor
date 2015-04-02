@@ -15,10 +15,25 @@ Strategist::~Strategist()
 }
 
 
+// TEMP
+void Strategist::addFactory()
+{
+	factories++;
+}
+
+
+// TEMP
+void Strategist::removeFactory()
+{
+	factories--;
+}
+
+
 // Builds facilities and troops.
 void Strategist::update()
 {
 	// Train new troops.
 	producer->trainUnit(INFANTRY_UNIT);
-	architect->scheduleBuild(INFANTRY_FACTORY);
+	if (architect->scheduled(INFANTRY_FACTORY) + factories < MAX_FACTORIES)
+		architect->scheduleBuild(INFANTRY_FACTORY);
 }

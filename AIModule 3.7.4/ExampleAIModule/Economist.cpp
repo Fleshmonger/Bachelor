@@ -32,6 +32,7 @@ void Economist::update()
 {
 	// Verify workforce.
 	// TODO Make it count workers currently constructing or repairing?
-	if (harvester->maxMiners() > workerManager->workforce())
+	//if (harvester->maxMiners() > workerManager->workforce())
+	if (workerManager->workforce() < MAX_WORKERS)
 		producer->trainUnit(PROTOSS_WORKER);
 }

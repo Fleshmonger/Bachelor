@@ -167,7 +167,10 @@ void Primary::onUnitDestroy(BWAPI::Unit* unit)
 			else if (unitType == BWAPI::UnitTypes::Protoss_Pylon)
 				architect.removePylon(unit);
 			else if (unitType == BWAPI::UnitTypes::Protoss_Gateway)
+			{
 				producer.removeInfantryFacility(unit);
+				strategist.removeFactory();
+			}
 			// Remove constructing units from the architect.
 			if (unit->isConstructing())
 				architect.removeConstruct(unit);
@@ -241,7 +244,10 @@ void Primary::designateUnit(BWAPI::Unit * unit)
 		else if (unitType == BWAPI::UnitTypes::Protoss_Pylon)
 			architect.addPylon(unit);
 		else if (unitType == BWAPI::UnitTypes::Protoss_Gateway) // TODO Make generic
+		{
 			producer.addInfantryFacility(unit);
+			strategist.addFactory();
+		}
 	}
 	else if (unitType.isWorker())
 		workerManager.addWorker(unit);
