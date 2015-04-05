@@ -2,6 +2,7 @@ d:\bachelor\aimodule 3.7.4\release\aibotmodule.lib
 d:\bachelor\aimodule 3.7.4\release\aibotmodule.exp
 d:\bachelor\aimodule 3.7.4\exampleaimodule\release\workermanager.obj
 d:\bachelor\aimodule 3.7.4\exampleaimodule\release\utilunit.obj
+d:\bachelor\aimodule 3.7.4\exampleaimodule\release\strategist.obj
 d:\bachelor\aimodule 3.7.4\exampleaimodule\release\combatjudge.obj
 d:\bachelor\aimodule 3.7.4\exampleaimodule\release\reconnoiter.obj
 d:\bachelor\aimodule 3.7.4\exampleaimodule\release\producer.obj
@@ -9,6 +10,8 @@ d:\bachelor\aimodule 3.7.4\exampleaimodule\release\primary.obj
 d:\bachelor\aimodule 3.7.4\exampleaimodule\release\harvester.obj
 d:\bachelor\aimodule 3.7.4\exampleaimodule\release\economist.obj
 d:\bachelor\aimodule 3.7.4\exampleaimodule\release\dll.obj
+d:\bachelor\aimodule 3.7.4\exampleaimodule\release\defender.obj
+d:\bachelor\aimodule 3.7.4\exampleaimodule\release\attacker.obj
 d:\bachelor\aimodule 3.7.4\exampleaimodule\release\armymanager.obj
 d:\bachelor\aimodule 3.7.4\exampleaimodule\release\archivist.obj
 d:\bachelor\aimodule 3.7.4\exampleaimodule\release\architect.obj

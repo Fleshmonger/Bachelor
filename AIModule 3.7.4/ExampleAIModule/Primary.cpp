@@ -26,7 +26,7 @@ void Primary::onStart()
 {
 	// BWAPI settings.
 	BWAPI::Broodwar->enableFlag(Flag::UserInput);
-	//BWAPI::Broodwar->setLocalSpeed(0);
+	BWAPI::Broodwar->setLocalSpeed(0);
 
 	// Read map information.
 	BWTA::readMap();
@@ -72,7 +72,6 @@ void Primary::onFrame()
 	// TODO Workermanager is last because it commands all leftover workers. Fix this by splitting it in two?
 	archivist.update();
 	workerManager.update();
-	producer.update();
 	architect.update();
 	reconnoiter.update();
 	armyManager.update();
@@ -138,7 +137,7 @@ void Primary::onUnitCreate(BWAPI::Unit* unit)
 		if (unitType.isBuilding())
 			architect.completeBuild(unit);
 		else
-			producer.incompleteUnit(unit);
+			producer.addProduction(unit);
 	}
 }
 
@@ -161,16 +160,13 @@ void Primary::onUnitDestroy(BWAPI::Unit* unit)
 			{
 				// TODO What should happen here?
 				architect.setDepot(NULL);
-				producer.setDepot(NULL);
+				//producer.setDepot(NULL);
 				workerManager.setDepot(NULL);
 			}
 			else if (unitType == BWAPI::UnitTypes::Protoss_Pylon)
 				architect.removePylon(unit);
 			else if (unitType == BWAPI::UnitTypes::Protoss_Gateway)
-			{
-				producer.removeInfantryFacility(unit);
-				strategist.removeFactory();
-			}
+				producer.removeFactory(unit);
 			// Remove constructing units from the architect.
 			if (unit->isConstructing())
 				architect.removeConstruct(unit);
@@ -215,8 +211,8 @@ void Primary::onUnitComplete(BWAPI::Unit *unit)
 		BWAPI::UnitType unitType = unit->getType();
 		if (unitType.isBuilding())
 			architect.completeConstruct(unit);
-		else
-			producer.completeUnit(unit);
+		//else
+			//producer.completeUnit(unit);
 		// Designate the new unit.
 		designateUnit(unit);
 	}
@@ -236,18 +232,14 @@ void Primary::designateUnit(BWAPI::Unit * unit)
 		if (unitType.isResourceDepot())
 		{
 			architect.setDepot(unit);
-			//economist->setDepot(unit);
-			producer.setDepot(unit);
+			producer.addFactory(unit);
 			workerManager.setDepot(unit);
 			armyManager.setDepot(unit);
 		}
 		else if (unitType == BWAPI::UnitTypes::Protoss_Pylon)
 			architect.addPylon(unit);
 		else if (unitType == BWAPI::UnitTypes::Protoss_Gateway) // TODO Make generic
-		{
-			producer.addInfantryFacility(unit);
-			strategist.addFactory();
-		}
+			producer.addFactory(unit);
 	}
 	else if (unitType.isWorker())
 		workerManager.addWorker(unit);

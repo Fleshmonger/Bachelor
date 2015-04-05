@@ -6,7 +6,7 @@
 #include "WorkerManager.h"
 
 
-const unsigned int MAX_MINERS_PER_MINERAL = 3;
+const unsigned int MINERS_PER_MINERAL = 2;
 
 
 // Collects minerals from nearby mineral fields.
@@ -28,6 +28,6 @@ public:
 	void removeMineral(BWAPI::Unit * mineral);
 	void update();
 
-	unsigned int maxMiners();
+	unsigned int minersMax();
 };
 

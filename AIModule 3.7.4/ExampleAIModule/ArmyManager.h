@@ -37,7 +37,5 @@ public:
 	void setDepot(BWAPI::Unit * depot);
 	void update();
 
-	bool canAttack(); // TODO rename
-
 	utilUnit::UnitSet getArmy(); // TEMP
 };

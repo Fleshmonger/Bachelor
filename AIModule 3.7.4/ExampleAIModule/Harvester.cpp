@@ -23,7 +23,7 @@ void Harvester::analyzed()
 		minerals.push_front(mineral);
 		mineralMiners[mineral] = utilUnit::UnitSet();
 	}
-	workerManager->setMinerQouta(maxMiners());
+	workerManager->setMinerQouta(minersMax());
 }
 
 
@@ -38,6 +38,7 @@ void Harvester::removeMiner(BWAPI::Unit * miner)
 		BWAPI::Unit * mineral = minerTargets[miner], * mineralBack = minerals.back();
 		minerTargets.erase(miner);
 		mineralMiners[mineral].erase(miner);
+
 		// Verify distribution.
 		if (mineralMiners[mineral].size() < mineralMiners[mineralBack].size() - 1)
 		{
@@ -45,6 +46,7 @@ void Harvester::removeMiner(BWAPI::Unit * miner)
 			BWAPI::Unit * newMiner = *mineralMiners[mineralBack].begin();
 			mineralMiners[mineralBack].erase(newMiner);
 			mineralMiners[mineral].insert(newMiner);
+
 			// Rotate prioties.
 			minerals.pop_back();
 			minerals.push_front(mineralBack);
@@ -64,6 +66,7 @@ void Harvester::removeMineral(BWAPI::Unit * mineral)
 		{
 			// Remove the mineral.
 			minerals.erase(it);
+
 			// Remove all the miners targets.
 			std::map<BWAPI::Unit*, utilUnit::UnitSet>::iterator mineralMinersIt = mineralMiners.find(mineral);
 			utilUnit::UnitSet miners = (*mineralMinersIt).second;
@@ -74,10 +77,12 @@ void Harvester::removeMineral(BWAPI::Unit * mineral)
 				minersIt++;
 				minerTargets.erase(miner);
 			}
+
 			// Remove the mineral miners.
 			mineralMiners.erase(mineralMinersIt);
+
 			// Update qouta.
-			workerManager->setMinerQouta(maxMiners());
+			workerManager->setMinerQouta(minersMax());
 			return;
 		}
 		else
@@ -135,7 +140,7 @@ void Harvester::update()
 
 
 // Returns the maximum amount of active miners.
-unsigned int Harvester::maxMiners()
+unsigned int Harvester::minersMax()
 {
-	return minerals.size() * MAX_MINERS_PER_MINERAL;
+	return minerals.size() * MINERS_PER_MINERAL;
 }

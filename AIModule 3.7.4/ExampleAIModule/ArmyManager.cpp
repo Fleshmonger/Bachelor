@@ -92,12 +92,6 @@ void ArmyManager::update()
 		defenders.clear();
 	}
 
-	/*
-	// Calculate attack.
-	if (canAttack())
-		attackers.insert(idle.begin(), idle.end());
-	*/
-
 	// Command attack.
 	attacker.commandAttack(attackers);
 
@@ -105,11 +99,6 @@ void ArmyManager::update()
 	defender.commandDefense(defenders, invaders);
 }
 
-// Returns whether or not we would win an attack based on army strength.
-bool ArmyManager::canAttack()
-{
-	return combatJudge.strength(army) > combatJudge.strength(archivist->getTroops()) + combatJudge.strength(archivist->getTurrets());
-}
 
 // Returns a copy of the army.
 utilUnit::UnitSet ArmyManager::getArmy()

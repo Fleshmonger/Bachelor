@@ -4,7 +4,6 @@
 #include "Architect.h"
 
 const int MAX_FACTORIES = 4;
-
 const BWAPI::UnitType
 	INFANTRY_FACTORY = BWAPI::UnitTypes::Protoss_Gateway,
 	INFANTRY_UNIT = BWAPI::UnitTypes::Protoss_Zealot;
@@ -17,13 +16,9 @@ private:
 	Producer	* producer;
 	Architect	* architect;
 
-	int factories;
-
 public:
 	Strategist(Producer * producer, Architect * architect);
 	~Strategist();
 
-	void addFactory();
-	void removeFactory();
 	void update();
 };

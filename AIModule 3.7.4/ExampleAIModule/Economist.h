@@ -6,7 +6,6 @@
 #include "Harvester.h"
 
 
-const int MAX_WORKERS = 16;
 const BWAPI::UnitType PROTOSS_WORKER = BWAPI::UnitTypes::Protoss_Probe;
 
 

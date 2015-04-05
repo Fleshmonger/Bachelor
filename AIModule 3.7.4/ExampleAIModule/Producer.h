@@ -1,29 +1,31 @@
 #pragma once
 #include <BWAPI.h>
+#include <boost/foreach.hpp>
 #include "UtilUnit.h"
 #include "Accountant.h"
 
 
-// Constructs units and monitors incomplete ones.
+// Trains units and monitors incomplete ones.
 class Producer
 {
 private:
 	Accountant * accountant;
 
-	BWAPI::Unit * depot;
-	std::multiset<BWAPI::UnitType> scheduledUnits;
-	utilUnit::UnitSet incompleteUnits, infantryFacilities, idleInfantryFacilities;
+	std::multiset<BWAPI::UnitType> scheduled; //TODO Remove this
+	utilUnit::UnitSet incompleteUnits;
+	//utilUnit::UnitSet incompleteUnits, infantryFacilities, idleInfantryFacilities;
+	std::map<BWAPI::UnitType, utilUnit::UnitSet> factories;
 
 public:
 	Producer(Accountant * accountant);
 	~Producer();
 
-	void incompleteUnit(BWAPI::Unit * unit);
-	void completeUnit(BWAPI::Unit * unit);
-	void addInfantryFacility(BWAPI::Unit * facility);
-	void removeInfantryFacility(BWAPI::Unit * facility);
-	void setDepot(BWAPI::Unit * depot);
-	void update();
+	void addFactory(BWAPI::Unit * factory);
+	void removeFactory(BWAPI::Unit * factory);
+	void addProduction(BWAPI::Unit * unit);
+	//void removeProduction(BWAPI::Unit * unit);
 
-	bool trainUnit(BWAPI::UnitType unitType);
+	bool train(BWAPI::UnitType unitType);
+
+	utilUnit::UnitSet getFactories(BWAPI::UnitType factoryType);
 };
