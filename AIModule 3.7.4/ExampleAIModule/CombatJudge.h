@@ -5,7 +5,7 @@
 
 
 // Manager that contains general combat functions
-// TODO Rename? Merge with greater utility?
+// TODO Rename
 class CombatJudge
 {
 private:

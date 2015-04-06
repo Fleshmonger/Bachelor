@@ -2,9 +2,10 @@
 
 
 // Constructor
-Attacker::Attacker(Archivist * archivist, CombatJudge * combatJudge) :
+Attacker::Attacker(Archivist * archivist, CombatJudge * combatJudge, ArmyManager * armyManager) :
 	archivist(archivist),
-	combatJudge(combatJudge)
+	combatJudge(combatJudge),
+	armyManager(armyManager)
 {
 }
 
@@ -15,9 +16,23 @@ Attacker::~Attacker()
 }
 
 
-// Commands the given units to attack the enemy.
-void Attacker::commandAttack(utilUnit::UnitSet attackers)
+// Sets the position units will retreat to.
+void Attacker::setDepot(BWAPI::Unit * depot)
 {
+	if (depot &&
+		depot->exists())
+		this->depot = depot;
+}
+
+
+// Commands units to attack.
+// TODO Cleanup
+void Attacker::update()
+{
+	// Enlist idle units as attackers.
+	BOOST_FOREACH(BWAPI::Unit * unit, armyManager->getEnlisted(IDLE))
+		armyManager->assignUnit(unit, ATTACK_TRANSIT);
+
 	// Verify target.
 	if (!target ||
 		!target->exists())
@@ -39,20 +54,15 @@ void Attacker::commandAttack(utilUnit::UnitSet attackers)
 	else
 		targetPosition = BWAPI::Positions::None;
 
-	/*
-	BOOST_FOREACH(BWAPI::Unit * attacker, attackers)
-		attacker->attack(targetPosition);
-	*/
+	// Aquire attackers.
+	utilUnit::UnitSet
+		fighters = armyManager->getEnlisted(ATTACK_FIGHT),
+		transit = armyManager->getEnlisted(ATTACK_TRANSIT),
+		waiting = armyManager->getEnlisted(ATTACK_WAIT);
 
-	// Identify new attackers.
-	double strength = 0;
-	BOOST_FOREACH(BWAPI::Unit * attacker, attackers)
-	{
-		if (fighters.count(attacker) > 0 || waiting.count(attacker) > 0)
-			strength += combatJudge->strength(attacker);
-		else if (transit.count(attacker) == 0)
-			transit.insert(attacker);
-	}
+	// Calculate strength.
+
+	double strength = combatJudge->strength(fighters) + combatJudge->strength(waiting);
 
 	// Verify and command transit.
 	utilUnit::UnitSet::iterator transitIt = transit.begin();
@@ -64,7 +74,7 @@ void Attacker::commandAttack(utilUnit::UnitSet attackers)
 			transiter->exists())
 		{
 			// Identify if enemy spotted.
-			if (enemyVisible(transiter) || transiter->isUnderAttack())
+			if (enemyDetected(transiter) || transiter->isUnderAttack())
 			{
 				// Move transiter to waiting.
 				waiting.insert(transiter);
@@ -101,15 +111,10 @@ void Attacker::commandAttack(utilUnit::UnitSet attackers)
 				waiter->exists())
 			{
 				// Command waiter.
-				if (enemyVisible(waiter) && depot)
-				{
-					// Retreat.
+				if (enemyDetected(waiter) && depot)
 					waiter->move(depot->getPosition());
-				}
 				else
-				{
 					waiter->stop();
-				}
 				waitingIt++;
 			}
 			else
@@ -137,18 +142,8 @@ void Attacker::commandAttack(utilUnit::UnitSet attackers)
 }
 
 
-// Sets the position units will retreat to.
-void Attacker::setDepot(BWAPI::Unit * depot)
-{
-	if (depot &&
-		depot->exists())
-		this->depot = depot;
-}
-
-
 // Returns whether the given unit can see an enemy unit.
-// TODO Rename.
-bool Attacker::enemyVisible(BWAPI::Unit * unit)
+bool Attacker::enemyDetected(BWAPI::Unit * unit)
 {
 	utilUnit::UnitSet visible = unit->getUnitsInRadius(unit->getType().sightRange());
 	utilUnit::UnitSet::iterator it = visible.begin();

@@ -2,11 +2,11 @@
 
 
 // Constructor.
-Economist::Economist(WorkerManager * workerManager, Producer * producer, Architect * architect, Harvester * harvester) :
+Economist::Economist(WorkerManager * workerManager, Producer * producer, Architect * architect) :
 	workerManager(workerManager),
 	producer(producer),
 	architect(architect),
-	harvester(harvester)
+	harvester(workerManager)
 {
 }
 
@@ -17,14 +17,11 @@ Economist::~Economist()
 }
 
 
-/*
-// Designates the current depot used for cargo return.
-// TODO This is probably needed later on.
-void Economist::setDepot(BWAPI::Unit * depot)
+// Fired when the map is analyzed.
+void Economist::analyzed()
 {
-	this->depot = depot;
+	harvester.analyzed();
 }
-*/
 
 
 // Simulate the architect AI. Creates pylons and commands builders.
@@ -32,7 +29,9 @@ void Economist::update()
 {
 	// Verify workforce.
 	// TODO Make it count workers currently constructing or repairing?
-	//if (harvester->maxMiners() > workerManager->workforce())
-	if (workerManager->workforce() < harvester->minersMax())
+	if (workerManager->workforce() < harvester.minersMax())
 		producer->train(PROTOSS_WORKER);
+
+	// Harvest resources
+	harvester.update();
 }

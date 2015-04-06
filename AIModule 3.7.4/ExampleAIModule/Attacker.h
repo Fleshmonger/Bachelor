@@ -4,29 +4,29 @@
 #include "UtilUnit.h"
 #include "Archivist.h"
 #include "CombatJudge.h"
+#include "ArmyManager.h"
 
 
-// Commands attacking units.
-// TODO Implement squads.
+// Commands units to attack.
 // TODO Rename?
 class Attacker
 {
 private:
-	Archivist * archivist;
-	CombatJudge * combatJudge;
+	Archivist	* archivist;
+	CombatJudge	* combatJudge;
+	ArmyManager	* armyManager;
 
 	double attackingStrength;
 	BWAPI::Unit
 		* target,
 		* depot;
-	utilUnit::UnitSet fighters, transit, waiting;
 
 public:
-	Attacker(Archivist * archivist, CombatJudge * combatJudge);
+	Attacker(Archivist * archivist, CombatJudge * combatJudge, ArmyManager * armyManager);
 	~Attacker();
 
-	void commandAttack(utilUnit::UnitSet attackers);
 	void setDepot(BWAPI::Unit * depot);
+	void update();
 
-	bool enemyVisible(BWAPI::Unit * unit); //TODO Rename
+	bool enemyDetected(BWAPI::Unit * unit);
 };

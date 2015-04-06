@@ -6,8 +6,9 @@
 #include "Archivist.h"
 #include "WorkerManager.h"
 #include "CombatJudge.h"
-#include "Defender.h"
-#include "Attacker.h"
+
+
+enum Task{ IDLE, DEFEND, ATTACK_FIGHT, ATTACK_TRANSIT, ATTACK_WAIT };
 
 
 // Commands attacking and defending troops.
@@ -17,25 +18,21 @@ class ArmyManager
 private:
 	Archivist		* archivist;
 	WorkerManager	* workerManager;
+	CombatJudge		* combatJudge;
 
-	utilUnit::UnitSet
-		army, // TEMP Uneeded, remove this.
-		attackers,
-		defenders,
-		idle;
-
-	CombatJudge	combatJudge;
-	Defender	defender;
-	Attacker	attacker;
+	utilUnit::UnitSet army; //TODO Is this redundant?
+	std::map<BWAPI::Unit*, Task> assignments;
+	std::map<Task, utilUnit::UnitSet> enlisted;
 
 public:
-	ArmyManager(Archivist * archivist, WorkerManager * workerManager);
+	ArmyManager(Archivist * archivist, WorkerManager * workerManager, CombatJudge * combatJudge);
 	~ArmyManager();
 
 	void addUnit(BWAPI::Unit * unit);
 	void removeUnit(BWAPI::Unit * unit);
-	void setDepot(BWAPI::Unit * depot);
+	void assignUnit(BWAPI::Unit * unit, Task task);
 	void update();
 
-	utilUnit::UnitSet getArmy(); // TEMP
+	utilUnit::UnitSet getArmy();
+	utilUnit::UnitSet getEnlisted(Task task);
 };

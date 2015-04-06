@@ -15,14 +15,13 @@ private:
 	WorkerManager	* workerManager;
 	Producer		* producer;
 	Architect		* architect; // TODO This is currently unused! Planned for assimilator construction.
-	Harvester		* harvester;
 
-	//BWAPI::Unit * depot;
+	Harvester harvester;
 
 public:
-	Economist(WorkerManager * workerManager, Producer * producer, Architect * architect, Harvester * harvester);
+	Economist(WorkerManager * workerManager, Producer * producer, Architect * architect);
 	~Economist();
 
-	//void setDepot(BWAPI::Unit * depot);
+	void analyzed();
 	void update();
 };

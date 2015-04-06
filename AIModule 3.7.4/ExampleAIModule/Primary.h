@@ -8,17 +8,21 @@
 #include "Archivist.h"
 #include "WorkerManager.h"
 #include "Producer.h"
-#include "CombatJudge.h" // TEMP
+#include "CombatJudge.h"
 #include "Architect.h"
 #include "Reconnoiter.h"
 #include "ArmyManager.h"
 #include "Strategist.h"
-#include "Harvester.h"
 #include "Economist.h"
+#include "Attacker.h"
+#include "Defender.h"
 
-using namespace BWAPI;
+
+using namespace BWAPI; //TODO Remove this
 
 
+// Handles callbacks and initializes and updates all sub-agents.
+//TODO Rename to something module related?
 class Primary : public BWAPI::AIModule
 {
 #define DEBUG
@@ -31,17 +35,18 @@ class Primary : public BWAPI::AIModule
 #endif
 
 private:
-	Accountant accountant;
-	Archivist archivist;
-	WorkerManager workerManager;
-	Producer producer;
-	CombatJudge combatJudge; // TEMP
-	Architect architect;
-	Reconnoiter reconnoiter;
-	ArmyManager armyManager;
-	Strategist strategist;
-	Harvester harvester;
-	Economist economist;
+	Accountant		accountant;
+	Archivist		archivist;
+	WorkerManager	workerManager;
+	Producer		producer;
+	CombatJudge		combatJudge;
+	Architect		architect;
+	Reconnoiter		reconnoiter;
+	ArmyManager		armyManager;
+	Strategist		strategist;
+	Economist		economist;
+	Attacker		attacker;
+	Defender		defender;
 
 public:
 	Primary();

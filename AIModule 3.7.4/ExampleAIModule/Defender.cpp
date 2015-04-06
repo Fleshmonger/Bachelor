@@ -2,8 +2,11 @@
 
 
 // Constructor
-Defender::Defender(Archivist * archivist) :
-	archivist(archivist)
+Defender::Defender(Archivist * archivist, WorkerManager * workerManager, CombatJudge * combatJudge, ArmyManager * armyManager) :
+	archivist(archivist),
+	workerManager(workerManager),
+	combatJudge(combatJudge),
+	armyManager(armyManager)
 {
 }
 
@@ -14,23 +17,60 @@ Defender::~Defender()
 }
 
 
-// Commands the given units to defend.
-void Defender::commandDefense(utilUnit::UnitSet guards, utilUnit::UnitSet invaders)
+// Commands defense.
+void Defender::update()
 {
-	// Command guards.
+	// Aquire defenders.
+	utilUnit::UnitSet defenders = armyManager->getEnlisted(DEFEND);
+
+	// Check invasion.
+	utilUnit::UnitSet invaders = archivist->invaders();
 	if (!invaders.empty())
 	{
 		// Aquire target.
 		BWAPI::Unit * target = *invaders.begin();
-		// Command interception.
-		BOOST_FOREACH(BWAPI::Unit * guard, guards)
+
+		// Enlist units in homeregion
+		BOOST_FOREACH(BWAPI::Unit * unit, armyManager->getArmy())
 		{
-			if (guard->isIdle())
-				utilUnit::command(guard, BWAPI::UnitCommandTypes::Attack_Move, archivist->getPosition(target));
+			if (archivist->inRegion(unit, archivist->getHomeRegion()))
+			{
+				armyManager->assignUnit(unit, DEFEND);
+				defenders.insert(unit);
+			}
+		}
+
+		// Enlist militia if necessary.
+		double defenseStrength = combatJudge->strength(defenders), invaderStrength = combatJudge->strength(invaders);
+		while (defenseStrength < invaderStrength)
+		{
+			BWAPI::Unit * worker = workerManager->takeWorker();
+			if (worker &&
+				worker->exists())
+			{
+				defenseStrength += combatJudge->strength(worker);
+				defenders.insert(worker);
+			}
+			else
+				break;
+		}
+
+		// Command interception.
+		BOOST_FOREACH(BWAPI::Unit * defender, defenders)
+		{
+			if (defender->isIdle())
+				utilUnit::command(defender, BWAPI::UnitCommandTypes::Attack_Move, archivist->getPosition(target));
 		}
 	}
 	else
 	{
-		//TODO Command patrol.
+		// Return defenders.
+		BOOST_FOREACH(BWAPI::Unit * defender, defenders)
+		{
+			if (defender->getType().isWorker())
+				workerManager->addWorker(defender);
+			else
+				armyManager->assignUnit(defender, IDLE);
+		}
 	}
 }

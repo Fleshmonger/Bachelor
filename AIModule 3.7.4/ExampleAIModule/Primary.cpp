@@ -7,10 +7,11 @@ Primary::Primary() :
 	combatJudge(&archivist),
 	architect(&accountant, &workerManager),
 	reconnoiter(&archivist, &workerManager),
-	armyManager(&archivist, &workerManager),
+	armyManager(&archivist, &workerManager, &combatJudge),
 	strategist(&producer, &architect),
-	harvester(&workerManager),
-	economist(&workerManager, &producer, &architect, &harvester)
+	economist(&workerManager, &producer, &architect),
+	attacker(&archivist, &combatJudge, &armyManager),
+	defender(&archivist, &workerManager, &combatJudge, &armyManager)
 {
 }
 
@@ -36,7 +37,7 @@ void Primary::onStart()
 	// TODO Move this to designator class?
 	archivist.analyzed();
 	architect.analyzed();
-	harvester.analyzed();
+	economist.analyzed();
 }
 
 
@@ -69,7 +70,6 @@ void Primary::onFrame()
 		return;
 
 	// Manager updatíng
-	// TODO Workermanager is last because it commands all leftover workers. Fix this by splitting it in two?
 	archivist.update();
 	workerManager.update();
 	architect.update();
@@ -77,7 +77,8 @@ void Primary::onFrame()
 	armyManager.update();
 	strategist.update();
 	economist.update();
-	harvester.update();
+	defender.update(); //TODO Defender must be before attacker, to ensure defenders are available. Fix this.
+	attacker.update();
 }
 
 
@@ -234,7 +235,7 @@ void Primary::designateUnit(BWAPI::Unit * unit)
 			architect.setDepot(unit);
 			producer.addFactory(unit);
 			workerManager.setDepot(unit);
-			armyManager.setDepot(unit);
+			attacker.setDepot(unit);
 		}
 		else if (unitType == BWAPI::UnitTypes::Protoss_Pylon)
 			architect.addPylon(unit);

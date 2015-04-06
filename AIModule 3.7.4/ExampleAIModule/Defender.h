@@ -3,19 +3,23 @@
 #include <boost/foreach.hpp>
 #include "utilUnit.h"
 #include "Archivist.h"
+#include "WorkerManager.h"
+#include "ArmyManager.h"
 
 
-// Commands given units to defend.
-//TODO Make independant of army manager?
+// Commands units to defend.
 class Defender
 {
 private:
-	Archivist * archivist;
+	Archivist		* archivist;
+	WorkerManager	* workerManager;
+	CombatJudge		* combatJudge;
+	ArmyManager		* armyManager;
 
 public:
-	Defender(Archivist * archivist);
+	Defender(Archivist * archivist, WorkerManager * workerManager, CombatJudge * combatJudge, ArmyManager * armyManager);
 	~Defender();
 
-	void commandDefense(utilUnit::UnitSet guards, utilUnit::UnitSet invaders);
+	void update();
 };
 
