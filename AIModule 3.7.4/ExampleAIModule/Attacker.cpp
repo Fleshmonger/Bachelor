@@ -33,6 +33,7 @@ void Attacker::setDepot(BWAPI::Unit * depot)
 void Attacker::update()
 {
 	// Enlist idle units as attackers.
+	// TODO Is this safe?
 	BOOST_FOREACH(BWAPI::Unit * unit, armyManager->getEnlisted(IDLE))
 		armyManager->assignUnit(unit, ATTACK_TRANSIT);
 
@@ -42,20 +43,14 @@ void Attacker::update()
 	{
 		// Aquire enemies.
 		utilUnit::UnitSet enemyBuildings = archivist->getBuildings();
+
 		// Verify enemies.
 		if (!enemyBuildings.empty())
-		{
-			// Aquire target.
 			target = *enemyBuildings.begin();
-		}
 	}
 
 	// Aquire target position.
-	BWAPI::Position targetPosition;
-	if (target)
-		targetPosition = archivist->getPosition(target);
-	else
-		targetPosition = BWAPI::Positions::None;
+	BWAPI::Position targetPosition = archivist->getPosition(target);
 
 	// Aquire attackers.
 	utilUnit::UnitSet

@@ -3,7 +3,7 @@
 #include "Producer.h"
 #include "Architect.h"
 
-const int MAX_FACTORIES = 4;
+const int MAX_FACTORIES = 4; // The desired amount of factories.
 const BWAPI::UnitType
 	INFANTRY_FACTORY = BWAPI::UnitTypes::Protoss_Gateway,
 	INFANTRY_UNIT = BWAPI::UnitTypes::Protoss_Zealot;

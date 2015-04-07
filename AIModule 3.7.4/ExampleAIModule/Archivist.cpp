@@ -169,7 +169,7 @@ BWAPI::Position Archivist::getPosition(BWAPI::Unit * unit)
 		return unit->getPosition();
 	else
 	{
-		if (isArchived(unit))
+		if (unit && isArchived(unit))
 			return positions[unit];
 		else
 			return BWAPI::Positions::None;
@@ -184,7 +184,7 @@ BWAPI::UnitType Archivist::getType(BWAPI::Unit * unit)
 		return unit->getType();
 	else
 	{
-		if (isArchived(unit))
+		if (unit && isArchived(unit))
 			return types[unit];
 		else
 			return BWAPI::UnitTypes::None;

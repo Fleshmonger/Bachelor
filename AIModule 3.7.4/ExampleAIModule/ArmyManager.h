@@ -20,9 +20,9 @@ private:
 	WorkerManager	* workerManager;
 	CombatJudge		* combatJudge;
 
-	utilUnit::UnitSet army; //TODO Is this redundant?
-	std::map<BWAPI::Unit*, Task> assignments;
-	std::map<Task, utilUnit::UnitSet> enlisted;
+	utilUnit::UnitSet					army;
+	std::map<BWAPI::Unit*, Task>		assignments;
+	std::map<Task, utilUnit::UnitSet>	enlisted;
 
 public:
 	ArmyManager(Archivist * archivist, WorkerManager * workerManager, CombatJudge * combatJudge);
@@ -32,6 +32,8 @@ public:
 	void removeUnit(BWAPI::Unit * unit);
 	void assignUnit(BWAPI::Unit * unit, Task task);
 	void update();
+
+	bool contains(BWAPI::Unit * unit);
 
 	utilUnit::UnitSet getArmy();
 	utilUnit::UnitSet getEnlisted(Task task);

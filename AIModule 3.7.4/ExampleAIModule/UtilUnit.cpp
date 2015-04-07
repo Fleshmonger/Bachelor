@@ -65,7 +65,7 @@ bool utilUnit::inRegion(BWAPI::Position pos, BWTA::Region * region)
 // TODO Can this be done more effectively?
 bool utilUnit::isEnemy(BWAPI::Unit * unit)
 {
-	return BWAPI::Broodwar->self()->isEnemy(unit->getPlayer());
+	return unit && BWAPI::Broodwar->self()->isEnemy(unit->getPlayer());
 }
 
 
@@ -73,5 +73,5 @@ bool utilUnit::isEnemy(BWAPI::Unit * unit)
 // TODO Can this be done more effectively?
 bool utilUnit::isOwned(BWAPI::Unit * unit)
 {
-	return unit->getPlayer() == BWAPI::Broodwar->self();
+	return unit && unit->getPlayer() == BWAPI::Broodwar->self();
 }

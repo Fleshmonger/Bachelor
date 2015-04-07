@@ -24,7 +24,8 @@ void ArmyManager::addUnit(BWAPI::Unit * unit)
 {
 	// Verify unit.
 	if (unit &&
-		unit->exists())
+		unit->exists() &&
+		utilUnit::isOwned(unit))
 	{
 		// Add unit.
 		army.insert(unit);
@@ -38,7 +39,7 @@ void ArmyManager::addUnit(BWAPI::Unit * unit)
 void ArmyManager::removeUnit(BWAPI::Unit * unit)
 {
 	// Verify unit.
-	if (unit)
+	if (contains(unit))
 	{
 		// Remove unit.
 		army.erase(unit);
@@ -50,79 +51,49 @@ void ArmyManager::removeUnit(BWAPI::Unit * unit)
 
 void ArmyManager::assignUnit(BWAPI::Unit * unit, Task task)
 {
-	// Remove unit from old task.
-	Task oldTask = assignments[unit];
-	enlisted[oldTask].erase(unit);
+	// Verify unit.
+	if (contains(unit))
+	{
+		// Remove unit from old task.
+		Task oldTask = assignments[unit];
+		enlisted[oldTask].erase(unit);
 
-	// Add unit to new task.
-	assignments[unit] = task;
-	enlisted[task].insert(unit);
+		// Add unit to new task.
+		assignments[unit] = task;
+		enlisted[task].insert(unit);
+	}
 }
 
 // Simulate the army manager AI, ordering, creating and upgrading troops.
-// TODO Simplify defense
 void ArmyManager::update()
 {
 	// Verify army.
 	// TODO Is this necessary?
-	utilUnit::UnitSet::iterator it = army.begin();
-	while (it != army.end())
+	utilUnit::UnitSet::iterator it = army.begin(), end = army.end();
+	while (it != end)
 	{
+		// Verify unit.
 		BWAPI::Unit * unit = *it;
 		if (!unit->exists())
 		{
+			// Remove unit.
 			it = army.erase(it);
 			Task task = assignments[unit];
 			assignments.erase(unit);
 			enlisted[task].erase(unit);
+
+			end = army.end();
 		}
 		else
 			it++;
 	}
+}
 
-	/*
-	// Invasion check.
-	utilUnit::UnitSet invaders = archivist->invaders();
-	if (!invaders.empty())
-	{
-		// Conscript troops.
-		defenders.insert(idle.begin(), idle.end());
 
-		// Conscript workers if necessary.
-		double defenseStrength = combatJudge->strength(defenders), invaderStrength = combatJudge->strength(invaders);
-		while (defenseStrength < invaderStrength)
-		{
-			BWAPI::Unit * worker = workerManager->takeWorker();
-			if (worker &&
-				worker->exists())
-			{
-				defenseStrength += combatJudge->strength(worker);
-				defenders.insert(worker);
-			}
-			else
-				break;
-		}
-	}
-	else
-	{
-		// Conscript attackers.
-		attackers.insert(idle.begin(), idle.end());
-
-		// Release defenders.
-		BOOST_FOREACH(BWAPI::Unit * defender, defenders)
-		{
-			if (defender &&
-				defender->exists())
-			{
-				if (defender->getType().isWorker())
-					workerManager->addWorker(defender);
-				else
-					idle.insert(defender);
-			}
-		}
-		defenders.clear();
-	}
-	*/
+// Returns whether the unit is in the army pool.
+bool ArmyManager::contains(BWAPI::Unit * unit)
+{
+	return army.count(unit) > 0;
 }
 
 
