@@ -5,7 +5,10 @@
 Attacker::Attacker(Archivist * archivist, CombatJudge * combatJudge, ArmyManager * armyManager) :
 	archivist(archivist),
 	combatJudge(combatJudge),
-	armyManager(armyManager)
+	armyManager(armyManager),
+	attackingStrength(0),
+	target(NULL),
+	depot(NULL)
 {
 }
 

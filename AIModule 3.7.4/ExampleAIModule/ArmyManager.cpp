@@ -5,7 +5,10 @@
 ArmyManager::ArmyManager(Archivist * archivist, WorkerManager * workerManager, CombatJudge * combatJudge) :
 	archivist(archivist),
 	workerManager(workerManager),
-	combatJudge(combatJudge)
+	combatJudge(combatJudge),
+	army(),
+	assignments(),
+	enlisted()
 {
 }
 

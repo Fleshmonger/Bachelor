@@ -14,7 +14,14 @@ class Archivist
 {
 private:
 	BWTA::Region * homeRegion;
-	std::set<BWAPI::Unit*> units, buildings, depots, refineries, turrets, workers, troops;
+	std::set<BWAPI::Unit*>
+		units,
+		buildings,
+		depots,
+		refineries,
+		turrets,
+		workers,
+		troops;
 	std::map<BWAPI::Unit*, BWAPI::Position> positions;
 	std::map<BWAPI::Unit*, BWAPI::UnitType> types;
 

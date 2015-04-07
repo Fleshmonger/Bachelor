@@ -1,9 +1,17 @@
 #include "Producer.h"
 
 
+std::multiset<BWAPI::UnitType> scheduled; //TODO Remove this
+utilUnit::UnitSet incompleteUnits;
+std::map<BWAPI::UnitType, utilUnit::UnitSet> factories;
+
+
 // Constructor
 Producer::Producer(Accountant * accountant) :
-	accountant(accountant)
+	accountant(accountant),
+	scheduled(),
+	incompleteUnits(),
+	factories()
 {
 }
 
@@ -40,19 +48,9 @@ void Producer::addProduction(BWAPI::Unit * unit)
 	if (scheduled.count(unitType) > 0)
 	{
 		scheduled.erase(unitType);
-		//incompleteUnits.insert(unit);
 		accountant->deallocate(unitType);
 	}
 }
-
-
-/*
-// Removes a unit from the incomplete pool.
-void Producer::removeProduction(BWAPI::Unit * unit)
-{
-	incompleteUnits.erase(unit);
-}
-*/
 
 
 // Attempt to produce an infantry unit at an available facility and returns true if successful.

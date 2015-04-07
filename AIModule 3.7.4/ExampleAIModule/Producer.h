@@ -13,7 +13,6 @@ private:
 
 	std::multiset<BWAPI::UnitType> scheduled; //TODO Remove this
 	utilUnit::UnitSet incompleteUnits;
-	//utilUnit::UnitSet incompleteUnits, infantryFacilities, idleInfantryFacilities;
 	std::map<BWAPI::UnitType, utilUnit::UnitSet> factories;
 
 public:
@@ -23,7 +22,6 @@ public:
 	void addFactory(BWAPI::Unit * factory);
 	void removeFactory(BWAPI::Unit * factory);
 	void addProduction(BWAPI::Unit * unit);
-	//void removeProduction(BWAPI::Unit * unit);
 
 	bool train(BWAPI::UnitType unitType);
 

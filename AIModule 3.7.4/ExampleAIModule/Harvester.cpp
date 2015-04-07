@@ -3,7 +3,10 @@
 
 // Constructor.
 Harvester::Harvester(WorkerManager * workerManager) :
-	workerManager(workerManager)
+	workerManager(workerManager),
+	minerals(),
+	minerTargets(),
+	mineralMiners()
 {
 }
 

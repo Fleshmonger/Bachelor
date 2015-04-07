@@ -7,11 +7,11 @@ Architect::Architect(Accountant * accountant, WorkerManager * workerManager) :
 	accountant(accountant),
 	workerManager(workerManager),
 	harvestingDefined(false),
-	harvesting(Zone(0, 0, 0, 0)),
+	harvesting(0, 0, 0, 0),
 	depot(NULL),
-	pylons(utilUnit::UnitSet()),
-	constructSchedule(std::multimap<BWAPI::UnitType, BWAPI::Unit*>()),
-	buildSchedule(std::multimap<BWAPI::UnitType, std::pair<BWAPI::Unit*, BWAPI::TilePosition>>())
+	pylons(),
+	constructSchedule(),
+	buildSchedule()
 {
 }
 

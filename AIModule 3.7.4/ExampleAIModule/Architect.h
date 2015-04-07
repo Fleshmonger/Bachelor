@@ -46,13 +46,11 @@ private:
 	WorkerManager * workerManager;
 
 	bool harvestingDefined; // Temporary stupid solution, change when information manager is introduced.
-
+	Zone harvesting;
 	BWAPI::Unit * depot;
 	utilUnit::UnitSet pylons;
 	std::multimap<BWAPI::UnitType, BWAPI::Unit*> constructSchedule;
 	std::multimap<BWAPI::UnitType, std::pair<BWAPI::Unit*, BWAPI::TilePosition>>  buildSchedule;
-
-	Zone harvesting;
 
 public:
 	Architect(Accountant * accountant, WorkerManager * workerManager);

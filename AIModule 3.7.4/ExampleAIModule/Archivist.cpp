@@ -4,15 +4,15 @@
 // Constructor
 Archivist::Archivist() :
 	homeRegion(NULL),
-	units(std::set<BWAPI::Unit*>()),
-	buildings(std::set<BWAPI::Unit*>()),
-	depots(std::set<BWAPI::Unit*>()),
-	refineries(std::set<BWAPI::Unit*>()),
-	turrets(std::set<BWAPI::Unit*>()),
-	workers(std::set<BWAPI::Unit*>()),
-	troops(std::set<BWAPI::Unit*>()),
-	positions(std::map<BWAPI::Unit*, BWAPI::Position>()),
-	types(std::map<BWAPI::Unit*, BWAPI::UnitType>())
+	units(),
+	buildings(),
+	depots(),
+	refineries(),
+	turrets(),
+	workers(),
+	troops(),
+	positions(),
+	types()
 {
 }
 

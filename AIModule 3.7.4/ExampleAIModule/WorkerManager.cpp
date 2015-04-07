@@ -2,7 +2,11 @@
 
 
 // Constructor
-WorkerManager::WorkerManager()
+WorkerManager::WorkerManager() :
+	minerQouta(0),
+	depot(NULL),
+	idle(),
+	miners()
 {
 }
 

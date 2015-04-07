@@ -5,8 +5,8 @@
 Reconnoiter::Reconnoiter(Archivist * archivist, WorkerManager * workerManager) :
 	archivist(archivist),
 	workerManager(workerManager),
-	scout(NULL),
-	target(BWAPI::TilePositions::None)
+	target(BWAPI::TilePositions::None),
+	scout(NULL)
 {
 }
 
