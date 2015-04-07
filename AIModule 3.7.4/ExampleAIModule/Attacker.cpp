@@ -6,9 +6,8 @@ Attacker::Attacker(Archivist * archivist, CombatJudge * combatJudge, ArmyManager
 	archivist(archivist),
 	combatJudge(combatJudge),
 	armyManager(armyManager),
-	attackingStrength(0),
-	target(NULL),
-	depot(NULL)
+	depot(NULL),
+	target(NULL)
 {
 }
 
@@ -37,20 +36,25 @@ void Attacker::update()
 	BOOST_FOREACH(BWAPI::Unit * unit, armyManager->getEnlisted(IDLE))
 		armyManager->assignUnit(unit, ATTACK_TRANSIT);
 
-	// Verify target.
-	if (!target ||
-		!target->exists())
-	{
-		// Aquire enemies.
-		utilUnit::UnitSet enemyBuildings = archivist->getBuildings();
-
-		// Verify enemies.
-		if (!enemyBuildings.empty())
-			target = *enemyBuildings.begin();
-	}
-
-	// Aquire target position.
+	// Aquire target.
 	BWAPI::Position targetPosition = archivist->getPosition(target);
+	if (!targetPosition)
+	{
+		utilUnit::UnitSet enemyBuildings = archivist->getBuildings();
+		utilUnit::UnitSet::iterator enemBuildIt = enemyBuildings.begin();
+		while (enemBuildIt != enemyBuildings.end())
+		{
+			BWAPI::Unit * enemyBuilding = *enemBuildIt;
+			BWAPI::Position enemyPosition = archivist->getPosition(enemyBuilding);
+			if (enemyPosition)
+			{
+				targetPosition = enemyPosition;
+				enemBuildIt = enemyBuildings.end();
+			}
+			else
+				enemBuildIt++;
+		}
+	}
 
 	// Aquire attackers.
 	utilUnit::UnitSet

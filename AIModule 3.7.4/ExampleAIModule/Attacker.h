@@ -16,10 +16,9 @@ private:
 	CombatJudge	* combatJudge;
 	ArmyManager	* armyManager;
 
-	double attackingStrength;
 	BWAPI::Unit
-		* target,
-		* depot;
+		* depot,
+		* target;
 
 public:
 	Attacker(Archivist * archivist, CombatJudge * combatJudge, ArmyManager * armyManager);
