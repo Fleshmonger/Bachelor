@@ -56,10 +56,10 @@ void Attacker::update()
 	utilUnit::UnitSet
 		fighters = armyManager->getEnlisted(ATTACK_FIGHT),
 		transit = armyManager->getEnlisted(ATTACK_TRANSIT),
-		waiting = armyManager->getEnlisted(ATTACK_WAIT);
+		waiting;
+		//waiting = armyManager->getEnlisted(ATTACK_WAIT);
 
 	// Calculate strength.
-
 	double strength = combatJudge->strength(fighters) + combatJudge->strength(waiting);
 
 	// Verify and command transit.
@@ -94,7 +94,12 @@ void Attacker::update()
 	// Check if attack.
 	if (strength > combatJudge->strength(archivist->getTroops()) + combatJudge->strength(archivist->getTurrets()))
 	{
-		fighters.insert(waiting.begin(), waiting.end()); // Move waiters to fighting.
+		// Move waiters to fighting.
+		BOOST_FOREACH(BWAPI::Unit * waiter, waiting)
+		{
+			fighters.insert(waiter);
+			armyManager->assignUnit(waiter, ATTACK_FIGHT);
+		}
 		waiting.clear();
 	}
 	else
