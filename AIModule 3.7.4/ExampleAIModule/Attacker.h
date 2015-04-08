@@ -7,6 +7,9 @@
 #include "ArmyManager.h"
 
 
+const int DETECTION_DISTANCE = 400; // 384 is the longest range in the game.
+
+
 // Commands units to attack.
 // TODO Rename?
 class Attacker

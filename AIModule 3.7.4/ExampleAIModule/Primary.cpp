@@ -41,14 +41,46 @@ void Primary::onStart()
 }
 
 
+// Fired when the game is over.
 void Primary::onEnd(bool isWinner)
 {
+	// Write output.
+	std::ofstream outputFile("bwapi-data/write/Results.txt", std::ios::app);
+	if (outputFile.is_open())
+	{
+		// Write to file.
+		outputFile << (isWinner ? "Win " : "Loss ");						// Game result.
+		outputFile << "\"" + BWAPI::Broodwar->enemy()->getName() + "\" ";	// Enemy name.
+		outputFile << BWAPI::Broodwar->enemy()->getRace().getName() + " ";	// Enemy race.
+		outputFile << BWAPI::Broodwar->mapFileName() + " ";					// Map name.
+		outputFile << BWAPI::Broodwar->getFrameCount();						// Frame count.
+		outputFile << " ";
+		outputFile << BWAPI::Broodwar->self()->getUnitScore();				// Unit score.
+		outputFile << " ";
+		outputFile << BWAPI::Broodwar->self()->getBuildingScore();			// Building score.
+		outputFile << " ";
+		outputFile << BWAPI::Broodwar->self()->getKillScore();				// Kill score.
+		outputFile << " ";
+		outputFile << BWAPI::Broodwar->self()->getRazingScore();			// Razing score.
+		outputFile << " ";
+		outputFile << BWAPI::Broodwar->self()->gatheredMinerals();			// Total Minerals.
+		outputFile << " ";
+		outputFile << BWAPI::Broodwar->self()->gatheredGas();				// Total Minerals.
+
+		// End stream.
+		outputFile << "\n";
+		outputFile.close();
+	}
 }
 
 
 // Fired at the start of a new frame.
 void Primary::onFrame()
 {
+	// Return if the game is a replay or is paused
+	if (BWAPI::Broodwar->isReplay() || BWAPI::Broodwar->isPaused() || !BWAPI::Broodwar->self())
+		return;
+
 	// Debugging display.
 	DEBUG_SCREEN(200, 0, "FPS: %d", BWAPI::Broodwar->getFPS());
 	DEBUG_SCREEN(200, 20, "APM: %d", BWAPI::Broodwar->getAPM());
@@ -59,10 +91,7 @@ void Primary::onFrame()
 		enemyStrength = combatJudge.strength(archivist.getTroops()) + combatJudge.strength(archivist.getTurrets());
 	DEBUG_SCREEN(200, 40, "Strength: %f", strength);
 	DEBUG_SCREEN(200, 60, "Enemy Strength: %f", enemyStrength);
-
-	// Return if the game is a replay or is paused
-	if (BWAPI::Broodwar->isReplay() || BWAPI::Broodwar->isPaused() || !BWAPI::Broodwar->self())
-		return;
+	DEBUG_SCREEN(200, 80, "Test: %d", BWAPI::UnitTypes::Terran_Siege_Tank_Siege_Mode.groundWeapon().maxRange());
 
 	// Prevent spamming by only running our onFrame once every number of latency frames.
 	// Latency frames are the number of frames before commands are processed.

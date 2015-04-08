@@ -2,6 +2,8 @@
 #include <BWAPI.h>
 #include <BWTA.h>
 #include <windows.h>
+#include <iostream>
+#include <fstream>
 #include <boost/foreach.hpp>
 #include "UtilUnit.h"
 #include "Accountant.h"
