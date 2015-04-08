@@ -8,7 +8,7 @@
 #include "CombatJudge.h"
 
 
-enum Task{ IDLE, DEFEND, ATTACK_FIGHT, ATTACK_TRANSIT };
+enum Task { IDLE, DEFEND, ATTACK_FIGHT, ATTACK_TRANSIT };
 
 
 // Commands attacking and defending troops.

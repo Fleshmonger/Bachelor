@@ -60,91 +60,61 @@ void Attacker::update()
 	utilUnit::UnitSet
 		fighters = armyManager->getEnlisted(ATTACK_FIGHT),
 		transit = armyManager->getEnlisted(ATTACK_TRANSIT),
-		waiting;
-		//waiting = armyManager->getEnlisted(ATTACK_WAIT);
+		ready;
 
 	// Calculate strength.
-	double strength = combatJudge->strength(fighters) + combatJudge->strength(waiting);
+	double strength = combatJudge->strength(fighters);
 
-	// Verify and command transit.
-	utilUnit::UnitSet::iterator transitIt = transit.begin();
-	while (transitIt != transit.end())
+	// Command transit.
+	BOOST_FOREACH(BWAPI::Unit * unit, transit)
 	{
-		BWAPI::Unit * transiter = *transitIt;
-		// Verify transiter.
-		if (transiter &&
-			transiter->exists())
+		// Verify unit.
+		if (unit &&
+			unit->exists())
 		{
-			// Identify if enemy spotted.
-			if (enemyDetected(transiter) || transiter->isUnderAttack())
+			// Detection check.
+			if (enemyDetected(unit))
 			{
-				// Move transiter to waiting.
-				waiting.insert(transiter);
-				strength += combatJudge->strength(transiter);
-				transitIt = transit.erase(transitIt);
+				// Move unit to ready.
+				ready.insert(unit);
+				strength += combatJudge->strength(unit);
 			}
 			else
 			{
-				// Command transiter.
+				// Verify target.
 				if (targetPosition)
-					transiter->move(targetPosition);
-				transitIt++;
+					unit->move(targetPosition);
 			}
 		}
-		else
-			transitIt = transit.erase(transitIt);
 	}
 
 	// Check if attack.
 	if (strength > combatJudge->strength(archivist->getTroops()) + combatJudge->strength(archivist->getTurrets()))
 	{
-		// Move waiters to fighting.
-		BOOST_FOREACH(BWAPI::Unit * waiter, waiting)
+		// Move ready to fighters.
+		BOOST_FOREACH(BWAPI::Unit * unit, ready)
 		{
-			fighters.insert(waiter);
-			armyManager->assignUnit(waiter, ATTACK_FIGHT);
+			fighters.insert(unit);
+			armyManager->assignUnit(unit, ATTACK_FIGHT);
 		}
-		waiting.clear();
 	}
 	else
 	{
-		// Command waiting.
-		utilUnit::UnitSet::iterator waitingIt = waiting.begin();
-		while (waitingIt != waiting.end())
-		{
-			BWAPI::Unit * waiter = *waitingIt;
-			// Verify waiter.
-			if (waiter &&
-				waiter->exists())
-			{
-				// Command waiter.
-				if (enemyDetected(waiter) && depot)
-					waiter->move(depot->getPosition());
-				else
-					waiter->stop();
-				waitingIt++;
-			}
-			else
-				waitingIt = waiting.erase(waitingIt);
-
-		}
+		// Command ready.
+		BOOST_FOREACH(BWAPI::Unit * unit, ready)
+			unit->move(depot->getPosition());
 	}
 
 	// Command fighters.
-	utilUnit::UnitSet::iterator fightersIt = fighters.begin();
-	while (fightersIt != fighters.end())
+	BOOST_FOREACH(BWAPI::Unit * unit, fighters)
 	{
-		// Verify fighter.
-		BWAPI::Unit * fighter = *fightersIt;
-		if (fighter &&
-			fighter->exists())
+		// Verify unit.
+		if (unit &&
+			unit->exists())
 		{
-			if (fighter->isIdle() || fighter->getLastCommand().getType() == BWAPI::UnitCommandTypes::Move)
-				fighter->attack(targetPosition);
-			fightersIt++;
+			if (unit->isIdle() || unit->getLastCommand().getType() != BWAPI::UnitCommandTypes::Attack_Move)
+				unit->attack(targetPosition);
 		}
-		else
-			fightersIt = fighters.erase(fightersIt);
 	}
 }
 
