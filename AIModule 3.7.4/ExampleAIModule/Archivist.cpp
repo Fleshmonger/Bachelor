@@ -192,8 +192,15 @@ BWAPI::UnitType Archivist::getType(BWAPI::Unit * unit)
 }
 
 
+// Returns the recorded home region.
+BWTA::Region * Archivist::getHomeRegion()
+{
+	return homeRegion;
+}
+
+
 // Finds and returns all invaders.
-std::set<BWAPI::Unit*> Archivist::invaders()
+utilUnit::UnitSet Archivist::invaders()
 {
 	std::set<BWAPI::Unit*> invaders;
 	BOOST_FOREACH(BWAPI::Unit * unit, units)
@@ -203,43 +210,43 @@ std::set<BWAPI::Unit*> Archivist::invaders()
 }
 
 
-// Returns the recorded home region.
-BWTA::Region * Archivist::getHomeRegion()
+// Returns a copy of recorded units.
+utilUnit::UnitSet Archivist::getUnits()
 {
-	return homeRegion;
+	return units;
 }
 
 
 // Returns a copy of recorded buildings.
-std::set<BWAPI::Unit*> Archivist::getBuildings()
+utilUnit::UnitSet Archivist::getBuildings()
 {
 	return buildings;
 }
 
 
 // Returns a copy of recorded depots.
-std::set<BWAPI::Unit*> Archivist::getDepots()
+utilUnit::UnitSet Archivist::getDepots()
 {
 	return depots;
 }
 
 
 // Returns a copy of recorded turrets.
-std::set<BWAPI::Unit*> Archivist::getTurrets()
+utilUnit::UnitSet Archivist::getTurrets()
 {
 	return turrets;
 }
 
 
 // Returns a copy of recorded workers.
-std::set<BWAPI::Unit*> Archivist::getWorkers()
+utilUnit::UnitSet Archivist::getWorkers()
 {
 	return workers;
 }
 
 
 // Returns a copy of recorded troops.
-std::set<BWAPI::Unit*> Archivist::getTroops()
+utilUnit::UnitSet Archivist::getTroops()
 {
 	return troops;
 }

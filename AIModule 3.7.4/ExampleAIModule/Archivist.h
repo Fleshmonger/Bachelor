@@ -14,7 +14,7 @@ class Archivist
 {
 private:
 	BWTA::Region * homeRegion;
-	std::set<BWAPI::Unit*>
+	utilUnit::UnitSet
 		units,
 		buildings,
 		depots,
@@ -47,10 +47,11 @@ public:
 
 	BWTA::Region * getHomeRegion(); // TODO Move this to analyzer class
 
-	std::set<BWAPI::Unit*> invaders();
-	std::set<BWAPI::Unit*> getBuildings();
-	std::set<BWAPI::Unit*> getDepots();
-	std::set<BWAPI::Unit*> getTurrets();
-	std::set<BWAPI::Unit*> getWorkers();
-	std::set<BWAPI::Unit*> getTroops();
+	utilUnit::UnitSet invaders();
+	utilUnit::UnitSet getUnits();
+	utilUnit::UnitSet getBuildings();
+	utilUnit::UnitSet getDepots();
+	utilUnit::UnitSet getTurrets();
+	utilUnit::UnitSet getWorkers();
+	utilUnit::UnitSet getTroops();
 };

@@ -120,19 +120,12 @@ void Attacker::update()
 
 
 // Returns whether the given unit can see an enemy unit.
-// TODO Remove code repetition.
 bool Attacker::enemyDetected(BWAPI::Unit * unit)
 {
-	BOOST_FOREACH(BWAPI::Unit * enemy, archivist->getTroops())
+	BOOST_FOREACH(BWAPI::Unit * unit, archivist->getUnits())
 	{
-		BWAPI::Position pos = archivist->getPosition(enemy);
-		if (unit->getDistance(pos) < DETECTION_DISTANCE)
-			return true;
-	}
-	BOOST_FOREACH(BWAPI::Unit * enemy, archivist->getBuildings())
-	{
-		BWAPI::Position pos = archivist->getPosition(enemy);
-		if (unit->getDistance(pos) < DETECTION_DISTANCE)
+		BWAPI::Position pos = archivist->getPosition(unit);
+		if (utilUnit::isEnemy(unit) && unit->getDistance(pos) < DETECTION_DISTANCE)
 			return true;
 	}
 	return false;
