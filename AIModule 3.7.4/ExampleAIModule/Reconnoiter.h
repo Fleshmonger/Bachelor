@@ -9,7 +9,8 @@ const unsigned int MIN_WORKFORCE = 5; // Minimum amount of workers available bef
 
 
 // Scouts the map while the enemy base is hidden.
-//TODO Make the scouting activated by the future strategist manager.
+//TODO Make the scouting activated by the strategist manager.
+//TODO Cleanup.
 class Reconnoiter
 {
 private:

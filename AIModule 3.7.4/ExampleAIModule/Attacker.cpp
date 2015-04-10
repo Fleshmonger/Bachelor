@@ -33,8 +33,8 @@ void Attacker::update()
 {
 	// Enlist idle units as attackers.
 	// TODO Is this safe?
-	BOOST_FOREACH(BWAPI::Unit * unit, armyManager->getEnlisted(IDLE))
-		armyManager->assignUnit(unit, ATTACK_TRANSIT);
+	BOOST_FOREACH(BWAPI::Unit * unit, armyManager->getEnlisted(DUTY_IDLE))
+		armyManager->assignUnit(unit, DUTY_ATTACK_TRANSIT);
 
 	// Aquire target.
 	BWAPI::Position targetPosition = archivist->getPosition(target);
@@ -58,8 +58,8 @@ void Attacker::update()
 
 	// Aquire attackers.
 	utilUnit::UnitSet
-		fighters = armyManager->getEnlisted(ATTACK_FIGHT),
-		transit = armyManager->getEnlisted(ATTACK_TRANSIT),
+		fighters = armyManager->getEnlisted(DUTY_ATTACK_FIGHT),
+		transit = armyManager->getEnlisted(DUTY_ATTACK_TRANSIT),
 		ready;
 
 	// Calculate strength.
@@ -95,7 +95,7 @@ void Attacker::update()
 		BOOST_FOREACH(BWAPI::Unit * unit, ready)
 		{
 			fighters.insert(unit);
-			armyManager->assignUnit(unit, ATTACK_FIGHT);
+			armyManager->assignUnit(unit, DUTY_ATTACK_FIGHT);
 		}
 	}
 	else

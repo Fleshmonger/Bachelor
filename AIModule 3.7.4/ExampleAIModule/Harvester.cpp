@@ -26,7 +26,7 @@ void Harvester::analyzed()
 		minerals.push_front(mineral);
 		mineralMiners[mineral] = utilUnit::UnitSet();
 	}
-	workerManager->setMinerQouta(minersMax());
+	//workerManager->setMinerQouta(minersMax());
 }
 
 
@@ -85,7 +85,7 @@ void Harvester::removeMineral(BWAPI::Unit * mineral)
 			mineralMiners.erase(mineralMinersIt);
 
 			// Update qouta.
-			workerManager->setMinerQouta(minersMax());
+			//workerManager->setMinerQouta(minersMax());
 			return;
 		}
 		else
@@ -101,7 +101,9 @@ void Harvester::update()
 	if (!minerals.empty())
 	{
 		// Aquire miners.
-		utilUnit::UnitSet miners = workerManager->getMiners();
+		//utilUnit::UnitSet miners = workerManager->getMiners();
+		utilUnit::UnitSet miners = workerManager->getEmployed(TASK_IDLE);
+
 		// Command miners.
 		BOOST_FOREACH(BWAPI::Unit * miner, miners)
 		{
@@ -119,10 +121,12 @@ void Harvester::update()
 					mineral = minerals.front();
 					minerTargets[miner] = mineral;
 					mineralMiners[mineral].insert(miner);
+
 					// Rotate mineral priorities.
 					minerals.pop_front();
 					minerals.push_back(mineral);
 				}
+
 				// Verify mineral.
 				if (mineral &&
 					mineral->exists())

@@ -41,19 +41,21 @@ bool Architect::scheduleBuild(BWAPI::UnitType buildingType)
 		// Check if we have the resources.
 		if (accountant->isAffordable(buildingType))
 		{
-			BWAPI::Unit * builder = workerManager->takeWorker();
+			// Aquire builder.
+			BWAPI::Unit * builder = workerManager->getIdle();
 			if (builder)
 			{
 				BWAPI::TilePosition location = getBuildLocation(builder, depot->getTilePosition(), buildingType);
 				if (location)
 				{
 					// Order the construction.
+					workerManager->employWorker(builder, TASK_BUILD);
 					utilUnit::commandBuild(builder, location, buildingType);
 					buildSchedule.insert(std::make_pair(buildingType, std::make_pair(builder, location)));
 					accountant->allocate(buildingType);
 					return true;
 				} // Closure: location
-				workerManager->addWorker(builder);
+				//workerManager->addWorker(builder);
 			} // Closure: builder.
 		} // Closure: affordable.
 	} // Closure: type.
@@ -85,7 +87,8 @@ void Architect::removeBuild(BWAPI::UnitType buildingType, BWAPI::TilePosition bu
 				std::pair<BWAPI::UnitType, std::pair<BWAPI::Unit*, BWAPI::TilePosition>> build = *it;
 				BWAPI::Unit * builder = build.second.first;
 				if (builder && builder->exists())
-					workerManager->addWorker(builder);
+					workerManager->employWorker(builder, TASK_IDLE);
+					//workerManager->addWorker(builder);
 				accountant->deallocate(build.first);
 				buildSchedule.erase(it);
 				return;

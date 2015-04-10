@@ -8,7 +8,9 @@
 #include "CombatJudge.h"
 
 
-enum Task { IDLE, DEFEND, ATTACK_FIGHT, ATTACK_TRANSIT };
+
+enum Duty { DUTY_ATTACK_FIGHT, DUTY_ATTACK_TRANSIT, DUTY_DEFEND, DUTY_IDLE };
+
 
 
 // Commands attacking and defending troops.
@@ -21,20 +23,20 @@ private:
 	CombatJudge		* combatJudge;
 
 	utilUnit::UnitSet					army;
-	std::map<BWAPI::Unit*, Task>		assignments;
-	std::map<Task, utilUnit::UnitSet>	enlisted;
+	std::map<BWAPI::Unit*, Duty>		assignments;
+	std::map<Duty, utilUnit::UnitSet>	enlisted;
 
 public:
 	ArmyManager(Archivist * archivist, WorkerManager * workerManager, CombatJudge * combatJudge);
 	~ArmyManager();
 
+	void update();
 	void addUnit(BWAPI::Unit * unit);
 	void removeUnit(BWAPI::Unit * unit);
-	void assignUnit(BWAPI::Unit * unit, Task task);
-	void update();
+	void assignUnit(BWAPI::Unit * unit, Duty duty);
 
 	bool contains(BWAPI::Unit * unit);
 
 	utilUnit::UnitSet getArmy();
-	utilUnit::UnitSet getEnlisted(Task task);
+	utilUnit::UnitSet getEnlisted(Duty duty);
 };

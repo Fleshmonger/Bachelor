@@ -16,6 +16,8 @@ private:
 	CombatJudge		* combatJudge;
 	ArmyManager		* armyManager;
 
+	utilUnit::UnitSet militia; //TODO Remove this.
+
 public:
 	Defender(Archivist * archivist, WorkerManager * workerManager, CombatJudge * combatJudge, ArmyManager * armyManager);
 	~Defender();

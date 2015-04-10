@@ -19,51 +19,6 @@ ArmyManager::~ArmyManager()
 }
 
 
-// Adds a unit to the army pool.
-void ArmyManager::addUnit(BWAPI::Unit * unit)
-{
-	// Verify unit.
-	if (unit &&
-		unit->exists() &&
-		utilUnit::isOwned(unit))
-	{
-		// Add unit.
-		army.insert(unit);
-		assignments[unit] = IDLE;
-		enlisted[IDLE].insert(unit);
-	}
-}
-
-
-// Removes a unit from the army pool.
-void ArmyManager::removeUnit(BWAPI::Unit * unit)
-{
-	// Verify unit.
-	if (contains(unit))
-	{
-		// Remove unit.
-		army.erase(unit);
-		Task task = assignments[unit];
-		assignments.erase(unit);
-		enlisted[task].erase(unit);
-	}
-}
-
-void ArmyManager::assignUnit(BWAPI::Unit * unit, Task task)
-{
-	// Verify unit.
-	if (contains(unit))
-	{
-		// Remove unit from old task.
-		Task oldTask = assignments[unit];
-		enlisted[oldTask].erase(unit);
-
-		// Add unit to new task.
-		assignments[unit] = task;
-		enlisted[task].insert(unit);
-	}
-}
-
 // Simulate the army manager AI, ordering, creating and upgrading troops.
 void ArmyManager::update()
 {
@@ -78,14 +33,62 @@ void ArmyManager::update()
 		{
 			// Remove unit.
 			it = army.erase(it);
-			Task task = assignments[unit];
+			Duty duty = assignments[unit];
 			assignments.erase(unit);
-			enlisted[task].erase(unit);
+			enlisted[duty].erase(unit);
 
 			end = army.end();
 		}
 		else
 			it++;
+	}
+}
+
+
+// Adds a unit to the army pool.
+void ArmyManager::addUnit(BWAPI::Unit * unit)
+{
+	// Verify unit.
+	if (unit &&
+		unit->exists() &&
+		utilUnit::isOwned(unit))
+	{
+		// Add unit.
+		army.insert(unit);
+		assignments[unit] = DUTY_IDLE;
+		enlisted[DUTY_IDLE].insert(unit);
+	}
+}
+
+
+// Removes a unit from the army pool.
+void ArmyManager::removeUnit(BWAPI::Unit * unit)
+{
+	// Verify unit.
+	if (contains(unit))
+	{
+		// Remove unit.
+		army.erase(unit);
+		Duty duty = assignments[unit];
+		assignments.erase(unit);
+		enlisted[duty].erase(unit);
+	}
+}
+
+
+// Assigns the unit a duty.
+void ArmyManager::assignUnit(BWAPI::Unit * unit, Duty duty)
+{
+	// Verify unit.
+	if (contains(unit))
+	{
+		// Remove unit from current duty.
+		Duty oldDuty = assignments[unit];
+		enlisted[oldDuty].erase(unit);
+
+		// Add unit to new duty.
+		assignments[unit] = duty;
+		enlisted[duty].insert(unit);
 	}
 }
 
@@ -104,8 +107,8 @@ utilUnit::UnitSet ArmyManager::getArmy()
 }
 
 
-// Returns a copy of units enlisted with the specified task.
-utilUnit::UnitSet ArmyManager::getEnlisted(Task task)
+// Returns a copy of units enlisted with the specified duty.
+utilUnit::UnitSet ArmyManager::getEnlisted(Duty duty)
 {
-	return enlisted[task];
+	return enlisted[duty];
 }

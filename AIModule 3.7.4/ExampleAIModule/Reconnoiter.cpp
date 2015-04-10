@@ -36,9 +36,13 @@ void Reconnoiter::update()
 		// Scouting
 		if (target)
 		{
-			// Retrieving Scout
+			// Retrieve Scout
 			if ((!scout || !scout->exists()) && workerManager->workforce() >= MIN_WORKFORCE)
-				scout = workerManager->takeWorker();
+			{
+				scout = workerManager->getIdle();
+				workerManager->removeWorker(scout);
+			}
+
 			// Commanding Scout
 			if (scout && scout->getOrderTargetPosition() != target)
 				//utilUnit::command(scout, BWAPI::UnitCommandTypes::Move, target);

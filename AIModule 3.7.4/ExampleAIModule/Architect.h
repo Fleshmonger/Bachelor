@@ -39,6 +39,8 @@ struct Zone {
 };
 
 
+// Manages building construction orders.
+//TODO Cleanup.
 class Architect
 {
 private:
