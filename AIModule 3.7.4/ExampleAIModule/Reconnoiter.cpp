@@ -39,7 +39,7 @@ void Reconnoiter::update()
 			// Retrieve Scout
 			if ((!scout || !scout->exists()) && workerManager->workforce() >= MIN_WORKFORCE)
 			{
-				scout = workerManager->getIdle();
+				scout = workerManager->getIdleWorker();
 				workerManager->removeWorker(scout);
 			}
 

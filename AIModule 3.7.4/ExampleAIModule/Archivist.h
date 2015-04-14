@@ -5,7 +5,7 @@
 #include "UtilUnit.h"
 
 
-// Collects battlefield information, mostly about opponents.
+// Collects battlefield information, mostly about opponents units.
 // TODO Only collects info about enemy - rename or restructure?
 // TODO Does not account for morphed creatures (important with drones for example!)
 // TODO Rename to avoid confusion with architect? Sage perhaps?
@@ -16,12 +16,14 @@ private:
 	BWTA::Region * homeRegion;
 	utilUnit::UnitSet
 		units,
+		enemies,
 		buildings,
 		depots,
 		refineries,
 		turrets,
 		workers,
-		troops;
+		troops,
+		geysers;
 	std::map<BWAPI::Unit*, BWAPI::Position> positions;
 	std::map<BWAPI::Unit*, BWAPI::UnitType> types;
 
@@ -35,8 +37,7 @@ public:
 	void analyzed();
 	void clearUnit(BWAPI::Unit * unit);
 	void recordUnit(BWAPI::Unit * unit);
-	void recordUnitPosition(BWAPI::Unit * unit);
-	void recordUnitType(BWAPI::Unit * unit);
+	void recordUnitStatus(BWAPI::Unit * unit);
 	void update();
 
 	bool inRegion(BWAPI::Unit * unit, BWTA::Region * region);
@@ -48,7 +49,7 @@ public:
 	BWTA::Region * getHomeRegion(); // TODO Move this to analyzer class
 
 	utilUnit::UnitSet invaders();
-	utilUnit::UnitSet getUnits();
+	utilUnit::UnitSet getEnemies();
 	utilUnit::UnitSet getBuildings();
 	utilUnit::UnitSet getDepots();
 	utilUnit::UnitSet getTurrets();

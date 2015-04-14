@@ -1,2 +1,3 @@
-Build	Wins	Losses	Ratio
-1	180	146	55.21%
+Build	Wins	Losses	Ratio	OverallRatio
+1	180	146	55.21%	55.21%
+2	218	172	59.38%	55.90%

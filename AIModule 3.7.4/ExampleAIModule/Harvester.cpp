@@ -4,6 +4,7 @@
 // Constructor.
 Harvester::Harvester(WorkerManager * workerManager) :
 	workerManager(workerManager),
+	depot(),
 	minerals(),
 	minerTargets(),
 	mineralMiners()
@@ -18,7 +19,6 @@ Harvester::~Harvester()
 
 
 // Fired when the map is analyzed. Reads mineral positions.
-// TODO Rename.
 void Harvester::analyzed()
 {
 	BOOST_FOREACH(BWAPI::Unit * mineral, BWTA::getStartLocation(BWAPI::Broodwar->self())->getStaticMinerals())
@@ -26,7 +26,6 @@ void Harvester::analyzed()
 		minerals.push_front(mineral);
 		mineralMiners[mineral] = utilUnit::UnitSet();
 	}
-	//workerManager->setMinerQouta(minersMax());
 }
 
 
@@ -83,9 +82,6 @@ void Harvester::removeMineral(BWAPI::Unit * mineral)
 
 			// Remove the mineral miners.
 			mineralMiners.erase(mineralMinersIt);
-
-			// Update qouta.
-			//workerManager->setMinerQouta(minersMax());
 			return;
 		}
 		else
@@ -94,6 +90,16 @@ void Harvester::removeMineral(BWAPI::Unit * mineral)
 }
 
 
+// Designates the current depot for cargo returns.
+void Harvester::setDepot(BWAPI::Unit * depot)
+{
+	if (depot &&
+		depot->exists() &&
+		utilUnit::isOwned(depot) &&
+		depot->getType().isResourceDepot())
+		this->depot = depot;
+}
+
 // Verifies and commands workers to mine minerals.
 void Harvester::update()
 {
@@ -101,7 +107,6 @@ void Harvester::update()
 	if (!minerals.empty())
 	{
 		// Aquire miners.
-		//utilUnit::UnitSet miners = workerManager->getMiners();
 		utilUnit::UnitSet miners = workerManager->getEmployed(TASK_IDLE);
 
 		// Command miners.
@@ -132,13 +137,10 @@ void Harvester::update()
 					mineral->exists())
 				{
 					// Command miner.
-					if (miner->isIdle())
-					{
-						if (miner->isCarryingGas() || miner->isCarryingMinerals())
-							miner->returnCargo();
-						else
-							miner->gather(mineral);
-					}
+					if (miner->isCarryingGas() || miner->isCarryingMinerals())
+						utilUnit::command(miner, BWAPI::UnitCommandTypes::Return_Cargo);
+					else
+						utilUnit::command(miner, BWAPI::UnitCommandTypes::Gather, mineral);
 				}
 			}
 		}

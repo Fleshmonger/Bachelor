@@ -6,8 +6,8 @@ Attacker::Attacker(Archivist * archivist, CombatJudge * combatJudge, ArmyManager
 	archivist(archivist),
 	combatJudge(combatJudge),
 	armyManager(armyManager),
-	depot(NULL),
-	target(NULL)
+	depot(),
+	target()
 {
 }
 
@@ -31,102 +31,115 @@ void Attacker::setDepot(BWAPI::Unit * depot)
 // TODO Cleanup
 void Attacker::update()
 {
-	// Enlist idle units as attackers.
-	// TODO Is this safe?
-	BOOST_FOREACH(BWAPI::Unit * unit, armyManager->getEnlisted(DUTY_IDLE))
-		armyManager->assignUnit(unit, DUTY_ATTACK_TRANSIT);
+	// Aquire units.
+	utilUnit::UnitSet
+		fighters = armyManager->getEnlisted(DUTY_ATTACK_FIGHT),
+		transit = armyManager->getEnlisted(DUTY_ATTACK_TRANSIT),
+		idle = armyManager->getEnlisted(DUTY_IDLE),
+		ready;
 
 	// Aquire target.
 	BWAPI::Position targetPosition = archivist->getPosition(target);
 	if (!targetPosition)
 	{
-		utilUnit::UnitSet enemyBuildings = archivist->getBuildings();
-		utilUnit::UnitSet::iterator enemBuildIt = enemyBuildings.begin();
-		while (enemBuildIt != enemyBuildings.end())
+		BOOST_FOREACH(BWAPI::Unit * building, archivist->getBuildings())
 		{
-			BWAPI::Unit * enemyBuilding = *enemBuildIt;
-			BWAPI::Position enemyPosition = archivist->getPosition(enemyBuilding);
-			if (enemyPosition)
+			BWAPI::Position buildingPosition = archivist->getPosition(building);
+			if (buildingPosition)
 			{
-				targetPosition = enemyPosition;
-				enemBuildIt = enemyBuildings.end();
+				targetPosition = buildingPosition;
+				break;
 			}
-			else
-				enemBuildIt++;
 		}
 	}
 
-	// Aquire attackers.
-	utilUnit::UnitSet
-		fighters = armyManager->getEnlisted(DUTY_ATTACK_FIGHT),
-		transit = armyManager->getEnlisted(DUTY_ATTACK_TRANSIT),
-		ready;
+	// Enlist idle units as attackers.
+	armyManager->assignUnits(idle, DUTY_ATTACK_TRANSIT);
 
-	// Calculate strength.
-	double strength = combatJudge->strength(fighters);
-
-	// Command transit.
-	BOOST_FOREACH(BWAPI::Unit * unit, transit)
+	// Move travellers in combat.
+	utilUnit::UnitSet::iterator transitIt = transit.begin(), transitEnd = transit.end();
+	while (transitIt != transitEnd)
 	{
-		// Verify unit.
-		if (unit &&
-			unit->exists())
+		// Verify traveller.
+		BWAPI::Unit * traveller = *transitIt;
+		if (enemyDetected(traveller))
 		{
-			// Detection check.
-			if (enemyDetected(unit))
-			{
-				// Move unit to ready.
-				ready.insert(unit);
-				strength += combatJudge->strength(unit);
-			}
-			else
-			{
-				// Verify target.
-				if (targetPosition)
-					unit->move(targetPosition);
-			}
+			// Move traveller to ready.
+			ready.insert(traveller);
+			transitIt = transit.erase(transitIt);
+			transitEnd = transit.end();
 		}
+		else
+			transitIt++;
 	}
 
-	// Check if attack.
-	if (strength > combatJudge->strength(archivist->getTroops()) + combatJudge->strength(archivist->getTurrets()))
+	// Move fighters outside combat.
+	utilUnit::UnitSet::iterator fightersIt = fighters.begin(), fightersEnd = fighters.end();
+	while (fightersIt != fightersEnd)
+	{
+		// Verify fighter.
+		BWAPI::Unit * fighter = *fightersIt;
+		if (!enemyDetected(fighter))
+		{
+			// Move fighter to transit.
+			transit.insert(fighter);
+			armyManager->assignUnit(fighter, DUTY_ATTACK_TRANSIT);
+			fightersIt = fighters.erase(fightersIt);
+			fightersEnd = fighters.end();
+		}
+		else
+			fightersIt++;
+	}
+
+	// Strength check.
+	if (combatJudge->strength(fighters) + combatJudge->strength(ready) > combatJudge->strength(archivist->getTroops()) + combatJudge->strength(archivist->getTurrets()))
 	{
 		// Move ready to fighters.
-		BOOST_FOREACH(BWAPI::Unit * unit, ready)
-		{
-			fighters.insert(unit);
-			armyManager->assignUnit(unit, DUTY_ATTACK_FIGHT);
-		}
+		fighters.insert(ready.begin(), ready.end());
+		armyManager->assignUnits(ready, DUTY_ATTACK_FIGHT);
 	}
 	else
 	{
 		// Command ready.
-		BOOST_FOREACH(BWAPI::Unit * unit, ready)
-			unit->move(depot->getPosition());
+		if (depot &&
+			depot->exists())
+		{
+			BOOST_FOREACH(BWAPI::Unit * unit, ready)
+				utilUnit::command(unit, BWAPI::UnitCommandTypes::Move, depot->getPosition());
+		}
 	}
 
-	// Command fighters.
-	BOOST_FOREACH(BWAPI::Unit * unit, fighters)
+	// Verify target position.
+	if (targetPosition)
 	{
-		// Verify unit.
-		if (unit &&
-			unit->exists())
-		{
-			if (unit->isIdle() || unit->getLastCommand().getType() != BWAPI::UnitCommandTypes::Attack_Move)
-				unit->attack(targetPosition);
-		}
+		// Command transit.
+		BOOST_FOREACH(BWAPI::Unit * traveller, transit)
+			utilUnit::command(traveller, BWAPI::UnitCommandTypes::Move, targetPosition);
+
+		// Command fighters.
+		BOOST_FOREACH(BWAPI::Unit * fighter, fighters)
+			utilUnit::command(fighter, BWAPI::UnitCommandTypes::Attack_Move, targetPosition);
 	}
 }
 
 
-// Returns whether the given unit can see an enemy unit.
+// Returns whether the given unit is within danger.
+//TODO Remove code duplication.
 bool Attacker::enemyDetected(BWAPI::Unit * unit)
 {
-	BOOST_FOREACH(BWAPI::Unit * unit, archivist->getUnits())
+	// Verify unit.
+	if (unit &&
+		unit->exists())
 	{
-		BWAPI::Position pos = archivist->getPosition(unit);
-		if (utilUnit::isEnemy(unit) && unit->getDistance(pos) < DETECTION_DISTANCE)
-			return true;
+		// Check enemy detection.
+		BOOST_FOREACH(BWAPI::Unit * enemy, archivist->getEnemies())
+		{
+			BWAPI::Position position = archivist->getPosition(enemy);
+			if (utilUnit::isEnemy(enemy) &&
+				position &&
+				unit->getDistance(position) < DETECTION_DISTANCE)
+				return true;
+		}
 	}
 	return false;
 }

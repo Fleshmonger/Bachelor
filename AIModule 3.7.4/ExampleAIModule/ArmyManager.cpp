@@ -2,9 +2,8 @@
 
 
 // Constructor
-ArmyManager::ArmyManager(Archivist * archivist, WorkerManager * workerManager, CombatJudge * combatJudge) :
+ArmyManager::ArmyManager(Archivist * archivist, CombatJudge * combatJudge) :
 	archivist(archivist),
-	workerManager(workerManager),
 	combatJudge(combatJudge),
 	army(),
 	assignments(),
@@ -90,6 +89,14 @@ void ArmyManager::assignUnit(BWAPI::Unit * unit, Duty duty)
 		assignments[unit] = duty;
 		enlisted[duty].insert(unit);
 	}
+}
+
+
+// Assigns the units a duty.
+void ArmyManager::assignUnits(utilUnit::UnitSet units, Duty duty)
+{
+	BOOST_FOREACH(BWAPI::Unit * unit, units)
+		assignUnit(unit, duty);
 }
 
 

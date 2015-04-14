@@ -47,7 +47,6 @@ private:
 	Accountant * accountant;
 	WorkerManager * workerManager;
 
-	bool harvestingDefined; // Temporary stupid solution, change when information manager is introduced.
 	Zone harvesting;
 	BWAPI::Unit * depot;
 	utilUnit::UnitSet pylons;
@@ -65,7 +64,7 @@ public:
 	void removeConstruct(BWAPI::Unit * building);
 	void completeBuild(BWAPI::Unit * building);
 	void completeConstruct(BWAPI::Unit * building);
-	void expandHarvesting(BWAPI::Unit * resource);
+	void expandHarvesting(BWAPI::Unit * unit);
 	void addPylon(BWAPI::Unit * pylon);
 	void removePylon(BWAPI::Unit * pylon);
 	void setDepot(BWAPI::Unit * depot);

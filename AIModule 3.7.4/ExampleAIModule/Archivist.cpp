@@ -3,14 +3,16 @@
 
 // Constructor
 Archivist::Archivist() :
-	homeRegion(NULL),
+	homeRegion(),
 	units(),
+	enemies(),
 	buildings(),
 	depots(),
 	refineries(),
 	turrets(),
 	workers(),
 	troops(),
+	geysers(),
 	positions(),
 	types()
 {
@@ -61,68 +63,96 @@ bool Archivist::isTurret(BWAPI::UnitType unitType)
 // TODO Code duplication with recordUnit.
 void Archivist::clearUnit(BWAPI::Unit * unit)
 {
-	BWAPI::UnitType unitType = unit->getType();
-	units.erase(unit);
-	positions.erase(unit);
-	types.erase(unit);
-	if (unitType.isBuilding())
+	if (unit &&
+		!utilUnit::isOwned(unit))
 	{
-		buildings.erase(unit);
-		if (unitType.isResourceDepot())
-			depots.erase(unit);
-		else if (unitType.isRefinery())
-			refineries.erase(unit);
-		else if (isTurret(unitType))
-			turrets.erase(unit);
+		// Player check.
+		BWAPI::UnitType unitType = unit->getType();
+		units.erase(unit);
+		if (utilUnit::isEnemy(unit))
+		{
+			// Type check.
+			enemies.erase(unit);
+			if (unitType.isBuilding())
+			{
+				// Sub-type check.
+				buildings.erase(unit);
+				if (unitType.isResourceDepot())
+					depots.erase(unit);
+				else if (unitType.isRefinery())
+					refineries.erase(unit);
+				else if (isTurret(unitType))
+					turrets.erase(unit);
+			}
+			else if (unitType.isWorker())
+				workers.erase(unit);
+			else if (!isMisc(unitType))
+				troops.erase(unit);
+		}
+		else if (unitType == BWAPI::UnitTypes::Resource_Vespene_Geyser)
+			geysers.erase(unit);
+		positions.erase(unit);
+		types.erase(unit);
 	}
-	else if (unitType.isWorker())
-		workers.erase(unit);
-	else if (!isMisc(unitType))
-		troops.erase(unit);
 }
 
 
 // Inserts a unit to the knowledge pool.
 void Archivist::recordUnit(BWAPI::Unit * unit)
 {
-	BWAPI::UnitType unitType = unit->getType();
-	units.insert(unit);
-	recordUnitPosition(unit);
-	recordUnitType(unit);
-	if (unitType.isBuilding())
+	if (unit &&
+		!utilUnit::isOwned(unit))
 	{
-		buildings.insert(unit);
-		if (unitType.isResourceDepot())
-			depots.insert(unit);
-		else if (unitType.isRefinery())
-			refineries.insert(unit);
-		else if (isTurret(unitType))
-			turrets.insert(unit);
+		BWAPI::UnitType unitType = unit->getType();
+		units.insert(unit);
+		// Player check.
+		if (utilUnit::isEnemy(unit))
+		{
+			enemies.insert(unit);
+			// Type check.
+			if (unitType.isBuilding())
+			{
+				buildings.insert(unit);
+				// Sub-type check.
+				if (unitType.isResourceDepot())
+					depots.insert(unit);
+				else if (unitType.isRefinery())
+					refineries.insert(unit);
+				else if (isTurret(unitType))
+					turrets.insert(unit);
+			}
+			else if (unitType.isWorker())
+				workers.insert(unit);
+			else if (!isMisc(unitType))
+				troops.insert(unit);
+		}
+		else if (unitType == BWAPI::UnitTypes::Resource_Vespene_Geyser)
+			geysers.insert(unit);
+		recordUnitStatus(unit);
 	}
-	else if (unitType.isWorker())
-		workers.erase(unit);
-	else if (!isMisc(unitType))
-		troops.insert(unit);
 }
 
 
-// Updates the position of a unit if it is visible.
-void Archivist::recordUnitPosition(BWAPI::Unit * unit)
+// Updates the status of a unit if it is visible.
+void Archivist::recordUnitStatus(BWAPI::Unit * unit)
 {
-	if (unit->isVisible())
-		positions[unit] = unit->getPosition();
-	else if (!isArchived(unit) || BWAPI::Broodwar->isVisible(BWAPI::TilePosition(positions[unit])))
-		positions[unit] = BWAPI::Positions::None;
-}
-
-
-// Updates the type of a unit if it is visible.
-void Archivist::recordUnitType(BWAPI::Unit * unit)
-{
-	if (unit->isVisible())
-		types[unit] = unit->getType();
-	else
-		types[unit] = BWAPI::UnitTypes::None;
+	// Verify unit.
+	if (unit)
+	{
+		// Visibility check.
+		if (unit->isVisible())
+		{
+			positions[unit] = unit->getPosition();
+			types[unit] = unit->getType();
+		}
+		else if (!isArchived(unit))
+		{
+			positions[unit] = BWAPI::Positions::None;
+			types[unit] = BWAPI::UnitTypes::None;
+		}
+		else if (BWAPI::Broodwar->isVisible(BWAPI::TilePosition(positions[unit])))
+			positions[unit] = BWAPI::Positions::None;
+	}
 }
 
 
@@ -132,18 +162,48 @@ void Archivist::update()
 	// Update new unit positions.
 	BOOST_FOREACH(BWAPI::Unit * unit, units)
 		if (unit->isVisible())
-			recordUnitPosition(unit);
+			recordUnitStatus(unit);
 
-	// Validate refineries haven't become geysers.
+	// Verify geysers.
+	utilUnit::UnitSet::iterator
+		geysersIt = geysers.begin(),
+		geysersEnd = geysers.end();
+	while (geysersIt != geysersEnd)
 	{
-		std::set<BWAPI::Unit*>::iterator it = refineries.begin();
-		while (it != refineries.end())
+		// Verify geyser.
+		BWAPI::Unit * geyser = *geysersIt;
+		if (types[geyser].isRefinery())
 		{
-			BWAPI::Unit * refinery = *it;
-			++it;
-			if (!refinery->getType().isRefinery())
-				clearUnit(refinery);
+			// Move geyser to refinery.
+			geysersIt = geysers.erase(geysersIt);
+			refineries.insert(geyser);
+			buildings.insert(geyser);
+			enemies.insert(geyser);
+			geysersEnd = geysers.end();
 		}
+		else
+			geysersIt++;
+	}
+
+	// Verify refineries.
+	std::set<BWAPI::Unit*>::iterator
+		refineriesIt = refineries.begin(),
+		refineriesEnd = refineries.end();
+	while (refineriesIt != refineriesEnd)
+	{
+		// Verify refinery.
+		BWAPI::Unit * refinery = *refineriesIt;
+		if (!types[refinery].isRefinery())
+		{
+			// Move refinery to geyser.
+			refineriesIt = refineries.erase(refineriesIt);
+			buildings.erase(refinery);
+			enemies.erase(refinery);
+			geysers.insert(refinery);
+			refineriesEnd = refineries.end();
+		}
+		else
+			refineriesIt++;
 	}
 }
 
@@ -210,10 +270,10 @@ utilUnit::UnitSet Archivist::invaders()
 }
 
 
-// Returns a copy of recorded units.
-utilUnit::UnitSet Archivist::getUnits()
+// Returns a copy of recorded enemies.
+utilUnit::UnitSet Archivist::getEnemies()
 {
-	return units;
+	return enemies;
 }
 
 

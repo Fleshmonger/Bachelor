@@ -27,7 +27,7 @@ using namespace BWAPI; //TODO Remove this
 //TODO Rename to something module related?
 class Primary : public BWAPI::AIModule
 {
-#define DEBUG
+//#define DEBUG
 #ifdef DEBUG
 #define DEBUG_OUT(s) Broodwar->printf(s);
 #define DEBUG_SCREEN(x, y, s, d) Broodwar->drawTextScreen(x, y, s, d);
@@ -73,4 +73,5 @@ public:
 	virtual void onUnitComplete(BWAPI::Unit *unit);
 
 	void designateUnit(BWAPI::Unit * unit);
+	void drawTerrainData();
 };

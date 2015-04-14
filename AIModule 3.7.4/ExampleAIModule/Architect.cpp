@@ -6,9 +6,8 @@
 Architect::Architect(Accountant * accountant, WorkerManager * workerManager) :
 	accountant(accountant),
 	workerManager(workerManager),
-	harvestingDefined(false),
 	harvesting(0, 0, 0, 0),
-	depot(NULL),
+	depot(),
 	pylons(),
 	constructSchedule(),
 	buildSchedule()
@@ -25,6 +24,10 @@ Architect::~Architect()
 // Fired when the map is analyzed. Reads mineral and geyser positions.
 void Architect::analyzed()
 {
+	// Clear harvesting zone.
+	harvesting = Zone(BWAPI::Broodwar->mapWidth(), BWAPI::Broodwar->mapHeight(), 0, 0);
+
+	// Expand harvesting zone.
 	BOOST_FOREACH(BWAPI::Unit * mineral, BWTA::getStartLocation(BWAPI::Broodwar->self())->getStaticMinerals())
 		expandHarvesting(mineral);
 	BOOST_FOREACH(BWAPI::Unit * geyser, BWTA::getStartLocation(BWAPI::Broodwar->self())->getGeysers())
@@ -42,7 +45,7 @@ bool Architect::scheduleBuild(BWAPI::UnitType buildingType)
 		if (accountant->isAffordable(buildingType))
 		{
 			// Aquire builder.
-			BWAPI::Unit * builder = workerManager->getIdle();
+			BWAPI::Unit * builder = workerManager->getIdleWorker();
 			if (builder)
 			{
 				BWAPI::TilePosition location = getBuildLocation(builder, depot->getTilePosition(), buildingType);
@@ -141,25 +144,21 @@ void Architect::completeConstruct(BWAPI::Unit * building)
 
 
 // Resizes the harvesting zone to include the given unit.
-void Architect::expandHarvesting(BWAPI::Unit * resource)
+void Architect::expandHarvesting(BWAPI::Unit * unit)
 {
-	if (resource && resource->exists())
+	// Verify unit.
+	if (unit && unit->exists())
 	{
-		BWAPI::TilePosition pos = resource->getTilePosition();
-		BWAPI::UnitType type = resource->getType();
-		if (harvestingDefined)
-		{
-			int left = std::min(harvesting.left, pos.x()),
-				top = std::min(harvesting.top, pos.y()),
-				right = std::max(harvesting.right, pos.x() + type.tileWidth()),
-				bottom = std::max(harvesting.bottom, pos.y() + type.tileHeight());
-			harvesting = Zone(left, top, right, bottom);
-		}
-		else
-		{
-			harvesting = Zone(pos.x(), pos.y(), pos.x() + type.tileWidth(), pos.y() + type.tileHeight());
-			harvestingDefined = true;
-		}
+		// Calculate harvesting.
+		BWAPI::TilePosition pos = unit->getTilePosition();
+		BWAPI::UnitType type = unit->getType();
+
+		int left = std::min(harvesting.left, pos.x()),
+			top = std::min(harvesting.top, pos.y()),
+			right = std::max(harvesting.right, pos.x() + type.tileWidth()),
+			bottom = std::max(harvesting.bottom, pos.y() + type.tileHeight());
+
+		harvesting = Zone(left, top, right, bottom);
 	}
 }
 
@@ -257,6 +256,7 @@ BWAPI::TilePosition Architect::getBuildLocation(BWAPI::Unit * builder, BWAPI::Ti
 			BWAPI::TilePosition tile = BWAPI::TilePosition::TilePosition(desiredLocation.x() + dx, desiredLocation.y() + dy);
 			if (validBuildLocation(builder, tile, buildingType))
 				return tile;
+
 			// Find next tile.
 			if (dx == dy)
 				length++;

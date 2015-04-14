@@ -19,7 +19,6 @@ class ArmyManager
 {
 private:
 	Archivist		* archivist;
-	WorkerManager	* workerManager;
 	CombatJudge		* combatJudge;
 
 	utilUnit::UnitSet					army;
@@ -27,13 +26,14 @@ private:
 	std::map<Duty, utilUnit::UnitSet>	enlisted;
 
 public:
-	ArmyManager(Archivist * archivist, WorkerManager * workerManager, CombatJudge * combatJudge);
+	ArmyManager(Archivist * archivist, CombatJudge * combatJudge);
 	~ArmyManager();
 
 	void update();
 	void addUnit(BWAPI::Unit * unit);
 	void removeUnit(BWAPI::Unit * unit);
 	void assignUnit(BWAPI::Unit * unit, Duty duty);
+	void assignUnits(utilUnit::UnitSet units, Duty duty);
 
 	bool contains(BWAPI::Unit * unit);
 

@@ -21,6 +21,9 @@ Economist::~Economist()
 void Economist::analyzed()
 {
 	harvester.analyzed();
+	std::set<BWTA::Region*> regions = BWTA::getRegions();
+	BWTA::Region * region = *regions.begin();
+	std::set<BWTA::Region*> reach = region->getReachableRegions();
 }
 
 
@@ -28,7 +31,6 @@ void Economist::analyzed()
 void Economist::update()
 {
 	// Verify workforce.
-	// TODO Make it count workers currently constructing or repairing?
 	if (workerManager->workforce() < harvester.minersMax())
 		producer->train(PROTOSS_WORKER);
 

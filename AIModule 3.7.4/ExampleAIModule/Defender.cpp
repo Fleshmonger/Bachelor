@@ -22,10 +22,28 @@ Defender::~Defender()
 void Defender::update()
 {
 	// Aquire defenders.
-	utilUnit::UnitSet defenders = armyManager->getEnlisted(DUTY_DEFEND);
+	utilUnit::UnitSet
+		defenders = armyManager->getEnlisted(DUTY_DEFEND),
+		militia = workerManager->getEmployed(TASK_DEFEND);
+
+	// Aquire invaders.
+	utilUnit::UnitSet invaders = archivist->invaders();
+
+	// Remove flying invaders.
+	utilUnit::UnitSet::iterator invadersIt = invaders.begin(), invadersEnd = invaders.end();
+	while (invadersIt != invadersEnd)
+	{
+		BWAPI::Unit * invader = *invadersIt;
+		if (archivist->getType(invader).isFlyer())
+		{
+			invadersIt = invaders.erase(invadersIt);
+			invadersEnd = invaders.end();
+		}
+		else
+			invadersIt++;
+	}
 
 	// Check invasion.
-	utilUnit::UnitSet invaders = archivist->invaders();
 	if (!invaders.empty())
 	{
 		// Aquire target.
@@ -46,14 +64,13 @@ void Defender::update()
 		double defenseStrength = combatJudge->strength(defenders) + combatJudge->strength(militia), invaderStrength = combatJudge->strength(invaders);
 		utilUnit::UnitSet idle = workerManager->getEmployed(TASK_IDLE);
 		utilUnit::UnitSet::iterator it = idle.begin(), end = idle.end();
-		while (defenseStrength < invaderStrength && it != end)
+		while (it != end && defenseStrength < invaderStrength)
 		{
-			//BWAPI::Unit * worker = workerManager->takeWorker();
+			// Verify worker.
 			BWAPI::Unit * worker = *it;
-			it++;
-			if (worker &&
-				worker->exists())
+			if (worker->exists())
 			{
+				// Enlist worker.
 				workerManager->employWorker(worker, TASK_DEFEND);
 				defenseStrength += combatJudge->strength(worker);
 				militia.insert(worker);
@@ -81,6 +98,6 @@ void Defender::update()
 		BOOST_FOREACH(BWAPI::Unit * defender, defenders)
 			armyManager->assignUnit(defender, DUTY_IDLE);
 		BOOST_FOREACH(BWAPI::Unit * worker, militia)
-			workerManager->addWorker(worker);
+			workerManager->employWorker(worker, TASK_IDLE);
 	}
 }
