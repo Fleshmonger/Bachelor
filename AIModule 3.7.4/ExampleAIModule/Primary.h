@@ -6,12 +6,8 @@
 #include <fstream>
 #include <boost/foreach.hpp>
 #include "UtilUnit.h"
-#include "Accountant.h"
 #include "Archivist.h"
-#include "WorkerManager.h"
-#include "Producer.h"
 #include "CombatJudge.h"
-#include "Architect.h"
 #include "Reconnoiter.h"
 #include "ArmyManager.h"
 #include "Strategist.h"
@@ -37,18 +33,14 @@ class Primary : public BWAPI::AIModule
 #endif
 
 private:
-	Accountant		accountant;
 	Archivist		archivist;
-	WorkerManager	workerManager;
-	Producer		producer;
 	CombatJudge		combatJudge;
-	Architect		architect;
-	Reconnoiter		reconnoiter;
+	//Reconnoiter		reconnoiter;
 	ArmyManager		armyManager;
-	Strategist		strategist;
+	//Strategist		strategist;
 	Economist		economist;
 	Attacker		attacker;
-	Defender		defender;
+	//Defender		defender;
 
 public:
 	Primary();
@@ -72,6 +64,6 @@ public:
 	virtual void onSaveGame(std::string gameName);
 	virtual void onUnitComplete(BWAPI::Unit *unit);
 
-	void designateUnit(BWAPI::Unit * unit);
+	//void designateUnit(BWAPI::Unit * unit);
 	void drawTerrainData();
 };

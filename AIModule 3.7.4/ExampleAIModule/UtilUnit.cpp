@@ -68,12 +68,6 @@ void utilUnit::commandBuild(BWAPI::Unit * unit, BWAPI::TilePosition location, BW
 }
 
 
-bool utilUnit::inRegion(BWAPI::Position pos, BWTA::Region * region)
-{
-	return region && BWTA::getRegion(pos) == region;
-}
-
-
 // Returns true if the unit is owned by an enemy and false otherwise.
 // TODO Can this be done more effectively?
 bool utilUnit::isEnemy(BWAPI::Unit * unit)
@@ -87,4 +81,44 @@ bool utilUnit::isEnemy(BWAPI::Unit * unit)
 bool utilUnit::isOwned(BWAPI::Unit * unit)
 {
 	return unit && unit->getPlayer() == BWAPI::Broodwar->self();
+}
+
+
+bool utilUnit::isSupport(BWAPI::UnitType unitType)
+{
+	return
+		unitType.isWorker() ||
+		unitType == BWAPI::UnitTypes::Zerg_Overlord ||
+		unitType == BWAPI::UnitTypes::Zerg_Egg ||
+		unitType == BWAPI::UnitTypes::Zerg_Lurker_Egg;
+}
+
+
+// Determines whether the unit type is a special case.
+bool utilUnit::isMisc(BWAPI::UnitType unitType)
+{
+	return
+		unitType == BWAPI::UnitTypes::Zerg_Larva ||
+		unitType == BWAPI::UnitTypes::Terran_Nuclear_Missile ||
+		unitType == BWAPI::UnitTypes::Protoss_Scarab ||
+		unitType == BWAPI::UnitTypes::Spell_Scanner_Sweep ||
+		unitType == BWAPI::UnitTypes::Spell_Dark_Swarm ||
+		unitType == BWAPI::UnitTypes::Spell_Disruption_Web;
+}
+
+
+// Determines whether a unit type is a defensive structure.
+// TODO Unneeded?
+// TODO Excludes bunkers - is this behavior wished?
+bool utilUnit::isTurret(BWAPI::UnitType unitType)
+{
+	return
+		unitType.isBuilding() && unitType.canAttack();
+}
+
+
+// Returns true if the position is within the region.
+bool utilUnit::inRegion(BWAPI::Position pos, BWTA::Region * region)
+{
+	return region && BWTA::getRegion(pos) == region;
 }

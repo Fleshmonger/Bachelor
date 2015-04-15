@@ -7,10 +7,6 @@
 #include "WorkerManager.h"
 
 
-static const int MIN_SUPPLY = 10;
-static const BWAPI::UnitType BUILD_SUPPLY = BWAPI::UnitTypes::Protoss_Pylon;
-
-
 struct Zone {
 	int left, top, right, bottom;
 
@@ -48,8 +44,6 @@ private:
 	WorkerManager * workerManager;
 
 	Zone harvesting;
-	BWAPI::Unit * depot;
-	utilUnit::UnitSet pylons;
 	std::multimap<BWAPI::UnitType, BWAPI::Unit*> constructSchedule;
 	std::multimap<BWAPI::UnitType, std::pair<BWAPI::Unit*, BWAPI::TilePosition>>  buildSchedule;
 
@@ -57,8 +51,6 @@ public:
 	Architect(Accountant * accountant, WorkerManager * workerManager);
 	~Architect();
 
-	void analyzed();
-	bool scheduleBuild(BWAPI::UnitType buildingType); // TODO Not symmetrical signature with scheduleConstruct
 	void scheduleConstruct(BWAPI::Unit * building);
 	void removeBuild(BWAPI::UnitType buildingType, BWAPI::TilePosition buildLocation);
 	void removeConstruct(BWAPI::Unit * building);
@@ -67,9 +59,9 @@ public:
 	void expandHarvesting(BWAPI::Unit * unit);
 	void addPylon(BWAPI::Unit * pylon);
 	void removePylon(BWAPI::Unit * pylon);
-	void setDepot(BWAPI::Unit * depot);
 	void update();
 
+	bool scheduleBuild(BWAPI::UnitType buildingType, BWAPI::TilePosition desiredLocation);
 	bool validBuildLocation(BWAPI::Unit * builder, BWAPI::TilePosition location, BWAPI::UnitType buildingType);
 
 	int scheduled(BWAPI::UnitType buildingType);

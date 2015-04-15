@@ -31,33 +31,6 @@ void Archivist::analyzed()
 	homeRegion = BWTA::getStartLocation(BWAPI::Broodwar->self())->getRegion();
 }
 
-// Private
-// Determines whether unit is a special case such as overlord or larvae
-bool Archivist::isMisc(BWAPI::UnitType unitType)
-{
-	return
-		unitType == BWAPI::UnitTypes::Zerg_Larva ||
-		unitType == BWAPI::UnitTypes::Zerg_Overlord ||
-		unitType == BWAPI::UnitTypes::Zerg_Egg ||
-		unitType == BWAPI::UnitTypes::Zerg_Lurker_Egg ||
-		unitType == BWAPI::UnitTypes::Terran_Nuclear_Missile ||
-		unitType == BWAPI::UnitTypes::Protoss_Scarab ||
-		unitType == BWAPI::UnitTypes::Spell_Scanner_Sweep ||
-		unitType == BWAPI::UnitTypes::Spell_Dark_Swarm ||
-		unitType == BWAPI::UnitTypes::Spell_Disruption_Web;
-}
-
-
-// Private
-// Determines whether a unit is a defensive structure.
-// TODO Unneeded?
-// TODO Excludes bunkers - is this behavior wished?
-bool Archivist::isTurret(BWAPI::UnitType unitType)
-{
-	return
-		unitType.isBuilding() && unitType.canAttack();
-}
-
 
 // Removes a unit from the knowledge pool.
 // TODO Code duplication with recordUnit.
@@ -81,12 +54,12 @@ void Archivist::clearUnit(BWAPI::Unit * unit)
 					depots.erase(unit);
 				else if (unitType.isRefinery())
 					refineries.erase(unit);
-				else if (isTurret(unitType))
+				else if (utilUnit::isTurret(unitType))
 					turrets.erase(unit);
 			}
 			else if (unitType.isWorker())
 				workers.erase(unit);
-			else if (!isMisc(unitType))
+			else if (!utilUnit::isMisc(unitType) && !utilUnit::isSupport(unitType))
 				troops.erase(unit);
 		}
 		else if (unitType == BWAPI::UnitTypes::Resource_Vespene_Geyser)
@@ -118,12 +91,12 @@ void Archivist::recordUnit(BWAPI::Unit * unit)
 					depots.insert(unit);
 				else if (unitType.isRefinery())
 					refineries.insert(unit);
-				else if (isTurret(unitType))
+				else if (utilUnit::isTurret(unitType))
 					turrets.insert(unit);
 			}
 			else if (unitType.isWorker())
 				workers.insert(unit);
-			else if (!isMisc(unitType))
+			else if (!utilUnit::isMisc(unitType) && !utilUnit::isSupport(unitType))
 				troops.insert(unit);
 		}
 		else if (unitType == BWAPI::UnitTypes::Resource_Vespene_Geyser)

@@ -15,7 +15,10 @@ namespace utilUnit
 	void command(BWAPI::Unit * unit, BWAPI::UnitCommandType commandType, BWAPI::Unit * target, BWAPI::Position position);
 	void commandBuild(BWAPI::Unit * unit, BWAPI::TilePosition, BWAPI::UnitType buildingType);
 
-	bool inRegion(BWAPI::Position position, BWTA::Region * region);
 	bool isEnemy(BWAPI::Unit * unit);
 	bool isOwned(BWAPI::Unit * unit);
+	bool isSupport(BWAPI::UnitType unitType);
+	bool isMisc(BWAPI::UnitType unitType);
+	bool isTurret(BWAPI::UnitType unitType);
+	bool inRegion(BWAPI::Position position, BWTA::Region * region);
 }

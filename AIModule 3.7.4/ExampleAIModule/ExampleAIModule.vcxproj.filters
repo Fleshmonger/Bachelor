@@ -10,14 +10,14 @@
     <Filter Include="Managers\Combat">
       <UniqueIdentifier>{cbdab239-0038-4fed-a446-d2d42500c6d5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Managers\Expansion">
-      <UniqueIdentifier>{72595dae-5b54-4a14-92aa-fd9a9c5e5783}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Managers\Expansion\Economist">
-      <UniqueIdentifier>{52a9e0cd-42bf-4cc0-9588-394066d70767}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Managers\Intelligence">
       <UniqueIdentifier>{c10b902b-fe4c-458a-bb3a-99b94d158053}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Managers\Economist">
+      <UniqueIdentifier>{72595dae-5b54-4a14-92aa-fd9a9c5e5783}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Managers\Economist\Vassal">
+      <UniqueIdentifier>{4eb1ca3c-beec-4dd6-8aed-183ebee3bf9c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -29,32 +29,14 @@
     <ClCompile Include="Reconnoiter.cpp">
       <Filter>Managers\Combat</Filter>
     </ClCompile>
-    <ClCompile Include="Architect.cpp">
-      <Filter>Managers\Expansion</Filter>
-    </ClCompile>
-    <ClCompile Include="Producer.cpp">
-      <Filter>Managers\Expansion</Filter>
-    </ClCompile>
-    <ClCompile Include="Accountant.cpp">
-      <Filter>Managers\Intelligence</Filter>
-    </ClCompile>
     <ClCompile Include="Archivist.cpp">
       <Filter>Managers\Intelligence</Filter>
-    </ClCompile>
-    <ClCompile Include="WorkerManager.cpp">
-      <Filter>Managers\Expansion</Filter>
     </ClCompile>
     <ClCompile Include="Strategist.cpp">
       <Filter>Managers\Combat</Filter>
     </ClCompile>
     <ClCompile Include="CombatJudge.cpp">
       <Filter>Managers\Combat</Filter>
-    </ClCompile>
-    <ClCompile Include="Economist.cpp">
-      <Filter>Managers\Expansion\Economist</Filter>
-    </ClCompile>
-    <ClCompile Include="Harvester.cpp">
-      <Filter>Managers\Expansion\Economist</Filter>
     </ClCompile>
     <ClCompile Include="Attacker.cpp">
       <Filter>Managers\Combat</Filter>
@@ -65,6 +47,27 @@
     <ClCompile Include="ArmyManager.cpp">
       <Filter>Managers\Combat</Filter>
     </ClCompile>
+    <ClCompile Include="Harvester.cpp">
+      <Filter>Managers\Economist\Vassal</Filter>
+    </ClCompile>
+    <ClCompile Include="Architect.cpp">
+      <Filter>Managers\Economist\Vassal</Filter>
+    </ClCompile>
+    <ClCompile Include="Producer.cpp">
+      <Filter>Managers\Economist\Vassal</Filter>
+    </ClCompile>
+    <ClCompile Include="Vassal.cpp">
+      <Filter>Managers\Economist\Vassal</Filter>
+    </ClCompile>
+    <ClCompile Include="WorkerManager.cpp">
+      <Filter>Managers\Economist\Vassal</Filter>
+    </ClCompile>
+    <ClCompile Include="Economist.cpp">
+      <Filter>Managers\Economist</Filter>
+    </ClCompile>
+    <ClCompile Include="Accountant.cpp">
+      <Filter>Managers\Economist</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="UtilUnit.h">
@@ -74,32 +77,14 @@
     <ClInclude Include="Reconnoiter.h">
       <Filter>Managers\Combat</Filter>
     </ClInclude>
-    <ClInclude Include="Architect.h">
-      <Filter>Managers\Expansion</Filter>
-    </ClInclude>
-    <ClInclude Include="Producer.h">
-      <Filter>Managers\Expansion</Filter>
-    </ClInclude>
-    <ClInclude Include="Accountant.h">
-      <Filter>Managers\Intelligence</Filter>
-    </ClInclude>
     <ClInclude Include="Archivist.h">
       <Filter>Managers\Intelligence</Filter>
-    </ClInclude>
-    <ClInclude Include="WorkerManager.h">
-      <Filter>Managers\Expansion</Filter>
     </ClInclude>
     <ClInclude Include="Strategist.h">
       <Filter>Managers\Combat</Filter>
     </ClInclude>
     <ClInclude Include="CombatJudge.h">
       <Filter>Managers\Combat</Filter>
-    </ClInclude>
-    <ClInclude Include="Economist.h">
-      <Filter>Managers\Expansion\Economist</Filter>
-    </ClInclude>
-    <ClInclude Include="Harvester.h">
-      <Filter>Managers\Expansion\Economist</Filter>
     </ClInclude>
     <ClInclude Include="Defender.h">
       <Filter>Managers\Combat</Filter>
@@ -109,6 +94,27 @@
     </ClInclude>
     <ClInclude Include="ArmyManager.h">
       <Filter>Managers\Combat</Filter>
+    </ClInclude>
+    <ClInclude Include="Harvester.h">
+      <Filter>Managers\Economist\Vassal</Filter>
+    </ClInclude>
+    <ClInclude Include="Vassal.h">
+      <Filter>Managers\Economist\Vassal</Filter>
+    </ClInclude>
+    <ClInclude Include="Architect.h">
+      <Filter>Managers\Economist\Vassal</Filter>
+    </ClInclude>
+    <ClInclude Include="Producer.h">
+      <Filter>Managers\Economist\Vassal</Filter>
+    </ClInclude>
+    <ClInclude Include="WorkerManager.h">
+      <Filter>Managers\Economist\Vassal</Filter>
+    </ClInclude>
+    <ClInclude Include="Economist.h">
+      <Filter>Managers\Economist</Filter>
+    </ClInclude>
+    <ClInclude Include="Accountant.h">
+      <Filter>Managers\Economist</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

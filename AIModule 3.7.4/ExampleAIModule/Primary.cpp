@@ -3,15 +3,13 @@
 
 // Constructor
 Primary::Primary() :
-	producer(&accountant),
 	combatJudge(&archivist),
-	architect(&accountant, &workerManager),
-	reconnoiter(&archivist, &workerManager),
+	//reconnoiter(&archivist, &workerManager),
 	armyManager(&archivist, &combatJudge),
-	strategist(&producer, &architect),
-	economist(&workerManager, &producer, &architect),
-	attacker(&archivist, &combatJudge, &armyManager),
-	defender(&archivist, &workerManager, &combatJudge, &armyManager)
+	//strategist(&producer, &architect),
+	economist(),
+	attacker(&archivist, &combatJudge, &armyManager)
+	//defender(&archivist, &workerManager, &combatJudge, &armyManager)
 {
 }
 
@@ -36,8 +34,20 @@ void Primary::onStart()
 	// Update managers
 	// TODO Move this to designator class?
 	archivist.analyzed();
-	architect.analyzed();
-	economist.analyzed();
+	//economist.analyzed();
+
+	utilUnit::UnitSet startingUnits;
+	BOOST_FOREACH(BWAPI::Unit * unit, BWAPI::Broodwar->self()->getUnits())
+	{
+		if (utilUnit::isOwned(unit))
+		{
+			startingUnits.insert(unit);
+			if (unit->getType().isResourceDepot())
+				economist.addHomeBase(unit);
+		}
+	}
+	BOOST_FOREACH(BWAPI::Unit * unit, startingUnits)
+		economist.unitCompleted(unit);
 }
 
 
@@ -99,13 +109,11 @@ void Primary::onFrame()
 
 	// Manager updatíng
 	archivist.update();
-	workerManager.update();
-	architect.update();
-	reconnoiter.update();
+	//reconnoiter.update();
 	armyManager.update();
-	strategist.update();
+	//strategist.update();
 	economist.update();
-	defender.update(); //TODO Defender must be before attacker, to ensure defenders are available. Fix this.
+	//defender.update(); //TODO Defender must be before attacker, to ensure defenders are available. Fix this.
 	attacker.update();
 }
 
@@ -153,27 +161,32 @@ void Primary::onUnitHide(BWAPI::Unit* unit)
 }
 
 
-// Fired when a unit is created.
-// Units under construction triggers this.
+// Fired when a unit is created, but not yet completed.
 void Primary::onUnitCreate(BWAPI::Unit* unit)
 {
 	//DEBUG_OUT("Unit Create: " + unit->getType().getName());
 	// Monitor the construction of the unit.
-	if (utilUnit::isOwned(unit))
+	if (unit)
 	{
-		BWAPI::UnitType unitType = unit->getType();
-		if (unitType.isBuilding())
-			architect.completeBuild(unit);
-		else
-			producer.addProduction(unit);
+		economist.unitCreated(unit);
 	}
 }
 
 
 // Fired when a unit dies or is destroyed.
-// TODO Do refineries trigger this?
 void Primary::onUnitDestroy(BWAPI::Unit* unit)
 {
+	if (unit)
+	{
+		economist.unitDestroyed(unit);
+		archivist.clearUnit(unit);
+		BWAPI::UnitType unitType = unit->getType();
+		if (!unitType.isBuilding() &&
+			!utilUnit::isSupport(unitType) &&
+			!utilUnit::isMisc(unitType))
+			armyManager.addUnit(unit);
+	}
+	/*
 	//Broodwar->printf("%s was destroyed", unit->getType().getName().c_str());
 	//DEBUG_OUT("Unit Destroy: " + unit->getType().getName());
 	// Determine owner.
@@ -196,9 +209,6 @@ void Primary::onUnitDestroy(BWAPI::Unit* unit)
 				architect.removePylon(unit);
 			else if (unitType == BWAPI::UnitTypes::Protoss_Gateway)
 				producer.removeFactory(unit);
-			// Remove constructing units from the architect.
-			if (unit->isConstructing())
-				architect.removeConstruct(unit);
 		}
 		else if (unitType.isWorker())
 			workerManager.removeWorker(unit);
@@ -206,6 +216,7 @@ void Primary::onUnitDestroy(BWAPI::Unit* unit)
 			armyManager.removeUnit(unit);
 		// TODO if unit was incomplete, remove it from the producer.
 	}
+	*/
 }
 
 
@@ -232,6 +243,16 @@ void Primary::onUnitComplete(BWAPI::Unit *unit)
 {
 	//DEBUG_OUT("Unit Complete: %s", unit->getType().getName());
 	// Determine owner.
+	if (unit)
+	{
+		economist.unitCompleted(unit);
+		BWAPI::UnitType unitType = unit->getType();
+		if (!unitType.isBuilding() &&
+			!utilUnit::isSupport(unitType) &&
+			!utilUnit::isMisc(unitType))
+			armyManager.addUnit(unit);
+	}
+	/*
 	if (utilUnit::isOwned(unit))
 	{
 		// Update construction status.
@@ -243,9 +264,11 @@ void Primary::onUnitComplete(BWAPI::Unit *unit)
 		// Designate the new unit.
 		designateUnit(unit);
 	}
+	*/
 }
 
 
+/*
 // Delivers a unit to managers who needs it.
 // Assumes the unit is owned.
 // TODO Remove this assumption.
@@ -273,6 +296,7 @@ void Primary::designateUnit(BWAPI::Unit * unit)
 	else // Must be a combat unit
 		armyManager.addUnit(unit);
 }
+*/
 
 void Primary::drawTerrainData()
 {

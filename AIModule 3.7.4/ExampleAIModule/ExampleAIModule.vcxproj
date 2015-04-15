@@ -110,6 +110,7 @@
     <ClCompile Include="CombatJudge.cpp" />
     <ClCompile Include="Strategist.cpp" />
     <ClCompile Include="UtilUnit.cpp" />
+    <ClCompile Include="Vassal.cpp" />
     <ClCompile Include="WorkerManager.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -127,6 +128,7 @@
     <ClInclude Include="CombatJudge.h" />
     <ClInclude Include="Strategist.h" />
     <ClInclude Include="UtilUnit.h" />
+    <ClInclude Include="Vassal.h" />
     <ClInclude Include="WorkerManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -2,13 +2,10 @@
 
 
 // Constructor
-// TODO: Simplify.
 Architect::Architect(Accountant * accountant, WorkerManager * workerManager) :
 	accountant(accountant),
 	workerManager(workerManager),
 	harvesting(0, 0, 0, 0),
-	depot(),
-	pylons(),
 	constructSchedule(),
 	buildSchedule()
 {
@@ -21,22 +18,8 @@ Architect::~Architect()
 }
 
 
-// Fired when the map is analyzed. Reads mineral and geyser positions.
-void Architect::analyzed()
-{
-	// Clear harvesting zone.
-	harvesting = Zone(BWAPI::Broodwar->mapWidth(), BWAPI::Broodwar->mapHeight(), 0, 0);
-
-	// Expand harvesting zone.
-	BOOST_FOREACH(BWAPI::Unit * mineral, BWTA::getStartLocation(BWAPI::Broodwar->self())->getStaticMinerals())
-		expandHarvesting(mineral);
-	BOOST_FOREACH(BWAPI::Unit * geyser, BWTA::getStartLocation(BWAPI::Broodwar->self())->getGeysers())
-		expandHarvesting(geyser);
-}
-
-
 // Attempt to build a new building. Returns true if it succeeds, otherwise returns false.
-bool Architect::scheduleBuild(BWAPI::UnitType buildingType)
+bool Architect::scheduleBuild(BWAPI::UnitType buildingType, BWAPI::TilePosition desiredLocation)
 {
 	// Confirm the unit type.
 	if (buildingType.isBuilding())
@@ -48,7 +31,7 @@ bool Architect::scheduleBuild(BWAPI::UnitType buildingType)
 			BWAPI::Unit * builder = workerManager->getIdleWorker();
 			if (builder)
 			{
-				BWAPI::TilePosition location = getBuildLocation(builder, depot->getTilePosition(), buildingType);
+				BWAPI::TilePosition location = getBuildLocation(builder, desiredLocation, buildingType);
 				if (location)
 				{
 					// Order the construction.
@@ -57,11 +40,10 @@ bool Architect::scheduleBuild(BWAPI::UnitType buildingType)
 					buildSchedule.insert(std::make_pair(buildingType, std::make_pair(builder, location)));
 					accountant->allocate(buildingType);
 					return true;
-				} // Closure: location
-				//workerManager->addWorker(builder);
-			} // Closure: builder.
-		} // Closure: affordable.
-	} // Closure: type.
+				}
+			}
+		}
+	}
 	// Attempt unsuccessful.
 	return false;
 }
@@ -163,38 +145,9 @@ void Architect::expandHarvesting(BWAPI::Unit * unit)
 }
 
 
-// Adds a pylon to the pylon pool.
-// Used for placing Protoss buildings.
-void Architect::addPylon(BWAPI::Unit * pylon)
-{
-	pylons.insert(pylon);
-}
-
-
-// Removes a pylon to the pylon pool.
-// Used for placing Protoss buildings.
-void Architect::removePylon(BWAPI::Unit * pylon)
-{
-	pylons.erase(pylon);
-}
-
-
-// Designates the current base position.
-void Architect::setDepot(BWAPI::Unit * depot)
-{
-	this->depot = depot;
-	if (depot)
-		expandHarvesting(depot);
-}
-
-
 // Creates pylons, validates orders and commands builders.
 void Architect::update()
 {
-	// Order a supply building if more supply is needed, and none are being constructed.
-	if (accountant->supply() < MIN_SUPPLY &&
-		scheduled(BUILD_SUPPLY) == 0)
-		scheduleBuild(BUILD_SUPPLY);
 	// Remove invalid build orders and continue valid orders.
 	{
 		std::multimap <BWAPI::UnitType, std::pair<BWAPI::Unit*, BWAPI::TilePosition>>::iterator it = buildSchedule.begin();
@@ -213,6 +166,7 @@ void Architect::update()
 				removeBuild(buildingType, buildTarget);
 		}
 	}
+
 	// Remove all invalid construction orders.
 	{
 		std::multimap<BWAPI::UnitType, BWAPI::Unit*>::iterator it = constructSchedule.begin();
@@ -235,7 +189,7 @@ bool Architect::validBuildLocation(BWAPI::Unit * builder, BWAPI::TilePosition lo
 }
 
 
-// Returns the amount of oders of a specific building type currently scheduled.
+// Returns the amount of scheduled buildings of the specified type.
 int Architect::scheduled(BWAPI::UnitType buildingType)
 {
 	return buildSchedule.count(buildingType) + constructSchedule.count(buildingType);

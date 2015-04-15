@@ -11,8 +11,7 @@ class Producer
 private:
 	Accountant * accountant;
 
-	std::multiset<BWAPI::UnitType> scheduled; //TODO Remove this
-	utilUnit::UnitSet incompleteUnits;
+	std::multiset<BWAPI::UnitType> trainingSchedule;
 	std::map<BWAPI::UnitType, utilUnit::UnitSet> factories;
 
 public:
@@ -20,10 +19,10 @@ public:
 	~Producer();
 
 	void addFactory(BWAPI::Unit * factory);
-	void removeFactory(BWAPI::Unit * factory);
 	void addProduction(BWAPI::Unit * unit);
+	void removeFactory(BWAPI::Unit * factory);
 
-	bool train(BWAPI::UnitType unitType);
+	bool scheduleTraining(BWAPI::UnitType unitType);
 
 	utilUnit::UnitSet getFactories(BWAPI::UnitType factoryType);
 };

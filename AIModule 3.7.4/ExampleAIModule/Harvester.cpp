@@ -4,7 +4,6 @@
 // Constructor.
 Harvester::Harvester(WorkerManager * workerManager) :
 	workerManager(workerManager),
-	depot(),
 	minerals(),
 	minerTargets(),
 	mineralMiners()
@@ -18,10 +17,10 @@ Harvester::~Harvester()
 }
 
 
-// Fired when the map is analyzed. Reads mineral positions.
-void Harvester::analyzed()
+// Adds a mineral for harvesting.
+void Harvester::addMineral(BWAPI::Unit * mineral)
 {
-	BOOST_FOREACH(BWAPI::Unit * mineral, BWTA::getStartLocation(BWAPI::Broodwar->self())->getStaticMinerals())
+	if (mineral)
 	{
 		minerals.push_front(mineral);
 		mineralMiners[mineral] = utilUnit::UnitSet();
@@ -49,7 +48,7 @@ void Harvester::removeMiner(BWAPI::Unit * miner)
 			mineralMiners[mineralBack].erase(newMiner);
 			mineralMiners[mineral].insert(newMiner);
 
-			// Rotate prioties.
+			// Rotate priorities.
 			minerals.pop_back();
 			minerals.push_front(mineralBack);
 		}
@@ -89,16 +88,6 @@ void Harvester::removeMineral(BWAPI::Unit * mineral)
 	}
 }
 
-
-// Designates the current depot for cargo returns.
-void Harvester::setDepot(BWAPI::Unit * depot)
-{
-	if (depot &&
-		depot->exists() &&
-		utilUnit::isOwned(depot) &&
-		depot->getType().isResourceDepot())
-		this->depot = depot;
-}
 
 // Verifies and commands workers to mine minerals.
 void Harvester::update()

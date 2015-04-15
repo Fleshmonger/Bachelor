@@ -15,7 +15,6 @@ class Harvester
 private:
 	WorkerManager * workerManager;
 
-	BWAPI::Unit * depot;
 	utilUnit::UnitList minerals;
 	std::map<BWAPI::Unit*, BWAPI::Unit*> minerTargets;
 	std::map<BWAPI::Unit*, utilUnit::UnitSet> mineralMiners;
@@ -24,10 +23,9 @@ public:
 	Harvester(WorkerManager * workerManager);
 	~Harvester();
 
-	void analyzed();
+	void addMineral(BWAPI::Unit * mineral);
 	void removeMiner(BWAPI::Unit * miner);
 	void removeMineral(BWAPI::Unit * mineral);
-	void setDepot(BWAPI::Unit * depot);
 	void update();
 
 	unsigned int minersMax();

@@ -1,16 +1,10 @@
 #include "Producer.h"
 
 
-std::multiset<BWAPI::UnitType> scheduled; //TODO Remove this
-utilUnit::UnitSet incompleteUnits;
-std::map<BWAPI::UnitType, utilUnit::UnitSet> factories;
-
-
 // Constructor
 Producer::Producer(Accountant * accountant) :
 	accountant(accountant),
-	scheduled(),
-	incompleteUnits(),
+	trainingSchedule(),
 	factories()
 {
 }
@@ -32,6 +26,25 @@ void Producer::addFactory(BWAPI::Unit * factory)
 }
 
 
+// Adds a unit to the production schedule.
+void Producer::addProduction(BWAPI::Unit * unit)
+{
+	// Verify unit.
+	if (unit &&
+		utilUnit::isOwned(unit))
+	{
+		// Verify schedule.
+		BWAPI::UnitType unitType = unit->getType();
+		if (trainingSchedule.count(unitType) > 0)
+		{
+			// Remove training schedule.
+			trainingSchedule.erase(unitType);
+			accountant->deallocate(unitType);
+		}
+	}
+}
+
+
 // Removes a unit from the factory pool
 void Producer::removeFactory(BWAPI::Unit * factory)
 {
@@ -41,20 +54,8 @@ void Producer::removeFactory(BWAPI::Unit * factory)
 }
 
 
-// Accounts for the new unit.
-void Producer::addProduction(BWAPI::Unit * unit)
-{
-	BWAPI::UnitType unitType = unit->getType();
-	if (scheduled.count(unitType) > 0)
-	{
-		scheduled.erase(unitType);
-		accountant->deallocate(unitType);
-	}
-}
-
-
-// Attempt to produce an infantry unit at an available facility and returns true if successful.
-bool Producer::train(BWAPI::UnitType unitType)
+// Attempts to train a unit at an available facility and returns true if successful.
+bool Producer::scheduleTraining(BWAPI::UnitType unitType)
 {
 	// Verify order order.
 	if (!unitType.isBuilding())
@@ -67,14 +68,13 @@ bool Producer::train(BWAPI::UnitType unitType)
 			BOOST_FOREACH(BWAPI::Unit * factory, factories[builderInfo.first])
 			{
 				// Check availability.
-				if (factory &&
-					factory->exists() &&
+				if (factory->exists() &&
 					factory->isIdle())
 				{
 					// Train unit.
 					factory->train(unitType);
+					trainingSchedule.insert(unitType);
 					accountant->allocate(unitType);
-					scheduled.insert(unitType);
 					return true;
 				}
 			}
@@ -83,6 +83,9 @@ bool Producer::train(BWAPI::UnitType unitType)
 	return false;
 }
 
+
+// Returns current factories of the specified type.
+//TODO Is this needed?
 utilUnit::UnitSet Producer::getFactories(BWAPI::UnitType factoryType)
 {
 	return factories[factoryType];
