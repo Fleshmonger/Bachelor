@@ -137,8 +137,8 @@ void Harvester::update()
 }
 
 
-// Returns the maximum amount of active miners.
-unsigned int Harvester::minersMax()
+// Returns the amount of minerals.
+unsigned int Harvester::mineralFields()
 {
-	return minerals.size() * MINERS_PER_MINERAL;
+	return minerals.size();
 }

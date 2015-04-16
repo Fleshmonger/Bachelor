@@ -3,22 +3,23 @@
 #include <BWTA.h>
 
 
-// Contains common functions for units.
+// Contains common functions and definitions for units.
 namespace utilUnit
 {
-	typedef std::list<BWAPI::Unit*> UnitList;
 	typedef std::set<BWAPI::Unit*> UnitSet;
+	typedef std::list<BWAPI::Unit*> UnitList;
 
 	void command(BWAPI::Unit * unit, BWAPI::UnitCommandType commandType);
-	void command(BWAPI::Unit * unit, BWAPI::UnitCommandType commandType, BWAPI::Unit * target);
 	void command(BWAPI::Unit * unit, BWAPI::UnitCommandType commandType, BWAPI::Position position);
+	void command(BWAPI::Unit * unit, BWAPI::UnitCommandType commandType, BWAPI::Unit * target);
 	void command(BWAPI::Unit * unit, BWAPI::UnitCommandType commandType, BWAPI::Unit * target, BWAPI::Position position);
 	void commandBuild(BWAPI::Unit * unit, BWAPI::TilePosition, BWAPI::UnitType buildingType);
 
+	bool inRegion(BWAPI::Position position, BWTA::Region * region);
 	bool isEnemy(BWAPI::Unit * unit);
 	bool isOwned(BWAPI::Unit * unit);
-	bool isSupport(BWAPI::UnitType unitType);
+	bool isFighter(BWAPI::UnitType unitType);
 	bool isMisc(BWAPI::UnitType unitType);
+	bool isSupport(BWAPI::UnitType unitType);
 	bool isTurret(BWAPI::UnitType unitType);
-	bool inRegion(BWAPI::Position position, BWTA::Region * region);
 }

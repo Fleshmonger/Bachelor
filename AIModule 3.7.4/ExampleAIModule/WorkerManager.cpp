@@ -107,7 +107,6 @@ bool WorkerManager::contains(BWAPI::Unit * worker)
 unsigned int WorkerManager::workforce()
 {
 	return workers.size();
-	//return idle.size() + miners.size();
 }
 
 

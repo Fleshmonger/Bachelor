@@ -8,17 +8,17 @@ void utilUnit::command(BWAPI::Unit * unit, BWAPI::UnitCommandType commandType)
 }
 
 
-// Commands a unit with a given command type and target.
-void utilUnit::command(BWAPI::Unit * unit, BWAPI::UnitCommandType commandType, BWAPI::Unit * target)
-{
-	command(unit, commandType, target, BWAPI::Positions::None);
-}
-
-
 // Commands a unit with a given command type and position.
 void utilUnit::command(BWAPI::Unit * unit, BWAPI::UnitCommandType commandType, BWAPI::Position position)
 {
 	command(unit, commandType, NULL, position);
+}
+
+
+// Commands a unit with a given command type and target.
+void utilUnit::command(BWAPI::Unit * unit, BWAPI::UnitCommandType commandType, BWAPI::Unit * target)
+{
+	command(unit, commandType, target, BWAPI::Positions::None);
 }
 
 
@@ -68,6 +68,13 @@ void utilUnit::commandBuild(BWAPI::Unit * unit, BWAPI::TilePosition location, BW
 }
 
 
+// Returns true if the position is within the region.
+bool utilUnit::inRegion(BWAPI::Position pos, BWTA::Region * region)
+{
+	return region && BWTA::getRegion(pos) == region;
+}
+
+
 // Returns true if the unit is owned by an enemy and false otherwise.
 // TODO Can this be done more effectively?
 bool utilUnit::isEnemy(BWAPI::Unit * unit)
@@ -84,17 +91,14 @@ bool utilUnit::isOwned(BWAPI::Unit * unit)
 }
 
 
-bool utilUnit::isSupport(BWAPI::UnitType unitType)
+// Determines if a unit type is non-building and combat based.
+bool utilUnit::isFighter(BWAPI::UnitType unitType)
 {
-	return
-		unitType.isWorker() ||
-		unitType == BWAPI::UnitTypes::Zerg_Overlord ||
-		unitType == BWAPI::UnitTypes::Zerg_Egg ||
-		unitType == BWAPI::UnitTypes::Zerg_Lurker_Egg;
+	return !unitType.isBuilding() && !isMisc(unitType) && !isSupport(unitType);
 }
 
 
-// Determines whether the unit type is a special case.
+// Determines if a unit type is a special case.
 bool utilUnit::isMisc(BWAPI::UnitType unitType)
 {
 	return
@@ -107,18 +111,22 @@ bool utilUnit::isMisc(BWAPI::UnitType unitType)
 }
 
 
-// Determines whether a unit type is a defensive structure.
-// TODO Unneeded?
+// Determines if a unit type is economy based.
+//TODO Should eggs be in this or in combateer?
+bool utilUnit::isSupport(BWAPI::UnitType unitType)
+{
+	return
+		unitType.isWorker() ||
+		unitType == BWAPI::UnitTypes::Zerg_Overlord ||
+		unitType == BWAPI::UnitTypes::Zerg_Egg ||
+		unitType == BWAPI::UnitTypes::Zerg_Lurker_Egg;
+}
+
+
+// Determines if a unit type is a defensive structure.
 // TODO Excludes bunkers - is this behavior wished?
 bool utilUnit::isTurret(BWAPI::UnitType unitType)
 {
 	return
 		unitType.isBuilding() && unitType.canAttack();
-}
-
-
-// Returns true if the position is within the region.
-bool utilUnit::inRegion(BWAPI::Position pos, BWTA::Region * region)
-{
-	return region && BWTA::getRegion(pos) == region;
 }

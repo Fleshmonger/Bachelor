@@ -233,6 +233,7 @@ BWTA::Region * Archivist::getHomeRegion()
 
 
 // Finds and returns all invaders.
+//TODO Move this to defender.
 utilUnit::UnitSet Archivist::invaders()
 {
 	std::set<BWAPI::Unit*> invaders;

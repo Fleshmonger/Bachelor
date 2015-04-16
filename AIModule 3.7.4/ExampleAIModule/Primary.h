@@ -6,7 +6,9 @@
 #include <fstream>
 #include <boost/foreach.hpp>
 #include "UtilUnit.h"
+#include "Accountant.h"
 #include "Archivist.h"
+#include "Producer.h"
 #include "CombatJudge.h"
 #include "Reconnoiter.h"
 #include "ArmyManager.h"
@@ -23,17 +25,10 @@ using namespace BWAPI; //TODO Remove this
 //TODO Rename to something module related?
 class Primary : public BWAPI::AIModule
 {
-//#define DEBUG
-#ifdef DEBUG
-#define DEBUG_OUT(s) Broodwar->printf(s);
-#define DEBUG_SCREEN(x, y, s, d) Broodwar->drawTextScreen(x, y, s, d);
-#else
-#define DEBUG_OUT(s)
-#define DEBUG_SCREEN(x, y, s, d)
-#endif
-
 private:
+	Accountant		accountant;
 	Archivist		archivist;
+	Producer		producer;
 	CombatJudge		combatJudge;
 	//Reconnoiter		reconnoiter;
 	ArmyManager		armyManager;

@@ -2,18 +2,17 @@
 
 
 // Constructor
-Vassal::Vassal(BWAPI::Unit * depot, Accountant * accountant) :
+Vassal::Vassal(BWAPI::Unit * depot, Accountant * accountant, Producer * producer) :
 	accountant(accountant),
+	producer(producer),
 	depot(depot),
 	region(BWTA::getRegion(depot->getPosition())),
 	workerManager(),
-	producer(accountant),
 	harvester(&workerManager),
 	architect(accountant, &workerManager)
 {
 	// Designate depot.
 	architect.expandHarvesting(depot);
-	producer.addFactory(depot);
 
 	// Designate resources.
 	BOOST_FOREACH(BWAPI::Unit * mineral, BWAPI::Broodwar->getStaticMinerals())
@@ -49,11 +48,7 @@ void Vassal::unitCompleted(BWAPI::Unit * unit)
 		// Identify type.
 		BWAPI::UnitType unitType = unit->getType();
 		if (unitType.isBuilding())
-		{
 			architect.completeConstruct(unit);
-			if (unitType.canProduce())
-				producer.addFactory(unit);
-		}
 		else if (unitType.isWorker())
 			workerManager.addWorker(unit);
 	}
@@ -75,8 +70,6 @@ void Vassal::unitCreated(BWAPI::Unit * unit)
 			architect.completeBuild(unit);
 			architect.scheduleConstruct(unit);
 		}
-		else
-			producer.addProduction(unit);
 	}
 }
 
@@ -89,13 +82,8 @@ void Vassal::unitDestroyed(BWAPI::Unit * unit)
 	{
 		// Identify type.
 		BWAPI::UnitType unitType = unit->getType();
-		if (unitType.isBuilding())
-		{
-			if (!unit->isCompleted())
-				architect.removeConstruct(unit);
-			else if (unitType.canProduce())
-				producer.removeFactory(unit);
-		}
+		if (unitType.isBuilding() && !unit->isCompleted())
+			architect.removeConstruct(unit);
 		else if (unitType.isWorker() && unit->isCompleted())
 		{
 			workerManager.removeWorker(unit);
@@ -115,14 +103,6 @@ void Vassal::update()
 }
 
 
-// Returns whether the vassal needs more miners.
-// TODO Rename and/or restrutucture.
-bool Vassal::needMiners()
-{
-	return workerManager.workforce() < harvester.minersMax();
-}
-
-
 // Constructs a building if able.
 bool Vassal::build(BWAPI::UnitType buildingType)
 {
@@ -133,19 +113,29 @@ bool Vassal::build(BWAPI::UnitType buildingType)
 }
 
 
-// Trains a unit if able.
-bool Vassal::train(BWAPI::UnitType unitType)
+// Returns the amount of minerals in the region.
+unsigned int Vassal::mineralFields()
 {
-	return producer.scheduleTraining(unitType);
+	return harvester.mineralFields();
+}
+
+
+// Returns the amount of workers.
+unsigned int Vassal::workforce()
+{
+	return workerManager.workforce();
 }
 
 
 // Returns the amount of scheduled units of the specified type.
-//TODO Add producer scheduling support.
 unsigned int Vassal::scheduled(BWAPI::UnitType unitType)
 {
-	if (unitType.isBuilding())
-		return architect.scheduled(unitType);
-	else
-		return 0;
+	return architect.scheduled(unitType);
+}
+
+
+// Returns the designated depot.
+BWAPI::Unit * Vassal::getDepot()
+{
+	return depot;
 }

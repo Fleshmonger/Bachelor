@@ -3,11 +3,14 @@
 
 // Constructor
 Primary::Primary() :
+	accountant(),
+	archivist(),
+	producer(&accountant),
 	combatJudge(&archivist),
 	//reconnoiter(&archivist, &workerManager),
+	economist(&accountant, &producer),
 	armyManager(&archivist, &combatJudge),
 	//strategist(&producer, &architect),
-	economist(),
 	attacker(&archivist, &combatJudge, &armyManager)
 	//defender(&archivist, &workerManager, &combatJudge, &armyManager)
 {
@@ -24,7 +27,7 @@ Primary::~Primary()
 void Primary::onStart()
 {
 	// BWAPI settings.
-	//BWAPI::Broodwar->enableFlag(Flag::UserInput);
+	BWAPI::Broodwar->enableFlag(Flag::UserInput);
 	BWAPI::Broodwar->setLocalSpeed(0);
 
 	// Read map information.
@@ -34,8 +37,9 @@ void Primary::onStart()
 	// Update managers
 	// TODO Move this to designator class?
 	archivist.analyzed();
-	//economist.analyzed();
+	//economist.analyzed(); TODO Needed later.
 
+	// Create first vassal.
 	utilUnit::UnitSet startingUnits;
 	BOOST_FOREACH(BWAPI::Unit * unit, BWAPI::Broodwar->self()->getUnits())
 	{
@@ -97,10 +101,10 @@ void Primary::onFrame()
 	double
 		strength = combatJudge.strength(armyManager.getArmy()),
 		enemyStrength = combatJudge.strength(archivist.getTroops()) + combatJudge.strength(archivist.getTurrets());
-	DEBUG_SCREEN(200, 0, "FPS: %d", BWAPI::Broodwar->getFPS());
-	DEBUG_SCREEN(200, 20, "APM: %d", BWAPI::Broodwar->getAPM());
-	DEBUG_SCREEN(200, 40, "Strength: %f", strength);
-	DEBUG_SCREEN(200, 60, "Enemy Strength: %f", enemyStrength);
+	Broodwar->drawTextScreen(200, 0, "FPS: %d", BWAPI::Broodwar->getFPS());
+	Broodwar->drawTextScreen(200, 20, "APM: %d", BWAPI::Broodwar->getAPM());
+	Broodwar->drawTextScreen(200, 40, "Strength: %f", strength);
+	Broodwar->drawTextScreen(200, 60, "Enemy Strength: %f", enemyStrength);
 
 	// Prevent spamming by only running our onFrame once every number of latency frames.
 	// Latency frames are the number of frames before commands are processed.
@@ -161,14 +165,20 @@ void Primary::onUnitHide(BWAPI::Unit* unit)
 }
 
 
-// Fired when a unit is created, but not yet completed.
+// Fired when a unit is trained or built.
 void Primary::onUnitCreate(BWAPI::Unit* unit)
 {
-	//DEBUG_OUT("Unit Create: " + unit->getType().getName());
-	// Monitor the construction of the unit.
-	if (unit)
+	// Verify unit.
+	if (utilUnit::isOwned(unit))
 	{
+		// Monitor unit.
 		economist.unitCreated(unit);
+
+		// Training check.
+		BWAPI::UnitType unitType = unit->getType();
+		if (!utilUnit::isMisc(unitType) &&
+			!unitType.isBuilding())
+			producer.addProduction(unit);
 	}
 }
 
@@ -176,52 +186,24 @@ void Primary::onUnitCreate(BWAPI::Unit* unit)
 // Fired when a unit dies or is destroyed.
 void Primary::onUnitDestroy(BWAPI::Unit* unit)
 {
-	if (unit)
-	{
-		economist.unitDestroyed(unit);
-		archivist.clearUnit(unit);
-		BWAPI::UnitType unitType = unit->getType();
-		if (!unitType.isBuilding() &&
-			!utilUnit::isSupport(unitType) &&
-			!utilUnit::isMisc(unitType))
-			armyManager.addUnit(unit);
-	}
-	/*
-	//Broodwar->printf("%s was destroyed", unit->getType().getName().c_str());
-	//DEBUG_OUT("Unit Destroy: " + unit->getType().getName());
-	// Determine owner.
-	archivist.clearUnit(unit);
+	// Verify unit.
 	if (utilUnit::isOwned(unit))
 	{
-		// Undesignate the destroyed unit.
+		// Remove unit.
+		archivist.clearUnit(unit);
+		economist.unitDestroyed(unit);
+
+		// Fighter unit check.
 		BWAPI::UnitType unitType = unit->getType();
-		if (unitType.isBuilding())
-		{
-			// Determine the type.
-			if (unitType.isResourceDepot())
-			{
-				// TODO What should happen here?
-				architect.setDepot(NULL);
-				//producer.setDepot(NULL);
-				workerManager.setDepot(NULL);
-			}
-			else if (unitType == BWAPI::UnitTypes::Protoss_Pylon)
-				architect.removePylon(unit);
-			else if (unitType == BWAPI::UnitTypes::Protoss_Gateway)
-				producer.removeFactory(unit);
-		}
-		else if (unitType.isWorker())
-			workerManager.removeWorker(unit);
-		else // Must be a combat unit
+		if (utilUnit::isFighter(unitType))
 			armyManager.removeUnit(unit);
-		// TODO if unit was incomplete, remove it from the producer.
+		else if (unitType.canProduce())
+			producer.addFactory(unit);
 	}
-	*/
 }
 
 
-// Fires when a unit changes type.
-// TODO Does building geyser emplacements trigger this?
+// Fired when a unit changes type including built refineries.
 void Primary::onUnitMorph(BWAPI::Unit* unit)
 {
 }
@@ -237,67 +219,26 @@ void Primary::onSaveGame(std::string gameName)
 }
 
 
-// Fires when a unit has finished construction.
-// Both units and buildings trigger this.
+// Fired when a unit is completed or constructed.
 void Primary::onUnitComplete(BWAPI::Unit *unit)
 {
-	//DEBUG_OUT("Unit Complete: %s", unit->getType().getName());
-	// Determine owner.
-	if (unit)
-	{
-		economist.unitCompleted(unit);
-		BWAPI::UnitType unitType = unit->getType();
-		if (!unitType.isBuilding() &&
-			!utilUnit::isSupport(unitType) &&
-			!utilUnit::isMisc(unitType))
-			armyManager.addUnit(unit);
-	}
-	/*
+	// Verify unit.
 	if (utilUnit::isOwned(unit))
 	{
-		// Update construction status.
+		// Add unit.
+		economist.unitCompleted(unit);
+
+		// Fighter unit check.
 		BWAPI::UnitType unitType = unit->getType();
-		if (unitType.isBuilding())
-			architect.completeConstruct(unit);
-		//else
-			//producer.completeUnit(unit);
-		// Designate the new unit.
-		designateUnit(unit);
+		if (utilUnit::isFighter(unitType))
+			armyManager.addUnit(unit);
+		else if (unitType.canProduce())
+			producer.addFactory(unit);
 	}
-	*/
 }
 
 
-/*
-// Delivers a unit to managers who needs it.
-// Assumes the unit is owned.
-// TODO Remove this assumption.
-// TODO Move to designator class.
-void Primary::designateUnit(BWAPI::Unit * unit)
-{
-	// Determine type.
-	BWAPI::UnitType unitType = unit->getType();
-	if (unitType.isBuilding())
-	{
-		if (unitType.isResourceDepot())
-		{
-			architect.setDepot(unit);
-			producer.addFactory(unit);
-			workerManager.setDepot(unit);
-			attacker.setDepot(unit);
-		}
-		else if (unitType == BWAPI::UnitTypes::Protoss_Pylon)
-			architect.addPylon(unit);
-		else if (unitType == BWAPI::UnitTypes::Protoss_Gateway) // TODO Make generic
-			producer.addFactory(unit);
-	}
-	else if (unitType.isWorker())
-		workerManager.addWorker(unit);
-	else // Must be a combat unit
-		armyManager.addUnit(unit);
-}
-*/
-
+// Draws BWTA regions and resources.
 void Primary::drawTerrainData()
 {
 	//we will iterate through all the base locations, and draw their outlines.

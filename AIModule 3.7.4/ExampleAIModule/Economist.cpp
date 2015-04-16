@@ -2,8 +2,9 @@
 
 
 // Constructor.
-Economist::Economist() :
-	accountant(),
+Economist::Economist(Accountant * accountant, Producer * producer) :
+	accountant(accountant),
+	producer(producer),
 	homeBase(),
 	vassals(),
 	unitRegion(),
@@ -17,6 +18,16 @@ Economist::~Economist()
 {
 }
 
+/*
+// Fired when the map is analyzed.
+void Economist::analyzed()
+{
+// Code for finding natural expansion.
+std::set<BWTA::Region*> regions = BWTA::getRegions();
+BWTA::Region * region = *regions.begin();
+std::set<BWTA::Region*> reach = region->getReachableRegions();
+}
+*/
 
 // Creates a vassal region tied to the given depot, designated as the main base.
 void Economist::addHomeBase(BWAPI::Unit * depot)
@@ -34,6 +45,7 @@ void Economist::addHomeBase(BWAPI::Unit * depot)
 
 
 // Creates a new vassal region tied to the given depot.
+// TODO Uses dynamic memory.
 void Economist::addExpansion(BWAPI::Unit * depot)
 {
 	// Verify depot.
@@ -42,23 +54,12 @@ void Economist::addExpansion(BWAPI::Unit * depot)
 		utilUnit::isOwned(depot) &&
 		depot->getType().isResourceDepot())
 	{
+		// Instantiate vassal.
 		BWTA::Region * region = BWTA::getRegion(depot->getPosition());
-		regionVassal[region] = new Vassal(depot, &accountant);
+		regionVassal[region] = new Vassal(depot, accountant, producer);
 		vassals.insert(regionVassal[region]);
 	}
 }
-
-
-/*
-// Fired when the map is analyzed.
-void Economist::analyzed()
-{
-	// Code for finding natural expansion.
-	std::set<BWTA::Region*> regions = BWTA::getRegions();
-	BWTA::Region * region = *regions.begin();
-	std::set<BWTA::Region*> reach = region->getReachableRegions();
-}
-*/
 
 
 void Economist::unitCompleted(BWAPI::Unit * unit)
@@ -68,9 +69,8 @@ void Economist::unitCompleted(BWAPI::Unit * unit)
 		unit->exists() &&
 		unitRegion.count(unit) > 0)
 	{
-		BWTA::Region * region = unitRegion[unit];
-
 		// Verify region.
+		BWTA::Region * region = unitRegion[unit];
 		if (regionVassal.count(region) > 0)
 			regionVassal[region]->unitCompleted(unit);
 	}
@@ -84,12 +84,13 @@ void Economist::unitCreated(BWAPI::Unit * unit)
 		unit->exists() &&
 		utilUnit::isOwned(unit))
 	{
-		BWTA::Region * region = BWTA::getRegion(unit->getPosition());
-		unitRegion[unit] = region;
-
 		// Verify region.
+		BWTA::Region * region = BWTA::getRegion(unit->getPosition());
 		if (regionVassal.count(region) > 0)
 			regionVassal[region]->unitCreated(unit);
+
+		// Add entry.
+		unitRegion[unit] = region;
 	}
 }
 
@@ -101,12 +102,12 @@ void Economist::unitDestroyed(BWAPI::Unit * unit)
 		unit->exists() &&
 		unitRegion.count(unit) > 0)
 	{
-		BWTA::Region * region = unitRegion[unit];
-
 		// Verify region.
+		BWTA::Region * region = unitRegion[unit];
 		if (regionVassal.count(region) > 0)
 			regionVassal[region]->unitDestroyed(unit);
 
+		// Remove entry.
 		unitRegion.erase(unit);
 	}
 }
@@ -122,16 +123,17 @@ void Economist::update()
 		vassal->update();
 
 		// Train workers.
-		if (vassal->needMiners())
-			vassal->train(PROTOSS_WORKER);
+		//TODO Make train workers in nearby depots if necessary.
+		if (vassal->workforce() < vassal->mineralFields() * MINERAL_SATURATION)
+			producer->scheduleTraining(UNIT_WORKER, vassal->getDepot());
 	}
 
 	if (homeBase)
 	{
 		// Order a supply building if more supply is needed and none are being constructed.
-		if (accountant.supply() < MIN_SUPPLY &&
-			homeBase->scheduled(BUILD_SUPPLY) == 0)
-			homeBase->build(BUILD_SUPPLY);
+		if (accountant->supply() < MIN_SUPPLY &&
+			homeBase->scheduled(UNIT_SUPPLY) == 0)
+			homeBase->build(UNIT_SUPPLY);
 	}
 
 

@@ -57,30 +57,37 @@ void Producer::removeFactory(BWAPI::Unit * factory)
 // Attempts to train a unit at an available facility and returns true if successful.
 bool Producer::scheduleTraining(BWAPI::UnitType unitType)
 {
-	// Verify order order.
-	if (!unitType.isBuilding())
+	// Find factory.
+	std::pair<BWAPI::UnitType, int> builderInfo = unitType.whatBuilds();
+	BOOST_FOREACH(BWAPI::Unit * factory, factories[builderInfo.first])
 	{
-		// Verify cost.
-		if (accountant->isAffordable(unitType))
+		// Check availability.
+		if (factory->exists() &&
+			!factory->isTraining())
 		{
-			// Find factory.
-			std::pair<BWAPI::UnitType, int> builderInfo = unitType.whatBuilds();
-			BOOST_FOREACH(BWAPI::Unit * factory, factories[builderInfo.first])
-			{
-				// Check availability.
-				if (factory->exists() &&
-					factory->isIdle())
-				{
-					// Train unit.
-					factory->train(unitType);
-					trainingSchedule.insert(unitType);
-					accountant->allocate(unitType);
-					return true;
-				}
-			}
+			return scheduleTraining(unitType, factory);
 		}
 	}
-	return false;
+}
+
+
+// Schedules the unit type to be trained at the factory.
+bool Producer::scheduleTraining(BWAPI::UnitType unitType, BWAPI::Unit * factory)
+{
+	if (unitType &&								// Verify type.
+		accountant->isAffordable(unitType) &&	// Verify cost.
+		utilUnit::isOwned(factory) &&			// Verify availability.
+		factory->exists() &&
+		!factory->isTraining() &&
+		factory->train(unitType))				// Attempt training.
+	{
+		// Schedule training.
+		trainingSchedule.insert(unitType);
+		accountant->allocate(unitType);
+		return true;
+	}
+	else
+		return false;
 }
 
 

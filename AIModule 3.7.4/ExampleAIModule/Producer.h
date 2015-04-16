@@ -23,6 +23,7 @@ public:
 	void removeFactory(BWAPI::Unit * factory);
 
 	bool scheduleTraining(BWAPI::UnitType unitType);
+	bool scheduleTraining(BWAPI::UnitType unitType, BWAPI::Unit * factory);
 
 	utilUnit::UnitSet getFactories(BWAPI::UnitType factoryType);
 };

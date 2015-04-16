@@ -10,21 +10,21 @@
 
 
 // Manages a region, its base and its managers.
+//TODO Should it interpret sub-managers, or return sub-managers?
 class Vassal
 {
 private:
-	Accountant * accountant;
+	BWAPI::Unit	* depot;
+	Accountant	* accountant;
+	Producer	* producer;
 
-	BWAPI::Unit		* depot;
 	BWTA::Region	* region;
-
 	WorkerManager	workerManager;
-	Producer		producer;
 	Harvester		harvester;
 	Architect		architect;
 
 public:
-	Vassal(BWAPI::Unit * depot, Accountant * accountant);
+	Vassal(BWAPI::Unit * depot, Accountant * accountant, Producer * producer);
 	~Vassal();
 
 	void unitCompleted(BWAPI::Unit * unit);
@@ -32,10 +32,12 @@ public:
 	void unitDestroyed(BWAPI::Unit * unit);
 	void update();
 
-	bool needMiners();
 	bool build(BWAPI::UnitType buildingType);
-	bool train(BWAPI::UnitType unitType);
 
+	unsigned int mineralFields();
+	unsigned int workforce();
 	unsigned int scheduled(BWAPI::UnitType unitType);
+
+	BWAPI::Unit * getDepot();
 };
 
