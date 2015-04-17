@@ -10,10 +10,10 @@
     <Filter Include="Managers\Combat">
       <UniqueIdentifier>{cbdab239-0038-4fed-a446-d2d42500c6d5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Managers\Economist">
+    <Filter Include="Managers\Landlord">
       <UniqueIdentifier>{72595dae-5b54-4a14-92aa-fd9a9c5e5783}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Managers\Economist\Vassal">
+    <Filter Include="Managers\Landlord\Vassal">
       <UniqueIdentifier>{4eb1ca3c-beec-4dd6-8aed-183ebee3bf9c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -42,28 +42,31 @@
       <Filter>Managers\Combat</Filter>
     </ClCompile>
     <ClCompile Include="Harvester.cpp">
-      <Filter>Managers\Economist\Vassal</Filter>
-    </ClCompile>
-    <ClCompile Include="Architect.cpp">
-      <Filter>Managers\Economist\Vassal</Filter>
+      <Filter>Managers\Landlord\Vassal</Filter>
     </ClCompile>
     <ClCompile Include="Vassal.cpp">
-      <Filter>Managers\Economist\Vassal</Filter>
+      <Filter>Managers\Landlord\Vassal</Filter>
     </ClCompile>
     <ClCompile Include="WorkerManager.cpp">
-      <Filter>Managers\Economist\Vassal</Filter>
-    </ClCompile>
-    <ClCompile Include="Economist.cpp">
-      <Filter>Managers\Economist</Filter>
-    </ClCompile>
-    <ClCompile Include="Accountant.cpp">
-      <Filter>Managers\Economist</Filter>
+      <Filter>Managers\Landlord\Vassal</Filter>
     </ClCompile>
     <ClCompile Include="Archivist.cpp">
       <Filter>Managers</Filter>
     </ClCompile>
     <ClCompile Include="Producer.cpp">
-      <Filter>Managers\Economist</Filter>
+      <Filter>Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Architect.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Landlord.cpp">
+      <Filter>Managers\Landlord</Filter>
+    </ClCompile>
+    <ClCompile Include="Accountant.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Economist.cpp">
+      <Filter>Managers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -90,28 +93,31 @@
       <Filter>Managers\Combat</Filter>
     </ClInclude>
     <ClInclude Include="Harvester.h">
-      <Filter>Managers\Economist\Vassal</Filter>
+      <Filter>Managers\Landlord\Vassal</Filter>
     </ClInclude>
     <ClInclude Include="Vassal.h">
-      <Filter>Managers\Economist\Vassal</Filter>
-    </ClInclude>
-    <ClInclude Include="Architect.h">
-      <Filter>Managers\Economist\Vassal</Filter>
+      <Filter>Managers\Landlord\Vassal</Filter>
     </ClInclude>
     <ClInclude Include="WorkerManager.h">
-      <Filter>Managers\Economist\Vassal</Filter>
-    </ClInclude>
-    <ClInclude Include="Economist.h">
-      <Filter>Managers\Economist</Filter>
-    </ClInclude>
-    <ClInclude Include="Accountant.h">
-      <Filter>Managers\Economist</Filter>
+      <Filter>Managers\Landlord\Vassal</Filter>
     </ClInclude>
     <ClInclude Include="Archivist.h">
       <Filter>Managers</Filter>
     </ClInclude>
     <ClInclude Include="Producer.h">
-      <Filter>Managers\Economist</Filter>
+      <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Architect.h">
+      <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Landlord.h">
+      <Filter>Managers\Landlord</Filter>
+    </ClInclude>
+    <ClInclude Include="Accountant.h">
+      <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Economist.h">
+      <Filter>Managers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

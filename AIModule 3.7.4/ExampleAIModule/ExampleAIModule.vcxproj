@@ -103,6 +103,7 @@
     <ClCompile Include="Defender.cpp" />
     <ClCompile Include="Dll.cpp" />
     <ClCompile Include="Economist.cpp" />
+    <ClCompile Include="Landlord.cpp" />
     <ClCompile Include="Harvester.cpp" />
     <ClCompile Include="Primary.cpp" />
     <ClCompile Include="Producer.cpp" />
@@ -121,6 +122,7 @@
     <ClInclude Include="Attacker.h" />
     <ClInclude Include="Defender.h" />
     <ClInclude Include="Economist.h" />
+    <ClInclude Include="Landlord.h" />
     <ClInclude Include="Harvester.h" />
     <ClInclude Include="Primary.h" />
     <ClInclude Include="Producer.h" />

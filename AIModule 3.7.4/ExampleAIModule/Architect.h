@@ -4,7 +4,7 @@
 #include <boost/foreach.hpp>
 #include "UtilUnit.h"
 #include "Accountant.h"
-#include "WorkerManager.h"
+#include "Landlord.h"
 
 
 struct Zone {
@@ -41,14 +41,14 @@ class Architect
 {
 private:
 	Accountant * accountant;
-	WorkerManager * workerManager;
+	Landlord * landlord;
 
 	Zone harvesting;
 	std::multimap<BWAPI::UnitType, BWAPI::Unit*> constructSchedule;
 	std::multimap<BWAPI::UnitType, std::pair<BWAPI::Unit*, BWAPI::TilePosition>>  buildSchedule;
 
 public:
-	Architect(Accountant * accountant, WorkerManager * workerManager);
+	Architect(Accountant * accountant, Landlord * landlord);
 	~Architect();
 
 	void scheduleConstruct(BWAPI::Unit * building);

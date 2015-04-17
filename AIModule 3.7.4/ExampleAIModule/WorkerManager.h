@@ -8,6 +8,7 @@ enum Task { TASK_BUILD, TASK_DEFEND, TASK_IDLE };
 
 
 // Contains and handles all workers while commanding harvesting.
+//TODO Rename to taskmaster.
 class WorkerManager
 {
 	private:
@@ -29,6 +30,5 @@ class WorkerManager
 		bool contains(BWAPI::Unit * worker);
 		unsigned int workforce();
 
-		BWAPI::Unit * getIdleWorker();
 		utilUnit::UnitSet getEmployed(Task task);
 };

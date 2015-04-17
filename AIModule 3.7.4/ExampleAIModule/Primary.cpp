@@ -5,13 +5,15 @@
 Primary::Primary() :
 	accountant(),
 	archivist(),
+	landlord(),
 	producer(&accountant),
 	combatJudge(&archivist),
-	//reconnoiter(&archivist, &workerManager),
-	economist(&accountant, &producer),
+	architect(&accountant, &landlord),
+	economist(&accountant, &landlord, &producer, &architect),
 	armyManager(&archivist, &combatJudge),
-	//strategist(&producer, &architect),
 	attacker(&archivist, &combatJudge, &armyManager)
+	//reconnoiter(&archivist, &workerManager),
+	//strategist(&producer, &architect),
 	//defender(&archivist, &workerManager, &combatJudge, &armyManager)
 {
 }
@@ -47,11 +49,11 @@ void Primary::onStart()
 		{
 			startingUnits.insert(unit);
 			if (unit->getType().isResourceDepot())
-				economist.addHomeBase(unit);
+				landlord.addHeadquarters(unit);
 		}
 	}
 	BOOST_FOREACH(BWAPI::Unit * unit, startingUnits)
-		economist.unitCompleted(unit);
+		landlord.addWorker(unit);
 }
 
 
@@ -113,12 +115,14 @@ void Primary::onFrame()
 
 	// Manager updatíng
 	archivist.update();
-	//reconnoiter.update();
-	armyManager.update();
-	//strategist.update();
+	landlord.update();
+	architect.update();
 	economist.update();
-	//defender.update(); //TODO Defender must be before attacker, to ensure defenders are available. Fix this.
+	armyManager.update();
 	attacker.update();
+	//strategist.update();
+	//reconnoiter.update();
+	//defender.update(); //TODO Defender must be before attacker, to ensure defenders are available. Fix this.
 }
 
 
@@ -145,6 +149,7 @@ void Primary::onNukeDetect(BWAPI::Position target)
 // Fired when a unit becomes visible for the first time.
 void Primary::onUnitDiscover(BWAPI::Unit* unit)
 {
+	// Record unit.
 	archivist.recordUnit(unit);
 }
 
@@ -171,13 +176,14 @@ void Primary::onUnitCreate(BWAPI::Unit* unit)
 	// Verify unit.
 	if (utilUnit::isOwned(unit))
 	{
-		// Monitor unit.
-		economist.unitCreated(unit);
-
-		// Training check.
+		// Type check.
 		BWAPI::UnitType unitType = unit->getType();
-		if (!utilUnit::isMisc(unitType) &&
-			!unitType.isBuilding())
+		if (unitType.isBuilding())
+		{
+			architect.completeBuild(unit);
+			architect.scheduleConstruct(unit);
+		}
+		else if (!utilUnit::isMisc(unitType))
 			producer.addProduction(unit);
 	}
 }
@@ -186,16 +192,17 @@ void Primary::onUnitCreate(BWAPI::Unit* unit)
 // Fired when a unit dies or is destroyed.
 void Primary::onUnitDestroy(BWAPI::Unit* unit)
 {
-	// Verify unit.
+	// Clear unit record.
+	archivist.clearUnit(unit);
+
+	// Ownership check.
 	if (utilUnit::isOwned(unit))
 	{
-		// Remove unit.
-		archivist.clearUnit(unit);
-		economist.unitDestroyed(unit);
-
-		// Fighter unit check.
+		// Type check.
 		BWAPI::UnitType unitType = unit->getType();
-		if (utilUnit::isFighter(unitType))
+		if (unitType.isWorker())
+			landlord.removeWorker(unit);
+		else if (utilUnit::isFighter(unitType))
 			armyManager.removeUnit(unit);
 		else if (unitType.canProduce())
 			producer.addFactory(unit);
@@ -225,12 +232,11 @@ void Primary::onUnitComplete(BWAPI::Unit *unit)
 	// Verify unit.
 	if (utilUnit::isOwned(unit))
 	{
-		// Add unit.
-		economist.unitCompleted(unit);
-
-		// Fighter unit check.
+		// Type check.
 		BWAPI::UnitType unitType = unit->getType();
-		if (utilUnit::isFighter(unitType))
+		if (unitType.isWorker())
+			landlord.addWorker(unit);
+		else if (utilUnit::isFighter(unitType))
 			armyManager.addUnit(unit);
 		else if (unitType.canProduce())
 			producer.addFactory(unit);

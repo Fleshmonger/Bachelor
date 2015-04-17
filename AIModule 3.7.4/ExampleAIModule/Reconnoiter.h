@@ -1,8 +1,10 @@
 #pragma once
 #include <BWAPI.h>
+#include <BWTA.h>
 #include "UtilUnit.h"
 #include "Archivist.h"
-#include "WorkerManager.h"
+#include "Vassal.h"
+#include "Landlord.h"
 
 
 const unsigned int MIN_WORKFORCE = 5; // Minimum amount of workers available before requesting a scout.
@@ -15,13 +17,13 @@ class Reconnoiter
 {
 private:
 	Archivist * archivist;
-	WorkerManager * workerManager;
+	Landlord * landlord;
 
 	BWAPI::Position target;
 	BWAPI::Unit * scout;
 
 public:
-	Reconnoiter(Archivist * archivist, WorkerManager * workerManager);
+	Reconnoiter(Archivist * archivist, Landlord * landlord);
 	~Reconnoiter();
 
 	void update();

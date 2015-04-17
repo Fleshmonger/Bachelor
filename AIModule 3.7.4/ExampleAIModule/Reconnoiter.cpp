@@ -2,11 +2,11 @@
 
 
 // Constructor
-Reconnoiter::Reconnoiter(Archivist * archivist, WorkerManager * workerManager) :
+Reconnoiter::Reconnoiter(Archivist * archivist, Landlord * landlord) :
 	archivist(archivist),
-	workerManager(workerManager),
-	target(BWAPI::TilePositions::None),
-	scout(NULL)
+	landlord(landlord),
+	target(),
+	scout()
 {
 }
 
@@ -37,10 +37,10 @@ void Reconnoiter::update()
 		if (target)
 		{
 			// Retrieve Scout
-			if ((!scout || !scout->exists()) && workerManager->workforce() >= MIN_WORKFORCE)
+			if ((!scout || !scout->exists()) && landlord->getHeadquarters()->workforce() >= MIN_WORKFORCE)
 			{
-				scout = workerManager->getIdleWorker();
-				workerManager->removeWorker(scout);
+				scout = landlord->getIdleWorker(BWTA::getRegion(landlord->getHeadquarters()->getDepot()->getPosition()));
+				landlord->removeWorker(scout);
 			}
 
 			// Commanding Scout

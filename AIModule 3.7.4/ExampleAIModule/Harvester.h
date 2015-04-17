@@ -23,7 +23,7 @@ public:
 	void addMineral(BWAPI::Unit * mineral);
 	void removeMiner(BWAPI::Unit * miner);
 	void removeMineral(BWAPI::Unit * mineral);
-	void update();
+	void harvest();
 
 	unsigned int mineralFields();
 };

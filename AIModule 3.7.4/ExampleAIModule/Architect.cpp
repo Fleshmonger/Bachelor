@@ -2,9 +2,9 @@
 
 
 // Constructor
-Architect::Architect(Accountant * accountant, WorkerManager * workerManager) :
+Architect::Architect(Accountant * accountant, Landlord * landlord) :
 	accountant(accountant),
-	workerManager(workerManager),
+	landlord(landlord),
 	harvesting(0, 0, 0, 0),
 	constructSchedule(),
 	buildSchedule()
@@ -28,14 +28,14 @@ bool Architect::scheduleBuild(BWAPI::UnitType buildingType, BWAPI::TilePosition 
 		if (accountant->isAffordable(buildingType))
 		{
 			// Aquire builder.
-			BWAPI::Unit * builder = workerManager->getIdleWorker();
+			BWAPI::Unit * builder = landlord->getIdleWorker(BWTA::getRegion(desiredLocation));
 			if (builder)
 			{
 				BWAPI::TilePosition location = getBuildLocation(builder, desiredLocation, buildingType);
 				if (location)
 				{
 					// Order the construction.
-					workerManager->employWorker(builder, TASK_BUILD);
+					landlord->employWorker(builder, TASK_BUILD);
 					utilUnit::commandBuild(builder, location, buildingType);
 					buildSchedule.insert(std::make_pair(buildingType, std::make_pair(builder, location)));
 					accountant->allocate(buildingType);
@@ -71,9 +71,7 @@ void Architect::removeBuild(BWAPI::UnitType buildingType, BWAPI::TilePosition bu
 			{
 				std::pair<BWAPI::UnitType, std::pair<BWAPI::Unit*, BWAPI::TilePosition>> build = *it;
 				BWAPI::Unit * builder = build.second.first;
-				if (builder && builder->exists())
-					workerManager->employWorker(builder, TASK_IDLE);
-					//workerManager->addWorker(builder);
+				landlord->dismissWorker(builder);
 				accountant->deallocate(build.first);
 				buildSchedule.erase(it);
 				return;

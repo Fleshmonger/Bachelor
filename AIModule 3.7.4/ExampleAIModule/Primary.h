@@ -8,14 +8,16 @@
 #include "UtilUnit.h"
 #include "Accountant.h"
 #include "Archivist.h"
+#include "LandLord.h"
 #include "Producer.h"
 #include "CombatJudge.h"
-#include "Reconnoiter.h"
-#include "ArmyManager.h"
-#include "Strategist.h"
+#include "Architect.h"
 #include "Economist.h"
+#include "ArmyManager.h"
 #include "Attacker.h"
-#include "Defender.h"
+//#include "Reconnoiter.h"
+//#include "Strategist.h"
+//#include "Defender.h"
 
 
 using namespace BWAPI; //TODO Remove this
@@ -28,13 +30,15 @@ class Primary : public BWAPI::AIModule
 private:
 	Accountant		accountant;
 	Archivist		archivist;
+	Landlord		landlord;
 	Producer		producer;
 	CombatJudge		combatJudge;
-	//Reconnoiter		reconnoiter;
-	ArmyManager		armyManager;
-	//Strategist		strategist;
+	Architect		architect;
 	Economist		economist;
+	ArmyManager		armyManager;
 	Attacker		attacker;
+	//Reconnoiter	reconnoiter;
+	//Strategist	strategist;
 	//Defender		defender;
 
 public:

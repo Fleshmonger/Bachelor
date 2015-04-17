@@ -2,32 +2,16 @@
 
 
 // Constructor
-Vassal::Vassal(BWAPI::Unit * depot, Accountant * accountant, Producer * producer) :
-	accountant(accountant),
-	producer(producer),
+Vassal::Vassal(BWAPI::Unit * depot) :
 	depot(depot),
-	region(BWTA::getRegion(depot->getPosition())),
 	workerManager(),
-	harvester(&workerManager),
-	architect(accountant, &workerManager)
+	harvester(&workerManager)
 {
-	// Designate depot.
-	architect.expandHarvesting(depot);
-
 	// Designate resources.
+	BWTA::Region * region = BWTA::getRegion(depot->getPosition());
 	BOOST_FOREACH(BWAPI::Unit * mineral, BWAPI::Broodwar->getStaticMinerals())
-	{
 		if (utilUnit::inRegion(mineral->getPosition(), region))
-		{
 			harvester.addMineral(mineral);
-			architect.expandHarvesting(mineral);
-		}
-	}
-	BOOST_FOREACH(BWAPI::Unit * geyser, BWAPI::Broodwar->getStaticGeysers())
-	{
-		if (utilUnit::inRegion(geyser->getPosition(), region))
-			architect.expandHarvesting(geyser);
-	}
 }
 
 
@@ -37,79 +21,39 @@ Vassal::~Vassal()
 }
 
 
-// Adds a unit to the vassalage.
-void Vassal::unitCompleted(BWAPI::Unit * unit)
+// Adds a worker to the workerManager.
+void Vassal::addWorker(BWAPI::Unit * worker)
 {
-	// Verify unit.
-	if (unit &&
-		unit->exists() &&
-		utilUnit::isOwned(unit))
-	{
-		// Identify type.
-		BWAPI::UnitType unitType = unit->getType();
-		if (unitType.isBuilding())
-			architect.completeConstruct(unit);
-		else if (unitType.isWorker())
-			workerManager.addWorker(unit);
-	}
+	workerManager.addWorker(worker);
 }
 
 
-// Assigns a unit under construction to the vassalage.
-void Vassal::unitCreated(BWAPI::Unit * unit)
+// Employs a worker in the workerManager.
+void Vassal::employWorker(BWAPI::Unit * worker, Task task)
 {
-	// Verify unit.
-	if (unit &&
-		unit->exists() &&
-		utilUnit::isOwned(unit))
-	{
-		// Identify type.
-		BWAPI::UnitType unitType = unit->getType();
-		if (unitType.isBuilding())
-		{
-			architect.completeBuild(unit);
-			architect.scheduleConstruct(unit);
-		}
-	}
+	workerManager.employWorker(worker, task);
 }
 
 
-// Removes a unit from the vassalage.
-void Vassal::unitDestroyed(BWAPI::Unit * unit)
+// Removes a worker from the workerManager.
+void Vassal::removeWorker(BWAPI::Unit * worker)
 {
-	// Verify unit.
-	if (unit)
-	{
-		// Identify type.
-		BWAPI::UnitType unitType = unit->getType();
-		if (unitType.isBuilding() && !unit->isCompleted())
-			architect.removeConstruct(unit);
-		else if (unitType.isWorker() && unit->isCompleted())
-		{
-			workerManager.removeWorker(unit);
-			harvester.removeMiner(unit);
-		}
-	}
+	workerManager.removeWorker(worker);
+	harvester.removeMiner(worker);
+}
+
+
+// Commands idle workers to harvest.
+void Vassal::harvest()
+{
+	harvester.harvest();
 }
 
 
 // Updates local managers.
 void Vassal::update()
 {
-	// Update managers.
 	workerManager.update();
-	architect.update();
-	harvester.update();
-}
-
-
-// Constructs a building if able.
-bool Vassal::build(BWAPI::UnitType buildingType)
-{
-	if (depot)
-		return architect.scheduleBuild(buildingType, depot->getTilePosition());
-	else
-		return false;
 }
 
 
@@ -127,15 +71,26 @@ unsigned int Vassal::workforce()
 }
 
 
-// Returns the amount of scheduled units of the specified type.
-unsigned int Vassal::scheduled(BWAPI::UnitType unitType)
-{
-	return architect.scheduled(unitType);
-}
-
-
 // Returns the designated depot.
 BWAPI::Unit * Vassal::getDepot()
 {
 	return depot;
+}
+
+
+// Returns an idle worker if one exists.
+BWAPI::Unit * Vassal::getIdleWorker()
+{
+	// Search through idle.
+	BOOST_FOREACH(BWAPI::Unit * worker, workerManager.getEmployed(TASK_IDLE))
+	{
+		// Verify worker.
+		if (worker->exists() &&
+			!worker->isCarryingGas() &&
+			!worker->isCarryingMinerals())
+			return worker;
+	}
+
+	// No idle worker found.
+	return NULL;
 }

@@ -21,13 +21,30 @@ WorkerManager::~WorkerManager()
 void WorkerManager::addWorker(BWAPI::Unit * worker)
 {
 	// Verify worker.
-	if (worker &&
+	if (utilUnit::isOwned(worker) &&
 		worker->exists() &&
 		worker->getType().isWorker())
 	{
 		workers.insert(worker);
 		assignments[worker] = TASK_IDLE;
 		employed[TASK_IDLE].insert(worker);
+	}
+}
+
+
+// Assigns the unit a duty.
+void WorkerManager::employWorker(BWAPI::Unit * worker, Task task)
+{
+	// Verify worker.
+	if (contains(worker))
+	{
+		// Remove worker from current task.
+		Task oldTask = assignments[worker];
+		employed[oldTask].erase(worker);
+
+		// Add worker to new task.
+		assignments[worker] = task;
+		employed[task].insert(worker);
 	}
 }
 
@@ -55,23 +72,6 @@ void WorkerManager::setDepot(BWAPI::Unit * depot)
 		utilUnit::isOwned(depot) &&
 		depot->getType().isResourceDepot())
 		this->depot = depot;
-}
-
-
-// Assigns the unit a duty.
-void WorkerManager::employWorker(BWAPI::Unit * worker, Task task)
-{
-	// Verify worker.
-	if (contains(worker))
-	{
-		// Remove worker from current task.
-		Task oldTask = assignments[worker];
-		employed[oldTask].erase(worker);
-
-		// Add worker to new task.
-		assignments[worker] = task;
-		employed[task].insert(worker);
-	}
 }
 
 
@@ -107,22 +107,6 @@ bool WorkerManager::contains(BWAPI::Unit * worker)
 unsigned int WorkerManager::workforce()
 {
 	return workers.size();
-}
-
-
-// Returns an idle worker.
-BWAPI::Unit * WorkerManager::getIdleWorker()
-{
-	// Iterate through idle.
-	BOOST_FOREACH(BWAPI::Unit * worker, employed[TASK_IDLE])
-	{
-		// Verify unit.
-		if (worker->exists() &&
-			!worker->isCarryingGas() &&
-			!worker->isCarryingMinerals())
-			return worker;
-	}
-	return NULL;
 }
 
 

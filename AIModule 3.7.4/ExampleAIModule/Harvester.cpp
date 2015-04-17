@@ -90,7 +90,7 @@ void Harvester::removeMineral(BWAPI::Unit * mineral)
 
 
 // Verifies and commands workers to mine minerals.
-void Harvester::update()
+void Harvester::harvest()
 {
 	// Verify minerals.
 	if (!minerals.empty())
