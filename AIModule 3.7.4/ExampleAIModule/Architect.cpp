@@ -38,6 +38,7 @@ bool Architect::scheduleBuild(BWAPI::UnitType buildingType, BWAPI::TilePosition 
 					utilUnit::commandBuild(builder, location, buildingType);
 					buildSchedule.insert(std::make_pair(buildingType, std::make_pair(builder, location)));
 					accountant->allocate(buildingType);
+					schedule[buildingType]++;
 					return true;
 				}
 			}
@@ -73,6 +74,7 @@ void Architect::removeBuild(BWAPI::UnitType buildingType, BWAPI::TilePosition bu
 				landlord->dismissWorker(builder);
 				accountant->deallocate(build.first);
 				buildSchedule.erase(it);
+				schedule[buildingType]--;
 				return;
 			}
 			else
@@ -98,6 +100,7 @@ void Architect::removeConstruct(BWAPI::Unit * building)
 			if (construct == building)
 			{
 				constructSchedule.erase(it);
+				schedule[building->getType()]--;
 				return;
 			}
 			else
@@ -110,8 +113,10 @@ void Architect::removeConstruct(BWAPI::Unit * building)
 // Identifies a building as built.
 void Architect::completeBuild(BWAPI::Unit * building)
 {
-	removeBuild(building->getType(), building->getTilePosition());
+	BWAPI::UnitType buildingType = building->getType();
+	removeBuild(buildingType, building->getTilePosition());
 	scheduleConstruct(building);
+	schedule[buildingType]++;
 }
 
 
@@ -122,7 +127,8 @@ void Architect::completeConstruct(BWAPI::Unit * building)
 }
 
 
-// Creates pylons, validates orders and commands builders.
+// Verifies orders and commands builders.
+// TODO Remove verification?
 void Architect::update()
 {
 	// Remove invalid build orders and continue valid orders.
@@ -173,7 +179,8 @@ bool Architect::validBuildLocation(BWAPI::Unit * builder, BWAPI::TilePosition lo
 // Returns the amount of scheduled buildings of the specified type.
 int Architect::scheduled(BWAPI::UnitType buildingType)
 {
-	return buildSchedule.count(buildingType) + constructSchedule.count(buildingType);
+	//return buildSchedule.count(buildingType) + constructSchedule.count(buildingType);
+	return schedule[buildingType];
 }
 
 

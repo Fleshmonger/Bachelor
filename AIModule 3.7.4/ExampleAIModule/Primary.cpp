@@ -107,7 +107,7 @@ void Primary::onFrame()
 	Broodwar->drawTextScreen(200, 0, "FPS: %d", BWAPI::Broodwar->getFPS());
 	Broodwar->drawTextScreen(200, 20, "APM: %d", BWAPI::Broodwar->getAPM());
 	Broodwar->drawTextScreen(200, 40, "Strength: %f", strength);
-	Broodwar->drawTextScreen(200, 60, "Workforce: %d", landlord.getHeadquarters()->workforce());
+	Broodwar->drawTextScreen(200, 60, "Scheduled Supply: %d", architect.scheduled(BWAPI::UnitTypes::Protoss_Pylon));
 	//Broodwar->drawTextScreen(200, 60, "Enemy Strength: %f", enemyStrength);
 
 	// Prevent spamming by only running our onFrame once every number of latency frames.
@@ -117,7 +117,6 @@ void Primary::onFrame()
 
 	// Manager updatíng
 	archivist.update();
-	architect.update();
 	//landlord.update();
 	reconnoiter.update();
 	architect.update();
@@ -182,10 +181,7 @@ void Primary::onUnitCreate(BWAPI::Unit* unit)
 		// Type check.
 		BWAPI::UnitType unitType = unit->getType();
 		if (unitType.isBuilding())
-		{
 			architect.completeBuild(unit);
-			architect.scheduleConstruct(unit);
-		}
 		else if (!utilUnit::isMisc(unitType))
 			producer.addProduction(unit);
 	}
@@ -201,8 +197,18 @@ void Primary::onUnitDestroy(BWAPI::Unit* unit)
 	// Ownership check.
 	if (utilUnit::isOwned(unit))
 	{
-		// Type check.
+		// Notify architect.
 		BWAPI::UnitType unitType = unit->getType();
+		if (unitType.isBuilding())
+		{
+			if (unit->isCompleted())
+				architect.removeConstruct(unit);
+			//else
+				//architect.removeBuild(unitType);
+		}
+
+
+		// Undesignate.
 		if (unitType.isWorker())
 			landlord.removeWorker(unit);
 		else if (utilUnit::isFighter(unitType))
@@ -235,8 +241,12 @@ void Primary::onUnitComplete(BWAPI::Unit *unit)
 	// Verify unit.
 	if (utilUnit::isOwned(unit))
 	{
-		// Type check.
+		// Notify architect.
 		BWAPI::UnitType unitType = unit->getType();
+		if (unitType.isBuilding())
+			architect.removeConstruct(unit);
+
+		// Designate.
 		if (unitType.isWorker())
 			landlord.addWorker(unit);
 		else if (utilUnit::isFighter(unitType))

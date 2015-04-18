@@ -16,6 +16,7 @@ private:
 	Accountant * accountant;
 	Landlord * landlord;
 
+	std::map<BWAPI::UnitType, int> schedule;
 	std::multimap<BWAPI::UnitType, BWAPI::Unit*> constructSchedule;
 	std::multimap<BWAPI::UnitType, std::pair<BWAPI::Unit*, BWAPI::TilePosition>>  buildSchedule;
 
