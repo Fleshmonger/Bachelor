@@ -5,13 +5,8 @@
 Vassal::Vassal(BWAPI::Unit * depot) :
 	depot(depot),
 	workerManager(),
-	harvester(&workerManager)
+	harvester(BWTA::getRegion(depot->getPosition()), &workerManager)
 {
-	// Designate resources.
-	BWTA::Region * region = BWTA::getRegion(depot->getPosition());
-	BOOST_FOREACH(BWAPI::Unit * mineral, BWAPI::Broodwar->getStaticMinerals())
-		if (utilUnit::inRegion(mineral->getPosition(), region))
-			harvester.addMineral(mineral);
 }
 
 
@@ -60,7 +55,7 @@ void Vassal::update()
 // Returns the amount of minerals in the region.
 unsigned int Vassal::mineralFields()
 {
-	return harvester.mineralFields();
+	return harvester.getMinerals().size();
 }
 
 
@@ -68,6 +63,36 @@ unsigned int Vassal::mineralFields()
 unsigned int Vassal::workforce()
 {
 	return workerManager.workforce();
+}
+
+
+// Returns a zone containing the harvesting area.
+utilMap::Zone Vassal::getHarvestingZone()
+{
+	// Verify depot.
+	if (depot &&
+		depot->exists())
+	{
+		// Calculate zone.
+		BWAPI::TilePosition depotPos = depot->getTilePosition();
+		BWAPI::UnitType depotType = depot->getType();
+		int left = depotPos.x(),
+			top = depotPos.y(),
+			right = depotPos.x() + depotType.tileWidth() - 1,
+			bottom = depotPos.y() + depotType.tileHeight() - 1;
+		BOOST_FOREACH(BWAPI::Unit * mineral, harvester.getMinerals())
+		{
+			BWAPI::TilePosition mineralPos = mineral->getTilePosition();
+			BWAPI::UnitType mineralType = mineral->getType();
+			int left = std::min(left, mineralPos.x() + mineralType.tileWidth() - 1),
+				top = std::min(top, mineralPos.y() + mineralType.tileHeight() - 1),
+				right = std::max(right, mineralPos.x()),
+				bottom = std::max(bottom, mineralPos.y());
+		}
+		return utilMap::Zone(left, top, right, bottom);
+	}
+	else
+		return utilMap::Zone();
 }
 
 

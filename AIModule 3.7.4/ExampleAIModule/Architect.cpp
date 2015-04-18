@@ -5,7 +5,6 @@
 Architect::Architect(Accountant * accountant, Landlord * landlord) :
 	accountant(accountant),
 	landlord(landlord),
-	harvesting(0, 0, 0, 0),
 	constructSchedule(),
 	buildSchedule()
 {
@@ -123,26 +122,6 @@ void Architect::completeConstruct(BWAPI::Unit * building)
 }
 
 
-// Resizes the harvesting zone to include the given unit.
-void Architect::expandHarvesting(BWAPI::Unit * unit)
-{
-	// Verify unit.
-	if (unit && unit->exists())
-	{
-		// Calculate harvesting.
-		BWAPI::TilePosition pos = unit->getTilePosition();
-		BWAPI::UnitType type = unit->getType();
-
-		int left = std::min(harvesting.left, pos.x()),
-			top = std::min(harvesting.top, pos.y()),
-			right = std::max(harvesting.right, pos.x() + type.tileWidth()),
-			bottom = std::max(harvesting.bottom, pos.y() + type.tileHeight());
-
-		harvesting = utilMap::Zone(left, top, right, bottom);
-	}
-}
-
-
 // Creates pylons, validates orders and commands builders.
 void Architect::update()
 {
@@ -183,7 +162,11 @@ void Architect::update()
 // Returns whether or not a given building type can be built at a given location.
 bool Architect::validBuildLocation(BWAPI::Unit * builder, BWAPI::TilePosition location, BWAPI::UnitType buildingType)
 {
-	return location.isValid() && !harvesting.contains(location, buildingType) && BWAPI::Broodwar->canBuildHere(builder, location, buildingType);
+	return
+		location &&
+		location.isValid() &&
+		!landlord->getHarvestingZone(BWTA::getRegion(location)).contains(location, buildingType) &&
+		BWAPI::Broodwar->canBuildHere(builder, location, buildingType);
 }
 
 

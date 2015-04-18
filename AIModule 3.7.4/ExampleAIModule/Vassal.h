@@ -1,6 +1,7 @@
 #pragma once
 #include <BWAPI.h>
 #include <BWTA.h>
+#include "utilMap.h"
 #include "utilUnit.h"
 #include "WorkerManager.h"
 #include "Harvester.h"
@@ -27,6 +28,8 @@ public:
 
 	unsigned int mineralFields();
 	unsigned int workforce();
+
+	utilMap::Zone getHarvestingZone();
 
 	BWAPI::Unit * getDepot();
 	BWAPI::Unit * getIdleWorker();

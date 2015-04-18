@@ -132,6 +132,17 @@ bool Landlord::contains(BWTA::Region * region)
 }
 
 
+// Returns the harvesting zone related to the specified region.
+utilMap::Zone Landlord::getHarvestingZone(BWTA::Region * region)
+{
+	// Verify region.
+	if (contains(region))
+		return regionVassal[region]->getHarvestingZone();
+	else
+		return utilMap::Zone();
+}
+
+
 // Returns an idle worker from the region if one exists.
 BWAPI::Unit * Landlord::getIdleWorker(BWTA::Region * region)
 {

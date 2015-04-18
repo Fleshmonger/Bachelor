@@ -2,12 +2,16 @@
 
 
 // Constructor.
-Harvester::Harvester(WorkerManager * workerManager) :
+Harvester::Harvester(BWTA::Region * region, WorkerManager * workerManager) :
 	workerManager(workerManager),
 	minerals(),
 	minerTargets(),
 	mineralMiners()
 {
+	// Designate resources.
+	BOOST_FOREACH(BWAPI::Unit * mineral, BWAPI::Broodwar->getStaticMinerals())
+		if (utilUnit::inRegion(mineral->getPosition(), region))
+			addMineral(mineral);
 }
 
 
@@ -139,15 +143,15 @@ void Harvester::harvest()
 }
 
 
-// Returns the amount of minerals.
-unsigned int Harvester::mineralFields()
-{
-	return minerals.size();
-}
-
-
 // Returns whether the miner is in the miner pool.
 bool Harvester::contains(BWAPI::Unit * miner)
 {
 	return minerTargets.count(miner) > 0;
+}
+
+
+// Returns a copy of the sorted list of mineral pointers.
+utilUnit::UnitList Harvester::getMinerals()
+{
+	return minerals;
 }

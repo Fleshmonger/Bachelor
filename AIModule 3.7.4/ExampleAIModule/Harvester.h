@@ -17,7 +17,7 @@ private:
 	std::map<BWAPI::Unit*, utilUnit::UnitSet> mineralMiners;
 
 public:
-	Harvester(WorkerManager * workerManager);
+	Harvester(BWTA::Region * region, WorkerManager * workerManager);
 	~Harvester();
 
 	void addMineral(BWAPI::Unit * mineral);
@@ -27,6 +27,6 @@ public:
 
 	bool contains(BWAPI::Unit * miner);
 
-	unsigned int mineralFields();
+	utilUnit::UnitList getMinerals();
 };
 

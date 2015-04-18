@@ -1,5 +1,7 @@
 #pragma once
 #include <BWAPI.h>
+#include <BWTA.h>
+#include "utilMap.h"
 #include "Vassal.h"
 
 
@@ -26,6 +28,8 @@ public:
 
 	bool contains(BWAPI::Unit * worker);
 	bool contains(BWTA::Region * region);
+
+	utilMap::Zone getHarvestingZone(BWTA::Region * region);
 
 	BWAPI::Unit * getIdleWorker(BWTA::Region * region);
 	utilUnit::UnitSet getEmployed(BWTA::Region * region, Task task);
