@@ -78,7 +78,7 @@ BWAPI::Unit * Vassal::getDepot()
 }
 
 
-// Returns an idle worker if one exists.
+// Returns an idle worker in the region if one exists.
 BWAPI::Unit * Vassal::getIdleWorker()
 {
 	// Search through idle.
@@ -93,4 +93,11 @@ BWAPI::Unit * Vassal::getIdleWorker()
 
 	// No idle worker found.
 	return NULL;
+}
+
+
+// Returns a copy of pointers of workers employed with the specified task in the region.
+utilUnit::UnitSet Vassal::getEmployed(Task task)
+{
+	return workerManager.getEmployed(task);
 }

@@ -30,5 +30,6 @@ public:
 
 	BWAPI::Unit * getDepot();
 	BWAPI::Unit * getIdleWorker();
+	utilUnit::UnitSet getEmployed(Task task);
 };
 

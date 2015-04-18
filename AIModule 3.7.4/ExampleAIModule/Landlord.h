@@ -28,6 +28,7 @@ public:
 	bool contains(BWTA::Region * region);
 
 	BWAPI::Unit * getIdleWorker(BWTA::Region * region);
+	utilUnit::UnitSet getEmployed(BWTA::Region * region, Task task);
 
 	Vassal * getHeadquarters();
 	Vassal * getVassal(BWTA::Region * region);

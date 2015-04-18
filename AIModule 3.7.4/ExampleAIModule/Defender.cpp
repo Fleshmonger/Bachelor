@@ -2,9 +2,9 @@
 
 
 // Constructor
-Defender::Defender(Archivist * archivist, WorkerManager * workerManager, CombatJudge * combatJudge, ArmyManager * armyManager) :
+Defender::Defender(Archivist * archivist, Landlord * landlord, CombatJudge * combatJudge, ArmyManager * armyManager) :
 	archivist(archivist),
-	workerManager(workerManager),
+	landlord(landlord),
 	combatJudge(combatJudge),
 	armyManager(armyManager)
 {
@@ -19,12 +19,13 @@ Defender::~Defender()
 
 // Commands defense.
 //TODO Use utilUnit::command
+//TODO Only defends homeregion.
 void Defender::update()
 {
 	// Aquire defenders.
 	utilUnit::UnitSet
 		defenders = armyManager->getEnlisted(DUTY_DEFEND),
-		militia = workerManager->getEmployed(TASK_DEFEND);
+		militia = landlord->getEmployed(archivist->getHomeRegion(), TASK_DEFEND);
 
 	// Aquire invaders.
 	utilUnit::UnitSet invaders = archivist->invaders();
@@ -62,7 +63,7 @@ void Defender::update()
 
 		// Enlist militia if necessary.
 		double defenseStrength = combatJudge->strength(defenders) + combatJudge->strength(militia), invaderStrength = combatJudge->strength(invaders);
-		utilUnit::UnitSet idle = workerManager->getEmployed(TASK_IDLE);
+		utilUnit::UnitSet idle = landlord->getEmployed(archivist->getHomeRegion(), TASK_IDLE);
 		utilUnit::UnitSet::iterator it = idle.begin(), end = idle.end();
 		while (it != end && defenseStrength < invaderStrength)
 		{
@@ -71,7 +72,7 @@ void Defender::update()
 			if (worker->exists())
 			{
 				// Enlist worker.
-				workerManager->employWorker(worker, TASK_DEFEND);
+				landlord->employWorker(worker, TASK_DEFEND);
 				defenseStrength += combatJudge->strength(worker);
 				militia.insert(worker);
 			}
@@ -98,6 +99,6 @@ void Defender::update()
 		BOOST_FOREACH(BWAPI::Unit * defender, defenders)
 			armyManager->assignUnit(defender, DUTY_IDLE);
 		BOOST_FOREACH(BWAPI::Unit * worker, militia)
-			workerManager->employWorker(worker, TASK_IDLE);
+			landlord->employWorker(worker, TASK_IDLE);
 	}
 }

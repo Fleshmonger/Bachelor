@@ -15,9 +15,9 @@
 #include "Economist.h"
 #include "ArmyManager.h"
 #include "Attacker.h"
+#include "Defender.h"
 //#include "Reconnoiter.h"
 //#include "Strategist.h"
-//#include "Defender.h"
 
 
 using namespace BWAPI; //TODO Remove this
@@ -37,9 +37,9 @@ private:
 	Economist		economist;
 	ArmyManager		armyManager;
 	Attacker		attacker;
+	Defender		defender;
 	//Reconnoiter	reconnoiter;
 	//Strategist	strategist;
-	//Defender		defender;
 
 public:
 	Primary();

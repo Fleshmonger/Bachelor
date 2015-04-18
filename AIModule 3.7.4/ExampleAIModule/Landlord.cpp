@@ -143,6 +143,16 @@ BWAPI::Unit * Landlord::getIdleWorker(BWTA::Region * region)
 }
 
 
+// Returns a set of pointers of workers employed with the specified task in the region.
+utilUnit::UnitSet Landlord::getEmployed(BWTA::Region * region, Task task)
+{
+	if (contains(region))
+		return regionVassal[region]->getEmployed(task);
+	else
+		return utilUnit::UnitSet();
+}
+
+
 // Returns a pointer to the headquarter vassal.
 Vassal * Landlord::getHeadquarters()
 {
@@ -153,7 +163,7 @@ Vassal * Landlord::getHeadquarters()
 // Returns a pointer to the related vassal.
 Vassal * Landlord::getVassal(BWTA::Region * region)
 {
-	if (regionVassal.count(region) > 0)
+	if (contains(region))
 		return regionVassal[region];
 	else
 		return NULL;

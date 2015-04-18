@@ -3,7 +3,8 @@
 #include <boost/foreach.hpp>
 #include "utilUnit.h"
 #include "Archivist.h"
-#include "WorkerManager.h"
+#include "Landlord.h"
+#include "CombatJudge.h"
 #include "ArmyManager.h"
 
 
@@ -12,12 +13,12 @@ class Defender
 {
 private:
 	Archivist		* archivist;
-	WorkerManager	* workerManager;
+	Landlord		* landlord;
 	CombatJudge		* combatJudge;
 	ArmyManager		* armyManager;
 
 public:
-	Defender(Archivist * archivist, WorkerManager * workerManager, CombatJudge * combatJudge, ArmyManager * armyManager);
+	Defender(Archivist * archivist, Landlord * landlord, CombatJudge * combatJudge, ArmyManager * armyManager);
 	~Defender();
 
 	void update();

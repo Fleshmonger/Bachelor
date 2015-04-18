@@ -11,10 +11,10 @@ Primary::Primary() :
 	architect(&accountant, &landlord),
 	economist(&accountant, &landlord, &producer, &architect),
 	armyManager(&archivist, &combatJudge),
-	attacker(&archivist, &combatJudge, &armyManager)
+	attacker(&archivist, &combatJudge, &armyManager),
+	defender(&archivist, &landlord, &combatJudge, &armyManager)
 	//reconnoiter(&archivist, &workerManager),
 	//strategist(&producer, &architect),
-	//defender(&archivist, &workerManager, &combatJudge, &armyManager)
 {
 }
 
@@ -117,12 +117,12 @@ void Primary::onFrame()
 	archivist.update();
 	landlord.update();
 	architect.update();
-	economist.update();
 	armyManager.update();
+	defender.update(); //TODO Defender must be before attacker and economist, to ensure defenders are available. Fix this.
+	economist.update();
 	attacker.update();
 	//strategist.update();
 	//reconnoiter.update();
-	//defender.update(); //TODO Defender must be before attacker, to ensure defenders are available. Fix this.
 }
 
 
