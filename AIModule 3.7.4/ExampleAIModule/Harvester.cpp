@@ -20,7 +20,9 @@ Harvester::~Harvester()
 // Adds a mineral for harvesting.
 void Harvester::addMineral(BWAPI::Unit * mineral)
 {
-	if (mineral)
+	if (mineral &&
+		mineral->exists() &&
+		mineral->getType().isMineralField())
 	{
 		minerals.push_front(mineral);
 		mineralMiners[mineral] = utilUnit::UnitSet();
@@ -32,16 +34,21 @@ void Harvester::addMineral(BWAPI::Unit * mineral)
 void Harvester::removeMiner(BWAPI::Unit * miner)
 {
 	// Verify miner.
-	if (miner &&
-		minerTargets.count(miner) > 0)
+	if (contains(miner))
 	{
-		// Remove the miner.
-		BWAPI::Unit * mineral = minerTargets[miner], * mineralBack = minerals.back();
+		// Remove miner.
+		BWAPI::Unit * mineral = minerTargets[miner];
 		minerTargets.erase(miner);
 		mineralMiners[mineral].erase(miner);
 
+		// Reprioritize.
+		//TODO Remove is slow.
+		minerals.remove(mineral);
+		minerals.push_front(mineral);
+
 		// Verify distribution.
-		if (mineralMiners[mineral].size() < mineralMiners[mineralBack].size() - 1)
+		BWAPI::Unit * mineralBack = minerals.back();
+		if (mineralMiners[mineral].size() + 1 < mineralMiners[mineralBack].size())
 		{
 			// Redistribute miners.
 			BWAPI::Unit * newMiner = *mineralMiners[mineralBack].begin();
@@ -57,6 +64,7 @@ void Harvester::removeMiner(BWAPI::Unit * miner)
 
 
 // Removes a mineral and its related miners from the pool.
+//TODO Unused?
 void Harvester::removeMineral(BWAPI::Unit * mineral)
 {
 	// Find the mineral.
@@ -65,22 +73,14 @@ void Harvester::removeMineral(BWAPI::Unit * mineral)
 	{
 		if (*it == mineral)
 		{
+			// Remove miners.
+			BOOST_FOREACH(BWAPI::Unit * miner, mineralMiners[mineral])
+				minerTargets.erase(miner);
+
 			// Remove the mineral.
 			minerals.erase(it);
+			mineralMiners.erase(mineral);
 
-			// Remove all the miners targets.
-			std::map<BWAPI::Unit*, utilUnit::UnitSet>::iterator mineralMinersIt = mineralMiners.find(mineral);
-			utilUnit::UnitSet miners = (*mineralMinersIt).second;
-			utilUnit::UnitSet::iterator minersIt = miners.begin();
-			while (minersIt != miners.end())
-			{
-				BWAPI::Unit * miner = *minersIt;
-				minersIt++;
-				minerTargets.erase(miner);
-			}
-
-			// Remove the mineral miners.
-			mineralMiners.erase(mineralMinersIt);
 			return;
 		}
 		else
@@ -92,6 +92,8 @@ void Harvester::removeMineral(BWAPI::Unit * mineral)
 // Verifies and commands workers to mine minerals.
 void Harvester::harvest()
 {
+	BWAPI::Broodwar->drawTextScreen(200, 80, "Miners: %d", minerTargets.size());
+
 	// Verify minerals.
 	if (!minerals.empty())
 	{
@@ -107,7 +109,7 @@ void Harvester::harvest()
 			{
 				// Aquire mineral.
 				BWAPI::Unit * mineral;
-				if (minerTargets.count(miner) > 0)
+				if (contains(miner))
 					mineral = minerTargets[miner];
 				else
 				{
@@ -141,4 +143,11 @@ void Harvester::harvest()
 unsigned int Harvester::mineralFields()
 {
 	return minerals.size();
+}
+
+
+// Returns whether the miner is in the miner pool.
+bool Harvester::contains(BWAPI::Unit * miner)
+{
+	return minerTargets.count(miner) > 0;
 }

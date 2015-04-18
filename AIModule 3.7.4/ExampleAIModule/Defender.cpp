@@ -99,6 +99,6 @@ void Defender::update()
 		BOOST_FOREACH(BWAPI::Unit * defender, defenders)
 			armyManager->assignUnit(defender, DUTY_IDLE);
 		BOOST_FOREACH(BWAPI::Unit * worker, militia)
-			landlord->employWorker(worker, TASK_IDLE);
+			landlord->dismissWorker(worker);
 	}
 }

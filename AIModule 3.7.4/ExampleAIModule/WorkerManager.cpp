@@ -3,7 +3,6 @@
 
 // Constructor
 WorkerManager::WorkerManager() :
-	depot(NULL),
 	workers(),
 	assignments(),
 	employed()
@@ -64,17 +63,6 @@ void WorkerManager::removeWorker(BWAPI::Unit * worker)
 }
 
 
-// Designates the current depot for returning cargo
-void WorkerManager::setDepot(BWAPI::Unit * depot)
-{
-	if (depot &&
-		depot->exists() &&
-		utilUnit::isOwned(depot) &&
-		depot->getType().isResourceDepot())
-		this->depot = depot;
-}
-
-
 // Verifies worker integrity.
 void WorkerManager::update()
 {
@@ -90,6 +78,9 @@ void WorkerManager::update()
 		else
 		{
 			it = workers.erase(it);
+			Task task = assignments[worker];
+			assignments.erase(worker);
+			employed[task].erase(worker);
 			end = workers.end();
 		}
 	}

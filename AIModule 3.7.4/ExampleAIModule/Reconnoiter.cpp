@@ -18,6 +18,7 @@ Reconnoiter::~Reconnoiter()
 
 
 // Scouts and harasses the enemy base.
+//TODO Use command.
 void Reconnoiter::update()
 {
 	// Enemy base spotted check.

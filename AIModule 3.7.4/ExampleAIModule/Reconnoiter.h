@@ -3,7 +3,6 @@
 #include <BWTA.h>
 #include "UtilUnit.h"
 #include "Archivist.h"
-#include "Vassal.h"
 #include "Landlord.h"
 
 

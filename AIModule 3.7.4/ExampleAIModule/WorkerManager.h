@@ -12,7 +12,6 @@ enum Task { TASK_BUILD, TASK_DEFEND, TASK_IDLE };
 class WorkerManager
 {
 	private:
-		BWAPI::Unit * depot;
 		utilUnit::UnitSet					workers;
 		std::map<BWAPI::Unit*, Task>		assignments;
 		std::map<Task, utilUnit::UnitSet>	employed;
@@ -24,7 +23,6 @@ class WorkerManager
 		void addWorker(BWAPI::Unit * worker);
 		void employWorker(BWAPI::Unit * worker, Task task);
 		void removeWorker(BWAPI::Unit * worker);
-		void setDepot(BWAPI::Unit * depot);
 		void update();
 
 		bool contains(BWAPI::Unit * worker);

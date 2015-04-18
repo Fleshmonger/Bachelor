@@ -12,11 +12,11 @@
 #include "Producer.h"
 #include "CombatJudge.h"
 #include "Architect.h"
+#include "Reconnoiter.h"
 #include "Economist.h"
 #include "ArmyManager.h"
 #include "Attacker.h"
 #include "Defender.h"
-//#include "Reconnoiter.h"
 //#include "Strategist.h"
 
 
@@ -34,11 +34,11 @@ private:
 	Producer		producer;
 	CombatJudge		combatJudge;
 	Architect		architect;
+	Reconnoiter		reconnoiter;
 	Economist		economist;
 	ArmyManager		armyManager;
 	Attacker		attacker;
 	Defender		defender;
-	//Reconnoiter	reconnoiter;
 	//Strategist	strategist;
 
 public:

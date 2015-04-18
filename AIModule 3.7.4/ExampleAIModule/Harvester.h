@@ -25,6 +25,8 @@ public:
 	void removeMineral(BWAPI::Unit * mineral);
 	void harvest();
 
+	bool contains(BWAPI::Unit * miner);
+
 	unsigned int mineralFields();
 };
 

@@ -34,8 +34,7 @@ std::set<BWTA::Region*> reach = region->getReachableRegions();
 void Economist::update()
 {
 	// Command vassals.
-	std::set<Vassal*> vassals = landlord->getVassals();
-	BOOST_FOREACH(Vassal * vassal, vassals)
+	BOOST_FOREACH(Vassal * vassal, landlord->getVassals())
 	{
 		// Train miners as needed.
 		//TODO Make train workers in nearby depots if necessary.
@@ -52,12 +51,15 @@ void Economist::update()
 	{
 		// Verify headquarters depot.
 		BWAPI::Unit * depot = headquarters->getDepot();
-		if (depot)
+		if (depot &&
+			depot->exists())
 		{
+			/*
 			// Build supply as needed.
 			if (accountant->supply() < MIN_SUPPLY &&
 				architect->scheduled(UNIT_SUPPLY) == 0)
 				architect->scheduleBuild(UNIT_SUPPLY, headquarters->getDepot()->getTilePosition());
+			*/
 		}
 	}
 }

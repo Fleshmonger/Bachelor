@@ -9,11 +9,11 @@ Primary::Primary() :
 	producer(&accountant),
 	combatJudge(&archivist),
 	architect(&accountant, &landlord),
+	reconnoiter(&archivist, &landlord),
 	economist(&accountant, &landlord, &producer, &architect),
 	armyManager(&archivist, &combatJudge),
 	attacker(&archivist, &combatJudge, &armyManager),
 	defender(&archivist, &landlord, &combatJudge, &armyManager)
-	//reconnoiter(&archivist, &workerManager),
 	//strategist(&producer, &architect),
 {
 }
@@ -47,9 +47,10 @@ void Primary::onStart()
 	{
 		if (utilUnit::isOwned(unit))
 		{
-			startingUnits.insert(unit);
 			if (unit->getType().isResourceDepot())
 				landlord.addHeadquarters(unit);
+			else
+				startingUnits.insert(unit);
 		}
 	}
 	BOOST_FOREACH(BWAPI::Unit * unit, startingUnits)
@@ -106,7 +107,8 @@ void Primary::onFrame()
 	Broodwar->drawTextScreen(200, 0, "FPS: %d", BWAPI::Broodwar->getFPS());
 	Broodwar->drawTextScreen(200, 20, "APM: %d", BWAPI::Broodwar->getAPM());
 	Broodwar->drawTextScreen(200, 40, "Strength: %f", strength);
-	Broodwar->drawTextScreen(200, 60, "Enemy Strength: %f", enemyStrength);
+	Broodwar->drawTextScreen(200, 60, "Workforce: %d", landlord.getHeadquarters()->workforce());
+	//Broodwar->drawTextScreen(200, 60, "Enemy Strength: %f", enemyStrength);
 
 	// Prevent spamming by only running our onFrame once every number of latency frames.
 	// Latency frames are the number of frames before commands are processed.
@@ -115,14 +117,14 @@ void Primary::onFrame()
 
 	// Manager updatíng
 	archivist.update();
-	landlord.update();
+	//landlord.update();
+	reconnoiter.update();
 	architect.update();
 	armyManager.update();
 	defender.update(); //TODO Defender must be before attacker and economist, to ensure defenders are available. Fix this.
 	economist.update();
 	attacker.update();
 	//strategist.update();
-	//reconnoiter.update();
 }
 
 
