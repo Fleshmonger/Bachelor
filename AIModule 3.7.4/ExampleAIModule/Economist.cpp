@@ -54,12 +54,10 @@ void Economist::update()
 		if (depot &&
 			depot->exists())
 		{
-			/*
 			// Build supply as needed.
 			if (accountant->supply() < MIN_SUPPLY &&
 				architect->scheduled(UNIT_SUPPLY) == 0)
 				architect->scheduleBuild(UNIT_SUPPLY, headquarters->getDepot()->getTilePosition());
-			*/
 		}
 	}
 }

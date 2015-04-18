@@ -138,7 +138,7 @@ void Architect::expandHarvesting(BWAPI::Unit * unit)
 			right = std::max(harvesting.right, pos.x() + type.tileWidth()),
 			bottom = std::max(harvesting.bottom, pos.y() + type.tileHeight());
 
-		harvesting = Zone(left, top, right, bottom);
+		harvesting = utilMap::Zone(left, top, right, bottom);
 	}
 }
 

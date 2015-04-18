@@ -117,6 +117,7 @@ void Primary::onFrame()
 
 	// Manager updatíng
 	archivist.update();
+	architect.update();
 	//landlord.update();
 	reconnoiter.update();
 	architect.update();
