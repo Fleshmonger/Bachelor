@@ -2,11 +2,11 @@
 
 
 // Constructor
-Attacker::Attacker(Archivist * archivist, CombatJudge * combatJudge, ArmyManager * armyManager) :
+Attacker::Attacker(Archivist * archivist, Landlord * landlord, CombatJudge * combatJudge, ArmyManager * armyManager) :
 	archivist(archivist),
+	landlord(landlord),
 	combatJudge(combatJudge),
 	armyManager(armyManager),
-	depot(),
 	target()
 {
 }
@@ -15,15 +15,6 @@ Attacker::Attacker(Archivist * archivist, CombatJudge * combatJudge, ArmyManager
 // Destructor
 Attacker::~Attacker()
 {
-}
-
-
-// Sets the position units will retreat to.
-void Attacker::setDepot(BWAPI::Unit * depot)
-{
-	if (depot &&
-		depot->exists())
-		this->depot = depot;
 }
 
 
@@ -100,10 +91,14 @@ void Attacker::update()
 	}
 	else
 	{
+		// Aquire depot.
+		BWAPI::Unit * depot = landlord->getHeadquarters()->getDepot();
+
 		// Command ready.
 		if (depot &&
 			depot->exists())
 		{
+			// Retreat.
 			BOOST_FOREACH(BWAPI::Unit * unit, ready)
 				utilUnit::command(unit, BWAPI::UnitCommandTypes::Move, depot->getPosition());
 		}
@@ -135,8 +130,7 @@ bool Attacker::enemyDetected(BWAPI::Unit * unit)
 		BOOST_FOREACH(BWAPI::Unit * enemy, archivist->getEnemies())
 		{
 			BWAPI::Position position = archivist->getPosition(enemy);
-			if (utilUnit::isEnemy(enemy) &&
-				position &&
+			if (position &&
 				unit->getDistance(position) < DETECTION_DISTANCE)
 				return true;
 		}

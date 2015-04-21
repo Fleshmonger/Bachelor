@@ -18,7 +18,6 @@ private:
 	Archivist * archivist;
 	Landlord * landlord;
 
-	//BWAPI::Position target;
 	BWAPI::Unit * scout;
 	BWTA::BaseLocation * target;
 

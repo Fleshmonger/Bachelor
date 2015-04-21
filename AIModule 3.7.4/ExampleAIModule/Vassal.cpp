@@ -78,16 +78,16 @@ utilMap::Zone Vassal::getHarvestingZone()
 		BWAPI::UnitType depotType = depot->getType();
 		int left = depotPos.x(),
 			top = depotPos.y(),
-			right = depotPos.x() + depotType.tileWidth() - 1,
-			bottom = depotPos.y() + depotType.tileHeight() - 1;
+			right = depotPos.x() + depotType.tileWidth(),
+			bottom = depotPos.y() + depotType.tileHeight();
 		BOOST_FOREACH(BWAPI::Unit * mineral, harvester.getMinerals())
 		{
 			BWAPI::TilePosition mineralPos = mineral->getTilePosition();
 			BWAPI::UnitType mineralType = mineral->getType();
-			int left = std::min(left, mineralPos.x() + mineralType.tileWidth() - 1),
-				top = std::min(top, mineralPos.y() + mineralType.tileHeight() - 1),
-				right = std::max(right, mineralPos.x()),
-				bottom = std::max(bottom, mineralPos.y());
+			left = std::min(left, mineralPos.x() + mineralType.tileWidth());
+			top = std::min(top, mineralPos.y() + mineralType.tileHeight());
+			right = std::max(right, mineralPos.x());
+			bottom = std::max(bottom, mineralPos.y());
 		}
 		return utilMap::Zone(left, top, right, bottom);
 	}

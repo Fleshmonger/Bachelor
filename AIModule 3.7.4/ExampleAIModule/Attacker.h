@@ -3,6 +3,7 @@
 #include <boost/foreach.hpp>
 #include "UtilUnit.h"
 #include "Archivist.h"
+#include "Landlord.h"
 #include "CombatJudge.h"
 #include "ArmyManager.h"
 
@@ -16,18 +17,16 @@ class Attacker
 {
 private:
 	Archivist	* archivist;
+	Landlord	* landlord;
 	CombatJudge	* combatJudge;
 	ArmyManager	* armyManager;
 
-	BWAPI::Unit
-		* depot,
-		* target;
+	BWAPI::Unit * target;
 
 public:
-	Attacker(Archivist * archivist, CombatJudge * combatJudge, ArmyManager * armyManager);
+	Attacker(Archivist * archivist, Landlord * landlord, CombatJudge * combatJudge, ArmyManager * armyManager);
 	~Attacker();
 
-	void setDepot(BWAPI::Unit * depot);
 	void update();
 
 	bool enemyDetected(BWAPI::Unit * unit);

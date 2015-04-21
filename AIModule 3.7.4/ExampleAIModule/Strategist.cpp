@@ -2,7 +2,8 @@
 
 
 // Constructor
-Strategist::Strategist(Producer * producer, Architect * architect) :
+Strategist::Strategist(Landlord * landlord, Producer * producer, Architect * architect) :
+	landlord(landlord),
 	producer(producer),
 	architect(architect)
 {
@@ -18,10 +19,8 @@ Strategist::~Strategist()
 // Builds facilities and troops.
 void Strategist::update()
 {
-	/*
 	// Train new troops.
-	producer->train(INFANTRY_UNIT);
+	producer->scheduleTraining(INFANTRY_UNIT);
 	if (architect->scheduled(INFANTRY_FACTORY) + producer->getFactories(INFANTRY_FACTORY).size() < MAX_FACTORIES)
-		architect->scheduleBuild(INFANTRY_FACTORY);
-		*/
+		architect->scheduleBuild(INFANTRY_FACTORY, landlord->getHeadquarters()->getDepot()->getTilePosition());
 }
