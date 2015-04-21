@@ -2,11 +2,16 @@
 
 
 // Constructor
-Vassal::Vassal() :
+Vassal::Vassal(BWTA::Region * region) :
 	depot(),
+	region(region),
 	workerManager(),
 	harvester(&workerManager)
 {
+	// Designate minerals.
+	BOOST_FOREACH(BWAPI::Unit * mineral, BWAPI::Broodwar->getStaticMinerals())
+		if (utilUnit::inRegion(mineral->getPosition(), region))
+			harvester.addMineral(mineral);
 }
 
 
@@ -45,16 +50,7 @@ void Vassal::setDepot(BWAPI::Unit * depot)
 	if (utilUnit::isOwned(depot) &&
 		depot->exists() &&
 		depot->getType().isResourceDepot())
-	{
-		// Set depot.
 		this->depot = depot;
-
-		// Designate minerals.
-		BWTA::Region * region = BWTA::getRegion(depot->getPosition());
-		BOOST_FOREACH(BWAPI::Unit * mineral, BWAPI::Broodwar->getStaticMinerals())
-			if (utilUnit::inRegion(mineral->getPosition(), region))
-				harvester.addMineral(mineral);
-	}
 }
 
 
@@ -145,4 +141,11 @@ BWAPI::Unit * Vassal::getIdleWorker()
 utilUnit::UnitSet Vassal::getEmployed(Task task)
 {
 	return workerManager.getEmployed(task);
+}
+
+
+// Returns the region the Vassal is situated in.
+BWTA::Region * Vassal::getRegion()
+{
+	return region;
 }

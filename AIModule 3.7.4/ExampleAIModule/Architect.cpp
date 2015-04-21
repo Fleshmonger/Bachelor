@@ -17,8 +17,15 @@ Architect::~Architect()
 }
 
 
-// Attempt to build a new building. Returns true if it succeeds, otherwise returns false.
-bool Architect::scheduleBuild(BWAPI::UnitType buildingType, BWAPI::TilePosition desiredLocation)
+// Attempt to build a new building and returns true if it succeeds.
+bool Architect::scheduleBuilding(BWAPI::UnitType buildingType, BWAPI::TilePosition desiredLocation)
+{
+	return scheduleBuilding(buildingType, desiredLocation, landlord->getIdleWorker(BWTA::getRegion(desiredLocation)));
+}
+
+
+// Attempt to build a new building with the builder and returns true if it succeeds.
+bool Architect::scheduleBuilding(BWAPI::UnitType buildingType, BWAPI::TilePosition desiredLocation, BWAPI::Unit * builder)
 {
 	// Confirm the unit type.
 	if (buildingType.isBuilding())
@@ -26,8 +33,7 @@ bool Architect::scheduleBuild(BWAPI::UnitType buildingType, BWAPI::TilePosition 
 		// Check if we have the resources.
 		if (accountant->isAffordable(buildingType))
 		{
-			// Aquire builder.
-			BWAPI::Unit * builder = landlord->getIdleWorker(BWTA::getRegion(desiredLocation));
+			// Verify builder.
 			if (builder)
 			{
 				BWAPI::TilePosition location = getBuildLocation(builder, desiredLocation, buildingType);

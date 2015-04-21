@@ -92,8 +92,6 @@ void Harvester::removeMineral(BWAPI::Unit * mineral)
 // Verifies and commands workers to mine minerals.
 void Harvester::harvest()
 {
-	BWAPI::Broodwar->drawTextScreen(200, 80, "Miners: %d", minerTargets.size());
-
 	// Verify minerals.
 	if (!minerals.empty())
 	{

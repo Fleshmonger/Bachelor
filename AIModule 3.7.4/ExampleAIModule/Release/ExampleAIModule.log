@@ -1,4 +1,4 @@
-﻿Build started 21-04-2015 20:29:06.
+﻿Build started 22-04-2015 00:41:46.
      1>Project "D:\Bachelor\AIModule 3.7.4\ExampleAIModule\ExampleAIModule.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
          D:\Programs\Microsoft Visual Studio 9.0\VC\bin\CL.exe /c /I../Source /I"D:\Programs\BWAPI 3.7.4/include" /ID:\Tools\boost_1_57_0 /I/include /I/include /I/include/freetype2 /I/include /Zi /nologo /W3 /WX- /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _WINDOWS /D _USRDLL /D EXAMPLEAIMODULE_EXPORTS /D _WINDLL /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc90.pdb" /Gd /TP /analyze- /errorReport:prompt Primary.cpp
@@ -26,7 +26,6 @@
             Creating library D:\Bachelor\AIModule 3.7.4\Release\AIBotModule.lib and object D:\Bachelor\AIModule 3.7.4\Release\AIBotModule.exp
      1>LINK : warning LNK4098: defaultlib 'LIBCMT' conflicts with use of other libs; use /NODEFAULTLIB:library
          Generating code
-     1>d:\bachelor\aimodule 3.7.4\exampleaimodule\producer.cpp(71): warning C4715: 'Producer::scheduleTraining' : not all control paths return a value
          Finished generating code
          ExampleAIModule.vcxproj -> D:\Bachelor\AIModule 3.7.4\Release\AIBotModule.dll
        Manifest:
@@ -35,4 +34,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:03.69
+Time Elapsed 00:00:03.65

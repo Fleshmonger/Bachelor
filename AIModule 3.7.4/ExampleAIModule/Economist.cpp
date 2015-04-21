@@ -57,7 +57,30 @@ void Economist::update()
 			// Build supply as needed.
 			if (accountant->supply() < MIN_SUPPLY &&
 				architect->scheduled(UNIT_SUPPLY) == 0)
-				architect->scheduleBuild(UNIT_SUPPLY, headquarters->getDepot()->getTilePosition());
+				architect->scheduleBuilding(UNIT_SUPPLY, headquarters->getDepot()->getTilePosition());
+		}
+
+		// Expand.
+		//TODO Cleanup.
+		if (landlord->getVassals().size() < 2 &&
+			architect->scheduled(UNIT_DEPOT) == 0)
+		{
+			std::set<BWTA::Chokepoint*> borders = headquarters->getRegion()->getChokepoints();
+			if (!borders.empty())
+			{
+				BWTA::Chokepoint * border = *borders.begin();
+				BWTA::Region * region;
+				if (border->getRegions().first == headquarters->getRegion())
+					region = border->getRegions().second;
+				else
+					region = border->getRegions().first;
+				std::set<BWTA::BaseLocation*> locations = region->getBaseLocations();
+				if (!locations.empty())
+				{
+					BWTA::BaseLocation * location = *locations.begin();
+					architect->scheduleBuilding(UNIT_DEPOT, location->getTilePosition(), landlord->getIdleWorker(headquarters->getRegion()));
+				}
+			}
 		}
 	}
 }

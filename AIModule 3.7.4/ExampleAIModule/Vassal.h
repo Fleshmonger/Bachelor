@@ -12,12 +12,13 @@ class Vassal
 {
 private:
 	BWAPI::Unit	* depot;
+	BWTA::Region	* region;
 
 	WorkerManager	workerManager;
 	Harvester		harvester;
 
 public:
-	Vassal();
+	Vassal(BWTA::Region * region);
 	~Vassal();
 
 	void addWorker(BWAPI::Unit * worker);
@@ -35,5 +36,7 @@ public:
 	BWAPI::Unit * getDepot();
 	BWAPI::Unit * getIdleWorker();
 	utilUnit::UnitSet getEmployed(Task task);
+
+	BWTA::Region * getRegion();
 };
 

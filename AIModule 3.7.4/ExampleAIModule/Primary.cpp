@@ -39,24 +39,6 @@ void Primary::onStart()
 	// Update managers
 	// TODO Move this to designator class?
 	archivist.analyzed();
-	//economist.analyzed(); TODO Needed later.
-
-	/*
-	// Create first vassal.
-	utilUnit::UnitSet startingUnits;
-	BOOST_FOREACH(BWAPI::Unit * unit, BWAPI::Broodwar->self()->getUnits())
-	{
-		if (utilUnit::isOwned(unit))
-		{
-			if (unit->getType().isResourceDepot())
-				landlord.addHeadquarters(unit);
-			else
-				startingUnits.insert(unit);
-		}
-	}
-	BOOST_FOREACH(BWAPI::Unit * unit, startingUnits)
-		landlord.addWorker(unit);
-	*/
 }
 
 
@@ -110,7 +92,6 @@ void Primary::onFrame()
 	Broodwar->drawTextScreen(200, 0, "FPS: %d", BWAPI::Broodwar->getFPS());
 	Broodwar->drawTextScreen(200, 20, "APM: %d", BWAPI::Broodwar->getAPM());
 	Broodwar->drawTextScreen(200, 40, "Strength: %f", strength);
-	Broodwar->drawTextScreen(200, 60, "Scheduled Supply: %d", architect.scheduled(BWAPI::UnitTypes::Protoss_Pylon));
 	//Broodwar->drawTextScreen(200, 60, "Enemy Strength: %f", enemyStrength);
 	*/
 	Broodwar->drawTextScreen(200, 0, "Vassals: %d", landlord.getVassals().size());
@@ -130,7 +111,7 @@ void Primary::onFrame()
 	defender.update(); //TODO Defender must be before attacker and economist, to ensure defenders are available. Fix this.
 	economist.update();
 	attacker.update();
-	strategist.update();
+	//strategist.update();
 }
 
 
@@ -203,23 +184,22 @@ void Primary::onUnitDestroy(BWAPI::Unit* unit)
 	// Ownership check.
 	if (utilUnit::isOwned(unit))
 	{
-		// Notify architect.
+		// Completion check.
 		BWAPI::UnitType unitType = unit->getType();
-		if (unitType.isBuilding())
+		if (unit->isCompleted())
 		{
-			if (unit->isCompleted())
-				architect.removeConstruct(unit);
-			//else
-				//architect.removeBuild(unitType);
+			// Undesignate.
+			if (unitType.isWorker())
+				landlord.removeWorker(unit);
+			else if (utilUnit::isFighter(unitType))
+				armyManager.removeUnit(unit);
+			else if (unitType.canProduce())
+				producer.addFactory(unit);
 		}
-
-		// Undesignate.
-		if (unitType.isWorker())
-			landlord.removeWorker(unit);
-		else if (utilUnit::isFighter(unitType))
-			armyManager.removeUnit(unit);
-		else if (unitType.canProduce())
-			producer.addFactory(unit);
+		else if (unitType.isBuilding())
+			architect.removeConstruct(unit);
+		else
+			producer.removeProduction(unit);
 	}
 }
 
@@ -250,6 +230,8 @@ void Primary::onUnitComplete(BWAPI::Unit *unit)
 		BWAPI::UnitType unitType = unit->getType();
 		if (unitType.isBuilding())
 			architect.removeConstruct(unit);
+		else
+			producer.removeProduction(unit);
 
 		// Check if expansion.
 		if (unitType.isResourceDepot())

@@ -150,7 +150,7 @@ void Landlord::newVassal(BWTA::Region * region)
 	if (!contains(region))
 	{
 		// Instantiate vassal.
-		Vassal * vassal = new Vassal();
+		Vassal * vassal = new Vassal(region);
 		regionVassal[region] = vassal;
 		vassals.insert(vassal);
 

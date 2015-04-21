@@ -5,6 +5,7 @@
 Producer::Producer(Accountant * accountant) :
 	accountant(accountant),
 	trainingSchedule(),
+	productionSchedule(),
 	factories()
 {
 }
@@ -20,7 +21,7 @@ Producer::~Producer()
 void Producer::addFactory(BWAPI::Unit * factory)
 {
 	// Verify factory.
-	if (factory &&
+	if (utilUnit::isOwned(factory) &&
 		factory->exists())
 		factories[factory->getType()].insert(factory);
 }
@@ -30,16 +31,22 @@ void Producer::addFactory(BWAPI::Unit * factory)
 void Producer::addProduction(BWAPI::Unit * unit)
 {
 	// Verify unit.
-	if (unit &&
-		utilUnit::isOwned(unit))
+	if (utilUnit::isOwned(unit))
 	{
 		// Verify schedule.
 		BWAPI::UnitType unitType = unit->getType();
-		if (trainingSchedule.count(unitType) > 0)
+		if (trainingSchedule.count(unitType) > 0 &&
+			trainingSchedule[unitType] > 0)
 		{
 			// Remove training schedule.
-			trainingSchedule.erase(unitType);
+			trainingSchedule[unitType]--;
 			accountant->deallocate(unitType);
+
+			// Add production schedule.
+			if (productionSchedule.count(unitType) > 0)
+				productionSchedule[unitType]++;
+			else
+				productionSchedule[unitType] = 1;
 		}
 	}
 }
@@ -54,19 +61,27 @@ void Producer::removeFactory(BWAPI::Unit * factory)
 }
 
 
+// Removes a unit from the production schedule.
+void Producer::removeProduction(BWAPI::Unit * unit)
+{
+	// Verify unit.
+	if (utilUnit::isOwned(unit) &&
+		productionSchedule.count(unit->getType()))
+		productionSchedule[unit->getType()]--;
+}
+
+
 // Attempts to train a unit at an available facility and returns true if successful.
 bool Producer::scheduleTraining(BWAPI::UnitType unitType)
 {
-	// Find factory.
+	// Search through factories.
 	std::pair<BWAPI::UnitType, int> builderInfo = unitType.whatBuilds();
 	BOOST_FOREACH(BWAPI::Unit * factory, factories[builderInfo.first])
 	{
-		// Check availability.
+		// Verify factory.
 		if (factory->exists() &&
 			!factory->isTraining())
-		{
 			return scheduleTraining(unitType, factory);
-		}
 	}
 }
 
@@ -82,12 +97,27 @@ bool Producer::scheduleTraining(BWAPI::UnitType unitType, BWAPI::Unit * factory)
 		factory->train(unitType))				// Attempt training.
 	{
 		// Schedule training.
-		trainingSchedule.insert(unitType);
+		if (trainingSchedule.count(unitType) > 0)
+			trainingSchedule[unitType]++;
+		else
+			trainingSchedule[unitType] = 1;
 		accountant->allocate(unitType);
 		return true;
 	}
 	else
 		return false;
+}
+
+
+// Returns the amount of scheduled units of the unit type.
+unsigned int Producer::scheduled(BWAPI::UnitType unitType)
+{
+	int scheduled = 0;
+	if (trainingSchedule.count(unitType) > 0)
+		scheduled += trainingSchedule[unitType];
+	if (productionSchedule.count(unitType) > 0)
+		scheduled += productionSchedule[unitType];
+	return scheduled;
 }
 
 
