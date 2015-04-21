@@ -24,16 +24,26 @@ void Reconnoiter::update()
 	// Enemy base spotted check.
 	if (archivist->getDepots().empty())
 	{
-		// Finding Target.
-		std::set<BWAPI::TilePosition> points = BWAPI::Broodwar->getStartLocations();
-		std::set<BWAPI::TilePosition>::iterator it = points.begin();
-		while ((!target || BWAPI::Broodwar->isExplored(BWAPI::TilePosition(target))) && it != points.end())
+		// Aquire target
+		if ((!target || BWAPI::Broodwar->isExplored(target->getTilePosition())))
 		{
-			BWAPI::TilePosition tile = *it;
-			if (!BWAPI::Broodwar->isExplored(tile))
-				target = BWAPI::Position(tile);
-			++it;
+			target = NULL;
+			std::set<BWTA::BaseLocation*> locations = BWTA::getBaseLocations();
+			std::set<BWTA::BaseLocation*>::const_iterator
+				it = locations.begin(),
+				end = locations.end();
+			while (it != end)
+			{
+				if ((*it)->isStartLocation() && !BWAPI::Broodwar->isExplored((*it)->getTilePosition()))
+				{
+					target = *it;
+					break;
+				}
+				else
+					it++;
+			}
 		}
+
 		// Scouting
 		if (target)
 		{
@@ -45,9 +55,9 @@ void Reconnoiter::update()
 			}
 
 			// Commanding Scout
-			if (scout && scout->getOrderTargetPosition() != target)
+			if (scout)
+				scout->move(target->getPosition());
 				//utilUnit::command(scout, BWAPI::UnitCommandTypes::Move, target);
-				scout->move(target);
 		}
 	}
 	else if (scout && scout->exists())

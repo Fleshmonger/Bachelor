@@ -286,6 +286,10 @@ void Primary::drawTerrainData()
 		//if this is an island expansion, draw a yellow circle around the base location
 		if ((*i)->isIsland())
 			Broodwar->drawCircle(CoordinateType::Map, c.x(), c.y(), 80, Colors::Yellow, false);
+
+		//if this is a start location, draw a green circle around the base location
+		if ((*i)->isStartLocation())
+			Broodwar->drawCircle(CoordinateType::Map, c.x(), c.y(), 100, Colors::Green, false);
 	}
 
 	//we will iterate through all the regions and draw the polygon outline of it in green.

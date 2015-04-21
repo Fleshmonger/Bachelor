@@ -18,8 +18,9 @@ private:
 	Archivist * archivist;
 	Landlord * landlord;
 
-	BWAPI::Position target;
+	//BWAPI::Position target;
 	BWAPI::Unit * scout;
+	BWTA::BaseLocation * target;
 
 public:
 	Reconnoiter(Archivist * archivist, Landlord * landlord);
