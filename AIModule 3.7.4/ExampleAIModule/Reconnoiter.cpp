@@ -19,6 +19,7 @@ Reconnoiter::~Reconnoiter()
 
 // Scouts and harasses the enemy base.
 //TODO Use command.
+//TODO Cleanup.
 void Reconnoiter::update()
 {
 	// Enemy base spotted check.
@@ -34,7 +35,8 @@ void Reconnoiter::update()
 				end = locations.end();
 			while (it != end)
 			{
-				if ((*it)->isStartLocation() && !BWAPI::Broodwar->isExplored((*it)->getTilePosition()))
+				if ((*it)->isStartLocation() &&
+					!BWAPI::Broodwar->isExplored((*it)->getTilePosition()))
 				{
 					target = *it;
 					break;
@@ -48,9 +50,12 @@ void Reconnoiter::update()
 		if (target)
 		{
 			// Retrieve Scout
-			if ((!scout || !scout->exists()) && landlord->getHeadquarters()->workforce() >= MIN_WORKFORCE)
+			Vassal * headquarters = landlord->getHeadquarters();
+			if ((!scout || !scout->exists()) &&
+				headquarters &&
+				headquarters->workforce() >= MIN_WORKFORCE)
 			{
-				scout = landlord->getIdleWorker(BWTA::getRegion(landlord->getHeadquarters()->getDepot()->getPosition()));
+				scout = headquarters->getIdleWorker();
 				landlord->removeWorker(scout);
 			}
 

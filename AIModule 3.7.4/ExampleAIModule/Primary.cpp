@@ -41,6 +41,7 @@ void Primary::onStart()
 	archivist.analyzed();
 	//economist.analyzed(); TODO Needed later.
 
+	/*
 	// Create first vassal.
 	utilUnit::UnitSet startingUnits;
 	BOOST_FOREACH(BWAPI::Unit * unit, BWAPI::Broodwar->self()->getUnits())
@@ -55,6 +56,7 @@ void Primary::onStart()
 	}
 	BOOST_FOREACH(BWAPI::Unit * unit, startingUnits)
 		landlord.addWorker(unit);
+	*/
 }
 
 
@@ -101,6 +103,7 @@ void Primary::onFrame()
 	drawTerrainData();
 
 	// Debugging display.
+	/*
 	double
 		strength = combatJudge.strength(armyManager.getArmy()),
 		enemyStrength = combatJudge.strength(archivist.getTroops()) + combatJudge.strength(archivist.getTurrets());
@@ -109,6 +112,9 @@ void Primary::onFrame()
 	Broodwar->drawTextScreen(200, 40, "Strength: %f", strength);
 	Broodwar->drawTextScreen(200, 60, "Scheduled Supply: %d", architect.scheduled(BWAPI::UnitTypes::Protoss_Pylon));
 	//Broodwar->drawTextScreen(200, 60, "Enemy Strength: %f", enemyStrength);
+	*/
+	Broodwar->drawTextScreen(200, 0, "Vassals: %d", landlord.getVassals().size());
+	Broodwar->drawTextScreen(200, 20, "Headquarters: %s", landlord.getHeadquarters() ? "Yes" : "No");
 
 	// Prevent spamming by only running our onFrame once every number of latency frames.
 	// Latency frames are the number of frames before commands are processed.
@@ -207,7 +213,6 @@ void Primary::onUnitDestroy(BWAPI::Unit* unit)
 				//architect.removeBuild(unitType);
 		}
 
-
 		// Undesignate.
 		if (unitType.isWorker())
 			landlord.removeWorker(unit);
@@ -245,6 +250,10 @@ void Primary::onUnitComplete(BWAPI::Unit *unit)
 		BWAPI::UnitType unitType = unit->getType();
 		if (unitType.isBuilding())
 			architect.removeConstruct(unit);
+
+		// Check if expansion.
+		if (unitType.isResourceDepot())
+			landlord.addDepot(unit);
 
 		// Designate.
 		if (unitType.isWorker())

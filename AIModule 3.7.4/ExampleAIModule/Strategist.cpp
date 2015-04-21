@@ -21,6 +21,11 @@ void Strategist::update()
 {
 	// Train new troops.
 	producer->scheduleTraining(INFANTRY_UNIT);
-	if (architect->scheduled(INFANTRY_FACTORY) + producer->getFactories(INFANTRY_FACTORY).size() < MAX_FACTORIES)
-		architect->scheduleBuild(INFANTRY_FACTORY, landlord->getHeadquarters()->getDepot()->getTilePosition());
+
+	// Build gateways.
+	Vassal * headquarters = landlord->getHeadquarters();
+	if (headquarters &&
+		headquarters->getDepot() &&
+		architect->scheduled(INFANTRY_FACTORY) + producer->getFactories(INFANTRY_FACTORY).size() < MAX_FACTORIES)
+		architect->scheduleBuild(INFANTRY_FACTORY, headquarters->getDepot()->getTilePosition());
 }

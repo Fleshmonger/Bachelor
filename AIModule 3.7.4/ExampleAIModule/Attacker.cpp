@@ -89,16 +89,16 @@ void Attacker::update()
 		fighters.insert(ready.begin(), ready.end());
 		armyManager->assignUnits(ready, DUTY_ATTACK_FIGHT);
 	}
-	else
+	else if (landlord->getHeadquarters())
 	{
 		// Aquire depot.
 		BWAPI::Unit * depot = landlord->getHeadquarters()->getDepot();
 
-		// Command ready.
+		// Verify depot.
 		if (depot &&
 			depot->exists())
 		{
-			// Retreat.
+			// Command ready to retreat.
 			BOOST_FOREACH(BWAPI::Unit * unit, ready)
 				utilUnit::command(unit, BWAPI::UnitCommandTypes::Move, depot->getPosition());
 		}
@@ -107,11 +107,11 @@ void Attacker::update()
 	// Verify target position.
 	if (targetPosition)
 	{
-		// Command transit.
+		// Command transit to move.
 		BOOST_FOREACH(BWAPI::Unit * traveller, transit)
 			utilUnit::command(traveller, BWAPI::UnitCommandTypes::Move, targetPosition);
 
-		// Command fighters.
+		// Command fighters to attack.
 		BOOST_FOREACH(BWAPI::Unit * fighter, fighters)
 			utilUnit::command(fighter, BWAPI::UnitCommandTypes::Attack_Move, targetPosition);
 	}

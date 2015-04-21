@@ -1,6 +1,8 @@
 #pragma once
 #include <BWAPI.h>
 #include "Archivist.h"
+#include "Vassal.h"
+#include "Landlord.h"
 #include "Producer.h"
 #include "Architect.h"
 

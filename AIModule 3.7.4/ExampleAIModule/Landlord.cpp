@@ -12,11 +12,12 @@ Landlord::Landlord() :
 
 
 // Deconstructor.
+//TODO Deconstruct vassals.
 Landlord::~Landlord()
 {
 }
 
-
+/*
 // Creates a vassal region tied to the given depot, designated as the main base.
 void Landlord::addHeadquarters(BWAPI::Unit * depot)
 {
@@ -49,37 +50,57 @@ void Landlord::addExpansion(BWAPI::Unit * depot)
 		vassals.insert(vassal);
 	}
 }
+*/
+
+
+// Updates all vassals.
+//TODO Move harvesting to separate economist class.
+//TODO distribute workers between regions.
+void Landlord::update()
+{
+	// Update vassals.
+	BOOST_FOREACH(Vassal * vassal, vassals)
+		vassal->update();
+}
+
+
+// Designates a depot to the related vassal.
+void Landlord::addDepot(BWAPI::Unit * depot)
+{
+	// Verify depot.
+	if (utilUnit::isOwned(depot) &&
+		depot->exists() &&
+		depot->getType().isResourceDepot())
+	{
+		// Verify vassal or create new.
+		BWTA::Region * region = BWTA::getRegion(depot->getPosition());
+		if (!contains(region))
+			newVassal(region);
+
+		// Designate depot.
+		regionVassal[region]->setDepot(depot);
+	}
+}
 
 
 // Adds a worker to the related vassal.
 void Landlord::addWorker(BWAPI::Unit * worker)
 {
-	// Verify unit.
+	// Verify worker.
 	if (utilUnit::isOwned(worker) &&
 		worker->exists() &&
 		worker->getType().isWorker())
 	{
-		// Verify region.
+		// Verify vassal or create new.
 		BWTA::Region * region = BWTA::getRegion(worker->getPosition());
-		if (contains(region))
-			regionVassal[region]->addWorker(worker);
+		if (!contains(region))
+			newVassal(region);
+
+		// Add worker.
+		regionVassal[region]->addWorker(worker);
 
 		// Add entry.
 		workerRegion[worker] = region;
-	}
-}
-
-
-// Employs a worker from the related vassal.
-void Landlord::employWorker(BWAPI::Unit * worker, Task task)
-{
-	// Verify worker.
-	if (contains(worker))
-	{
-		// Verify vassal.
-		BWTA::Region * region = workerRegion[worker];
-		if (contains(region))
-			regionVassal[region]->employWorker(worker, task);
 	}
 }
 
@@ -108,14 +129,35 @@ void Landlord::removeWorker(BWAPI::Unit * worker)
 }
 
 
-// Updates all vassals.
-//TODO Move harvesting to separate economist class.
-//TODO distribute workers between regions.
-void Landlord::update()
+// Employs a worker from the related vassal.
+void Landlord::employWorker(BWAPI::Unit * worker, Task task)
 {
-	// Update vassals.
-	BOOST_FOREACH(Vassal * vassal, vassals)
-		vassal->update();
+	// Verify worker.
+	if (contains(worker))
+	{
+		// Verify vassal.
+		BWTA::Region * region = workerRegion[worker];
+		if (contains(region))
+			regionVassal[region]->employWorker(worker, task);
+	}
+}
+
+
+// Instantiates a new vassal for the region.
+void Landlord::newVassal(BWTA::Region * region)
+{
+	// Verify region.
+	if (!contains(region))
+	{
+		// Instantiate vassal.
+		Vassal * vassal = new Vassal();
+		regionVassal[region] = vassal;
+		vassals.insert(vassal);
+
+		// Assign headquarters if there is none.
+		if (!headquarters)
+			headquarters = vassal;
+	}
 }
 
 
@@ -144,27 +186,6 @@ utilMap::Zone Landlord::getHarvestingZone(BWTA::Region * region)
 }
 
 
-// Returns an idle worker from the region if one exists.
-BWAPI::Unit * Landlord::getIdleWorker(BWTA::Region * region)
-{
-	// Verify region.
-	if (contains(region))
-		return regionVassal[region]->getIdleWorker();
-	else
-		return NULL;
-}
-
-
-// Returns a set of pointers of workers employed with the specified task in the region.
-utilUnit::UnitSet Landlord::getEmployed(BWTA::Region * region, Task task)
-{
-	if (contains(region))
-		return regionVassal[region]->getEmployed(task);
-	else
-		return utilUnit::UnitSet();
-}
-
-
 // Returns a pointer to the headquarter vassal.
 Vassal * Landlord::getHeadquarters()
 {
@@ -186,4 +207,25 @@ Vassal * Landlord::getVassal(BWTA::Region * region)
 std::set<Vassal*> Landlord::getVassals()
 {
 	return vassals;
+}
+
+
+// Returns an idle worker from the region if one exists.
+BWAPI::Unit * Landlord::getIdleWorker(BWTA::Region * region)
+{
+	// Verify region.
+	if (contains(region))
+		return regionVassal[region]->getIdleWorker();
+	else
+		return NULL;
+}
+
+
+// Returns a set of pointers of workers employed with the specified task in the region.
+utilUnit::UnitSet Landlord::getEmployed(BWTA::Region * region, Task task)
+{
+	if (contains(region))
+		return regionVassal[region]->getEmployed(task);
+	else
+		return utilUnit::UnitSet();
 }

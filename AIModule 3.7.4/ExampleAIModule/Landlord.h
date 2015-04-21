@@ -18,23 +18,25 @@ public:
 	Landlord();
 	~Landlord();
 
-	void addHeadquarters(BWAPI::Unit * depot);
-	void addExpansion(BWAPI::Unit * depot);
+	//void addHeadquarters(BWAPI::Unit * depot);
+	//void addExpansion(BWAPI::Unit * depot);
+	void update();
+	void addDepot(BWAPI::Unit * depot);
 	void addWorker(BWAPI::Unit * worker);
-	void employWorker(BWAPI::Unit * worker, Task task);
 	void dismissWorker(BWAPI::Unit * worker);
 	void removeWorker(BWAPI::Unit * worker);
-	void update();
+	void employWorker(BWAPI::Unit * worker, Task task);
+	void newVassal(BWTA::Region * region);
 
 	bool contains(BWAPI::Unit * worker);
 	bool contains(BWTA::Region * region);
 
 	utilMap::Zone getHarvestingZone(BWTA::Region * region);
 
-	BWAPI::Unit * getIdleWorker(BWTA::Region * region);
-	utilUnit::UnitSet getEmployed(BWTA::Region * region, Task task);
-
 	Vassal * getHeadquarters();
 	Vassal * getVassal(BWTA::Region * region);
 	std::set<Vassal*> getVassals();
+
+	BWAPI::Unit * getIdleWorker(BWTA::Region * region);
+	utilUnit::UnitSet getEmployed(BWTA::Region * region, Task task);
 };
