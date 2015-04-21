@@ -9,8 +9,8 @@ Vassal::Vassal(BWTA::Region * region) :
 	harvester(&workerManager)
 {
 	// Designate minerals.
-	BOOST_FOREACH(BWAPI::Unit * mineral, BWAPI::Broodwar->getStaticMinerals())
-		if (utilUnit::inRegion(mineral->getPosition(), region))
+	BOOST_FOREACH(BWTA::BaseLocation * location, region->getBaseLocations())
+		BOOST_FOREACH(BWAPI::Unit * mineral, location->getStaticMinerals())
 			harvester.addMineral(mineral);
 }
 

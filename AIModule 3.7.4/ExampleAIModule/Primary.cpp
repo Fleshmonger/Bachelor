@@ -93,9 +93,16 @@ void Primary::onFrame()
 	Broodwar->drawTextScreen(200, 20, "APM: %d", BWAPI::Broodwar->getAPM());
 	Broodwar->drawTextScreen(200, 40, "Strength: %f", strength);
 	//Broodwar->drawTextScreen(200, 60, "Enemy Strength: %f", enemyStrength);
-	*/
 	Broodwar->drawTextScreen(200, 0, "Vassals: %d", landlord.getVassals().size());
 	Broodwar->drawTextScreen(200, 20, "Headquarters: %s", landlord.getHeadquarters() ? "Yes" : "No");
+	*/
+	int y = 0;
+	BOOST_FOREACH(Vassal * vassal, landlord.getVassals())
+	{
+		Broodwar->drawTextScreen(200, y, "Workforce: %d", vassal->workforce());
+		Broodwar->drawTextScreen(200, y + 20, "Minerals: %d", vassal->mineralFields());
+		y += 40;
+	}
 
 	// Prevent spamming by only running our onFrame once every number of latency frames.
 	// Latency frames are the number of frames before commands are processed.

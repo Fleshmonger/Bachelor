@@ -18,11 +18,10 @@ Harvester::~Harvester()
 
 
 // Adds a mineral for harvesting.
+// TODO Verify type, but the mineral is not always visible.
 void Harvester::addMineral(BWAPI::Unit * mineral)
 {
-	if (mineral &&
-		mineral->exists() &&
-		mineral->getType().isMineralField())
+	if (mineral)
 	{
 		minerals.push_front(mineral);
 		mineralMiners[mineral] = utilUnit::UnitSet();
