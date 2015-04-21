@@ -2,16 +2,12 @@
 
 
 // Constructor.
-Harvester::Harvester(BWTA::Region * region, WorkerManager * workerManager) :
+Harvester::Harvester(WorkerManager * workerManager) :
 	workerManager(workerManager),
 	minerals(),
 	minerTargets(),
 	mineralMiners()
 {
-	// Designate resources.
-	BOOST_FOREACH(BWAPI::Unit * mineral, BWAPI::Broodwar->getStaticMinerals())
-		if (utilUnit::inRegion(mineral->getPosition(), region))
-			addMineral(mineral);
 }
 
 

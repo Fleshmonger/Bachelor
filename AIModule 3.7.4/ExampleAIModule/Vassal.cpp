@@ -2,10 +2,10 @@
 
 
 // Constructor
-Vassal::Vassal(BWAPI::Unit * depot) :
-	depot(depot),
+Vassal::Vassal() :
+	depot(),
 	workerManager(),
-	harvester(BWTA::getRegion(depot->getPosition()), &workerManager)
+	harvester(&workerManager)
 {
 }
 
@@ -35,6 +35,26 @@ void Vassal::removeWorker(BWAPI::Unit * worker)
 {
 	workerManager.removeWorker(worker);
 	harvester.removeMiner(worker);
+}
+
+
+// Designates the depot in the region.
+void Vassal::setDepot(BWAPI::Unit * depot)
+{
+	// Verify depot.
+	if (utilUnit::isOwned(depot) &&
+		depot->exists() &&
+		depot->getType().isResourceDepot())
+	{
+		// Set depot.
+		this->depot = depot;
+
+		// Designate minerals.
+		BWTA::Region * region = BWTA::getRegion(depot->getPosition());
+		BOOST_FOREACH(BWAPI::Unit * mineral, BWAPI::Broodwar->getStaticMinerals())
+			if (utilUnit::inRegion(mineral->getPosition(), region))
+				harvester.addMineral(mineral);
+	}
 }
 
 

@@ -17,12 +17,13 @@ private:
 	Harvester		harvester;
 
 public:
-	Vassal(BWAPI::Unit * depot);
+	Vassal();
 	~Vassal();
 
 	void addWorker(BWAPI::Unit * worker);
 	void employWorker(BWAPI::Unit * worker, Task task);
 	void removeWorker(BWAPI::Unit * worker);
+	void setDepot(BWAPI::Unit * depot);
 	void harvest();
 	void update();
 

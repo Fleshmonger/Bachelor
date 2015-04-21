@@ -37,15 +37,16 @@ void Landlord::addHeadquarters(BWAPI::Unit * depot)
 void Landlord::addExpansion(BWAPI::Unit * depot)
 {
 	// Verify depot.
-	if (depot &&
+	if (utilUnit::isOwned(depot) &&
 		depot->exists() &&
-		utilUnit::isOwned(depot) &&
 		depot->getType().isResourceDepot())
 	{
 		// Instantiate vassal.
 		BWTA::Region * region = BWTA::getRegion(depot->getPosition());
-		regionVassal[region] = new Vassal(depot);
-		vassals.insert(regionVassal[region]);
+		Vassal * vassal = new Vassal();
+		vassal->setDepot(depot);
+		regionVassal[region] = vassal;
+		vassals.insert(vassal);
 	}
 }
 

@@ -17,7 +17,7 @@ private:
 	std::map<BWAPI::Unit*, utilUnit::UnitSet> mineralMiners;
 
 public:
-	Harvester(BWTA::Region * region, WorkerManager * workerManager);
+	Harvester(WorkerManager * workerManager);
 	~Harvester();
 
 	void addMineral(BWAPI::Unit * mineral);
