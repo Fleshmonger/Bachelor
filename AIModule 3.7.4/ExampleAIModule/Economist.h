@@ -24,12 +24,12 @@ private:
 	Producer	* producer;
 	Architect	* architect;
 
-	Vassal * expansion;
-
 public:
 	Economist(Accountant * accountant, Landlord * landlord, Producer * producer, Architect * architect);
 	~Economist();
 
 	void update();
+
+	BWTA::Region * nextExpansion();
 };
 

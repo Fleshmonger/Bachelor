@@ -60,20 +60,14 @@ void Economist::update()
 				architect->scheduleBuilding(UNIT_SUPPLY, headquarters->getDepot()->getTilePosition());
 		}
 
-		// Expand.
-		//TODO Cleanup.
+		// Expansion check.
 		if (landlord->getVassals().size() < 2 &&
 			architect->scheduled(UNIT_DEPOT) == 0)
 		{
-			std::set<BWTA::Chokepoint*> borders = headquarters->getRegion()->getChokepoints();
-			if (!borders.empty())
+			// Verify expansion.
+			BWTA::Region * region = nextExpansion();
+			if (region)
 			{
-				BWTA::Chokepoint * border = *borders.begin();
-				BWTA::Region * region;
-				if (border->getRegions().first == headquarters->getRegion())
-					region = border->getRegions().second;
-				else
-					region = border->getRegions().first;
 				std::set<BWTA::BaseLocation*> locations = region->getBaseLocations();
 				if (!locations.empty())
 				{
@@ -83,4 +77,31 @@ void Economist::update()
 			}
 		}
 	}
+}
+
+
+// Returns the next region for expansion.
+BWTA::Region * Economist::nextExpansion()
+{
+	// Verify headquarters.
+	Vassal * headquarters = landlord->getHeadquarters();
+	if (headquarters &&
+		headquarters->getRegion())
+	{
+		// Search through chokepoints.
+		BOOST_FOREACH(BWTA::Chokepoint * border, landlord->getHeadquarters()->getRegion()->getChokepoints())
+		{
+			// Verify chokepoint.
+			BWTA::Region * region;
+			if (border->getRegions().first == headquarters->getRegion())
+				region = border->getRegions().second;
+			else
+				region = border->getRegions().first;
+			if (!region->getBaseLocations().empty())
+				return region;
+		}
+	}
+
+	// No candidate found.
+	return NULL;
 }
