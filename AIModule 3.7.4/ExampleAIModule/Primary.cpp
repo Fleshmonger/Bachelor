@@ -97,7 +97,6 @@ void Primary::onFrame()
 	if (BWAPI::Broodwar->getFrameCount() % BWAPI::Broodwar->getLatencyFrames() != 0)
 		return;
 
-	/*
 	// Manager updatíng
 	archivist.update();
 	//landlord.update();
@@ -105,7 +104,6 @@ void Primary::onFrame()
 	architect.update();
 	armyManager.update();
 	defender.update(); //TODO Defender must be before attacker and economist, to ensure defenders are available. Fix this.
-	*/
 	economist.update();
 	/*
 	attacker.update();

@@ -7,6 +7,7 @@
 
 
 // Harvests minerals and gas.
+//TODO Rename this and related functions to "gatherer".
 class Harvester
 {
 private:
