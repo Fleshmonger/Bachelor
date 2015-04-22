@@ -6,27 +6,31 @@
 #include "WorkerManager.h"
 
 
-// Collects minerals from nearby mineral fields.
+// Harvests minerals and gas.
 class Harvester
 {
 private:
 	WorkerManager * workerManager;
 
 	utilUnit::UnitList minerals;
+	utilUnit::UnitList refineries;
 	std::map<BWAPI::Unit*, BWAPI::Unit*> minerTargets;
-	std::map<BWAPI::Unit*, utilUnit::UnitSet> mineralMiners;
+	std::map<BWAPI::Unit*, utilUnit::UnitSet> resourceMiners;
 
 public:
 	Harvester(WorkerManager * workerManager);
 	~Harvester();
 
 	void addMineral(BWAPI::Unit * mineral);
+	void addRefinery(BWAPI::Unit * refinery);
 	void removeMiner(BWAPI::Unit * miner);
 	void removeMineral(BWAPI::Unit * mineral);
+	void removeRefinery(BWAPI::Unit * refinery);
 	void harvest();
 
 	bool contains(BWAPI::Unit * miner);
 
 	utilUnit::UnitList getMinerals();
+	utilUnit::UnitList getRefineries();
 };
 

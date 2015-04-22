@@ -11,9 +11,9 @@
 class Vassal
 {
 private:
-	BWAPI::Unit	* depot;
-	BWTA::Region	* region;
+	BWTA::Region* region;
 
+	BWAPI::Unit		* depot;
 	WorkerManager	workerManager;
 	Harvester		harvester;
 
@@ -21,14 +21,17 @@ public:
 	Vassal(BWTA::Region * region);
 	~Vassal();
 
-	void addWorker(BWAPI::Unit * worker);
-	void employWorker(BWAPI::Unit * worker, Task task);
-	void removeWorker(BWAPI::Unit * worker);
-	void setDepot(BWAPI::Unit * depot);
 	void harvest();
 	void update();
+	void setDepot(BWAPI::Unit * depot);
+	void addRefinery(BWAPI::Unit * refinery);
+	void removeRefinery(BWAPI::Unit * refinery);
+	void addWorker(BWAPI::Unit * worker);
+	void removeWorker(BWAPI::Unit * worker);
+	void employWorker(BWAPI::Unit * worker, Task task);
 
-	unsigned int mineralFields();
+	unsigned int minerals();
+	unsigned int refineries();
 	unsigned int workforce();
 
 	utilMap::Zone getHarvestingZone();

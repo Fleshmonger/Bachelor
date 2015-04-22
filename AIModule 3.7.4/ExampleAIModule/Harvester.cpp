@@ -5,8 +5,9 @@
 Harvester::Harvester(WorkerManager * workerManager) :
 	workerManager(workerManager),
 	minerals(),
+	refineries(),
 	minerTargets(),
-	mineralMiners()
+	resourceMiners()
 {
 }
 
@@ -19,15 +20,33 @@ Harvester::~Harvester()
 
 // Adds a mineral for harvesting.
 // TODO Verify type, but the mineral is not always visible.
+// TODO redesignate workers.
 void Harvester::addMineral(BWAPI::Unit * mineral)
 {
+	// Verify mineral.
 	if (mineral)
 	{
+		// Add mineral.
 		minerals.push_front(mineral);
-		mineralMiners[mineral] = utilUnit::UnitSet();
+		resourceMiners[mineral] = utilUnit::UnitSet();
 	}
 }
 
+
+// Adds a refinery for harvesting.
+// TODO redesignate workers.
+void Harvester::addRefinery(BWAPI::Unit * refinery)
+{
+	// Verify mineral.
+	if (utilUnit::isOwned(refinery) &&
+		refinery->exists() &&
+		refinery->getType().isRefinery())
+	{
+		// Add refinery.
+		refineries.push_front(refinery);
+		resourceMiners[refinery] = utilUnit::UnitSet();
+	}
+}
 
 // Removes a miner from the pool.
 void Harvester::removeMiner(BWAPI::Unit * miner)
@@ -38,7 +57,7 @@ void Harvester::removeMiner(BWAPI::Unit * miner)
 		// Remove miner.
 		BWAPI::Unit * mineral = minerTargets[miner];
 		minerTargets.erase(miner);
-		mineralMiners[mineral].erase(miner);
+		resourceMiners[mineral].erase(miner);
 
 		// Reprioritize.
 		//TODO Remove is slow.
@@ -47,12 +66,12 @@ void Harvester::removeMiner(BWAPI::Unit * miner)
 
 		// Verify distribution.
 		BWAPI::Unit * mineralBack = minerals.back();
-		if (mineralMiners[mineral].size() + 1 < mineralMiners[mineralBack].size())
+		if (resourceMiners[mineral].size() + 1 < resourceMiners[mineralBack].size())
 		{
 			// Redistribute miners.
-			BWAPI::Unit * newMiner = *mineralMiners[mineralBack].begin();
-			mineralMiners[mineralBack].erase(newMiner);
-			mineralMiners[mineral].insert(newMiner);
+			BWAPI::Unit * newMiner = *resourceMiners[mineralBack].begin();
+			resourceMiners[mineralBack].erase(newMiner);
+			resourceMiners[mineral].insert(newMiner);
 
 			// Rotate priorities.
 			minerals.pop_back();
@@ -66,24 +85,60 @@ void Harvester::removeMiner(BWAPI::Unit * miner)
 //TODO Unused?
 void Harvester::removeMineral(BWAPI::Unit * mineral)
 {
-	// Find the mineral.
-	utilUnit::UnitList::iterator it = minerals.begin(), end = minerals.end();
-	while (it != end)
+	// Verify mineral.
+	if (mineral)
 	{
-		if (*it == mineral)
+		// Search through minerals.
+		utilUnit::UnitList::iterator it = minerals.begin(), end = minerals.end();
+		while (it != end)
 		{
-			// Remove miners.
-			BOOST_FOREACH(BWAPI::Unit * miner, mineralMiners[mineral])
-				minerTargets.erase(miner);
+			// Verify mineral.
+			if (*it == mineral)
+			{
+				// Remove miners.
+				BOOST_FOREACH(BWAPI::Unit * miner, resourceMiners[mineral])
+					minerTargets.erase(miner);
 
-			// Remove the mineral.
-			minerals.erase(it);
-			mineralMiners.erase(mineral);
+				// Remove the mineral.
+				minerals.erase(it);
+				resourceMiners.erase(mineral);
 
-			return;
+				return;
+			}
+			else
+				it++;
 		}
-		else
-			++it;
+	}
+}
+
+
+// Removes a refinery and its related miners from the pool.
+//TODO Unused?
+void Harvester::removeRefinery(BWAPI::Unit * refinery)
+{
+	// Verify refinery.
+	if (refinery)
+	{
+		// Search through refineries.
+		utilUnit::UnitList::iterator it = refineries.begin(), end = refineries.end();
+		while (it != end)
+		{
+			// Verify entry.
+			if (*it == refinery)
+			{
+				// Remove miners.
+				BOOST_FOREACH(BWAPI::Unit * miner, resourceMiners[refinery])
+					minerTargets.erase(miner);
+
+				// Remove the refinery.
+				refineries.erase(it);
+				resourceMiners.erase(refinery);
+
+				return;
+			}
+			else
+				it++;
+		}
 	}
 }
 
@@ -91,45 +146,41 @@ void Harvester::removeMineral(BWAPI::Unit * mineral)
 // Verifies and commands workers to mine minerals.
 void Harvester::harvest()
 {
-	// Verify minerals.
-	if (!minerals.empty())
+	// Aquire miners.
+	utilUnit::UnitSet miners = workerManager->getEmployed(TASK_IDLE);
+
+	// Command miners.
+	BOOST_FOREACH(BWAPI::Unit * miner, miners)
 	{
-		// Aquire miners.
-		utilUnit::UnitSet miners = workerManager->getEmployed(TASK_IDLE);
-
-		// Command miners.
-		BOOST_FOREACH(BWAPI::Unit * miner, miners)
+		// Verify miner.
+		if (miner &&
+			miner->exists())
 		{
-			// Verify miner.
-			if (miner &&
-				miner->exists())
+			// Aquire target.
+			BWAPI::Unit * resource;
+			if (contains(miner))
+				resource = minerTargets[miner];
+			else if (!minerals.empty())
 			{
-				// Aquire mineral.
-				BWAPI::Unit * mineral;
-				if (contains(miner))
-					mineral = minerTargets[miner];
+				// Set target mineral.
+				resource = minerals.front();
+				minerTargets[miner] = resource;
+				resourceMiners[resource].insert(miner);
+
+				// Rotate mineral priorities.
+				minerals.pop_front();
+				minerals.push_back(resource);
+			}
+
+			// Verify mineral.
+			if (resource &&
+				resource->exists())
+			{
+				// Command miner.
+				if (miner->isCarryingGas() || miner->isCarryingMinerals())
+					utilUnit::command(miner, BWAPI::UnitCommandTypes::Return_Cargo);
 				else
-				{
-					// Set target mineral.
-					mineral = minerals.front();
-					minerTargets[miner] = mineral;
-					mineralMiners[mineral].insert(miner);
-
-					// Rotate mineral priorities.
-					minerals.pop_front();
-					minerals.push_back(mineral);
-				}
-
-				// Verify mineral.
-				if (mineral &&
-					mineral->exists())
-				{
-					// Command miner.
-					if (miner->isCarryingGas() || miner->isCarryingMinerals())
-						utilUnit::command(miner, BWAPI::UnitCommandTypes::Return_Cargo);
-					else
-						utilUnit::command(miner, BWAPI::UnitCommandTypes::Gather, mineral);
-				}
+					utilUnit::command(miner, BWAPI::UnitCommandTypes::Gather, resource);
 			}
 		}
 	}
@@ -147,4 +198,11 @@ bool Harvester::contains(BWAPI::Unit * miner)
 utilUnit::UnitList Harvester::getMinerals()
 {
 	return minerals;
+}
+
+
+// Returns a copy of the sorted list of refinery pointers.
+utilUnit::UnitList Harvester::getRefineries()
+{
+	return refineries;
 }

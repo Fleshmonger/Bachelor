@@ -30,7 +30,7 @@ void Primary::onStart()
 {
 	// BWAPI settings.
 	BWAPI::Broodwar->enableFlag(Flag::UserInput);
-	BWAPI::Broodwar->setLocalSpeed(0);
+	//BWAPI::Broodwar->setLocalSpeed(0);
 
 	// Read map information.
 	BWTA::readMap();
@@ -85,30 +85,19 @@ void Primary::onFrame()
 	drawTerrainData();
 
 	// Debugging display.
-	/*
 	double
 		strength = combatJudge.strength(armyManager.getArmy()),
 		enemyStrength = combatJudge.strength(archivist.getTroops()) + combatJudge.strength(archivist.getTurrets());
 	Broodwar->drawTextScreen(200, 0, "FPS: %d", BWAPI::Broodwar->getFPS());
 	Broodwar->drawTextScreen(200, 20, "APM: %d", BWAPI::Broodwar->getAPM());
 	Broodwar->drawTextScreen(200, 40, "Strength: %f", strength);
-	//Broodwar->drawTextScreen(200, 60, "Enemy Strength: %f", enemyStrength);
-	Broodwar->drawTextScreen(200, 0, "Vassals: %d", landlord.getVassals().size());
-	Broodwar->drawTextScreen(200, 20, "Headquarters: %s", landlord.getHeadquarters() ? "Yes" : "No");
-	*/
-	int y = 0;
-	BOOST_FOREACH(Vassal * vassal, landlord.getVassals())
-	{
-		Broodwar->drawTextScreen(200, y, "Workforce: %d", vassal->workforce());
-		Broodwar->drawTextScreen(200, y + 20, "Minerals: %d", vassal->mineralFields());
-		y += 40;
-	}
 
 	// Prevent spamming by only running our onFrame once every number of latency frames.
 	// Latency frames are the number of frames before commands are processed.
 	if (BWAPI::Broodwar->getFrameCount() % BWAPI::Broodwar->getLatencyFrames() != 0)
 		return;
 
+	/*
 	// Manager updatíng
 	archivist.update();
 	//landlord.update();
@@ -116,9 +105,12 @@ void Primary::onFrame()
 	architect.update();
 	armyManager.update();
 	defender.update(); //TODO Defender must be before attacker and economist, to ensure defenders are available. Fix this.
+	*/
 	economist.update();
+	/*
 	attacker.update();
-	//strategist.update();
+	strategist.update();
+	*/
 }
 
 
@@ -188,7 +180,7 @@ void Primary::onUnitDestroy(BWAPI::Unit* unit)
 	// Clear unit record.
 	archivist.clearUnit(unit);
 
-	// Ownership check.
+	// Verify unit.
 	if (utilUnit::isOwned(unit))
 	{
 		// Completion check.
@@ -202,11 +194,17 @@ void Primary::onUnitDestroy(BWAPI::Unit* unit)
 				armyManager.removeUnit(unit);
 			else if (unitType.canProduce())
 				producer.addFactory(unit);
+			else if (unitType.isRefinery())
+				landlord.removeRefinery(unit);
 		}
-		else if (unitType.isBuilding())
-			architect.removeConstruct(unit);
 		else
-			producer.removeProduction(unit);
+		{
+			// Remove monitoring.
+			if (unitType.isBuilding())
+				architect.removeConstruct(unit);
+			else
+				producer.removeProduction(unit);
+		}
 	}
 }
 
@@ -214,6 +212,10 @@ void Primary::onUnitDestroy(BWAPI::Unit* unit)
 // Fired when a unit changes type including built refineries.
 void Primary::onUnitMorph(BWAPI::Unit* unit)
 {
+	// Verify unit.
+	if (utilUnit::isOwned(unit) &&
+		unit->getType().isRefinery())
+		economist.addRefinery(unit);
 }
 
 

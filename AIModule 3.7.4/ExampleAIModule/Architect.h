@@ -33,6 +33,7 @@ public:
 	void removePylon(BWAPI::Unit * pylon);
 	void update();
 
+	bool scheduleRefinery(BWAPI::UnitType refinery, BWAPI::Unit * geyser);
 	bool scheduleBuilding(BWAPI::UnitType buildingType, BWAPI::TilePosition desiredLocation);
 	bool scheduleBuilding(BWAPI::UnitType buildingType, BWAPI::TilePosition desiredLocation, BWAPI::Unit * builder);
 	bool validBuildLocation(BWAPI::Unit * builder, BWAPI::TilePosition location, BWAPI::UnitType buildingType);

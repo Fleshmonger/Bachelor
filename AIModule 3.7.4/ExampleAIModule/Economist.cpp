@@ -6,7 +6,8 @@ Economist::Economist(Accountant * accountant, Landlord * landlord, Producer * pr
 	accountant(accountant),
 	landlord(landlord),
 	producer(producer),
-	architect(architect)
+	architect(architect),
+	refineries()
 {
 }
 
@@ -17,33 +18,42 @@ Economist::~Economist()
 }
 
 
-/*
-//TODO Move to economist.
-// Fired when the map is analyzed.
-void Economist::analyzed()
-{
-// Code for finding natural expansion.
-std::set<BWTA::Region*> regions = BWTA::getRegions();
-BWTA::Region * region = *regions.begin();
-std::set<BWTA::Region*> reach = region->getReachableRegions();
-}
-*/
-
-
 // Expands workforce and supply.
 void Economist::update()
 {
+	// Monitor refineries.
+	utilUnit::UnitList::iterator it = refineries.begin(), end = refineries.end();
+	while (it != end)
+	{
+		// Verify refinery.
+		BWAPI::Unit * refinery = *it;
+		if (refinery->isCompleted() ||
+			!refinery->exists())
+		{
+			// Completion check.
+			if (refinery->isCompleted())
+				landlord->addRefinery(refinery);
+
+			// Remove refinery.
+			it = refineries.erase(it);
+		}
+		else
+			it++;
+	}
+
+	/*
 	// Command vassals.
 	BOOST_FOREACH(Vassal * vassal, landlord->getVassals())
 	{
 		// Train miners as needed.
 		//TODO Make train workers in nearby depots if necessary.
-		if (vassal->workforce() < vassal->mineralFields() * MINERAL_SATURATION)
+		if (vassal->workforce() < vassal->minerals() * MINERAL_SATURATION)
 			producer->scheduleTraining(UNIT_WORKER, vassal->getDepot());
 
 		// Command harvest.
 		vassal->harvest();
 	}
+	*/
 
 	// Verify headquarters.
 	Vassal * headquarters = landlord->getHeadquarters();
@@ -76,6 +86,23 @@ void Economist::update()
 				}
 			}
 		}
+	}
+}
+
+
+// Adds a refinery for monitoring or the landlord.
+void Economist::addRefinery(BWAPI::Unit * refinery)
+{
+	// Verify refinery.
+	if (utilUnit::isOwned(refinery) &&
+		refinery->exists() &&
+		refinery->getType().isRefinery())
+	{
+		// Completion check.
+		if (refinery->isCompleted())
+			landlord->addRefinery(refinery);
+		else
+			refineries.push_back(refinery);
 	}
 }
 

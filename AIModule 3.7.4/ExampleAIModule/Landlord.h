@@ -6,6 +6,8 @@
 
 
 // Manages all vassals and controls economy related actions.
+//TODO Idleworker should check all regions in order of closest. it should also be possible to simply only take workers from one region.
+
 class Landlord
 {
 private:
@@ -18,15 +20,15 @@ public:
 	Landlord();
 	~Landlord();
 
-	//void addHeadquarters(BWAPI::Unit * depot);
-	//void addExpansion(BWAPI::Unit * depot);
 	void update();
+	void newVassal(BWTA::Region * region);
 	void addDepot(BWAPI::Unit * depot);
+	void addRefinery(BWAPI::Unit * refinery);
+	void removeRefinery(BWAPI::Unit * refinery);
 	void addWorker(BWAPI::Unit * worker);
 	void dismissWorker(BWAPI::Unit * worker);
-	void removeWorker(BWAPI::Unit * worker);
 	void employWorker(BWAPI::Unit * worker, Task task);
-	void newVassal(BWTA::Region * region);
+	void removeWorker(BWAPI::Unit * worker);
 
 	bool contains(BWAPI::Unit * worker);
 	bool contains(BWTA::Region * region);

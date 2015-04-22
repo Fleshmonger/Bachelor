@@ -17,14 +17,44 @@ Architect::~Architect()
 }
 
 
-// Attempt to build a new building and returns true if it succeeds.
+// Attempts to build a refinery on the geyser and returns true if it succeeds.
+bool Architect::scheduleRefinery(BWAPI::UnitType refineryType, BWAPI::Unit * geyser)
+{
+	// Verify order.
+	if (refineryType.isRefinery() &&										// Verify type.
+		geyser &&															// Verify geyser.
+		geyser->exists() &&
+		geyser->getType() == BWAPI::UnitTypes::Resource_Vespene_Geyser &&
+		accountant->isAffordable(refineryType))								// Verify resources.
+	{
+		// Aquire builder.
+		BWAPI::Unit * builder = landlord->getIdleWorker(BWTA::getRegion(geyser->getPosition()));
+		
+		// Verify builder.
+		if (builder)
+		{
+			// Schedule building.
+			landlord->employWorker(builder, TASK_BUILD);
+			builder->build(geyser->getTilePosition(), refineryType);
+			buildSchedule.insert(std::make_pair(refineryType, std::make_pair(builder, geyser->getTilePosition())));
+			accountant->allocate(refineryType);
+			schedule[refineryType]++;
+			return true;
+		}
+	}
+
+	// Scheduling was unsuccessful.
+	return false;
+}
+
+// Attempt to build a building near the desired location and returns true if it succeeds.
 bool Architect::scheduleBuilding(BWAPI::UnitType buildingType, BWAPI::TilePosition desiredLocation)
 {
 	return scheduleBuilding(buildingType, desiredLocation, landlord->getIdleWorker(BWTA::getRegion(desiredLocation)));
 }
 
 
-// Attempt to build a new building with the builder and returns true if it succeeds.
+// Attempt to build a building near the desired location with the builder and returns true if it succeeds.
 bool Architect::scheduleBuilding(BWAPI::UnitType buildingType, BWAPI::TilePosition desiredLocation, BWAPI::Unit * builder)
 {
 	// Confirm the unit type.
@@ -50,6 +80,7 @@ bool Architect::scheduleBuilding(BWAPI::UnitType buildingType, BWAPI::TilePositi
 			}
 		}
 	}
+
 	// Attempt unsuccessful.
 	return false;
 }
@@ -148,7 +179,7 @@ void Architect::update()
 			++it;
 			if (builder &&
 				builder->exists() &&
-				BWAPI::Broodwar->canBuildHere(builder, buildTarget, buildingType) &&
+				//BWAPI::Broodwar->canBuildHere(builder, buildTarget, buildingType) &&
 				BWAPI::Broodwar->canMake(builder, buildingType))
 				builder->build(buildTarget, buildingType);
 			else
