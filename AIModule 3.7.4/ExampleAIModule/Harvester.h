@@ -3,7 +3,7 @@
 #include <BWTA.h>
 #include <boost/foreach.hpp>
 #include "UtilUnit.h"
-#include "WorkerManager.h"
+#include "Taskmaster.h"
 
 
 // Harvests minerals and gas.
@@ -11,7 +11,7 @@
 class Harvester
 {
 private:
-	WorkerManager * workerManager;
+	Taskmaster * taskmaster;
 
 	utilUnit::UnitList minerals;
 	utilUnit::UnitList refineries;
@@ -19,7 +19,7 @@ private:
 	std::map<BWAPI::Unit*, utilUnit::UnitSet> resourceWorkers;
 
 public:
-	Harvester(WorkerManager * workerManager);
+	Harvester(Taskmaster * taskmaster);
 	~Harvester();
 
 	void addMineral(BWAPI::Unit * mineral);

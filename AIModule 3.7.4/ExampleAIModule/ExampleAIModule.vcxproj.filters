@@ -47,9 +47,6 @@
     <ClCompile Include="Vassal.cpp">
       <Filter>Managers\Landlord\Vassal</Filter>
     </ClCompile>
-    <ClCompile Include="WorkerManager.cpp">
-      <Filter>Managers\Landlord\Vassal</Filter>
-    </ClCompile>
     <ClCompile Include="Archivist.cpp">
       <Filter>Managers</Filter>
     </ClCompile>
@@ -70,6 +67,9 @@
     </ClCompile>
     <ClCompile Include="UtilMap.cpp">
       <Filter>Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="Taskmaster.cpp">
+      <Filter>Managers\Landlord\Vassal</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -101,9 +101,6 @@
     <ClInclude Include="Vassal.h">
       <Filter>Managers\Landlord\Vassal</Filter>
     </ClInclude>
-    <ClInclude Include="WorkerManager.h">
-      <Filter>Managers\Landlord\Vassal</Filter>
-    </ClInclude>
     <ClInclude Include="Archivist.h">
       <Filter>Managers</Filter>
     </ClInclude>
@@ -124,6 +121,9 @@
     </ClInclude>
     <ClInclude Include="UtilMap.h">
       <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Taskmaster.h">
+      <Filter>Managers\Landlord\Vassal</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

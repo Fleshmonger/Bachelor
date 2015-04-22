@@ -5,8 +5,8 @@
 Vassal::Vassal(BWTA::Region * region) :
 	depot(),
 	region(region),
-	workerManager(),
-	harvester(&workerManager)
+	taskmaster(),
+	harvester(&taskmaster)
 {
 	// Designate minerals.
 	//TODO Check with getMinerals instead of static.
@@ -29,11 +29,13 @@ void Vassal::harvest()
 }
 
 
+/*
 // Updates local managers.
 void Vassal::update()
 {
-	workerManager.update();
+	taskmaster.update();
 }
+*/
 
 
 // Designates the depot in the region.
@@ -62,25 +64,25 @@ void Vassal::removeRefinery(BWAPI::Unit * refinery)
 }
 
 
-// Adds a worker to the workerManager.
+// Adds a worker to the taskmaster.
 void Vassal::addWorker(BWAPI::Unit * worker)
 {
-	workerManager.addWorker(worker);
+	taskmaster.addWorker(worker);
 }
 
 
-// Removes a worker from the workerManager.
+// Removes a worker from the taskmaster.
 void Vassal::removeWorker(BWAPI::Unit * worker)
 {
-	workerManager.removeWorker(worker);
+	taskmaster.removeWorker(worker);
 	harvester.removeWorker(worker);
 }
 
 
-// Employs a worker in the workerManager.
+// Employs a worker in the taskmaster.
 void Vassal::employWorker(BWAPI::Unit * worker, Task task)
 {
-	workerManager.employWorker(worker, task);
+	taskmaster.employWorker(worker, task);
 }
 
 
@@ -100,7 +102,7 @@ unsigned int Vassal::refineries()
 // Returns the amount of workers.
 unsigned int Vassal::workforce()
 {
-	return workerManager.workforce();
+	return taskmaster.workforce();
 }
 
 
@@ -145,7 +147,7 @@ BWAPI::Unit * Vassal::getDepot()
 BWAPI::Unit * Vassal::getIdleWorker()
 {
 	// Search through idle.
-	BOOST_FOREACH(BWAPI::Unit * worker, workerManager.getEmployed(TASK_IDLE))
+	BOOST_FOREACH(BWAPI::Unit * worker, taskmaster.getEmployed(TASK_IDLE))
 	{
 		// Verify worker.
 		if (worker->exists() &&
@@ -162,7 +164,7 @@ BWAPI::Unit * Vassal::getIdleWorker()
 // Returns a copy of pointers of workers employed with the specified task in the region.
 utilUnit::UnitSet Vassal::getEmployed(Task task)
 {
-	return workerManager.getEmployed(task);
+	return taskmaster.getEmployed(task);
 }
 
 

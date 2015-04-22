@@ -113,7 +113,7 @@
     <ClCompile Include="UtilMap.cpp" />
     <ClCompile Include="UtilUnit.cpp" />
     <ClCompile Include="Vassal.cpp" />
-    <ClCompile Include="WorkerManager.cpp" />
+    <ClCompile Include="Taskmaster.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Accountant.h" />
@@ -133,7 +133,7 @@
     <ClInclude Include="UtilMap.h" />
     <ClInclude Include="UtilUnit.h" />
     <ClInclude Include="Vassal.h" />
-    <ClInclude Include="WorkerManager.h" />
+    <ClInclude Include="Taskmaster.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

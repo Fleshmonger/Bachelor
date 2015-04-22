@@ -20,7 +20,7 @@ public:
 	Landlord();
 	~Landlord();
 
-	void update();
+	//void update();
 	void newVassal(BWTA::Region * region);
 	void addDepot(BWAPI::Unit * depot);
 	void addRefinery(BWAPI::Unit * refinery);

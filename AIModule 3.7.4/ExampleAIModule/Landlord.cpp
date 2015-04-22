@@ -18,6 +18,7 @@ Landlord::~Landlord()
 }
 
 
+/*
 // Updates all vassals.
 //TODO Move harvesting to separate economist class.
 //TODO distribute workers between regions.
@@ -27,6 +28,7 @@ void Landlord::update()
 	BOOST_FOREACH(Vassal * vassal, vassals)
 		vassal->update();
 }
+*/
 
 
 // Instantiates a new vassal for the region.

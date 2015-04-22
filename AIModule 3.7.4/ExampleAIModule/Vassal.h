@@ -3,7 +3,7 @@
 #include <BWTA.h>
 #include "utilMap.h"
 #include "utilUnit.h"
-#include "WorkerManager.h"
+#include "Taskmaster.h"
 #include "Harvester.h"
 
 
@@ -14,7 +14,7 @@ private:
 	BWTA::Region* region;
 
 	BWAPI::Unit		* depot;
-	WorkerManager	workerManager;
+	Taskmaster		taskmaster;
 	Harvester		harvester;
 
 public:
@@ -22,7 +22,7 @@ public:
 	~Vassal();
 
 	void harvest();
-	void update();
+	//void update();
 	void setDepot(BWAPI::Unit * depot);
 	void addRefinery(BWAPI::Unit * refinery);
 	void removeRefinery(BWAPI::Unit * refinery);

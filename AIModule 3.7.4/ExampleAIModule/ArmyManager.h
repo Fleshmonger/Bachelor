@@ -4,7 +4,6 @@
 #include <boost/foreach.hpp>
 #include "UtilUnit.h"
 #include "Archivist.h"
-#include "WorkerManager.h"
 #include "CombatJudge.h"
 
 

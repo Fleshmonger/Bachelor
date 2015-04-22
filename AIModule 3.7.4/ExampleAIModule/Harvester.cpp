@@ -2,8 +2,8 @@
 
 
 // Constructor.
-Harvester::Harvester(WorkerManager * workerManager) :
-	workerManager(workerManager),
+Harvester::Harvester(Taskmaster * taskmaster) :
+	taskmaster(taskmaster),
 	minerals(),
 	refineries(),
 	workerTargets(),
@@ -189,7 +189,7 @@ void Harvester::removeRefinery(BWAPI::Unit * refinery)
 void Harvester::harvest()
 {
 	// Command workers.
-	BOOST_FOREACH(BWAPI::Unit * worker, workerManager->getEmployed(TASK_IDLE))
+	BOOST_FOREACH(BWAPI::Unit * worker, taskmaster->getEmployed(TASK_IDLE))
 	{
 		// Verify miner.
 		if (worker &&
