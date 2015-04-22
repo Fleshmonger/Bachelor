@@ -4,7 +4,7 @@
 #include "utilMap.h"
 #include "utilUnit.h"
 #include "Taskmaster.h"
-#include "Harvester.h"
+#include "Gatherer.h"
 
 
 // Manages a regions workers and harvesting.
@@ -15,13 +15,13 @@ private:
 
 	BWAPI::Unit		* depot;
 	Taskmaster		taskmaster;
-	Harvester		harvester;
+	Gatherer		gatherer;
 
 public:
 	Vassal(BWTA::Region * region);
 	~Vassal();
 
-	void harvest();
+	void gather();
 	//void update();
 	void setDepot(BWAPI::Unit * depot);
 	void addRefinery(BWAPI::Unit * refinery);

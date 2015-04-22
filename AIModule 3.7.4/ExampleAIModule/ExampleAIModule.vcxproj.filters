@@ -41,9 +41,6 @@
     <ClCompile Include="ArmyManager.cpp">
       <Filter>Managers\Combat</Filter>
     </ClCompile>
-    <ClCompile Include="Harvester.cpp">
-      <Filter>Managers\Landlord\Vassal</Filter>
-    </ClCompile>
     <ClCompile Include="Vassal.cpp">
       <Filter>Managers\Landlord\Vassal</Filter>
     </ClCompile>
@@ -71,6 +68,9 @@
     <ClCompile Include="Taskmaster.cpp">
       <Filter>Managers\Landlord\Vassal</Filter>
     </ClCompile>
+    <ClCompile Include="Gatherer.cpp">
+      <Filter>Managers\Landlord\Vassal</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="UtilUnit.h">
@@ -94,9 +94,6 @@
     </ClInclude>
     <ClInclude Include="ArmyManager.h">
       <Filter>Managers\Combat</Filter>
-    </ClInclude>
-    <ClInclude Include="Harvester.h">
-      <Filter>Managers\Landlord\Vassal</Filter>
     </ClInclude>
     <ClInclude Include="Vassal.h">
       <Filter>Managers\Landlord\Vassal</Filter>
@@ -123,6 +120,9 @@
       <Filter>Utility</Filter>
     </ClInclude>
     <ClInclude Include="Taskmaster.h">
+      <Filter>Managers\Landlord\Vassal</Filter>
+    </ClInclude>
+    <ClInclude Include="Gatherer.h">
       <Filter>Managers\Landlord\Vassal</Filter>
     </ClInclude>
   </ItemGroup>

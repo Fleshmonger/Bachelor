@@ -57,8 +57,8 @@ void Economist::update()
 		if (vassal->workforce() < vassal->minerals() * MINERAL_SATURATION)
 			producer->scheduleTraining(UNIT_WORKER, vassal->getDepot());
 
-		// Command harvest.
-		vassal->harvest();
+		// Command mining and harvesting.
+		vassal->gather();
 	}
 
 	// Verify headquarters.

@@ -6,13 +6,13 @@ Vassal::Vassal(BWTA::Region * region) :
 	depot(),
 	region(region),
 	taskmaster(),
-	harvester(&taskmaster)
+	gatherer(&taskmaster)
 {
 	// Designate minerals.
 	//TODO Check with getMinerals instead of static.
 	BOOST_FOREACH(BWTA::BaseLocation * location, region->getBaseLocations())
 		BOOST_FOREACH(BWAPI::Unit * mineral, location->getStaticMinerals())
-			harvester.addMineral(mineral);
+			gatherer.addMineral(mineral);
 }
 
 
@@ -23,9 +23,9 @@ Vassal::~Vassal()
 
 
 // Commands idle workers to harvest.
-void Vassal::harvest()
+void Vassal::gather()
 {
-	harvester.harvest();
+	gatherer.gather();
 }
 
 
@@ -53,14 +53,14 @@ void Vassal::setDepot(BWAPI::Unit * depot)
 void Vassal::addRefinery(BWAPI::Unit * refinery)
 {
 	BWAPI::Broodwar->sendText("Refinery added.");
-	harvester.addRefinery(refinery);
+	gatherer.addRefinery(refinery);
 }
 
 
 // Removes a refinery from the harvester.
 void Vassal::removeRefinery(BWAPI::Unit * refinery)
 {
-	harvester.removeRefinery(refinery);
+	gatherer.removeRefinery(refinery);
 }
 
 
@@ -75,7 +75,7 @@ void Vassal::addWorker(BWAPI::Unit * worker)
 void Vassal::removeWorker(BWAPI::Unit * worker)
 {
 	taskmaster.removeWorker(worker);
-	harvester.removeWorker(worker);
+	gatherer.removeWorker(worker);
 }
 
 
@@ -89,14 +89,14 @@ void Vassal::employWorker(BWAPI::Unit * worker, Task task)
 // Returns the amount of mineral fields in the region.
 unsigned int Vassal::minerals()
 {
-	return harvester.getMinerals().size();
+	return gatherer.getMinerals().size();
 }
 
 
 // Returns the amount of refineries in the region.
 unsigned int Vassal::refineries()
 {
-	return harvester.getRefineries().size();
+	return gatherer.getRefineries().size();
 }
 
 // Returns the amount of workers.
@@ -120,7 +120,7 @@ utilMap::Zone Vassal::getHarvestingZone()
 			top = depotPos.y(),
 			right = depotPos.x() + depotType.tileWidth(),
 			bottom = depotPos.y() + depotType.tileHeight();
-		BOOST_FOREACH(BWAPI::Unit * mineral, harvester.getMinerals())
+		BOOST_FOREACH(BWAPI::Unit * mineral, gatherer.getMinerals())
 		{
 			BWAPI::TilePosition mineralPos = mineral->getTilePosition();
 			BWAPI::UnitType mineralType = mineral->getType();

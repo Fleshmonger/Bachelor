@@ -104,7 +104,7 @@
     <ClCompile Include="Dll.cpp" />
     <ClCompile Include="Economist.cpp" />
     <ClCompile Include="Landlord.cpp" />
-    <ClCompile Include="Harvester.cpp" />
+    <ClCompile Include="Gatherer.cpp" />
     <ClCompile Include="Primary.cpp" />
     <ClCompile Include="Producer.cpp" />
     <ClCompile Include="Reconnoiter.cpp" />
@@ -124,7 +124,7 @@
     <ClInclude Include="Defender.h" />
     <ClInclude Include="Economist.h" />
     <ClInclude Include="Landlord.h" />
-    <ClInclude Include="Harvester.h" />
+    <ClInclude Include="Gatherer.h" />
     <ClInclude Include="Primary.h" />
     <ClInclude Include="Producer.h" />
     <ClInclude Include="Reconnoiter.h" />
