@@ -73,7 +73,7 @@ void Vassal::addWorker(BWAPI::Unit * worker)
 void Vassal::removeWorker(BWAPI::Unit * worker)
 {
 	workerManager.removeWorker(worker);
-	harvester.removeMiner(worker);
+	harvester.removeWorker(worker);
 }
 
 

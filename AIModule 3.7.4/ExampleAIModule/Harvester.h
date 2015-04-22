@@ -15,8 +15,8 @@ private:
 
 	utilUnit::UnitList minerals;
 	utilUnit::UnitList refineries;
-	std::map<BWAPI::Unit*, BWAPI::Unit*> minerTargets;
-	std::map<BWAPI::Unit*, utilUnit::UnitSet> resourceMiners;
+	std::map<BWAPI::Unit*, BWAPI::Unit*> workerTargets;
+	std::map<BWAPI::Unit*, utilUnit::UnitSet> resourceWorkers;
 
 public:
 	Harvester(WorkerManager * workerManager);
@@ -24,12 +24,13 @@ public:
 
 	void addMineral(BWAPI::Unit * mineral);
 	void addRefinery(BWAPI::Unit * refinery);
-	void removeMiner(BWAPI::Unit * miner);
+	void addWorker(BWAPI::Unit * worker, bool mining);
+	void removeWorker(BWAPI::Unit * worker);
 	void removeMineral(BWAPI::Unit * mineral);
 	void removeRefinery(BWAPI::Unit * refinery);
 	void harvest();
 
-	bool contains(BWAPI::Unit * miner);
+	bool contains(BWAPI::Unit * worker);
 
 	utilUnit::UnitList getMinerals();
 	utilUnit::UnitList getRefineries();
