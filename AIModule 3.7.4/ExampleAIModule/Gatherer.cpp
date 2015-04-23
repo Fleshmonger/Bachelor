@@ -21,33 +21,47 @@ Gatherer::~Gatherer()
 // Commands workers to gather resources
 void Gatherer::gather()
 {
-	// Command workers.
-	BOOST_FOREACH(BWAPI::Unit * worker, taskmaster->getEmployed(TASK_IDLE))
-	{
-		// Verify miner.
-		if (worker &&
-			worker->exists())
-		{
-			// Aquire resource.
-			if (!contains(worker))
-			{
-				if (refineries.empty())
-					addWorker(worker, true);
-				else
-					addWorker(worker, false);
-			}
-			BWAPI::Unit * resource = workerTargets[worker];
+	BOOST_FOREACH(BWAPI::Unit * miner, taskmaster->getEmployed(TASK_MINE))
+		gather(miner, true);
+	BOOST_FOREACH(BWAPI::Unit * harvester, taskmaster->getEmployed(TASK_HARVEST))
+		gather(harvester, false);
+}
 
-			// Verify mineral.
-			if (resource &&
-				resource->exists())
+
+// Commands the worker to gather resources.
+void Gatherer::gather(BWAPI::Unit * worker, bool isMining)
+{
+	// Verify worker.
+	if (worker &&
+		worker->exists())
+	{
+		// Aquire resource.
+		BWAPI::Unit * resource;
+		if (!contains(worker))
+			addWorker(worker, isMining);
+		else
+		{
+			// Check resource type.
+			resource = workerTargets[worker];
+			if (!resource ||
+				(isMining && !resource->getType().isMineralField()) ||
+				(!isMining && !resource->getType().isRefinery()))
 			{
-				// Command miner.
-				if (worker->isCarryingGas() || worker->isCarryingMinerals())
-					utilUnit::command(worker, BWAPI::UnitCommandTypes::Return_Cargo);
-				else
-					utilUnit::command(worker, BWAPI::UnitCommandTypes::Gather, resource);
+				removeWorker(worker);
+				addWorker(worker, isMining);
 			}
+		}
+		resource = workerTargets[worker];
+
+		// Verify resource.
+		if (resource &&
+			resource->exists())
+		{
+			// Command worker.
+			if (worker->isCarryingGas() || worker->isCarryingMinerals())
+				utilUnit::command(worker, BWAPI::UnitCommandTypes::Return_Cargo);
+			else
+				utilUnit::command(worker, BWAPI::UnitCommandTypes::Gather, resource);
 		}
 	}
 }
@@ -87,7 +101,7 @@ void Gatherer::addRefinery(BWAPI::Unit * refinery)
 
 
 // Adds a worker to the miner pool or the harvesting pool.
-void Gatherer::addWorker(BWAPI::Unit * worker, bool mining)
+void Gatherer::addWorker(BWAPI::Unit * worker, bool isMining)
 {
 	// Verify worker.
 	if (utilUnit::isOwned(worker) &&
@@ -97,7 +111,7 @@ void Gatherer::addWorker(BWAPI::Unit * worker, bool mining)
 	{
 		// Get resources
 		utilUnit::UnitList * resources;
-		if (mining)
+		if (isMining)
 			resources = &minerals;
 		else
 			resources = &refineries;

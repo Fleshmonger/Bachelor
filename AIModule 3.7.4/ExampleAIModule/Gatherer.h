@@ -23,9 +23,10 @@ public:
 	~Gatherer();
 
 	void gather();
+	void gather(BWAPI::Unit * worker, bool isMining);
 	void addMineral(BWAPI::Unit * mineral);
 	void addRefinery(BWAPI::Unit * refinery);
-	void addWorker(BWAPI::Unit * worker, bool mining);
+	void addWorker(BWAPI::Unit * worker, bool isMining);
 	void removeWorker(BWAPI::Unit * worker);
 	void removeMineral(BWAPI::Unit * mineral);
 	void removeRefinery(BWAPI::Unit * refinery);

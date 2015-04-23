@@ -4,7 +4,7 @@
 #include "UtilUnit.h"
 
 
-enum Task { TASK_BUILD, TASK_DEFEND, TASK_IDLE };
+enum Task { TASK_BUILD, TASK_DEFEND, TASK_HARVEST, TASK_IDLE, TASK_MINE };
 
 
 // Contains and handles all workers while commanding harvesting.

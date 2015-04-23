@@ -29,6 +29,7 @@ public:
 	void addWorker(BWAPI::Unit * worker);
 	void removeWorker(BWAPI::Unit * worker);
 	void employWorker(BWAPI::Unit * worker, Task task);
+	void employWorkers(utilUnit::UnitSet workers, Task task);
 
 	unsigned int minerals();
 	unsigned int refineries();

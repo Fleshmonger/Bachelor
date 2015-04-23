@@ -71,7 +71,7 @@ void Taskmaster::removeWorker(BWAPI::Unit * worker)
 }
 
 
-// Assigns the unit a task.
+// Assigns the worker a task.
 void Taskmaster::employWorker(BWAPI::Unit * worker, Task task)
 {
 	// Verify worker.

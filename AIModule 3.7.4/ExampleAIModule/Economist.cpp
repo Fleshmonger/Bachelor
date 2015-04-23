@@ -52,10 +52,40 @@ void Economist::update()
 	// Command vassals.
 	BOOST_FOREACH(Vassal * vassal, landlord->getVassals())
 	{
+		unsigned int
+			minimumMiners = vassal->minerals(),
+			desiredMiners = vassal->minerals() * MINERAL_SATURATION,
+			desiredHarvesters = vassal->refineries() * REFINERY_SATURATION;
+
 		// Train miners as needed.
-		//TODO Make train workers in nearby depots if necessary.
-		if (vassal->workforce() < vassal->minerals() * MINERAL_SATURATION)
+		if (vassal->workforce() < desiredMiners + desiredHarvesters)
 			producer->scheduleTraining(UNIT_WORKER, vassal->getDepot());
+
+		// Harvesters saturation check.
+		//TODO Cleanup/Simplify.
+		utilUnit::UnitSet harvesters = vassal->getEmployed(TASK_HARVEST);
+		if (harvesters.size() < desiredHarvesters)
+		{
+			// Verify minimum miner criteria.
+			if (minimumMiners < vassal->workforce() - harvesters.size())
+			{
+				// Assign excess miners to harvesting.
+				int excess = std::min(vassal->workforce() - harvesters.size() - minimumMiners, desiredHarvesters - harvesters.size());
+				for (; excess > 0; excess--)
+					vassal->employWorker(vassal->getIdleWorker(), TASK_HARVEST);
+			}
+		}
+		else if (harvesters.size() > desiredHarvesters)
+		{
+			// Dismiss excess harvesters to mining.
+			int excess = harvesters.size() - desiredHarvesters;
+			utilUnit::UnitSet::iterator it = harvesters.begin();
+			for (; excess > 0; excess--, it++)
+				vassal->employWorker(*it, TASK_MINE);
+		}
+
+		// Assign idle workers to mining.
+		vassal->employWorkers(vassal->getEmployed(TASK_IDLE), TASK_MINE);
 
 		// Command mining and harvesting.
 		vassal->gather();

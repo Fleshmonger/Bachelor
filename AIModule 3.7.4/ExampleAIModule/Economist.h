@@ -10,7 +10,7 @@
 const unsigned int
 		MIN_SUPPLY = 10,
 		MINERAL_SATURATION = 2,
-		GEYSER_SATURATION = 3;
+		REFINERY_SATURATION = 3;
 const BWAPI::UnitType
 		UNIT_DEPOT = BWAPI::UnitTypes::Protoss_Nexus,
 		UNIT_REFINERY = BWAPI::UnitTypes::Protoss_Assimilator,

@@ -79,10 +79,18 @@ void Vassal::removeWorker(BWAPI::Unit * worker)
 }
 
 
-// Employs a worker in the taskmaster.
+// Employs the worker in the taskmaster.
 void Vassal::employWorker(BWAPI::Unit * worker, Task task)
 {
 	taskmaster.employWorker(worker, task);
+}
+
+
+// Employs workers in the taskmaster.
+void Vassal::employWorkers(utilUnit::UnitSet workers, Task task)
+{
+	BOOST_FOREACH(BWAPI::Unit * worker, workers)
+		taskmaster.employWorker(worker, task);
 }
 
 
@@ -144,6 +152,7 @@ BWAPI::Unit * Vassal::getDepot()
 
 
 // Returns an idle worker in the region if one exists.
+// TODO Simplify.
 BWAPI::Unit * Vassal::getIdleWorker()
 {
 	// Search through idle.
@@ -154,6 +163,26 @@ BWAPI::Unit * Vassal::getIdleWorker()
 			!worker->isCarryingGas() &&
 			!worker->isCarryingMinerals())
 			return worker;
+	}
+
+	// Search through miners.
+	BOOST_FOREACH(BWAPI::Unit * miner, taskmaster.getEmployed(TASK_MINE))
+	{
+		// Verify miner.
+		if (miner->exists() &&
+			!miner->isCarryingGas() &&
+			!miner->isCarryingMinerals())
+			return miner;
+	}
+
+	// Search through harvesters.
+	BOOST_FOREACH(BWAPI::Unit * harvester, taskmaster.getEmployed(TASK_HARVEST))
+	{
+		// Verify harvester.
+		if (harvester->exists() &&
+			!harvester->isCarryingGas() &&
+			!harvester->isCarryingMinerals())
+			return harvester;
 	}
 
 	// No idle worker found.
