@@ -2,9 +2,9 @@
 
 
 // Constructor
-Strategist::Strategist(Landlord * landlord, Producer * producer, Architect * architect) :
+Strategist::Strategist(Landlord * landlord, Recruiter * recruiter, Architect * architect) :
 	landlord(landlord),
-	producer(producer),
+	recruiter(recruiter),
 	architect(architect)
 {
 }
@@ -20,12 +20,14 @@ Strategist::~Strategist()
 void Strategist::update()
 {
 	// Train new troops.
-	producer->scheduleTraining(INFANTRY_UNIT);
+	recruiter->scheduleTraining(INFANTRY_UNIT);
 
+	/*
 	// Build gateways.
 	Vassal * headquarters = landlord->getHeadquarters();
 	if (headquarters &&
 		headquarters->getDepot() &&
 		architect->scheduled(INFANTRY_FACTORY) + producer->getFactories(INFANTRY_FACTORY).size() < MAX_FACTORIES)
 		architect->scheduleBuilding(INFANTRY_FACTORY, headquarters->getDepot()->getTilePosition());
+	*/
 }

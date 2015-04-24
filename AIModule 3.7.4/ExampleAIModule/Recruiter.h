@@ -1,0 +1,35 @@
+#pragma once
+#include <BWAPI.h>
+#include <boost/foreach.hpp>
+#include "UtilUnit.h"
+#include "Accountant.h"
+
+
+// Trains units and monitors incomplete ones.
+//TODO Rename to recruiter.
+class Recruiter
+{
+private:
+	Accountant * accountant;
+
+	std::map<BWAPI::UnitType, int>
+		trainingSchedule,
+		constructionSchedule;
+	std::map<BWAPI::UnitType, utilUnit::UnitSet> factories;
+
+public:
+	Recruiter(Accountant * accountant);
+	~Recruiter();
+
+	void addFactory(BWAPI::Unit * factory);
+	void removeFactory(BWAPI::Unit * factory);
+	void addConstruction(BWAPI::Unit * unit);
+	void removeConstruction(BWAPI::Unit * unit);
+
+	bool scheduleTraining(BWAPI::UnitType unitType);
+	bool scheduleTraining(BWAPI::UnitType unitType, BWAPI::Unit * factory);
+
+	unsigned int scheduled(BWAPI::UnitType unitType);
+
+	utilUnit::UnitSet getFactories(BWAPI::UnitType factoryType);
+};

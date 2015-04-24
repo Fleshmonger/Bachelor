@@ -6,15 +6,16 @@ Primary::Primary() :
 	accountant(),
 	archivist(),
 	landlord(),
-	producer(&accountant),
+	recruiter(&accountant),
 	combatJudge(&archivist),
 	architect(&accountant, &landlord),
 	reconnoiter(&archivist, &landlord),
-	economist(&accountant, &landlord, &producer, &architect),
+	economist(&accountant, &landlord, &recruiter, &architect),
 	armyManager(&archivist, &combatJudge),
 	defender(&archivist, &landlord, &combatJudge, &armyManager),
 	attacker(&archivist, &landlord, &combatJudge, &armyManager),
-	strategist(&landlord, &producer, &architect)
+	strategist(&landlord, &recruiter, &architect),
+	planner(&landlord, &recruiter, &architect)
 {
 }
 
@@ -30,7 +31,7 @@ void Primary::onStart()
 {
 	// BWAPI settings.
 	BWAPI::Broodwar->enableFlag(Flag::UserInput);
-	BWAPI::Broodwar->setLocalSpeed(0);
+	//BWAPI::Broodwar->setLocalSpeed(0);
 
 	// Read map information.
 	BWTA::readMap();
@@ -107,6 +108,7 @@ void Primary::onFrame()
 	economist.update();
 	attacker.update();
 	strategist.update();
+	planner.update();
 }
 
 
@@ -165,7 +167,7 @@ void Primary::onUnitCreate(BWAPI::Unit* unit)
 		if (unitType.isBuilding())
 			architect.completeBuild(unit);
 		else if (!utilUnit::isMisc(unitType))
-			producer.addProduction(unit);
+			recruiter.addConstruction(unit);
 	}
 }
 
@@ -189,7 +191,7 @@ void Primary::onUnitDestroy(BWAPI::Unit* unit)
 			else if (utilUnit::isFighter(unitType))
 				armyManager.removeUnit(unit);
 			else if (unitType.canProduce())
-				producer.addFactory(unit);
+				recruiter.addFactory(unit);
 			else if (unitType.isRefinery())
 				landlord.removeRefinery(unit);
 		}
@@ -199,7 +201,7 @@ void Primary::onUnitDestroy(BWAPI::Unit* unit)
 			if (unitType.isBuilding())
 				architect.removeConstruct(unit);
 			else
-				producer.removeProduction(unit);
+				recruiter.removeConstruction(unit);
 		}
 	}
 }
@@ -236,7 +238,7 @@ void Primary::onUnitComplete(BWAPI::Unit *unit)
 		if (unitType.isBuilding())
 			architect.removeConstruct(unit);
 		else
-			producer.removeProduction(unit);
+			recruiter.removeConstruction(unit);
 
 		// Check if expansion.
 		if (unitType.isResourceDepot())
@@ -248,7 +250,7 @@ void Primary::onUnitComplete(BWAPI::Unit *unit)
 		else if (utilUnit::isFighter(unitType))
 			armyManager.addUnit(unit);
 		else if (unitType.canProduce())
-			producer.addFactory(unit);
+			recruiter.addFactory(unit);
 	}
 }
 

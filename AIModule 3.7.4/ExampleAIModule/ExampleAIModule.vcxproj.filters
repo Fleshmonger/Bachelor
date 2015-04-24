@@ -47,9 +47,6 @@
     <ClCompile Include="Archivist.cpp">
       <Filter>Managers</Filter>
     </ClCompile>
-    <ClCompile Include="Producer.cpp">
-      <Filter>Managers</Filter>
-    </ClCompile>
     <ClCompile Include="Architect.cpp">
       <Filter>Managers</Filter>
     </ClCompile>
@@ -70,6 +67,12 @@
     </ClCompile>
     <ClCompile Include="Gatherer.cpp">
       <Filter>Managers\Landlord\Vassal</Filter>
+    </ClCompile>
+    <ClCompile Include="Planner.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Recruiter.cpp">
+      <Filter>Managers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -101,9 +104,6 @@
     <ClInclude Include="Archivist.h">
       <Filter>Managers</Filter>
     </ClInclude>
-    <ClInclude Include="Producer.h">
-      <Filter>Managers</Filter>
-    </ClInclude>
     <ClInclude Include="Architect.h">
       <Filter>Managers</Filter>
     </ClInclude>
@@ -124,6 +124,12 @@
     </ClInclude>
     <ClInclude Include="Gatherer.h">
       <Filter>Managers\Landlord\Vassal</Filter>
+    </ClInclude>
+    <ClInclude Include="Planner.h">
+      <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Recruiter.h">
+      <Filter>Managers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

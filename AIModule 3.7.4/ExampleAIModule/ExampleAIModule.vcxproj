@@ -105,8 +105,9 @@
     <ClCompile Include="Economist.cpp" />
     <ClCompile Include="Landlord.cpp" />
     <ClCompile Include="Gatherer.cpp" />
+    <ClCompile Include="Planner.cpp" />
     <ClCompile Include="Primary.cpp" />
-    <ClCompile Include="Producer.cpp" />
+    <ClCompile Include="Recruiter.cpp" />
     <ClCompile Include="Reconnoiter.cpp" />
     <ClCompile Include="CombatJudge.cpp" />
     <ClCompile Include="Strategist.cpp" />
@@ -125,8 +126,9 @@
     <ClInclude Include="Economist.h" />
     <ClInclude Include="Landlord.h" />
     <ClInclude Include="Gatherer.h" />
+    <ClInclude Include="Planner.h" />
     <ClInclude Include="Primary.h" />
-    <ClInclude Include="Producer.h" />
+    <ClInclude Include="Recruiter.h" />
     <ClInclude Include="Reconnoiter.h" />
     <ClInclude Include="CombatJudge.h" />
     <ClInclude Include="Strategist.h" />

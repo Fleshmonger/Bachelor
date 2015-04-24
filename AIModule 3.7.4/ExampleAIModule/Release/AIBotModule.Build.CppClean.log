@@ -1,6 +1,6 @@
 d:\bachelor\aimodule 3.7.4\release\aibotmodule.lib
 d:\bachelor\aimodule 3.7.4\release\aibotmodule.exp
-d:\bachelor\aimodule 3.7.4\exampleaimodule\release\workermanager.obj
+d:\bachelor\aimodule 3.7.4\exampleaimodule\release\taskmaster.obj
 d:\bachelor\aimodule 3.7.4\exampleaimodule\release\vassal.obj
 d:\bachelor\aimodule 3.7.4\exampleaimodule\release\utilunit.obj
 d:\bachelor\aimodule 3.7.4\exampleaimodule\release\utilmap.obj
@@ -20,6 +20,8 @@ d:\bachelor\aimodule 3.7.4\exampleaimodule\release\archivist.obj
 d:\bachelor\aimodule 3.7.4\exampleaimodule\release\architect.obj
 d:\bachelor\aimodule 3.7.4\exampleaimodule\release\accountant.obj
 d:\bachelor\aimodule 3.7.4\exampleaimodule\release\vc90.pdb
+d:\bachelor\aimodule 3.7.4\exampleaimodule\release\gatherer.obj
+d:\bachelor\aimodule 3.7.4\exampleaimodule\release\planner.obj
 d:\bachelor\aimodule 3.7.4\release\aibotmodule.dll
 d:\bachelor\aimodule 3.7.4\exampleaimodule\release\aibotmodule.dll.intermediate.manifest
 d:\bachelor\aimodule 3.7.4\exampleaimodule\release\aibotmodule.write.1.tlog

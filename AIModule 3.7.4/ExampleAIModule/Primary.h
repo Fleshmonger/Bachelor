@@ -9,7 +9,7 @@
 #include "Accountant.h"
 #include "Archivist.h"
 #include "LandLord.h"
-#include "Producer.h"
+#include "Recruiter.h"
 #include "CombatJudge.h"
 #include "Architect.h"
 #include "Reconnoiter.h"
@@ -18,6 +18,7 @@
 #include "Defender.h"
 #include "Attacker.h"
 #include "Strategist.h"
+#include "Planner.h"
 
 
 using namespace BWAPI; //TODO Remove this
@@ -31,7 +32,7 @@ private:
 	Accountant		accountant;
 	Archivist		archivist;
 	Landlord		landlord;
-	Producer		producer;
+	Recruiter		recruiter;
 	CombatJudge		combatJudge;
 	Architect		architect;
 	Reconnoiter		reconnoiter;
@@ -40,6 +41,7 @@ private:
 	Attacker		attacker;
 	Defender		defender;
 	Strategist		strategist;
+	Planner			planner;
 
 public:
 	Primary();

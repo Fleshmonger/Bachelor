@@ -47,14 +47,35 @@ bool Architect::scheduleRefinery(BWAPI::UnitType refineryType, BWAPI::Unit * gey
 	return false;
 }
 
-// Attempt to build a building near the desired location and returns true if it succeeds.
+
+// Attempts to schedule a building in the region related to the vassal and returns true if it succeeds.
+bool Architect::scheduleBuilding(BWAPI::UnitType buildingType, BWTA::Region * region)
+{
+	// Aquire vassal.
+	Vassal * vassal = landlord->getVassal(region);
+
+	// Verify vassal.
+	if (vassal)
+	{
+		// Verify depot.
+		BWAPI::Unit * depot = vassal->getDepot();
+		if (depot)
+			return scheduleBuilding(buildingType, depot->getTilePosition());
+	}
+
+	// Attempt unsuccessful.
+	return false;
+}
+
+
+// Attempts to schedule a building near the desired location and returns true if it succeeds.
 bool Architect::scheduleBuilding(BWAPI::UnitType buildingType, BWAPI::TilePosition desiredLocation)
 {
 	return scheduleBuilding(buildingType, desiredLocation, landlord->getIdleWorker(BWTA::getRegion(desiredLocation)));
 }
 
 
-// Attempt to build a building near the desired location with the builder and returns true if it succeeds.
+// Attempts to schedule a building near the desired location with the builder and returns true if it succeeds.
 bool Architect::scheduleBuilding(BWAPI::UnitType buildingType, BWAPI::TilePosition desiredLocation, BWAPI::Unit * builder)
 {
 	// Confirm the unit type.
@@ -64,7 +85,9 @@ bool Architect::scheduleBuilding(BWAPI::UnitType buildingType, BWAPI::TilePositi
 		if (accountant->isAffordable(buildingType))
 		{
 			// Verify builder.
-			if (builder)
+			if (utilUnit::isOwned(builder) &&
+				builder->exists() &&
+				builder->getType().isWorker())
 			{
 				BWAPI::TilePosition location = getBuildLocation(builder, desiredLocation, buildingType);
 				if (location)

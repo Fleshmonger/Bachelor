@@ -3,7 +3,7 @@
 #include "Archivist.h"
 #include "Vassal.h"
 #include "Landlord.h"
-#include "Producer.h"
+#include "recruiter.h"
 #include "Architect.h"
 
 const int MAX_FACTORIES = 4; // The desired amount of factories.
@@ -18,11 +18,11 @@ class Strategist
 private:
 	Archivist	* archivist;
 	Landlord	* landlord;
-	Producer	* producer;
+	Recruiter	* recruiter;
 	Architect	* architect;
 
 public:
-	Strategist(Landlord * landlord, Producer * producer, Architect * architect);
+	Strategist(Landlord * landlord, Recruiter * recruiter, Architect * architect);
 	~Strategist();
 
 	void update();

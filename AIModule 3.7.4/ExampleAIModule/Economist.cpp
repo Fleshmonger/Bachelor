@@ -2,10 +2,10 @@
 
 
 // Constructor
-Economist::Economist(Accountant * accountant, Landlord * landlord, Producer * producer, Architect * architect) :
+Economist::Economist(Accountant * accountant, Landlord * landlord, Recruiter * recruiter, Architect * architect) :
 	accountant(accountant),
 	landlord(landlord),
-	producer(producer),
+	recruiter(recruiter),
 	architect(architect),
 	refineries()
 {
@@ -59,9 +59,11 @@ void Economist::update()
 			desiredMiners = vassal->minerals() * MINERAL_SATURATION,
 			desiredHarvesters = vassal->refineries() * REFINERY_SATURATION;
 
+		/*
 		// Train miners as needed.
 		if (vassal->workforce() < desiredMiners + desiredHarvesters)
 			producer->scheduleTraining(UNIT_WORKER, vassal->getDepot());
+		*/
 
 		// Harvesters saturation check.
 		//TODO Cleanup/Simplify.
@@ -93,6 +95,7 @@ void Economist::update()
 		vassal->gather();
 	}
 
+	/*
 	// Verify headquarters.
 	Vassal * headquarters = landlord->getHeadquarters();
 	if (headquarters)
@@ -108,7 +111,6 @@ void Economist::update()
 				architect->scheduleBuilding(UNIT_SUPPLY, headquarters->getDepot()->getTilePosition());
 		}
 
-		/*
 		// Expansion check.
 		if (landlord->getVassals().size() < 2 &&
 			architect->scheduled(UNIT_DEPOT) == 0)
@@ -125,8 +127,8 @@ void Economist::update()
 				}
 			}
 		}
-		*/
 	}
+	*/
 }
 
 
