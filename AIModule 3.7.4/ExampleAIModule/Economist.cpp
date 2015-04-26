@@ -59,43 +59,12 @@ void Economist::update()
 			desiredMiners = vassal->minerals() * MINERAL_SATURATION,
 			desiredHarvesters = vassal->refineries() * REFINERY_SATURATION;
 
-		/*
 		// Train miners as needed.
 		if (vassal->workforce() < desiredMiners + desiredHarvesters)
-			producer->scheduleTraining(UNIT_WORKER, vassal->getDepot());
-		*/
-
-		// Harvesters saturation check.
-		//TODO Cleanup/Simplify.
-		utilUnit::UnitSet harvesters = vassal->getEmployed(TASK_HARVEST);
-		if (harvesters.size() < desiredHarvesters)
-		{
-			// Verify minimum miner criteria.
-			if (minimumMiners < vassal->workforce() - harvesters.size())
-			{
-				// Assign excess miners to harvesting.
-				int excess = std::min(vassal->workforce() - harvesters.size() - minimumMiners, desiredHarvesters - harvesters.size());
-				for (; excess > 0; excess--)
-					vassal->employWorker(vassal->getIdleWorker(), TASK_HARVEST);
-			}
-		}
-		else if (harvesters.size() > desiredHarvesters)
-		{
-			// Dismiss excess harvesters to mining.
-			int excess = harvesters.size() - desiredHarvesters;
-			utilUnit::UnitSet::iterator it = harvesters.begin();
-			for (; excess > 0; excess--, it++)
-				vassal->employWorker(*it, TASK_MINE);
-		}
-
-		// Assign idle workers to mining.
-		vassal->employWorkers(vassal->getEmployed(TASK_IDLE), TASK_MINE);
-
-		// Command mining and harvesting.
-		vassal->gather();
+			recruiter->scheduleTraining(UNIT_WORKER, vassal->getDepot());
 	}
 
-	/*
+
 	// Verify headquarters.
 	Vassal * headquarters = landlord->getHeadquarters();
 	if (headquarters)
@@ -111,6 +80,7 @@ void Economist::update()
 				architect->scheduleBuilding(UNIT_SUPPLY, headquarters->getDepot()->getTilePosition());
 		}
 
+		/*
 		// Expansion check.
 		if (landlord->getVassals().size() < 2 &&
 			architect->scheduled(UNIT_DEPOT) == 0)
@@ -127,8 +97,8 @@ void Economist::update()
 				}
 			}
 		}
+		*/
 	}
-	*/
 }
 
 

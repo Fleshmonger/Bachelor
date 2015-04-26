@@ -83,6 +83,8 @@ bool Recruiter::scheduleTraining(BWAPI::UnitType unitType)
 			!factory->isTraining())
 			return scheduleTraining(unitType, factory);
 	}
+
+	return false;
 }
 
 

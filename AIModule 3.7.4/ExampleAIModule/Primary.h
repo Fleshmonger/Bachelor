@@ -13,12 +13,13 @@
 #include "CombatJudge.h"
 #include "Architect.h"
 #include "Reconnoiter.h"
+#include "Planner.h"
 #include "Economist.h"
 #include "ArmyManager.h"
 #include "Defender.h"
 #include "Attacker.h"
 #include "Strategist.h"
-#include "Planner.h"
+#include "Despot.h"
 
 
 using namespace BWAPI; //TODO Remove this
@@ -36,12 +37,13 @@ private:
 	CombatJudge		combatJudge;
 	Architect		architect;
 	Reconnoiter		reconnoiter;
+	Planner			planner;
 	Economist		economist;
 	ArmyManager		armyManager;
 	Attacker		attacker;
 	Defender		defender;
 	Strategist		strategist;
-	Planner			planner;
+	Despot			despot;
 
 public:
 	Primary();

@@ -8,7 +8,7 @@
 #include "Landlord.h"
 
 
-// Manages building construction orders.
+// Builds buildings and monitors their construction.
 //TODO Cleanup.
 class Architect
 {

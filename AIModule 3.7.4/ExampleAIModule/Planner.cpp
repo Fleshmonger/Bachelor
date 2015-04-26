@@ -8,12 +8,6 @@ Planner::Planner(Landlord * landlord, Recruiter * recruiter, Architect * archite
 	architect(architect),
 	buildOrder()
 {
-	enqueue(BWAPI::UnitTypes::Protoss_Probe);
-	enqueue(BWAPI::UnitTypes::Protoss_Probe);
-	enqueue(BWAPI::UnitTypes::Protoss_Probe);
-	enqueue(BWAPI::UnitTypes::Protoss_Probe);
-	enqueue(BWAPI::UnitTypes::Protoss_Pylon);
-	enqueue(BWAPI::UnitTypes::Protoss_Probe);
 }
 
 
@@ -23,7 +17,7 @@ Planner::~Planner()
 }
 
 
-// Updates and executes a build order.
+// Updates and executes a build-order.
 void Planner::update()
 {
 	// Verify headquarters.
@@ -34,7 +28,7 @@ void Planner::update()
 		BWAPI::Unit * depot = headquarters->getDepot();
 		if (depot)
 		{
-			// Execute build order.
+			// Execute build-order.
 			while (!buildOrder.empty())
 			{
 				bool result = false;
@@ -55,8 +49,15 @@ void Planner::update()
 }
 
 
-// Enqueues an order at the end of the build order.
+// Enqueues an order at the end of the build-order.
 void Planner::enqueue(BWAPI::UnitType unitType)
 {
 	buildOrder.push_back(unitType);
+}
+
+
+// Returns whether the build-order is empty.
+bool Planner::empty()
+{
+	return buildOrder.empty();
 }

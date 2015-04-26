@@ -16,31 +16,6 @@ Taskmaster::~Taskmaster()
 }
 
 
-/*
-// Verifies worker integrity.
-void Taskmaster::update()
-{
-	// Verify workers.
-	utilUnit::UnitSet::iterator it = workers.begin(), end = workers.end();
-	while (it != end)
-	{
-		// Verify worker.
-		BWAPI::Unit * worker = *it;
-		if (worker->exists())
-			it++;
-		else
-		{
-			it = workers.erase(it);
-			Task task = assignments[worker];
-			assignments.erase(worker);
-			employed[task].erase(worker);
-			end = workers.end();
-		}
-	}
-}
-*/
-
-
 // Adds a worker to the pool.
 void Taskmaster::addWorker(BWAPI::Unit * worker)
 {
@@ -59,14 +34,14 @@ void Taskmaster::addWorker(BWAPI::Unit * worker)
 // Removes a worker from the pool.
 void Taskmaster::removeWorker(BWAPI::Unit * worker)
 {
-	// Verify unit.
+	// Verify worker.
 	if (contains(worker))
 	{
-		// Remove unit.
+		// Remove worker.
 		workers.erase(worker);
 		Task task = assignments[worker];
-		assignments.erase(worker);
 		employed[task].erase(worker);
+		assignments.erase(worker);
 	}
 }
 
@@ -78,8 +53,7 @@ void Taskmaster::employWorker(BWAPI::Unit * worker, Task task)
 	if (contains(worker))
 	{
 		// Remove worker from current task.
-		Task oldTask = assignments[worker];
-		employed[oldTask].erase(worker);
+		employed[assignments[worker]].erase(worker);
 
 		// Add worker to new task.
 		assignments[worker] = task;
@@ -102,7 +76,7 @@ unsigned int Taskmaster::workforce()
 }
 
 
-// Returns a copy of workers employed with the specified task.
+// Returns pointers to workers employed with the specified task.
 utilUnit::UnitSet Taskmaster::getEmployed(Task task)
 {
 	return employed[task];

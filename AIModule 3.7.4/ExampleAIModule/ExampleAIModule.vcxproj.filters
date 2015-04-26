@@ -74,6 +74,9 @@
     <ClCompile Include="Recruiter.cpp">
       <Filter>Managers</Filter>
     </ClCompile>
+    <ClCompile Include="Despot.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="UtilUnit.h">
@@ -129,6 +132,9 @@
       <Filter>Managers</Filter>
     </ClInclude>
     <ClInclude Include="Recruiter.h">
+      <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Despot.h">
       <Filter>Managers</Filter>
     </ClInclude>
   </ItemGroup>

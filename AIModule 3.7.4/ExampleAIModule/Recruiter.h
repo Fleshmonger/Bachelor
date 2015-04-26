@@ -5,8 +5,7 @@
 #include "Accountant.h"
 
 
-// Trains units and monitors incomplete ones.
-//TODO Rename to recruiter.
+// Trains units and monitors their construction.
 class Recruiter
 {
 private:

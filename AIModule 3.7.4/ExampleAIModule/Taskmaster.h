@@ -7,7 +7,7 @@
 enum Task { TASK_BUILD, TASK_DEFEND, TASK_HARVEST, TASK_IDLE, TASK_MINE };
 
 
-// Contains and handles all workers while commanding harvesting.
+// Contains workers and their tasks.
 class Taskmaster
 {
 	private:
@@ -19,7 +19,6 @@ class Taskmaster
 		Taskmaster();
 		~Taskmaster();
 
-		//void update();
 		void addWorker(BWAPI::Unit * worker);
 		void removeWorker(BWAPI::Unit * worker);
 		void employWorker(BWAPI::Unit * worker, Task task);

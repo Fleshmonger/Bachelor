@@ -10,12 +10,13 @@ Primary::Primary() :
 	combatJudge(&archivist),
 	architect(&accountant, &landlord),
 	reconnoiter(&archivist, &landlord),
+	planner(&landlord, &recruiter, &architect),
 	economist(&accountant, &landlord, &recruiter, &architect),
 	armyManager(&archivist, &combatJudge),
 	defender(&archivist, &landlord, &combatJudge, &armyManager),
 	attacker(&archivist, &landlord, &combatJudge, &armyManager),
 	strategist(&landlord, &recruiter, &architect),
-	planner(&landlord, &recruiter, &architect)
+	despot(&landlord, &recruiter, &architect, &economist, &strategist)
 {
 }
 
@@ -103,12 +104,11 @@ void Primary::onFrame()
 	//landlord.update();
 	reconnoiter.update();
 	architect.update();
+	planner.update();
 	armyManager.update();
 	defender.update(); //TODO Defender must be before attacker and economist, to ensure defenders are available. Fix this.
-	economist.update();
 	attacker.update();
-	strategist.update();
-	planner.update();
+	despot.update();
 }
 
 

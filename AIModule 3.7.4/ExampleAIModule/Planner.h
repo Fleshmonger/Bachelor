@@ -20,5 +20,7 @@ public:
 
 	void update();
 	void enqueue(BWAPI::UnitType unitType);
+
+	bool empty();
 };
 
