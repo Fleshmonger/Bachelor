@@ -37,7 +37,7 @@ void Despot::update()
 	{
 		// Execute auto-pilot.
 		economist->update();
-		strategist->update();
+		//strategist->update();
 	}
 
 	// Command harvest.

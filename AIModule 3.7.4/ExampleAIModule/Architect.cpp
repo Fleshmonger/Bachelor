@@ -231,7 +231,7 @@ bool Architect::validBuildLocation(BWAPI::Unit * builder, BWAPI::TilePosition lo
 	return
 		location &&
 		location.isValid() &&
-		//!landlord->getHarvestingZone(BWTA::getRegion(location)).contains(location, buildingType) &&
+		!landlord->getHarvestingZone(BWTA::getRegion(location)).contains(location, buildingType) &&
 		BWAPI::Broodwar->canBuildHere(builder, location, buildingType);
 }
 

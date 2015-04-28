@@ -63,6 +63,42 @@ unsigned int Vassal::workforce()
 }
 
 
+// Returns the harvesting area.
+//TODO Make dynamic, i.e. disregard exhausted mineral fields. 
+//TODO Remove code duplication.
+utilMap::Zone Vassal::getHarvestingZone()
+{
+	// Verify depot.
+	if (depot &&
+		depot->exists())
+	{
+		// Initialize zone.
+		BWAPI::TilePosition depotPos = depot->getTilePosition();
+		BWAPI::UnitType depotType = depot->getType();
+		utilMap::Zone zone (
+			depotPos.x(),
+			depotPos.y(),
+			depotPos.x() + depotType.tileWidth(),
+			depotPos.y() + depotType.tileHeight());
+
+		// Include resources.
+		BOOST_FOREACH(BWTA::BaseLocation * baseLocation, region->getBaseLocations())
+		{
+			// Include minerals.
+			BOOST_FOREACH(BWAPI::Unit * mineral, baseLocation->getStaticMinerals())
+				zone.expand(mineral->getInitialTilePosition(), mineral->getInitialType());
+
+			// Include geysers.
+			BOOST_FOREACH(BWAPI::Unit * geyser, baseLocation->getGeysers())
+				zone.expand(geyser->getInitialTilePosition(), geyser->getInitialType());
+		}
+		return zone;
+	}
+	else
+		return utilMap::Zone();
+}
+
+
 // Returns the designated depot.
 BWAPI::Unit * Vassal::getDepot()
 {

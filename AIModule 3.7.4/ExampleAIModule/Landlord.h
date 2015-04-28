@@ -30,6 +30,7 @@ public:
 	bool contains(BWAPI::Unit * worker);
 	bool contains(BWTA::Region * region);
 
+	utilMap::Zone getHarvestingZone(BWTA::Region * region);
 	Vassal * getHeadquarters();
 	Vassal * getVassal(BWTA::Region * region);
 	std::set<Vassal*> getVassals();

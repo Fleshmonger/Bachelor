@@ -70,5 +70,8 @@ public:
 	virtual void onUnitComplete(BWAPI::Unit *unit);
 
 	//void designateUnit(BWAPI::Unit * unit);
-	void drawTerrainData();
+	void drawGatherer();
+	void drawVassals();
+	void drawUnitOutline(BWAPI::Unit * unit);
+	//void drawTerrainData();
 };

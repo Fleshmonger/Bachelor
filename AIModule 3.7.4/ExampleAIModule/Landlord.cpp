@@ -129,6 +129,16 @@ bool Landlord::contains(BWTA::Region * region)
 }
 
 
+// Returns the harvesting area in the region.
+utilMap::Zone Landlord::getHarvestingZone(BWTA::Region * region)
+{
+	if (contains(region))
+		return regionVassal[region]->getHarvestingZone();
+	else
+		return utilMap::Zone();
+}
+
+
 // Returns a pointer to the headquarter vassal.
 Vassal * Landlord::getHeadquarters()
 {

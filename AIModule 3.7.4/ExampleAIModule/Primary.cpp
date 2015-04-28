@@ -85,15 +85,12 @@ void Primary::onFrame()
 	if (BWAPI::Broodwar->isReplay() || BWAPI::Broodwar->isPaused() || !BWAPI::Broodwar->self())
 		return;
 
-	drawTerrainData();
 
 	// Debugging display.
-	double
-		strength = combatJudge.strength(armyManager.getArmy()),
-		enemyStrength = combatJudge.strength(archivist.getTroops()) + combatJudge.strength(archivist.getTurrets());
 	Broodwar->drawTextScreen(200, 0, "FPS: %d", BWAPI::Broodwar->getFPS());
 	Broodwar->drawTextScreen(200, 20, "APM: %d", BWAPI::Broodwar->getAPM());
-	Broodwar->drawTextScreen(200, 40, "Strength: %f", strength);
+	drawVassals();
+	drawGatherer();
 
 	// Prevent spamming by only running our onFrame once every number of latency frames.
 	// Latency frames are the number of frames before commands are processed.
@@ -102,7 +99,6 @@ void Primary::onFrame()
 
 	// Manager updatíng
 	archivist.update();
-	//landlord.update();
 	reconnoiter.update();
 	architect.update();
 	planner.update();
@@ -138,18 +134,6 @@ void Primary::onUnitDiscover(BWAPI::Unit* unit)
 {
 	// Record unit.
 	archivist.recordUnit(unit);
-
-	// Verify unit.
-	if (unit &&
-		unit->exists())
-	{
-		BWAPI::UnitType unitType = unit->getType();
-		if (unitType.isMineralField())
-			gatherer.addMineral(unit);
-		else if (unitType == BWAPI::UnitTypes::Resource_Vespene_Geyser)
-			gatherer.addGeyser(unit);
-	}
-
 }
 
 
@@ -203,7 +187,10 @@ void Primary::onUnitDestroy(BWAPI::Unit* unit)
 			{
 				// Undesignate.
 				if (unitType.isWorker())
+				{
 					landlord.removeWorker(unit);
+					gatherer.removeWorker(unit);
+				}
 				else if (utilUnit::isFighter(unitType))
 					armyManager.removeUnit(unit);
 				else if (unitType.canProduce())
@@ -222,8 +209,6 @@ void Primary::onUnitDestroy(BWAPI::Unit* unit)
 		}
 		else if (unitType.isMineralField())
 			gatherer.removeMineral(unit);
-		else if (unitType == BWAPI::UnitTypes::Resource_Vespene_Geyser)
-			gatherer.removeGeyser(unit);
 	}
 
 }
@@ -277,6 +262,106 @@ void Primary::onUnitComplete(BWAPI::Unit *unit)
 }
 
 
+// Draws gatherer data for debugging.
+void Primary::drawGatherer()
+{
+	// Iterate through vassals.
+	BOOST_FOREACH(Vassal * vassal, landlord.getVassals())
+	{
+		// Draw minerals.
+		BWTA::Region * region = vassal->getRegion();
+		BOOST_FOREACH(BWAPI::Unit * mineral, gatherer.getMinerals(region))
+		{
+			// Draw mineral.
+			drawUnitOutline(mineral);
+
+			// Draw data.
+			BWAPI::TilePosition tile = mineral->getTilePosition();
+			BWAPI::Broodwar->drawTextMap(
+				tile.x() * TILE_SIZE,
+				tile.y() * TILE_SIZE,
+				"Miners: %d",
+				gatherer.getResourceWorkers(mineral).size()
+				);
+		}
+
+		// Draw refineries.
+		BOOST_FOREACH(BWAPI::Unit * refinery, gatherer.getRefineries(region))
+		{
+			// Draw mineral.
+			drawUnitOutline(refinery);
+
+			// Draw data.
+			BWAPI::TilePosition tile = refinery->getTilePosition();
+			BWAPI::Broodwar->drawTextMap(
+				tile.x() * TILE_SIZE,
+				tile.y() * TILE_SIZE,
+				"Harvesters: %d",
+				gatherer.getResourceWorkers(refinery).size()
+				);
+		}
+	}
+}
+
+
+// Draws vassal data for debugging.
+void Primary::drawVassals()
+{
+	// Iterate through vassals.
+	BOOST_FOREACH(Vassal * vassal, landlord.getVassals())
+	{
+		// Verify depot.
+		BWAPI::Unit * depot = vassal->getDepot();
+		if (depot)
+		{
+			// Draw depot.
+			drawUnitOutline(depot);
+
+			// Draw harvesting zone.
+			utilMap::Zone zone = vassal->getHarvestingZone();
+			BWAPI::Broodwar->drawBoxMap(
+				zone.left * TILE_SIZE,
+				zone.top * TILE_SIZE,
+				zone.right * TILE_SIZE,
+				zone.bottom * TILE_SIZE,
+				BWAPI::Colors::Purple,
+				false);
+
+			// Draw data.
+			BWAPI::TilePosition tile = depot->getTilePosition();
+			BWAPI::Broodwar->drawTextMap(
+				tile.x() * TILE_SIZE,
+				tile.y() * TILE_SIZE,
+				"Workforce: %d",
+				vassal->workforce()
+				);
+		}
+	}
+}
+
+
+// Draws an outline around the unit.
+void Primary::drawUnitOutline(BWAPI::Unit * unit)
+{
+	// Verify unit.
+	if (unit &&
+		unit->isVisible())
+	{
+		// Draw unit.
+		BWAPI::TilePosition tile = unit->getTilePosition();
+		BWAPI::UnitType unitType = unit->getType();
+		BWAPI::Broodwar->drawBoxMap(
+			tile.x() * TILE_SIZE,
+			tile.y() * TILE_SIZE,
+			(tile.x() + unitType.tileWidth()) * TILE_SIZE,
+			(tile.y() + unitType.tileHeight()) * TILE_SIZE,
+			BWAPI::Colors::Blue,
+			false);
+	}
+}
+
+
+/*
 // Draws BWTA regions and resources.
 void Primary::drawTerrainData()
 {
@@ -335,3 +420,4 @@ void Primary::drawTerrainData()
 		}
 	}
 }
+*/

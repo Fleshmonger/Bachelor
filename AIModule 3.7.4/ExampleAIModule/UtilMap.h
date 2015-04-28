@@ -10,7 +10,11 @@ namespace utilMap
 
 		Zone();
 		Zone(int left, int top, int right, int bottom);
-		bool contains(int tileX, int tileY);
+
+		void expand(int left, int top, int right, int bottom);
+		void expand(BWAPI::TilePosition pos, BWAPI::UnitType unitType);
+
+		bool contains(int x, int y);
 		bool contains(BWAPI::TilePosition pos, BWAPI::UnitType unitType);
 	};
 }

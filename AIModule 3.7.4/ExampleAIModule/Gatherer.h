@@ -18,32 +18,27 @@ private:
 	std::map<BWTA::Region*, utilUnit::UnitList>
 		regionMinerals,
 		regionRefineries;
-	std::map<BWTA::Region*, utilUnit::UnitSet> regionGeysers;
 	std::map<BWAPI::Unit*, BWAPI::Unit*> workerTargets;
 	std::map<BWAPI::Unit*, utilUnit::UnitSet> resourceWorkers;
+	std::map<BWAPI::Unit*, utilUnit::UnitList*> workerResources;
 
 public:
 	Gatherer(Landlord * landlord);
 	~Gatherer();
 
 	void gather();
+	void commandGather(BWAPI::Unit * worker, utilUnit::UnitList * resources, BWTA::Region * region);
 	void addRegion(BWTA::Region * region);
-	void addGeyser(BWAPI::Unit * geyser);
-	void removeGeyser(BWAPI::Unit * geyser);
-	void addMineral(BWAPI::Unit * mineral);
 	void removeMineral(BWAPI::Unit * mineral);
 	void addRefinery(BWAPI::Unit * refinery);
 	void removeRefinery(BWAPI::Unit * refinery);
-	void addHarvester(BWAPI::Unit * worker, BWTA::Region * region);
-	void addMiner(BWAPI::Unit * worker, BWTA::Region * region);
-	void removeWorker(BWAPI::Unit * worker, BWTA::Region * region);
+	void addWorker(BWAPI::Unit * worker, utilUnit::UnitList * resources);
+	void removeWorker(BWAPI::Unit * worker);
 
 	bool contains(BWTA::Region * region);
 	bool contains(BWAPI::Unit * worker);
 
-	utilMap::Zone harvestingZone(BWTA::Region * region);
-
-	utilUnit::UnitSet getGeysers(BWTA::Region * region);
+	utilUnit::UnitSet getResourceWorkers(BWAPI::Unit * resource);
 	utilUnit::UnitList getMinerals(BWTA::Region * region);
 	utilUnit::UnitList getRefineries(BWTA::Region * region);
 };

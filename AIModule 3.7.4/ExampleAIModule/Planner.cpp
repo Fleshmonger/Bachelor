@@ -60,10 +60,12 @@ bool Planner::produce(BWAPI::UnitType unitType)
 			// Type check.
 			if (unitType.isResourceDepot())
 			{
+				return false;
 				//TODO Build depot
 			}
 			else if (unitType.isRefinery())
 			{
+				return false;
 				//TODO Build refinery.
 			}
 			else

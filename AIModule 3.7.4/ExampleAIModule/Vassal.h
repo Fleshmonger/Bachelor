@@ -27,6 +27,8 @@ public:
 
 	unsigned int workforce();
 
+	utilMap::Zone getHarvestingZone();
+
 	BWAPI::Unit * getDepot();
 	BWAPI::Unit * getIdleWorker();
 	utilUnit::UnitSet getEmployed(Task task);

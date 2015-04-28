@@ -7,9 +7,9 @@ Gatherer::Gatherer(Landlord * landlord) :
 	regions(),
 	regionMinerals(),
 	regionRefineries(),
-	regionGeysers(),
 	workerTargets(),
-	resourceWorkers()
+	resourceWorkers(),
+	workerResources()
 {
 }
 
@@ -22,88 +22,81 @@ Gatherer::~Gatherer()
 
 // Verifies resources and commands workers to gather them.
 //TODO Transform into update.
-//TODO Cleanup.
 void Gatherer::gather()
 {
+	// Gather resources.
 	BOOST_FOREACH(Vassal * vassal, landlord->getVassals())
 	{
 		// Aquire resources.
 		BWTA::Region * region = vassal->getRegion();
+		if (!contains(region))
+			addRegion(region);
+
 		utilUnit::UnitList
 			* minerals = &regionMinerals[region],
 			* refineries = &regionRefineries[region];
 
 		// Mine minerals.
-		BOOST_FOREACH(BWAPI::Unit * worker, vassal->getEmployed(TASK_MINE))
-		{
-			// Verify worker.
-			if (worker &&
-				worker->exists())
-			{
-				// Aquire resource.
-				if (contains(worker))
-				{
-					// Verify resource type.
-					BWAPI::Unit * resource = workerTargets[worker];
-					if (!resource ||
-						!resource->exists())
-					{
-						// Redesignate.
-						removeMineral(resource);
-						addMiner(worker, region);
-					}
-					else if (!resource->getType().isMineralField())
-					{
-						removeWorker(worker, region);
-						addMiner(worker, region);
-					}
-				}
-				else if (!minerals->empty())
-					addMiner(worker, region);
+		if (!minerals->empty())
+			BOOST_FOREACH(BWAPI::Unit * worker, vassal->getEmployed(TASK_MINE))
+				commandGather(worker, minerals, region);
 
-				// Verify resource.
-				BWAPI::Unit * resource = workerTargets[worker];
-				if (resource &&
-					resource->exists())
-				{
-					// Command worker.
-					if (worker->isCarryingGas() || worker->isCarryingMinerals())
-						utilUnit::command(worker, BWAPI::UnitCommandTypes::Return_Cargo);
-					else
-						utilUnit::command(worker, BWAPI::UnitCommandTypes::Gather, resource);
-				}
+		// Harvest gas.
+		if (!refineries->empty())
+			BOOST_FOREACH(BWAPI::Unit * worker, vassal->getEmployed(TASK_HARVEST))
+				commandGather(worker, refineries, region);
+	}
+}
+
+
+// Commands the worker to gather resources.
+void Gatherer::commandGather(BWAPI::Unit * worker, utilUnit::UnitList * resources, BWTA::Region * region)
+{
+	// Verify input.
+	if (worker &&				// Verify worker.
+		worker->exists() &&
+		resources &&			// Verify resources.
+		!resources->empty())
+	{
+		BWAPI::UnitType resourceType = resources->front()->getType();
+
+		// Aquire resource.
+		if (contains(worker))
+		{
+			// Verify resource type.
+			BWAPI::Unit * resource = workerTargets[worker];
+			if (!resource ||
+				!resource->exists() ||
+				resource->getType() != resourceType)
+			{
+				// Redesignate.
+				removeWorker(worker);
+				addWorker(worker, resources);
+			}
+		}
+		else if (!resources->empty())
+			addWorker(worker, resources);
+
+		// Verify worker.
+		if (utilUnit::isOwned(worker) &&
+			worker->exists() &&
+			worker->getType().isWorker())
+		{
+			// Verify target.
+			BWAPI::Unit * resource = workerTargets[worker];
+			if (resource &&
+				resource->exists() &&
+				resource->getType().isResourceContainer())
+			{
+				// Command worker.
+				if (worker->isCarryingGas() || worker->isCarryingMinerals())
+					utilUnit::command(worker, BWAPI::UnitCommandTypes::Return_Cargo);
+				else
+					utilUnit::command(worker, BWAPI::UnitCommandTypes::Gather, resource);
 			}
 		}
 
-		// Harvest gas.
-		BOOST_FOREACH(BWAPI::Unit * harvester, vassal->getEmployed(TASK_HARVEST))
-		{
-			//TODO
-		}
 	}
-
-	/*
-	// Command gathering.
-	typedef std::pair<BWAPI::Unit*, BWAPI::Unit*> WorkerTarget;
-	BOOST_FOREACH(WorkerTarget workerTarget, workerTargets)
-	{
-		// Verify worker-target.
-		BWAPI::Unit
-			* worker = workerTarget.first,
-			*resource = workerTarget.second;
-		if (worker &&
-			worker->exists() &&
-			resource &&
-			resource->exists())
-		{
-			// Command worker.
-			if (worker->isCarryingGas() || worker->isCarryingMinerals())
-				utilUnit::command(worker, BWAPI::UnitCommandTypes::Return_Cargo);
-			else
-				utilUnit::command(worker, BWAPI::UnitCommandTypes::Gather, resource);
-		}
-	}
-	*/
 }
 
 
@@ -116,63 +109,21 @@ void Gatherer::addRegion(BWTA::Region * region)
 	{
 		// Add region.
 		regions.insert(region);
-		regionGeysers[region] = utilUnit::UnitSet();
-		regionMinerals[region] = utilUnit::UnitList();
 		regionRefineries[region] = utilUnit::UnitList();
-	}
-}
 
-
-// Adds a geyser to the pool.
-void Gatherer::addGeyser(BWAPI::Unit * geyser)
-{
-	// Verify geyser.
-	if (geyser &&
-		geyser->exists() &&
-		geyser->getType() == BWAPI::UnitTypes::Resource_Vespene_Geyser)
-	{
-		// Verify region.
-		BWTA::Region * region = BWTA::getRegion(geyser->getPosition());
-		if (!contains(region))
-			addRegion(region);
-
-		// Add geyser.
-		regionGeysers[region].insert(geyser);
-	}
-}
-
-
-// Removes a geyser from the pool.
-void Gatherer::removeGeyser(BWAPI::Unit * geyser)
-{
-	// Verify geyser.
-	if (geyser)
-	{
-		// Verify region.
-		BWTA::Region * region = BWTA::getRegion(geyser->getPosition());
-		if (contains(region))
-			regionGeysers[region].erase(geyser);
-	}
-}
-
-// Adds a mineral for mining.
-void Gatherer::addMineral(BWAPI::Unit * mineral)
-{
-	// Verify mineral.
-	if (mineral &&
-		mineral->exists() &&
-		mineral->getType().isMineralField())
-	{
-		// Verify region.
-		BWTA::Region * region = BWTA::getRegion(mineral->getPosition());
-		if (!contains(region))
-			addRegion(region);
-		
-		// Add mineral.
-		regionMinerals[region].push_front(mineral);
-		resourceWorkers[mineral] = utilUnit::UnitSet();
-
-		//TODO even saturation.
+		// Add minerals
+		utilUnit::UnitList minerals;
+		BOOST_FOREACH(BWTA::BaseLocation * baseLocation, region->getBaseLocations())
+		{
+			// Add minerals.
+			BOOST_FOREACH(BWAPI::Unit * mineral, baseLocation->getStaticMinerals())
+			{
+				// Add mineral.
+				minerals.push_front(mineral);
+				resourceWorkers[mineral] = utilUnit::UnitSet();
+			}
+		}
+		regionMinerals[region] = minerals;
 	}
 }
 
@@ -238,83 +189,44 @@ void Gatherer::removeRefinery(BWAPI::Unit * refinery)
 }
 
 
-// Adds a worker to the harvester pool in the region.
-//TODO Code duplication with addMiner.
-void Gatherer::addHarvester(BWAPI::Unit * worker, BWTA::Region * region)
+// Adds a worker to the resource pool.
+void Gatherer::addWorker(BWAPI::Unit * worker, utilUnit::UnitList * resources)
 {
 	// Verify input.
 	if (utilUnit::isOwned(worker) &&	// Verify worker.
 		worker->exists() &&
 		worker->getType().isWorker() &&
 		!contains(worker) &&
-		contains(region))				// Verify region.
+		!resources->empty())			// Verify resources.
 	{
-		// Verify refineries.
-		utilUnit::UnitList * refineries = &regionRefineries[region];
-		if (!refineries->empty())
-		{
-			// Set target resource.
-			BWAPI::Unit * refinery = refineries->front();
-			workerTargets[worker] = refinery;
-			resourceWorkers[refinery].insert(worker);
+		// Set target resource.
+		BWAPI::Unit * resource = resources->front();
+		workerTargets[worker] = resource;
+		workerResources[worker] = resources;
+		resourceWorkers[resource].insert(worker);
 
-			// Rotate mineral priorities.
-			refineries->pop_front();
-			refineries->push_back(refinery);
-		}
+		// Rotate resource priorities.
+		resources->pop_front();
+		resources->push_back(resource);
 	}
 }
 
 
-// Adds a worker to the miner pool or the harvesting pool.
-//TODO Code duplication with addHarvester.
-void Gatherer::addMiner(BWAPI::Unit * worker, BWTA::Region * region)
+// Removes a worker from the resources.
+//TODO Split resource distribution?
+void Gatherer::removeWorker(BWAPI::Unit * worker)
 {
-	// Verify input.
-	if (utilUnit::isOwned(worker) &&	// Verify worker.
-		worker->exists() &&
-		worker->getType().isWorker() &&
-		!contains(worker) &&
-		contains(region))				// Verify region.
-	{
-		// Verify minerals.
-		utilUnit::UnitList * minerals = &regionMinerals[region];
-		if (!minerals->empty())
-		{
-			// Set target resource.
-			BWAPI::Unit * mineral = minerals->front();
-			workerTargets[worker] = mineral;
-			resourceWorkers[mineral].insert(worker);
-
-			// Rotate mineral priorities.
-			minerals->pop_front();
-			minerals->push_back(mineral);
-		}
-	}
-}
-
-
-// Removes a worker from the pool.
-//TODO Cleanup.
-void Gatherer::removeWorker(BWAPI::Unit * worker, BWTA::Region * region)
-{
-	// Verify input.
-	if (contains(worker) &&	// Verify worker.
-		contains(region))				// Verify region.
+	// Verify worker.
+	if (contains(worker))
 	{
 		// Remove worker.
 		BWAPI::Unit * resource = workerTargets[worker];
 		workerTargets.erase(worker);
 		resourceWorkers[resource].erase(worker);
+		utilUnit::UnitList * resources = workerResources[worker];
+		workerResources.erase(worker);
 
-		// Aquire resource list.
-		utilUnit::UnitList * resources;
-		if (resource->getType().isMineralField())
-			resources = &regionMinerals[region];
-		else
-			resources = &regionRefineries[region];
-
-		// Reprioritize.
+		// Cycle priorities
 		resources->remove(resource);
 		resources->push_front(resource);
 
@@ -327,7 +239,7 @@ void Gatherer::removeWorker(BWAPI::Unit * worker, BWTA::Region * region)
 			resourceWorkers[resourceBack].erase(newWorker);
 			resourceWorkers[resource].insert(newWorker);
 
-			// Rotate priorities.
+			// Cycle priorities.
 			resources->pop_back();
 			resources->push_front(resourceBack);
 		}
@@ -349,44 +261,11 @@ bool Gatherer::contains(BWAPI::Unit * worker)
 }
 
 
-// Returns a zone containing the harvesting area.
-//TODO Move back to landlord.
-utilMap::Zone Gatherer::harvestingZone(BWTA::Region * region)
+// Returns a copy of worker pointers gathering from the resource.
+utilUnit::UnitSet Gatherer::getResourceWorkers(BWAPI::Unit * resource)
 {
-	// Verify depot.
-	BWAPI::Unit * depot = landlord->getDepot(region);
-	if (depot &&
-		depot->exists())
-	{
-		// Calculate zone.
-		BWAPI::TilePosition depotPos = depot->getTilePosition();
-		BWAPI::UnitType depotType = depot->getType();
-		int left = depotPos.x(),
-			top = depotPos.y(),
-			right = depotPos.x() + depotType.tileWidth(),
-			bottom = depotPos.y() + depotType.tileHeight();
-		BOOST_FOREACH(BWAPI::Unit * mineral, regionMinerals[region])
-		{
-			BWAPI::TilePosition mineralPos = mineral->getTilePosition();
-			BWAPI::UnitType mineralType = mineral->getType();
-			left = std::min(left, mineralPos.x() + mineralType.tileWidth());
-			top = std::min(top, mineralPos.y() + mineralType.tileHeight());
-			right = std::max(right, mineralPos.x());
-			bottom = std::max(bottom, mineralPos.y());
-		}
-		return utilMap::Zone(left, top, right, bottom);
-	}
-	else
-		return utilMap::Zone();
-}
-
-
-// Returns the set of geyser pointers in the region.
-utilUnit::UnitSet Gatherer::getGeysers(BWTA::Region * region)
-{
-	// Verify region.
-	if (contains(region))
-		return regionGeysers[region];
+	if (resourceWorkers.count(resource) > 0)
+		return resourceWorkers[resource];
 	else
 		return utilUnit::UnitSet();
 }

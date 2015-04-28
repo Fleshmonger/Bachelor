@@ -60,7 +60,7 @@ void Economist::update()
 			desiredHarvesters = gatherer->getRefineries(region).size() * REFINERY_SATURATION;
 
 		// Train miners as needed.
-		if (vassal->workforce() < desiredMiners + desiredHarvesters)
+		if (vassal->workforce() + recruiter->scheduled(UNIT_WORKER) < desiredMiners + desiredHarvesters)
 			recruiter->scheduleTraining(UNIT_WORKER, vassal->getDepot());
 	}
 
@@ -80,7 +80,6 @@ void Economist::update()
 				architect->scheduleBuilding(UNIT_SUPPLY, headquarters->getDepot()->getTilePosition());
 		}
 
-		/*
 		// Expansion check.
 		if (landlord->getVassals().size() < 2 &&
 			architect->scheduled(UNIT_DEPOT) == 0)
@@ -97,7 +96,6 @@ void Economist::update()
 				}
 			}
 		}
-		*/
 	}
 }
 

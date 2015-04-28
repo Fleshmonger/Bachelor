@@ -21,6 +21,23 @@ utilMap::Zone::Zone(int left, int top, int right, int bottom) :
 }
 
 
+// Expands the zone to include the area.
+void utilMap::Zone::expand(int left, int top, int right, int bottom)
+{
+	this->left = std::min(this->left, left);
+	this->top = std::min(this->top, top);
+	this->right = std::max(this->right, right);
+	this->bottom = std::max(this->bottom, bottom);
+}
+
+
+// Expands the zone to include the unit-type.
+void utilMap::Zone::expand(BWAPI::TilePosition pos, BWAPI::UnitType unitType)
+{
+	expand(pos.x(), pos.y(), pos.x() + unitType.tileWidth(), pos.y() + unitType.tileHeight());
+}
+
+
 // Returns whether the tile coordinates are within the zone.
 bool utilMap::Zone::contains(int x, int y)
 {
