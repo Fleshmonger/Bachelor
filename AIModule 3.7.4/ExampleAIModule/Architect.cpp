@@ -17,54 +17,22 @@ Architect::~Architect()
 }
 
 
-// Attempts to build a refinery on the geyser and returns true if it succeeds.
-bool Architect::scheduleRefinery(BWAPI::UnitType refineryType, BWAPI::Unit * geyser)
+// Attempts to schedule a building in the region related to the vassal and returns true if it succeeds.
+bool Architect::scheduleBuilding(BWAPI::UnitType buildingType, Vassal * vassal)
 {
-	// Verify order.
-	if (refineryType.isRefinery() &&										// Verify type.
-		geyser &&															// Verify geyser.
-		geyser->exists() &&
-		geyser->getType() == BWAPI::UnitTypes::Resource_Vespene_Geyser &&
-		accountant->isAffordable(refineryType))								// Verify resources.
-	{
-		// Aquire builder.
-		BWAPI::Unit * builder = landlord->getIdleWorker(BWTA::getRegion(geyser->getPosition()));
-		
-		// Verify builder.
-		if (builder)
-		{
-			// Schedule building.
-			landlord->employWorker(builder, TASK_BUILD);
-			builder->build(geyser->getTilePosition(), refineryType);
-			buildSchedule.insert(std::make_pair(refineryType, std::make_pair(builder, geyser->getTilePosition())));
-			accountant->allocate(refineryType);
-			schedule[refineryType]++;
-			return true;
-		}
-	}
-
-	// Scheduling was unsuccessful.
-	return false;
+	// Verify vassal.
+	if (vassal &&
+		vassal->getDepot())
+		return scheduleBuilding(buildingType, vassal->getDepot()->getTilePosition());
+	else
+		return false;
 }
 
 
-// Attempts to schedule a building in the region related to the vassal and returns true if it succeeds.
+// Attempts to schedule a building in the region and returns true if it succeeds.
 bool Architect::scheduleBuilding(BWAPI::UnitType buildingType, BWTA::Region * region)
 {
-	// Aquire vassal.
-	Vassal * vassal = landlord->getVassal(region);
-
-	// Verify vassal.
-	if (vassal)
-	{
-		// Verify depot.
-		BWAPI::Unit * depot = vassal->getDepot();
-		if (depot)
-			return scheduleBuilding(buildingType, depot->getTilePosition());
-	}
-
-	// Attempt unsuccessful.
-	return false;
+	return scheduleBuilding(buildingType, landlord->getVassal(region));
 }
 
 
@@ -105,6 +73,37 @@ bool Architect::scheduleBuilding(BWAPI::UnitType buildingType, BWAPI::TilePositi
 	}
 
 	// Attempt unsuccessful.
+	return false;
+}
+
+
+// Attempts to build a refinery on the geyser and returns true if it succeeds.
+bool Architect::scheduleRefinery(BWAPI::UnitType refineryType, BWAPI::Unit * geyser)
+{
+	// Verify order.
+	if (refineryType.isRefinery() &&										// Verify type.
+		geyser &&															// Verify geyser.
+		geyser->exists() &&
+		geyser->getType() == BWAPI::UnitTypes::Resource_Vespene_Geyser &&
+		accountant->isAffordable(refineryType))								// Verify resources.
+	{
+		// Aquire builder.
+		BWAPI::Unit * builder = landlord->getIdleWorker(BWTA::getRegion(geyser->getPosition()));
+
+		// Verify builder.
+		if (builder)
+		{
+			// Schedule building.
+			landlord->employWorker(builder, TASK_BUILD);
+			builder->build(geyser->getTilePosition(), refineryType);
+			buildSchedule.insert(std::make_pair(refineryType, std::make_pair(builder, geyser->getTilePosition())));
+			accountant->allocate(refineryType);
+			schedule[refineryType]++;
+			return true;
+		}
+	}
+
+	// Scheduling was unsuccessful.
 	return false;
 }
 
@@ -226,12 +225,13 @@ void Architect::update()
 
 
 // Returns whether or not a given building type can be built at a given location.
+//TODO Reimplement harvesting zones.
 bool Architect::validBuildLocation(BWAPI::Unit * builder, BWAPI::TilePosition location, BWAPI::UnitType buildingType)
 {
 	return
 		location &&
 		location.isValid() &&
-		!landlord->getHarvestingZone(BWTA::getRegion(location)).contains(location, buildingType) &&
+		//!landlord->getHarvestingZone(BWTA::getRegion(location)).contains(location, buildingType) &&
 		BWAPI::Broodwar->canBuildHere(builder, location, buildingType);
 }
 

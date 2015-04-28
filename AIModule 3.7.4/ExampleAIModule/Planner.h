@@ -22,5 +22,6 @@ public:
 	void enqueue(BWAPI::UnitType unitType);
 
 	bool empty();
+	bool produce(BWAPI::UnitType unitType);
 };
 

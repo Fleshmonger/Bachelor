@@ -22,29 +22,13 @@ void Planner::update()
 {
 	// Verify headquarters.
 	Vassal * headquarters = landlord->getHeadquarters();
-	if (headquarters)
+	if (headquarters &&
+		headquarters->getDepot())
 	{
-		// Verify depot.
-		BWAPI::Unit * depot = headquarters->getDepot();
-		if (depot)
-		{
-			// Execute build-order.
-			while (!buildOrder.empty())
-			{
-				bool result = false;
-
-				BWAPI::UnitType unitType = buildOrder.front();
-				if (unitType.isBuilding())
-					result = architect->scheduleBuilding(unitType, depot->getTilePosition());
-				else
-					result = recruiter->scheduleTraining(unitType);
-
-				if (result)
-					buildOrder.pop_front();
-				else
-					break;
-			}
-		}
+		// Execute build-order.
+		while (!buildOrder.empty() &&
+			produce(buildOrder.front()))
+			buildOrder.pop_front();
 	}
 }
 
@@ -60,4 +44,34 @@ void Planner::enqueue(BWAPI::UnitType unitType)
 bool Planner::empty()
 {
 	return buildOrder.empty();
+}
+
+
+// Attempts to schedule the production of a unit and returns whether successful.
+bool Planner::produce(BWAPI::UnitType unitType)
+{
+	// Verify type.
+	if (unitType &&
+		!utilUnit::isMisc(unitType))
+	{
+		// Building check.
+		if (unitType.isBuilding())
+		{
+			// Type check.
+			if (unitType.isResourceDepot())
+			{
+				//TODO Build depot
+			}
+			else if (unitType.isRefinery())
+			{
+				//TODO Build refinery.
+			}
+			else
+				return architect->scheduleBuilding(unitType, landlord->getHeadquarters());
+		}
+		else
+			return recruiter->scheduleTraining(unitType);
+	}
+	else
+		return false;
 }

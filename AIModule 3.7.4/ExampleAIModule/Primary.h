@@ -11,6 +11,7 @@
 #include "LandLord.h"
 #include "Recruiter.h"
 #include "CombatJudge.h"
+#include "Gatherer.h"
 #include "Architect.h"
 #include "Reconnoiter.h"
 #include "Planner.h"
@@ -35,6 +36,7 @@ private:
 	Landlord		landlord;
 	Recruiter		recruiter;
 	CombatJudge		combatJudge;
+	Gatherer		gatherer;
 	Architect		architect;
 	Reconnoiter		reconnoiter;
 	Planner			planner;

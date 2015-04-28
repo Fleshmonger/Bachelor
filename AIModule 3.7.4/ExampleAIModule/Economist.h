@@ -3,7 +3,8 @@
 #include "UtilUnit.h"
 #include "Vassal.h"
 #include "Landlord.h"
-#include "recruiter.h"
+#include "Recruiter.h"
+#include "Gatherer.h"
 #include "Architect.h"
 
 
@@ -25,12 +26,13 @@ private:
 	Accountant	* accountant;
 	Landlord	* landlord;
 	Recruiter	* recruiter;
+	Gatherer	* gatherer;
 	Architect	* architect;
 
 	utilUnit::UnitList refineries;
 
 public:
-	Economist(Accountant * accountant, Landlord * landlord, Recruiter * recruiter, Architect * architect);
+	Economist(Accountant * accountant, Landlord * landlord, Recruiter * recruiter, Gatherer * gatherer, Architect * architect);
 	~Economist();
 
 	void update();

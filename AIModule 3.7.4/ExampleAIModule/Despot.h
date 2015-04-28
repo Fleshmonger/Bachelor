@@ -2,6 +2,7 @@
 #include <BWAPI.h>
 #include "Landlord.h"
 #include "Recruiter.h"
+#include "Gatherer.h"
 #include "Architect.h"
 #include "Planner.h"
 #include "Economist.h"
@@ -15,6 +16,7 @@ class Despot
 private:
 	Landlord	* landlord;
 	Recruiter	* recruiter;
+	Gatherer	* gatherer;
 	Architect	* architect;
 	Economist	* economist;
 	Strategist	* strategist;
@@ -22,7 +24,7 @@ private:
 	Planner planner;
 
 public:
-	Despot(Landlord * landlord, Recruiter * recruiter, Architect * architect, Economist * economist, Strategist * strategist);
+	Despot(Landlord * landlord, Recruiter * recruiter, Gatherer * gatherer, Architect * architect, Economist * economist, Strategist * strategist);
 	~Despot();
 
 	void update();

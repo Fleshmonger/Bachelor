@@ -2,9 +2,10 @@
 
 
 // Constructor
-Despot::Despot(Landlord * landlord, Recruiter * recruiter, Architect * architect, Economist * economist, Strategist * strategist) :
+Despot::Despot(Landlord * landlord, Recruiter * recruiter, Gatherer * gatherer, Architect * architect, Economist * economist, Strategist * strategist) :
 	landlord(landlord),
 	recruiter(recruiter),
+	gatherer(gatherer),
 	architect(architect),
 	economist(economist),
 	strategist(strategist),
@@ -42,10 +43,11 @@ void Despot::update()
 	// Command harvest.
 	BOOST_FOREACH(Vassal * vassal, landlord->getVassals())
 	{
+		BWTA::Region * region = vassal->getRegion();
 		unsigned int
-			minimumMiners = vassal->minerals(),
-			desiredMiners = vassal->minerals() * MINERAL_SATURATION,
-			desiredHarvesters = vassal->refineries() * REFINERY_SATURATION;
+			minimumMiners = gatherer->getMinerals(region).size(),
+			desiredMiners = minimumMiners * MINERAL_SATURATION,
+			desiredHarvesters = gatherer->getRefineries(region).size() * REFINERY_SATURATION;
 
 		// Harvesters saturation check.
 		//TODO Cleanup/Simplify.
@@ -72,8 +74,8 @@ void Despot::update()
 
 		// Assign idle workers to mining.
 		vassal->employWorkers(vassal->getEmployed(TASK_IDLE), TASK_MINE);
-
-		// Command mining and harvesting.
-		vassal->gather();
 	}
+
+	// Command harvest.
+	gatherer->gather();
 }

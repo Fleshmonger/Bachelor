@@ -1,41 +1,19 @@
 #include "Vassal.h"
 
 
-// Constructor
+// Constructor.
 Vassal::Vassal(BWTA::Region * region) :
 	depot(),
 	region(region),
-	taskmaster(),
-	gatherer(&taskmaster)
+	taskmaster()
 {
-	// Designate minerals.
-	//TODO Check with getMinerals instead of static.
-	BOOST_FOREACH(BWTA::BaseLocation * location, region->getBaseLocations())
-		BOOST_FOREACH(BWAPI::Unit * mineral, location->getStaticMinerals())
-			gatherer.addMineral(mineral);
 }
 
 
-// Destructor
+// Destructor.
 Vassal::~Vassal()
 {
 }
-
-
-// Commands idle workers to harvest.
-void Vassal::gather()
-{
-	gatherer.gather();
-}
-
-
-/*
-// Updates local managers.
-void Vassal::update()
-{
-	taskmaster.update();
-}
-*/
 
 
 // Designates the depot in the region.
@@ -46,21 +24,6 @@ void Vassal::setDepot(BWAPI::Unit * depot)
 		depot->exists() &&
 		depot->getType().isResourceDepot())
 		this->depot = depot;
-}
-
-
-// Adds a refinery to the harvester.
-void Vassal::addRefinery(BWAPI::Unit * refinery)
-{
-	BWAPI::Broodwar->sendText("Refinery added.");
-	gatherer.addRefinery(refinery);
-}
-
-
-// Removes a refinery from the harvester.
-void Vassal::removeRefinery(BWAPI::Unit * refinery)
-{
-	gatherer.removeRefinery(refinery);
 }
 
 
@@ -75,7 +38,6 @@ void Vassal::addWorker(BWAPI::Unit * worker)
 void Vassal::removeWorker(BWAPI::Unit * worker)
 {
 	taskmaster.removeWorker(worker);
-	gatherer.removeWorker(worker);
 }
 
 
@@ -94,53 +56,10 @@ void Vassal::employWorkers(utilUnit::UnitSet workers, Task task)
 }
 
 
-// Returns the amount of mineral fields in the region.
-unsigned int Vassal::minerals()
-{
-	return gatherer.getMinerals().size();
-}
-
-
-// Returns the amount of refineries in the region.
-unsigned int Vassal::refineries()
-{
-	return gatherer.getRefineries().size();
-}
-
 // Returns the amount of workers.
 unsigned int Vassal::workforce()
 {
 	return taskmaster.workforce();
-}
-
-
-// Returns a zone containing the harvesting area.
-utilMap::Zone Vassal::getHarvestingZone()
-{
-	// Verify depot.
-	if (depot &&
-		depot->exists())
-	{
-		// Calculate zone.
-		BWAPI::TilePosition depotPos = depot->getTilePosition();
-		BWAPI::UnitType depotType = depot->getType();
-		int left = depotPos.x(),
-			top = depotPos.y(),
-			right = depotPos.x() + depotType.tileWidth(),
-			bottom = depotPos.y() + depotType.tileHeight();
-		BOOST_FOREACH(BWAPI::Unit * mineral, gatherer.getMinerals())
-		{
-			BWAPI::TilePosition mineralPos = mineral->getTilePosition();
-			BWAPI::UnitType mineralType = mineral->getType();
-			left = std::min(left, mineralPos.x() + mineralType.tileWidth());
-			top = std::min(top, mineralPos.y() + mineralType.tileHeight());
-			right = std::max(right, mineralPos.x());
-			bottom = std::max(bottom, mineralPos.y());
-		}
-		return utilMap::Zone(left, top, right, bottom);
-	}
-	else
-		return utilMap::Zone();
 }
 
 

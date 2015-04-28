@@ -7,9 +7,7 @@
 #include "CombatJudge.h"
 
 
-
 enum Duty { DUTY_ATTACK_FIGHT, DUTY_ATTACK_TRANSIT, DUTY_DEFEND, DUTY_IDLE };
-
 
 
 // Commands attacking and defending troops.

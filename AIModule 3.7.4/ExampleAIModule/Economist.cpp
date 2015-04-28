@@ -2,10 +2,11 @@
 
 
 // Constructor
-Economist::Economist(Accountant * accountant, Landlord * landlord, Recruiter * recruiter, Architect * architect) :
+Economist::Economist(Accountant * accountant, Landlord * landlord, Recruiter * recruiter, Gatherer * gatherer, Architect * architect) :
 	accountant(accountant),
 	landlord(landlord),
 	recruiter(recruiter),
+	gatherer(gatherer),
 	architect(architect),
 	refineries()
 {
@@ -32,7 +33,7 @@ void Economist::update()
 		{
 			// Completion check.
 			if (refinery->isCompleted())
-				landlord->addRefinery(refinery);
+				gatherer->addRefinery(refinery);
 
 			// Remove refinery.
 			it = refineries.erase(it);
@@ -41,7 +42,6 @@ void Economist::update()
 			it++;
 	}
 
-	/*
 	//TODO Early gas harvesting implementation.
 	utilUnit::UnitSet geysers = BWTA::getStartLocation(BWAPI::Broodwar->self())->getGeysers();
 	if (!geysers.empty())
@@ -49,15 +49,15 @@ void Economist::update()
 		BWAPI::Unit * geyser = *geysers.begin();
 		architect->scheduleRefinery(UNIT_REFINERY, geyser);
 	}
-	*/
 
 	// Command vassals.
 	BOOST_FOREACH(Vassal * vassal, landlord->getVassals())
 	{
+		BWTA::Region * region = vassal->getRegion();
 		unsigned int
-			minimumMiners = vassal->minerals(),
-			desiredMiners = vassal->minerals() * MINERAL_SATURATION,
-			desiredHarvesters = vassal->refineries() * REFINERY_SATURATION;
+			minimumMiners = gatherer->getMinerals(region).size(),
+			desiredMiners = minimumMiners * MINERAL_SATURATION,
+			desiredHarvesters = gatherer->getRefineries(region).size() * REFINERY_SATURATION;
 
 		// Train miners as needed.
 		if (vassal->workforce() < desiredMiners + desiredHarvesters)
@@ -112,7 +112,7 @@ void Economist::addRefinery(BWAPI::Unit * refinery)
 	{
 		// Completion check.
 		if (refinery->isCompleted())
-			landlord->addRefinery(refinery);
+			gatherer->addRefinery(refinery);
 		else
 			refineries.push_back(refinery);
 	}

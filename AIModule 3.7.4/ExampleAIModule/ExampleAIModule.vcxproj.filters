@@ -47,9 +47,6 @@
     <ClCompile Include="Archivist.cpp">
       <Filter>Managers</Filter>
     </ClCompile>
-    <ClCompile Include="Architect.cpp">
-      <Filter>Managers</Filter>
-    </ClCompile>
     <ClCompile Include="Landlord.cpp">
       <Filter>Managers\Landlord</Filter>
     </ClCompile>
@@ -65,16 +62,19 @@
     <ClCompile Include="Taskmaster.cpp">
       <Filter>Managers\Landlord\Vassal</Filter>
     </ClCompile>
-    <ClCompile Include="Gatherer.cpp">
-      <Filter>Managers\Landlord\Vassal</Filter>
-    </ClCompile>
     <ClCompile Include="Planner.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Despot.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Architect.cpp">
       <Filter>Managers</Filter>
     </ClCompile>
     <ClCompile Include="Recruiter.cpp">
       <Filter>Managers</Filter>
     </ClCompile>
-    <ClCompile Include="Despot.cpp">
+    <ClCompile Include="Gatherer.cpp">
       <Filter>Managers</Filter>
     </ClCompile>
   </ItemGroup>
@@ -107,9 +107,6 @@
     <ClInclude Include="Archivist.h">
       <Filter>Managers</Filter>
     </ClInclude>
-    <ClInclude Include="Architect.h">
-      <Filter>Managers</Filter>
-    </ClInclude>
     <ClInclude Include="Landlord.h">
       <Filter>Managers\Landlord</Filter>
     </ClInclude>
@@ -125,16 +122,19 @@
     <ClInclude Include="Taskmaster.h">
       <Filter>Managers\Landlord\Vassal</Filter>
     </ClInclude>
-    <ClInclude Include="Gatherer.h">
-      <Filter>Managers\Landlord\Vassal</Filter>
-    </ClInclude>
     <ClInclude Include="Planner.h">
+      <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Despot.h">
       <Filter>Managers</Filter>
     </ClInclude>
     <ClInclude Include="Recruiter.h">
       <Filter>Managers</Filter>
     </ClInclude>
-    <ClInclude Include="Despot.h">
+    <ClInclude Include="Architect.h">
+      <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Gatherer.h">
       <Filter>Managers</Filter>
     </ClInclude>
   </ItemGroup>

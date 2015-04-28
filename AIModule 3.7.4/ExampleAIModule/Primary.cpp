@@ -8,15 +8,16 @@ Primary::Primary() :
 	landlord(),
 	recruiter(&accountant),
 	combatJudge(&archivist),
+	gatherer(&landlord),
 	architect(&accountant, &landlord),
 	reconnoiter(&archivist, &landlord),
 	planner(&landlord, &recruiter, &architect),
-	economist(&accountant, &landlord, &recruiter, &architect),
+	economist(&accountant, &landlord, &recruiter, &gatherer, &architect),
 	armyManager(&archivist, &combatJudge),
 	defender(&archivist, &landlord, &combatJudge, &armyManager),
 	attacker(&archivist, &landlord, &combatJudge, &armyManager),
 	strategist(&landlord, &recruiter, &architect),
-	despot(&landlord, &recruiter, &architect, &economist, &strategist)
+	despot(&landlord, &recruiter, &gatherer, &architect, &economist, &strategist)
 {
 }
 
@@ -32,7 +33,7 @@ void Primary::onStart()
 {
 	// BWAPI settings.
 	BWAPI::Broodwar->enableFlag(Flag::UserInput);
-	//BWAPI::Broodwar->setLocalSpeed(0);
+	BWAPI::Broodwar->setLocalSpeed(0);
 
 	// Read map information.
 	BWTA::readMap();
@@ -137,6 +138,18 @@ void Primary::onUnitDiscover(BWAPI::Unit* unit)
 {
 	// Record unit.
 	archivist.recordUnit(unit);
+
+	// Verify unit.
+	if (unit &&
+		unit->exists())
+	{
+		BWAPI::UnitType unitType = unit->getType();
+		if (unitType.isMineralField())
+			gatherer.addMineral(unit);
+		else if (unitType == BWAPI::UnitTypes::Resource_Vespene_Geyser)
+			gatherer.addGeyser(unit);
+	}
+
 }
 
 
@@ -179,31 +192,40 @@ void Primary::onUnitDestroy(BWAPI::Unit* unit)
 	archivist.clearUnit(unit);
 
 	// Verify unit.
-	if (utilUnit::isOwned(unit))
+	if (unit)
 	{
-		// Completion check.
+		// Allegience check.
 		BWAPI::UnitType unitType = unit->getType();
-		if (unit->isCompleted())
+		if (utilUnit::isOwned(unit))
 		{
-			// Undesignate.
-			if (unitType.isWorker())
-				landlord.removeWorker(unit);
-			else if (utilUnit::isFighter(unitType))
-				armyManager.removeUnit(unit);
-			else if (unitType.canProduce())
-				recruiter.addFactory(unit);
-			else if (unitType.isRefinery())
-				landlord.removeRefinery(unit);
-		}
-		else
-		{
-			// Remove monitoring.
-			if (unitType.isBuilding())
-				architect.removeConstruct(unit);
+			// Completion check.
+			if (unit->isCompleted())
+			{
+				// Undesignate.
+				if (unitType.isWorker())
+					landlord.removeWorker(unit);
+				else if (utilUnit::isFighter(unitType))
+					armyManager.removeUnit(unit);
+				else if (unitType.canProduce())
+					recruiter.addFactory(unit);
+				else if (unitType.isRefinery())
+					gatherer.removeRefinery(unit);
+			}
 			else
-				recruiter.removeConstruction(unit);
+			{
+				// Remove monitoring.
+				if (unitType.isBuilding())
+					architect.removeConstruct(unit);
+				else
+					recruiter.removeConstruction(unit);
+			}
 		}
+		else if (unitType.isMineralField())
+			gatherer.removeMineral(unit);
+		else if (unitType == BWAPI::UnitTypes::Resource_Vespene_Geyser)
+			gatherer.removeGeyser(unit);
 	}
+
 }
 
 

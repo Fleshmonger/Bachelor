@@ -18,19 +18,6 @@ Landlord::~Landlord()
 }
 
 
-/*
-// Updates all vassals.
-//TODO Move harvesting to separate economist class.
-//TODO distribute workers between regions.
-void Landlord::update()
-{
-	// Update vassals.
-	BOOST_FOREACH(Vassal * vassal, vassals)
-		vassal->update();
-}
-*/
-
-
 // Instantiates a new vassal for the region.
 void Landlord::newVassal(BWTA::Region * region)
 {
@@ -64,39 +51,6 @@ void Landlord::addDepot(BWAPI::Unit * depot)
 
 		// Designate depot.
 		regionVassal[region]->setDepot(depot);
-	}
-}
-
-
-// Adds a refinery to the related vassal.
-void Landlord::addRefinery(BWAPI::Unit * refinery)
-{
-	// Verify refinery.
-	if (utilUnit::isOwned(refinery) &&
-		refinery->exists() &&
-		refinery->getType().isRefinery())
-	{
-		// Verify vassal or create new.
-		BWTA::Region * region = BWTA::getRegion(refinery->getPosition());
-		if (!contains(region))
-			newVassal(region);
-
-		// Add refinery.
-		regionVassal[region]->addRefinery(refinery);
-	}
-}
-
-
-// Removes a refinery from the related vassal.
-void Landlord::removeRefinery(BWAPI::Unit * refinery)
-{
-	// Verify refinery.
-	if (utilUnit::isOwned(refinery))
-	{
-		// Verify vassal.
-		BWTA::Region * region = BWTA::getRegion(refinery->getPosition());
-		if (contains(region))
-			regionVassal[region]->removeRefinery(refinery);
 	}
 }
 
@@ -175,17 +129,6 @@ bool Landlord::contains(BWTA::Region * region)
 }
 
 
-// Returns the harvesting zone related to the specified region.
-utilMap::Zone Landlord::getHarvestingZone(BWTA::Region * region)
-{
-	// Verify region.
-	if (contains(region))
-		return regionVassal[region]->getHarvestingZone();
-	else
-		return utilMap::Zone();
-}
-
-
 // Returns a pointer to the headquarter vassal.
 Vassal * Landlord::getHeadquarters()
 {
@@ -207,6 +150,16 @@ Vassal * Landlord::getVassal(BWTA::Region * region)
 std::set<Vassal*> Landlord::getVassals()
 {
 	return vassals;
+}
+
+
+// Returns the depot related to the region.
+BWAPI::Unit * Landlord::getDepot(BWTA::Region * region)
+{
+	if (contains(region))
+		return regionVassal[region]->getDepot();
+	else
+		return NULL;
 }
 
 
