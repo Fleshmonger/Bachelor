@@ -232,18 +232,6 @@ BWTA::Region * Archivist::getHomeRegion()
 }
 
 
-// Finds and returns all invaders.
-//TODO Move this to defender.
-utilUnit::UnitSet Archivist::invaders()
-{
-	std::set<BWAPI::Unit*> invaders;
-	BOOST_FOREACH(BWAPI::Unit * unit, units)
-		if (utilUnit::isEnemy(unit) && inRegion(unit, homeRegion))
-			invaders.insert(unit);
-	return invaders;
-}
-
-
 // Returns a copy of recorded enemies.
 utilUnit::UnitSet Archivist::getEnemies()
 {

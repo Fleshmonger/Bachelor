@@ -45,7 +45,6 @@ public:
 
 	BWTA::Region * getHomeRegion(); // TODO redundant.
 
-	utilUnit::UnitSet invaders();
 	utilUnit::UnitSet getEnemies();
 	utilUnit::UnitSet getBuildings();
 	utilUnit::UnitSet getDepots();
