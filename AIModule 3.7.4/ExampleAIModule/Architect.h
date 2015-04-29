@@ -24,6 +24,7 @@ public:
 	Architect(Accountant * accountant, Landlord * landlord);
 	~Architect();
 
+	void commandBuild(BWAPI::Unit * builder, BWAPI::TilePosition buildingLocation, BWAPI::UnitType buildingType);
 	void scheduleConstruct(BWAPI::Unit * building);
 	void removeBuild(BWAPI::UnitType buildingType, BWAPI::TilePosition buildLocation);
 	void removeConstruct(BWAPI::Unit * building);
@@ -33,6 +34,7 @@ public:
 	void removePylon(BWAPI::Unit * pylon);
 	void update();
 
+	bool isExplored(BWAPI::TilePosition buildingLocation, BWAPI::UnitType buildingType);
 	bool scheduleBuilding(BWAPI::UnitType buildingType, Vassal * vassal);
 	bool scheduleBuilding(BWAPI::UnitType buildingType, BWTA::Region * region);
 	bool scheduleBuilding(BWAPI::UnitType buildingType, BWAPI::TilePosition desiredLocation);

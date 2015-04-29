@@ -17,7 +17,7 @@ Primary::Primary() :
 	defender(&archivist, &landlord, &combatJudge, &armyManager),
 	attacker(&archivist, &landlord, &combatJudge, &armyManager),
 	strategist(&landlord, &recruiter, &architect),
-	despot(&landlord, &recruiter, &gatherer, &architect, &economist, &strategist)
+	despot(&landlord, &recruiter, &gatherer, &architect, &planner, &economist, &strategist)
 {
 }
 
@@ -89,8 +89,11 @@ void Primary::onFrame()
 	// Debugging display.
 	Broodwar->drawTextScreen(200, 0, "FPS: %d", BWAPI::Broodwar->getFPS());
 	Broodwar->drawTextScreen(200, 20, "APM: %d", BWAPI::Broodwar->getAPM());
+	Broodwar->drawTextScreen(200, 40, "Nexus scheduled: %s", architect.scheduled(BWAPI::UnitTypes::Protoss_Nexus) > 0 ? "Yes" : "No");
 	drawVassals();
 	drawGatherer();
+	drawLandlord();
+	drawPlanner();
 
 	// Prevent spamming by only running our onFrame once every number of latency frames.
 	// Latency frames are the number of frames before commands are processed.
@@ -273,7 +276,7 @@ void Primary::drawGatherer()
 		BOOST_FOREACH(BWAPI::Unit * mineral, gatherer.getMinerals(region))
 		{
 			// Draw mineral.
-			drawUnitOutline(mineral);
+			drawBuildingOutline(mineral);
 
 			// Draw data.
 			BWAPI::TilePosition tile = mineral->getTilePosition();
@@ -289,7 +292,7 @@ void Primary::drawGatherer()
 		BOOST_FOREACH(BWAPI::Unit * refinery, gatherer.getRefineries(region))
 		{
 			// Draw mineral.
-			drawUnitOutline(refinery);
+			drawBuildingOutline(refinery);
 
 			// Draw data.
 			BWAPI::TilePosition tile = refinery->getTilePosition();
@@ -304,6 +307,49 @@ void Primary::drawGatherer()
 }
 
 
+// Draws landlord data for debugging.
+void Primary::drawLandlord()
+{
+	// Iterate through vassals.
+	BOOST_FOREACH(Vassal * vassal, landlord.getVassals())
+	{
+		// Iterate through builders.
+		BOOST_FOREACH(BWAPI::Unit * worker, vassal->getEmployed(TASK_BUILD))
+		{
+			// Draw worker.
+			drawUnitOutline(worker);
+
+			// Draw worker data.
+			BWAPI::Position pos = worker->getPosition();
+			BWAPI::Broodwar->drawTextScreen(
+				pos.x(),
+				pos.y(),
+				"Builder"
+				);
+		}
+	}
+}
+
+
+// Draws planner data for debugging.
+void Primary::drawPlanner()
+{
+	// Iterate through build order.
+	int line = 0;
+	std::list<BWAPI::UnitType> test;
+	BOOST_FOREACH(BWAPI::UnitType unitType, planner.getBuildOrder())
+	{
+		// Draw build entry.
+		BWAPI::Broodwar->drawTextScreen(
+			0,
+			line,
+			unitType.getName().c_str()
+			);
+		line += 20;
+	}
+}
+
+
 // Draws vassal data for debugging.
 void Primary::drawVassals()
 {
@@ -314,9 +360,6 @@ void Primary::drawVassals()
 		BWAPI::Unit * depot = vassal->getDepot();
 		if (depot)
 		{
-			// Draw depot.
-			drawUnitOutline(depot);
-
 			// Draw harvesting zone.
 			utilMap::Zone zone = vassal->getHarvestingZone();
 			BWAPI::Broodwar->drawBoxMap(
@@ -326,6 +369,9 @@ void Primary::drawVassals()
 				zone.bottom * TILE_SIZE,
 				BWAPI::Colors::Purple,
 				false);
+
+			// Draw depot.
+			drawBuildingOutline(depot);
 
 			// Draw data.
 			BWAPI::TilePosition tile = depot->getTilePosition();
@@ -341,6 +387,27 @@ void Primary::drawVassals()
 
 
 // Draws an outline around the unit.
+void Primary::drawBuildingOutline(BWAPI::Unit * building)
+{
+	// Verify unit.
+	if (building &&
+		building->isVisible())
+	{
+		// Draw unit.
+		BWAPI::TilePosition tile = building->getTilePosition();
+		BWAPI::UnitType buildingType = building->getType();
+		BWAPI::Broodwar->drawBoxMap(
+			tile.x() * TILE_SIZE,
+			tile.y() * TILE_SIZE,
+			(tile.x() + buildingType.tileWidth()) * TILE_SIZE,
+			(tile.y() + buildingType.tileHeight()) * TILE_SIZE,
+			BWAPI::Colors::Blue,
+			false);
+	}
+}
+
+
+// Draws an outline around the unit.
 void Primary::drawUnitOutline(BWAPI::Unit * unit)
 {
 	// Verify unit.
@@ -348,13 +415,13 @@ void Primary::drawUnitOutline(BWAPI::Unit * unit)
 		unit->isVisible())
 	{
 		// Draw unit.
-		BWAPI::TilePosition tile = unit->getTilePosition();
+		BWAPI::Position pos = unit->getPosition();
 		BWAPI::UnitType unitType = unit->getType();
 		BWAPI::Broodwar->drawBoxMap(
-			tile.x() * TILE_SIZE,
-			tile.y() * TILE_SIZE,
-			(tile.x() + unitType.tileWidth()) * TILE_SIZE,
-			(tile.y() + unitType.tileHeight()) * TILE_SIZE,
+			pos.x() + unitType.dimensionLeft(),
+			pos.y() + unitType.dimensionUp(),
+			pos.x() + unitType.dimensionRight(),
+			pos.y() + unitType.dimensionDown(),
 			BWAPI::Colors::Blue,
 			false);
 	}

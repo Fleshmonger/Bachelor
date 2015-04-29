@@ -42,6 +42,7 @@ void Economist::update()
 			it++;
 	}
 
+	/*
 	//TODO Early gas harvesting implementation.
 	utilUnit::UnitSet geysers = BWTA::getStartLocation(BWAPI::Broodwar->self())->getGeysers();
 	if (!geysers.empty())
@@ -49,6 +50,7 @@ void Economist::update()
 		BWAPI::Unit * geyser = *geysers.begin();
 		architect->scheduleRefinery(UNIT_REFINERY, geyser);
 	}
+	*/
 
 	// Command vassals.
 	BOOST_FOREACH(Vassal * vassal, landlord->getVassals())
@@ -80,6 +82,7 @@ void Economist::update()
 				architect->scheduleBuilding(UNIT_SUPPLY, headquarters->getDepot()->getTilePosition());
 		}
 
+		/*
 		// Expansion check.
 		if (landlord->getVassals().size() < 2 &&
 			architect->scheduled(UNIT_DEPOT) == 0)
@@ -96,6 +99,7 @@ void Economist::update()
 				}
 			}
 		}
+		*/
 	}
 }
 

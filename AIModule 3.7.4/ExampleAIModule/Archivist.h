@@ -43,7 +43,7 @@ public:
 	BWAPI::Position getPosition(BWAPI::Unit * unit);
 	BWAPI::UnitType getType(BWAPI::Unit * unit);
 
-	BWTA::Region * getHomeRegion(); // TODO Move this to analyzer class
+	BWTA::Region * getHomeRegion(); // TODO redundant.
 
 	utilUnit::UnitSet invaders();
 	utilUnit::UnitSet getEnemies();

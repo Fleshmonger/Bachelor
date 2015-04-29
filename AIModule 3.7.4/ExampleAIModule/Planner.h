@@ -1,5 +1,6 @@
 #pragma once
 #include <BWAPI.h>
+#include <BWTA.h>
 #include "Landlord.h"
 #include "Recruiter.h"
 #include "Architect.h"
@@ -23,5 +24,9 @@ public:
 
 	bool empty();
 	bool produce(BWAPI::UnitType unitType);
+
+	BWTA::Region * nextExpansion();
+
+	std::list<BWAPI::UnitType> getBuildOrder();
 };
 

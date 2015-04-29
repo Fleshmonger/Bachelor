@@ -7,12 +7,13 @@
 #include "Landlord.h"
 
 
-const unsigned int MIN_WORKFORCE = 5; // Minimum amount of workers available before requesting a scout.
+const unsigned int MIN_WORKFORCE = 9; // Minimum amount of workers available before requesting a scout.
 
 
 // Scouts the map while the enemy base is hidden.
-//TODO Make the scouting activated by the strategist manager.
+//TODO Make the scouting activated by the planner?
 //TODO Cleanup.
+//TODO Rename to explorer
 class Reconnoiter
 {
 private:

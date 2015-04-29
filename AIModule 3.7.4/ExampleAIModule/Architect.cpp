@@ -17,6 +17,27 @@ Architect::~Architect()
 }
 
 
+// Commands the worker to build a structure
+void Architect::commandBuild(BWAPI::Unit * builder, BWAPI::TilePosition buildingLocation, BWAPI::UnitType buildingType)
+{
+	if (isExplored(buildingLocation, buildingType))
+		builder->build(buildingLocation, buildingType);
+	else
+		utilUnit::command(builder, BWAPI::UnitCommandTypes::Move, BWAPI::Position(buildingLocation));
+}
+
+
+// Returns whether or not the entire building location has been explored.
+bool Architect::isExplored(BWAPI::TilePosition buildingLocation, BWAPI::UnitType buildingType)
+{
+	for (int i = 0; i < buildingType.tileWidth(); i++)
+		for (int j = 0; j < buildingType.tileHeight(); j++)
+			if (!BWAPI::Broodwar->isExplored(BWAPI::TilePosition(buildingLocation.x() + i, buildingLocation.y() + j)))
+				return false;
+	return true;
+}
+
+
 // Attempts to schedule a building in the region related to the vassal and returns true if it succeeds.
 bool Architect::scheduleBuilding(BWAPI::UnitType buildingType, Vassal * vassal)
 {
@@ -57,15 +78,15 @@ bool Architect::scheduleBuilding(BWAPI::UnitType buildingType, BWAPI::TilePositi
 				builder->exists() &&
 				builder->getType().isWorker())
 			{
-				BWAPI::TilePosition location = getBuildLocation(builder, desiredLocation, buildingType);
-				if (location)
+				BWAPI::TilePosition buildingLocation = getBuildLocation(builder, desiredLocation, buildingType);
+				if (buildingLocation)
 				{
 					// Order the construction.
 					landlord->employWorker(builder, TASK_BUILD);
-					utilUnit::commandBuild(builder, location, buildingType);
-					buildSchedule.insert(std::make_pair(buildingType, std::make_pair(builder, location)));
+					buildSchedule.insert(std::make_pair(buildingType, std::make_pair(builder, buildingLocation)));
 					accountant->allocate(buildingType);
 					schedule[buildingType]++;
+					commandBuild(builder, buildingLocation, buildingType);
 					return true;
 				}
 			}
@@ -94,11 +115,12 @@ bool Architect::scheduleRefinery(BWAPI::UnitType refineryType, BWAPI::Unit * gey
 		if (builder)
 		{
 			// Schedule building.
+			BWAPI::TilePosition buildingLocation = geyser->getTilePosition();
 			landlord->employWorker(builder, TASK_BUILD);
-			builder->build(geyser->getTilePosition(), refineryType);
-			buildSchedule.insert(std::make_pair(refineryType, std::make_pair(builder, geyser->getTilePosition())));
+			buildSchedule.insert(std::make_pair(refineryType, std::make_pair(builder, buildingLocation)));
 			accountant->allocate(refineryType);
 			schedule[refineryType]++;
+			commandBuild(builder, buildingLocation, refineryType);
 			return true;
 		}
 	}
@@ -197,15 +219,15 @@ void Architect::update()
 		{
 			BWAPI::UnitType buildingType = it->first;
 			BWAPI::Unit * builder = it->second.first;
-			BWAPI::TilePosition buildTarget = it->second.second;
+			BWAPI::TilePosition buildingLocation = it->second.second;
 			++it;
 			if (builder &&
 				builder->exists() &&
 				//BWAPI::Broodwar->canBuildHere(builder, buildTarget, buildingType) &&
 				BWAPI::Broodwar->canMake(builder, buildingType))
-				builder->build(buildTarget, buildingType);
+				commandBuild(builder, buildingLocation, buildingType);
 			else
-				removeBuild(buildingType, buildTarget);
+				removeBuild(buildingType, buildingLocation);
 		}
 	}
 
@@ -232,7 +254,7 @@ bool Architect::validBuildLocation(BWAPI::Unit * builder, BWAPI::TilePosition lo
 		location &&
 		location.isValid() &&
 		!landlord->getHarvestingZone(BWTA::getRegion(location)).contains(location, buildingType) &&
-		BWAPI::Broodwar->canBuildHere(builder, location, buildingType);
+		BWAPI::Broodwar->canBuildHere(builder, location, buildingType, false);
 }
 
 

@@ -18,13 +18,12 @@ private:
 	Recruiter	* recruiter;
 	Gatherer	* gatherer;
 	Architect	* architect;
+	Planner		* planner;
 	Economist	* economist;
 	Strategist	* strategist;
 
-	Planner planner;
-
 public:
-	Despot(Landlord * landlord, Recruiter * recruiter, Gatherer * gatherer, Architect * architect, Economist * economist, Strategist * strategist);
+	Despot(Landlord * landlord, Recruiter * recruiter, Gatherer * gatherer, Architect * architect, Planner * planner, Economist * economist, Strategist * strategist);
 	~Despot();
 
 	void update();

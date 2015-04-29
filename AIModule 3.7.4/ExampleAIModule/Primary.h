@@ -69,9 +69,11 @@ public:
 	virtual void onSaveGame(std::string gameName);
 	virtual void onUnitComplete(BWAPI::Unit *unit);
 
-	//void designateUnit(BWAPI::Unit * unit);
 	void drawGatherer();
+	void drawLandlord();
+	void drawPlanner();
 	void drawVassals();
+	void drawBuildingOutline(BWAPI::Unit * building);
 	void drawUnitOutline(BWAPI::Unit * unit);
 	//void drawTerrainData();
 };

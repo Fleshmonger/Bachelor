@@ -2,21 +2,23 @@
 
 
 // Constructor
-Despot::Despot(Landlord * landlord, Recruiter * recruiter, Gatherer * gatherer, Architect * architect, Economist * economist, Strategist * strategist) :
+Despot::Despot(Landlord * landlord, Recruiter * recruiter, Gatherer * gatherer, Architect * architect, Planner * planner, Economist * economist, Strategist * strategist) :
 	landlord(landlord),
 	recruiter(recruiter),
 	gatherer(gatherer),
 	architect(architect),
+	planner(planner),
 	economist(economist),
-	strategist(strategist),
-	planner(landlord, recruiter, architect)
+	strategist(strategist)
 {
-	planner.enqueue(BWAPI::UnitTypes::Protoss_Probe);
-	planner.enqueue(BWAPI::UnitTypes::Protoss_Probe);
-	planner.enqueue(BWAPI::UnitTypes::Protoss_Probe);
-	planner.enqueue(BWAPI::UnitTypes::Protoss_Probe);
-	planner.enqueue(BWAPI::UnitTypes::Protoss_Pylon);
-	planner.enqueue(BWAPI::UnitTypes::Protoss_Probe);
+	planner->enqueue(BWAPI::UnitTypes::Protoss_Probe);
+	planner->enqueue(BWAPI::UnitTypes::Protoss_Probe);
+	planner->enqueue(BWAPI::UnitTypes::Protoss_Probe);
+	planner->enqueue(BWAPI::UnitTypes::Protoss_Probe);
+	planner->enqueue(BWAPI::UnitTypes::Protoss_Pylon);
+	planner->enqueue(BWAPI::UnitTypes::Protoss_Probe);
+	planner->enqueue(BWAPI::UnitTypes::Protoss_Probe);
+	planner->enqueue(BWAPI::UnitTypes::Protoss_Nexus);
 }
 
 
@@ -29,18 +31,15 @@ Despot::~Despot()
 // Executes build-order or auto-pilot.
 void Despot::update()
 {
-	// Update build-order.
-	planner.update();
-
 	// Build-order end check.
-	if (planner.empty())
+	if (planner->empty())
 	{
 		// Execute auto-pilot.
 		economist->update();
-		//strategist->update();
+		strategist->update();
 	}
 
-	// Command harvest.
+	// Update vassals.
 	BOOST_FOREACH(Vassal * vassal, landlord->getVassals())
 	{
 		BWTA::Region * region = vassal->getRegion();
