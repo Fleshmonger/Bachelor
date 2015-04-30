@@ -58,3 +58,23 @@ bool utilMap::Zone::contains(BWAPI::TilePosition pos, BWAPI::UnitType unitType)
 				return true;
 	return false;
 }
+
+
+// Returns neighboring regions.
+std::set<BWTA::Region*> utilMap::neighbors(BWTA::Region * region)
+{
+	std::set<BWTA::Region*> regions;
+	if (region)
+	{
+		BOOST_FOREACH(BWTA::Chokepoint * border, region->getChokepoints())
+		{
+			// Add neighbor.
+			std::pair<BWTA::Region*, BWTA::Region*> neighbors = border->getRegions();
+			if (neighbors.first == region)
+				regions.insert(neighbors.second);
+			else
+				regions.insert(neighbors.first);
+		}
+	}
+	return regions;
+}

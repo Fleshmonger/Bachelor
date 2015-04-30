@@ -111,6 +111,7 @@
     <ClCompile Include="Recruiter.cpp" />
     <ClCompile Include="Reconnoiter.cpp" />
     <ClCompile Include="CombatJudge.cpp" />
+    <ClCompile Include="Settler.cpp" />
     <ClCompile Include="Strategist.cpp" />
     <ClCompile Include="UtilMap.cpp" />
     <ClCompile Include="UtilUnit.cpp" />
@@ -133,6 +134,7 @@
     <ClInclude Include="Recruiter.h" />
     <ClInclude Include="Reconnoiter.h" />
     <ClInclude Include="CombatJudge.h" />
+    <ClInclude Include="Settler.h" />
     <ClInclude Include="Strategist.h" />
     <ClInclude Include="UtilMap.h" />
     <ClInclude Include="UtilUnit.h" />

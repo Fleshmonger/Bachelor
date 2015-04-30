@@ -1,6 +1,7 @@
 #pragma once
 #include <BWAPI.h>
 #include <BWTA.h>
+#include <boost/foreach.hpp>
 
 
 namespace utilMap
@@ -17,4 +18,6 @@ namespace utilMap
 		bool contains(int x, int y);
 		bool contains(BWAPI::TilePosition pos, BWAPI::UnitType unitType);
 	};
+
+	std::set<BWTA::Region*> neighbors(BWTA::Region * region);
 }

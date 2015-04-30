@@ -3,6 +3,7 @@
 #include <BWTA.h>
 #include "Landlord.h"
 #include "Recruiter.h"
+#include "Settler.h"
 #include "Architect.h"
 
 
@@ -11,12 +12,13 @@ class Planner
 private:
 	Landlord	* landlord;
 	Recruiter	* recruiter;
+	Settler		* settler;
 	Architect	* architect;
 
 	std::list<BWAPI::UnitType> buildOrder;
 
 public:
-	Planner(Landlord * landlord, Recruiter * recruiter, Architect * architect);
+	Planner(Landlord * landlord, Recruiter * recruiter, Settler * settler, Architect * architect);
 	~Planner();
 
 	void update();
@@ -24,8 +26,6 @@ public:
 
 	bool empty();
 	bool produce(BWAPI::UnitType unitType);
-
-	BWTA::Region * nextExpansion();
 
 	std::list<BWAPI::UnitType> getBuildOrder();
 };

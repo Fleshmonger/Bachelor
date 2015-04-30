@@ -12,6 +12,7 @@
 #include "Recruiter.h"
 #include "CombatJudge.h"
 #include "Gatherer.h"
+#include "Settler.h"
 #include "Architect.h"
 #include "Reconnoiter.h"
 #include "Planner.h"
@@ -37,6 +38,7 @@ private:
 	Recruiter		recruiter;
 	CombatJudge		combatJudge;
 	Gatherer		gatherer;
+	Settler			settler;
 	Architect		architect;
 	Reconnoiter		reconnoiter;
 	Planner			planner;
