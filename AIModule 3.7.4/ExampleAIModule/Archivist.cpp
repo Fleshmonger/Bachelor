@@ -25,9 +25,10 @@ Archivist::~Archivist()
 }
 
 
-// Fired when the map is analyzed. Finds the home region.
-void Archivist::analyzed()
+// Called after BWTA analysis. Sets home region.
+void Archivist::initialize()
 {
+	// Set home region.
 	homeRegion = BWTA::getStartLocation(BWAPI::Broodwar->self())->getRegion();
 }
 
@@ -36,8 +37,8 @@ void Archivist::analyzed()
 // TODO Code duplication with recordUnit.
 void Archivist::clearUnit(BWAPI::Unit * unit)
 {
-	if (unit &&
-		!utilUnit::isOwned(unit))
+	// Verify unit.
+	if (isArchived(unit))
 	{
 		// Player check.
 		BWAPI::UnitType unitType = unit->getType();
@@ -73,19 +74,26 @@ void Archivist::clearUnit(BWAPI::Unit * unit)
 // Inserts a unit to the knowledge pool.
 void Archivist::recordUnit(BWAPI::Unit * unit)
 {
+	// Verify unit.
 	if (unit &&
 		!utilUnit::isOwned(unit))
 	{
+		// Add entry.
 		BWAPI::UnitType unitType = unit->getType();
 		units.insert(unit);
+
 		// Player check.
 		if (utilUnit::isEnemy(unit))
 		{
+			// Add enemy.
 			enemies.insert(unit);
+
 			// Type check.
 			if (unitType.isBuilding())
 			{
+				// Add building.
 				buildings.insert(unit);
+
 				// Sub-type check.
 				if (unitType.isResourceDepot())
 					depots.insert(unit);
@@ -132,10 +140,23 @@ void Archivist::recordUnitStatus(BWAPI::Unit * unit)
 // Revises records to match new game state.
 void Archivist::update()
 {
-	// Update new unit positions.
-	BOOST_FOREACH(BWAPI::Unit * unit, units)
-		if (unit->isVisible())
-			recordUnitStatus(unit);
+	// Iterate through units.
+	utilUnit::UnitSet::iterator it = units.begin(), end = units.end();
+	while (it != end)
+	{
+		// Update unit state.
+		BWAPI::Unit * unit = *it;
+		recordUnitStatus(unit);
+		it++;
+
+		// Remove unknown immobile units.
+		BWAPI::UnitType unitType = types[unit];
+		if (!positions[unit] &&
+			unitType &&
+			!unitType.canMove() &&
+			!unitType.isFlyingBuilding())
+			clearUnit(unit);
+	}
 
 	// Verify geysers.
 	utilUnit::UnitSet::iterator

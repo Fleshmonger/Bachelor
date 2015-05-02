@@ -77,5 +77,5 @@ public:
 	void drawVassals();
 	void drawBuildingOutline(BWAPI::Unit * building);
 	void drawUnitOutline(BWAPI::Unit * unit);
-	//void drawTerrainData();
+	void drawTerrainData();
 };

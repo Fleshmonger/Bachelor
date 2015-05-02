@@ -98,24 +98,22 @@ bool Architect::scheduleBuilding(BWAPI::UnitType buildingType, BWAPI::TilePositi
 }
 
 
-// Attempts to build a refinery on the geyser and returns true if it succeeds.
-bool Architect::scheduleRefinery(BWAPI::UnitType refineryType, BWAPI::Unit * geyser)
+// Attempts to schedule a refinery at the tile position and returns true if successful.
+bool Architect::scheduleRefinery(BWAPI::UnitType refineryType, BWAPI::TilePosition buildingLocation)
 {
 	// Verify order.
 	if (refineryType.isRefinery() &&										// Verify type.
-		geyser &&															// Verify geyser.
-		geyser->exists() &&
-		geyser->getType() == BWAPI::UnitTypes::Resource_Vespene_Geyser &&
+		buildingLocation &&													// Verify location
 		accountant->isAffordable(refineryType))								// Verify resources.
 	{
 		// Aquire builder.
-		BWAPI::Unit * builder = landlord->getIdleWorker(BWTA::getRegion(geyser->getPosition()));
+		BWAPI::Unit * builder = landlord->getIdleWorker(BWTA::getRegion(buildingLocation));
 
 		// Verify builder.
-		if (builder)
+		if (builder &&
+			builder->exists())
 		{
 			// Schedule building.
-			BWAPI::TilePosition buildingLocation = geyser->getTilePosition();
 			landlord->employWorker(builder, TASK_BUILD);
 			buildSchedule.insert(std::make_pair(refineryType, std::make_pair(builder, buildingLocation)));
 			accountant->allocate(refineryType);
@@ -127,6 +125,17 @@ bool Architect::scheduleRefinery(BWAPI::UnitType refineryType, BWAPI::Unit * gey
 
 	// Scheduling was unsuccessful.
 	return false;
+}
+
+
+// Attempts to schedule a refinery on the geyser and returns true if it succeeds.
+bool Architect::scheduleRefinery(BWAPI::UnitType refineryType, BWAPI::Unit * geyser)
+{
+	// Verify geyser.
+	if (geyser)
+		return scheduleRefinery(refineryType, geyser->getInitialTilePosition());
+	else
+		return false;
 }
 
 

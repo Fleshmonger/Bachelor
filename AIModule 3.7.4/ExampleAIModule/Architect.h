@@ -16,7 +16,7 @@ private:
 	Accountant * accountant;
 	Landlord * landlord;
 
-	std::map<BWAPI::UnitType, int> schedule;
+	std::map<BWAPI::UnitType, int> schedule; //TODO Redundant.
 	std::multimap<BWAPI::UnitType, BWAPI::Unit*> constructSchedule;
 	std::multimap<BWAPI::UnitType, std::pair<BWAPI::Unit*, BWAPI::TilePosition>>  buildSchedule;
 
@@ -39,6 +39,7 @@ public:
 	bool scheduleBuilding(BWAPI::UnitType buildingType, BWTA::Region * region);
 	bool scheduleBuilding(BWAPI::UnitType buildingType, BWAPI::TilePosition desiredLocation);
 	bool scheduleBuilding(BWAPI::UnitType buildingType, BWAPI::TilePosition desiredLocation, BWAPI::Unit * builder);
+	bool scheduleRefinery(BWAPI::UnitType refinery, BWAPI::TilePosition buildingLocation);
 	bool scheduleRefinery(BWAPI::UnitType refinery, BWAPI::Unit * geyser);
 	bool validBuildLocation(BWAPI::Unit * builder, BWAPI::TilePosition location, BWAPI::UnitType buildingType);
 

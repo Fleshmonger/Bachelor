@@ -31,7 +31,7 @@ public:
 	Archivist();
 	~Archivist();
 
-	void analyzed();
+	void initialize();
 	void clearUnit(BWAPI::Unit * unit);
 	void recordUnit(BWAPI::Unit * unit);
 	void recordUnitStatus(BWAPI::Unit * unit);

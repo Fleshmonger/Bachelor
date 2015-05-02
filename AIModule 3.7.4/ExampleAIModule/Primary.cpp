@@ -40,9 +40,8 @@ void Primary::onStart()
 	BWTA::readMap();
 	BWTA::analyze();
 
-	// Update managers
-	// TODO Move this to designator class?
-	archivist.analyzed();
+	// Initialize managers
+	archivist.initialize();
 }
 
 
@@ -87,10 +86,10 @@ void Primary::onFrame()
 		return;
 
 
-	// Debugging display.
+	// Display.
+	//drawTerrainData();
 	Broodwar->drawTextScreen(200, 0, "FPS: %d", BWAPI::Broodwar->getFPS());
 	Broodwar->drawTextScreen(200, 20, "APM: %d", BWAPI::Broodwar->getAPM());
-	Broodwar->drawTextScreen(200, 40, "Nexus scheduled: %s", architect.scheduled(BWAPI::UnitTypes::Protoss_Nexus) > 0 ? "Yes" : "No");
 	drawVassals();
 	drawGatherer();
 	drawLandlord();
@@ -429,7 +428,6 @@ void Primary::drawUnitOutline(BWAPI::Unit * unit)
 }
 
 
-/*
 // Draws BWTA regions and resources.
 void Primary::drawTerrainData()
 {
@@ -488,4 +486,3 @@ void Primary::drawTerrainData()
 		}
 	}
 }
-*/
