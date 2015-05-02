@@ -8,6 +8,7 @@
 #include "UtilUnit.h"
 #include "Accountant.h"
 #include "Archivist.h"
+#include "Geologist.h"
 #include "LandLord.h"
 #include "Recruiter.h"
 #include "CombatJudge.h"
@@ -34,6 +35,7 @@ class Primary : public BWAPI::AIModule
 private:
 	Accountant		accountant;
 	Archivist		archivist;
+	Geologist		geologist;
 	Landlord		landlord;
 	Recruiter		recruiter;
 	CombatJudge		combatJudge;
@@ -72,9 +74,11 @@ public:
 	virtual void onUnitComplete(BWAPI::Unit *unit);
 
 	void drawGatherer();
+	void drawGeologist();
 	void drawLandlord();
 	void drawPlanner();
 	void drawVassals();
+	void drawBuildingOutline(BWAPI::TilePosition buildingLocation, BWAPI::UnitType buildingType);
 	void drawBuildingOutline(BWAPI::Unit * building);
 	void drawUnitOutline(BWAPI::Unit * unit);
 	void drawTerrainData();

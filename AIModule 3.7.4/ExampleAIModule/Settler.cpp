@@ -14,41 +14,6 @@ Settler::~Settler()
 }
 
 
-// Called after BWTA analysis. Initializes geyser data.
-void Settler::initialize()
-{
-	// Iterate through regions.
-	BOOST_FOREACH(BWTA::Region * region, BWTA::getRegions())
-	{
-		// Initialize set.
-		utilUnit::UnitSet geysers;
-
-		// Iterate through base locations.
-		BOOST_FOREACH(BWTA::BaseLocation * baseLocation, region->getBaseLocations())
-		{
-			// Add geysers.
-			utilUnit::UnitSet baseGeysers = baseLocation->getGeysers();
-			geysers.insert(baseGeysers.begin(), baseGeysers.end());
-		}
-
-		// Add entry.
-		regionGeysers[region] = geysers;
-	}
-}
-
-
-// Updates geyser data.
-void Settler::update()
-{
-	// Iterate through entries.
-	typedef std::pair<BWTA::Region*, utilUnit::UnitSet> geyserEntry;
-	BOOST_FOREACH(geyserEntry entry, regionGeysers)
-	{
-		//TODO
-	}
-}
-
-
 // Returns the next region for expansion.
 BWTA::Region * Settler::nextExpansion()
 {
@@ -94,10 +59,4 @@ BWTA::Region * Settler::nextExpansion()
 
 	// No expansion found.
 	return NULL;
-}
-
-
-utilUnit::UnitSet getGeysers(BWTA::Region * region)
-{
-
 }

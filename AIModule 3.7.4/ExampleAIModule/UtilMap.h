@@ -19,5 +19,7 @@ namespace utilMap
 		bool contains(BWAPI::TilePosition pos, BWAPI::UnitType unitType);
 	};
 
+	bool isExplored(BWAPI::TilePosition buildingLocation, BWAPI::UnitType buildingType);
+
 	std::set<BWTA::Region*> neighbors(BWTA::Region * region);
 }

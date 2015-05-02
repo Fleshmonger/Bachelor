@@ -104,6 +104,7 @@
     <ClCompile Include="Despot.cpp" />
     <ClCompile Include="Dll.cpp" />
     <ClCompile Include="Economist.cpp" />
+    <ClCompile Include="Geologist.cpp" />
     <ClCompile Include="Landlord.cpp" />
     <ClCompile Include="Gatherer.cpp" />
     <ClCompile Include="Planner.cpp" />
@@ -127,6 +128,7 @@
     <ClInclude Include="Defender.h" />
     <ClInclude Include="Despot.h" />
     <ClInclude Include="Economist.h" />
+    <ClInclude Include="Geologist.h" />
     <ClInclude Include="Landlord.h" />
     <ClInclude Include="Gatherer.h" />
     <ClInclude Include="Planner.h" />

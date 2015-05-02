@@ -5,6 +5,7 @@
 Primary::Primary() :
 	accountant(),
 	archivist(),
+	geologist(),
 	landlord(),
 	recruiter(&accountant),
 	combatJudge(&archivist),
@@ -34,7 +35,8 @@ void Primary::onStart()
 {
 	// BWAPI settings.
 	BWAPI::Broodwar->enableFlag(Flag::UserInput);
-	BWAPI::Broodwar->setLocalSpeed(0);
+	//BWAPI::Broodwar->setLocalSpeed(0);
+	BWAPI::Broodwar->setLocalSpeed(1);
 
 	// Read map information.
 	BWTA::readMap();
@@ -42,6 +44,7 @@ void Primary::onStart()
 
 	// Initialize managers
 	archivist.initialize();
+	geologist.initialize();
 }
 
 
@@ -90,10 +93,11 @@ void Primary::onFrame()
 	//drawTerrainData();
 	Broodwar->drawTextScreen(200, 0, "FPS: %d", BWAPI::Broodwar->getFPS());
 	Broodwar->drawTextScreen(200, 20, "APM: %d", BWAPI::Broodwar->getAPM());
-	drawVassals();
-	drawGatherer();
-	drawLandlord();
-	drawPlanner();
+	drawGeologist();
+	//drawVassals();
+	//drawGatherer();
+	//drawLandlord();
+	//drawPlanner();
 
 	// Prevent spamming by only running our onFrame once every number of latency frames.
 	// Latency frames are the number of frames before commands are processed.
@@ -101,6 +105,7 @@ void Primary::onFrame()
 		return;
 
 	// Manager updatíng
+	/*
 	archivist.update();
 	reconnoiter.update();
 	architect.update();
@@ -109,6 +114,7 @@ void Primary::onFrame()
 	defender.update(); //TODO Defender must be before attacker and economist, to ensure defenders are available. Fix this.
 	attacker.update();
 	despot.update();
+	*/
 }
 
 
@@ -137,6 +143,17 @@ void Primary::onUnitDiscover(BWAPI::Unit* unit)
 {
 	// Record unit.
 	archivist.recordUnit(unit);
+
+	// Verify unit.
+	if (unit)
+	{
+		// Check type.
+		BWAPI::UnitType unitType = unit->getType();
+		if (unitType == BWAPI::UnitTypes::Resource_Vespene_Geyser)
+			geologist.addGeyser(unit);
+		else if (unitType.isRefinery())
+			geologist.removeGeyser(unit);
+	}
 }
 
 
@@ -146,7 +163,7 @@ void Primary::onUnitEvade(BWAPI::Unit* unit)
 
 
 // Fired when an invisible unit becomes visible.
-void Primary::onUnitShow(BWAPI::Unit* unit)
+void Primary::onUnitShow(BWAPI::Unit * unit)
 {
 }
 
@@ -160,14 +177,18 @@ void Primary::onUnitHide(BWAPI::Unit* unit)
 void Primary::onUnitCreate(BWAPI::Unit* unit)
 {
 	// Verify unit.
-	if (utilUnit::isOwned(unit))
+	if (unit)
 	{
-		// Type check.
+		// Check ownership.
 		BWAPI::UnitType unitType = unit->getType();
-		if (unitType.isBuilding())
-			architect.completeBuild(unit);
-		else if (!utilUnit::isMisc(unitType))
-			recruiter.addConstruction(unit);
+		if (utilUnit::isOwned(unit))
+		{
+			// Check type.
+			if (unitType.isBuilding())
+				architect.completeBuild(unit);
+			else if (!utilUnit::isMisc(unitType))
+				recruiter.addConstruction(unit);
+		}
 	}
 }
 
@@ -223,7 +244,10 @@ void Primary::onUnitMorph(BWAPI::Unit* unit)
 	// Verify unit.
 	if (utilUnit::isOwned(unit) &&
 		unit->getType().isRefinery())
+	{
+		geologist.removeGeyser(unit);
 		economist.addRefinery(unit);
+	}
 }
 
 
@@ -241,26 +265,32 @@ void Primary::onSaveGame(std::string gameName)
 void Primary::onUnitComplete(BWAPI::Unit *unit)
 {
 	// Verify unit.
-	if (utilUnit::isOwned(unit))
+	if (unit)
 	{
-		// Notify architect.
+		// Check ownership.
 		BWAPI::UnitType unitType = unit->getType();
-		if (unitType.isBuilding())
-			architect.removeConstruct(unit);
-		else
-			recruiter.removeConstruction(unit);
+		if (utilUnit::isOwned(unit))
+		{
+			// Notify architect.
+			if (unitType.isBuilding())
+				architect.removeConstruct(unit);
+			else
+				recruiter.removeConstruction(unit);
 
-		// Check if expansion.
-		if (unitType.isResourceDepot())
-			landlord.addDepot(unit);
+			// Check if expansion.
+			if (unitType.isResourceDepot())
+				landlord.addDepot(unit);
 
-		// Designate.
-		if (unitType.isWorker())
-			landlord.addWorker(unit);
-		else if (utilUnit::isFighter(unitType))
-			armyManager.addUnit(unit);
-		else if (unitType.canProduce())
-			recruiter.addFactory(unit);
+			// Designate.
+			if (unitType.isWorker())
+				landlord.addWorker(unit);
+			else if (utilUnit::isFighter(unitType))
+				armyManager.addUnit(unit);
+			else if (unitType.canProduce())
+				recruiter.addFactory(unit);
+		}
+		else if (unitType == BWAPI::UnitTypes::Resource_Vespene_Geyser)
+			geologist.addGeyser(unit);
 	}
 }
 
@@ -304,6 +334,17 @@ void Primary::drawGatherer()
 				);
 		}
 	}
+}
+
+
+// Drawsd geologist data for debugging.
+void Primary::drawGeologist()
+{
+	// Draw geysers' outlines.
+	BOOST_FOREACH(BWTA::Region * region, BWTA::getRegions())
+		BOOST_FOREACH(BWAPI::Unit * geyser, geologist.getGeysers(region))
+			//drawBuildingOutline(geyser->getInitialTilePosition(), geyser->getInitialType());
+			drawBuildingOutline(geyser);
 }
 
 
@@ -387,23 +428,31 @@ void Primary::drawVassals()
 
 
 // Draws an outline around the unit.
-void Primary::drawBuildingOutline(BWAPI::Unit * building)
+void Primary::drawBuildingOutline(BWAPI::TilePosition buildingLocation, BWAPI::UnitType buildingType)
 {
-	// Verify unit.
-	if (building &&
-		building->isVisible())
+	// Verify building.
+	if (buildingLocation &&
+		buildingType)
 	{
-		// Draw unit.
-		BWAPI::TilePosition tile = building->getTilePosition();
-		BWAPI::UnitType buildingType = building->getType();
+		// Draw outline.
 		BWAPI::Broodwar->drawBoxMap(
-			tile.x() * TILE_SIZE,
-			tile.y() * TILE_SIZE,
-			(tile.x() + buildingType.tileWidth()) * TILE_SIZE,
-			(tile.y() + buildingType.tileHeight()) * TILE_SIZE,
+			buildingLocation.x() * TILE_SIZE,
+			buildingLocation.y() * TILE_SIZE,
+			(buildingLocation.x() + buildingType.tileWidth()) * TILE_SIZE,
+			(buildingLocation.y() + buildingType.tileHeight()) * TILE_SIZE,
 			BWAPI::Colors::Blue,
 			false);
 	}
+}
+
+
+// Draws an outline around the unit.
+void Primary::drawBuildingOutline(BWAPI::Unit * building)
+{
+	// Verify building.
+	if (building &&
+		building->isVisible())
+		drawBuildingOutline(building->getTilePosition(), building->getType());
 }
 
 

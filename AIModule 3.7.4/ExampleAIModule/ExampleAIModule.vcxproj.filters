@@ -80,6 +80,9 @@
     <ClCompile Include="Settler.cpp">
       <Filter>Managers</Filter>
     </ClCompile>
+    <ClCompile Include="Geologist.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="UtilUnit.h">
@@ -141,6 +144,9 @@
       <Filter>Managers</Filter>
     </ClInclude>
     <ClInclude Include="Settler.h">
+      <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Geologist.h">
       <Filter>Managers</Filter>
     </ClInclude>
   </ItemGroup>

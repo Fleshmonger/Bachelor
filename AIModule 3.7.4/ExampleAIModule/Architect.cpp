@@ -20,21 +20,10 @@ Architect::~Architect()
 // Commands the worker to build a structure
 void Architect::commandBuild(BWAPI::Unit * builder, BWAPI::TilePosition buildingLocation, BWAPI::UnitType buildingType)
 {
-	if (isExplored(buildingLocation, buildingType))
+	if (utilMap::isExplored(buildingLocation, buildingType))
 		builder->build(buildingLocation, buildingType);
 	else
 		utilUnit::command(builder, BWAPI::UnitCommandTypes::Move, BWAPI::Position(buildingLocation));
-}
-
-
-// Returns whether or not the entire building location has been explored.
-bool Architect::isExplored(BWAPI::TilePosition buildingLocation, BWAPI::UnitType buildingType)
-{
-	for (int i = 0; i < buildingType.tileWidth(); i++)
-		for (int j = 0; j < buildingType.tileHeight(); j++)
-			if (!BWAPI::Broodwar->isExplored(BWAPI::TilePosition(buildingLocation.x() + i, buildingLocation.y() + j)))
-				return false;
-	return true;
 }
 
 

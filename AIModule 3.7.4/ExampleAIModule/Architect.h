@@ -34,7 +34,6 @@ public:
 	void removePylon(BWAPI::Unit * pylon);
 	void update();
 
-	bool isExplored(BWAPI::TilePosition buildingLocation, BWAPI::UnitType buildingType);
 	bool scheduleBuilding(BWAPI::UnitType buildingType, Vassal * vassal);
 	bool scheduleBuilding(BWAPI::UnitType buildingType, BWTA::Region * region);
 	bool scheduleBuilding(BWAPI::UnitType buildingType, BWAPI::TilePosition desiredLocation);
