@@ -19,6 +19,7 @@ namespace utilUnit
 	bool isEnemy(BWAPI::Unit * unit);
 	bool isOwned(BWAPI::Unit * unit);
 	bool isFighter(BWAPI::UnitType unitType);
+	bool isGeyser(BWAPI::UnitType unitType);
 	bool isMisc(BWAPI::UnitType unitType);
 	bool isSupport(BWAPI::UnitType unitType);
 	bool isTurret(BWAPI::UnitType unitType);

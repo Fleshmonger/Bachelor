@@ -91,14 +91,21 @@ bool utilUnit::isOwned(BWAPI::Unit * unit)
 }
 
 
-// Determines if a unit type is non-building and combat based.
+// Determines if a unit-type is non-building and combat based.
 bool utilUnit::isFighter(BWAPI::UnitType unitType)
 {
 	return !unitType.isBuilding() && !isMisc(unitType) && !isSupport(unitType);
 }
 
 
-// Determines if a unit type is a special case.
+// Determines if a unit-type is a vespene geyser.
+bool utilUnit::isGeyser(BWAPI::UnitType unitType)
+{
+	return unitType == BWAPI::UnitTypes::Resource_Vespene_Geyser;
+}
+
+
+// Determines if a unit-type is a special case.
 bool utilUnit::isMisc(BWAPI::UnitType unitType)
 {
 	return
@@ -111,7 +118,7 @@ bool utilUnit::isMisc(BWAPI::UnitType unitType)
 }
 
 
-// Determines if a unit type is economy based.
+// Determines if a unit-type is economy based.
 //TODO Should eggs be in this or in combateer?
 bool utilUnit::isSupport(BWAPI::UnitType unitType)
 {
@@ -123,7 +130,7 @@ bool utilUnit::isSupport(BWAPI::UnitType unitType)
 }
 
 
-// Determines if a unit type is a defensive structure.
+// Determines if a unit-type is a defensive structure.
 // TODO Excludes bunkers - is this behavior wished?
 bool utilUnit::isTurret(BWAPI::UnitType unitType)
 {

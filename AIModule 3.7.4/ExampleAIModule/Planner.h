@@ -1,6 +1,7 @@
 #pragma once
 #include <BWAPI.h>
 #include <BWTA.h>
+#include "Geologist.h"
 #include "Landlord.h"
 #include "Recruiter.h"
 #include "Settler.h"
@@ -10,6 +11,7 @@
 class Planner
 {
 private:
+	Geologist	* geologist;
 	Landlord	* landlord;
 	Recruiter	* recruiter;
 	Settler		* settler;
@@ -18,7 +20,7 @@ private:
 	std::list<BWAPI::UnitType> buildOrder;
 
 public:
-	Planner(Landlord * landlord, Recruiter * recruiter, Settler * settler, Architect * architect);
+	Planner(Geologist * geologist, Landlord * landlord, Recruiter * recruiter, Settler * settler, Architect * architect);
 	~Planner();
 
 	void update();

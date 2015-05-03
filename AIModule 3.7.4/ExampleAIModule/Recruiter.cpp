@@ -4,9 +4,10 @@
 // Constructor
 Recruiter::Recruiter(Accountant * accountant) :
 	accountant(accountant),
+	busyFactories(),
 	trainingSchedule(),
 	constructionSchedule(),
-	factories()
+	typeFactories()
 {
 }
 
@@ -17,13 +18,19 @@ Recruiter::~Recruiter()
 }
 
 
+// Clears the busy factories.
+void Recruiter::update()
+{
+	busyFactories.clear();
+}
+
 // Adds a factory to the pool.
 void Recruiter::addFactory(BWAPI::Unit * factory)
 {
 	// Verify factory.
 	if (utilUnit::isOwned(factory) &&
 		factory->exists())
-		factories[factory->getType()].insert(factory);
+		typeFactories[factory->getType()].insert(factory);
 }
 
 
@@ -32,7 +39,7 @@ void Recruiter::removeFactory(BWAPI::Unit * factory)
 {
 	// Verify factory.
 	if (factory)
-		factories[factory->getType()].erase(factory);
+		typeFactories[factory->getType()].erase(factory);
 }
 
 
@@ -76,14 +83,16 @@ bool Recruiter::scheduleTraining(BWAPI::UnitType unitType)
 {
 	// Search through factories.
 	std::pair<BWAPI::UnitType, int> builderInfo = unitType.whatBuilds();
-	BOOST_FOREACH(BWAPI::Unit * factory, factories[builderInfo.first])
+	BOOST_FOREACH(BWAPI::Unit * factory, typeFactories[builderInfo.first])
 	{
 		// Verify factory.
 		if (factory->exists() &&
-			!factory->isTraining())
+			!factory->isTraining() &&
+			busyFactories.count(factory) == 0)
 			return scheduleTraining(unitType, factory);
 	}
 
+	// Scheduling failed.
 	return false;
 }
 
@@ -96,6 +105,7 @@ bool Recruiter::scheduleTraining(BWAPI::UnitType unitType, BWAPI::Unit * factory
 		utilUnit::isOwned(factory) &&			// Verify availability.
 		factory->exists() &&
 		!factory->isTraining() &&
+		busyFactories.count(factory) == 0 &&
 		factory->train(unitType))				// Attempt training.
 	{
 		// Schedule training.
@@ -104,6 +114,7 @@ bool Recruiter::scheduleTraining(BWAPI::UnitType unitType, BWAPI::Unit * factory
 		else
 			trainingSchedule[unitType] = 1;
 		accountant->allocate(unitType);
+		busyFactories.insert(factory);
 		return true;
 	}
 	else
@@ -127,5 +138,5 @@ unsigned int Recruiter::scheduled(BWAPI::UnitType unitType)
 //TODO Is this needed?
 utilUnit::UnitSet Recruiter::getFactories(BWAPI::UnitType factoryType)
 {
-	return factories[factoryType];
+	return typeFactories[factoryType];
 }

@@ -35,11 +35,11 @@ public:
 	void update();
 
 	bool scheduleBuilding(BWAPI::UnitType buildingType, Vassal * vassal);
-	bool scheduleBuilding(BWAPI::UnitType buildingType, BWTA::Region * region);
-	bool scheduleBuilding(BWAPI::UnitType buildingType, BWAPI::TilePosition desiredLocation);
-	bool scheduleBuilding(BWAPI::UnitType buildingType, BWAPI::TilePosition desiredLocation, BWAPI::Unit * builder);
-	bool scheduleRefinery(BWAPI::UnitType refinery, BWAPI::TilePosition buildingLocation);
-	bool scheduleRefinery(BWAPI::UnitType refinery, BWAPI::Unit * geyser);
+	//bool scheduleBuilding(BWAPI::UnitType buildingType, BWTA::Region * region);
+	bool scheduleBuilding(BWAPI::UnitType buildingType, BWAPI::TilePosition buildingLocation);
+	bool scheduleBuilding(BWAPI::UnitType buildingType, BWAPI::TilePosition buildingLocation, BWAPI::Unit * builder);
+	bool scheduleRefinery(BWAPI::UnitType refinery, BWAPI::TilePosition buildingLocation); //TODO Redundant?
+	bool scheduleRefinery(BWAPI::UnitType refinery, BWAPI::Unit * geyser); //TODO Redundant?
 	bool validBuildLocation(BWAPI::Unit * builder, BWAPI::TilePosition location, BWAPI::UnitType buildingType);
 
 	int scheduled(BWAPI::UnitType buildingType);

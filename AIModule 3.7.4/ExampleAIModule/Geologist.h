@@ -10,6 +10,7 @@ class Geologist
 {
 private:
 	std::map<BWTA::Region*, utilUnit::UnitSet> regionGeysers;
+	std::map<BWAPI::Unit*, BWAPI::TilePosition> geyserPositions;
 
 public:
 	Geologist();
@@ -20,7 +21,10 @@ public:
 	void removeGeyser(BWAPI::Unit * geyser);
 
 	bool contains(BWTA::Region * region);
+	bool contains(BWAPI::Unit * geyser);
 
 	utilUnit::UnitSet getGeysers(BWTA::Region * region);
+
+	BWAPI::TilePosition getGeyserPosition(BWAPI::Unit * geyser);
 };
 

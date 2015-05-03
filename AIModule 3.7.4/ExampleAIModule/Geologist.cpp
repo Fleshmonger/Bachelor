@@ -2,7 +2,9 @@
 
 
 // Constructor.
-Geologist::Geologist()
+Geologist::Geologist() :
+	regionGeysers(),
+	geyserPositions()
 {
 }
 
@@ -27,25 +29,27 @@ void Geologist::initialize()
 void Geologist::addGeyser(BWAPI::Unit * geyser)
 {
 	// Verify Geyser.
-	if (geyser)
+	if (geyser &&
+		utilUnit::isGeyser(geyser->getType()) || utilUnit::isGeyser(geyser->getInitialType()))
 	{
-		// Aquire tile-position.
-		BWAPI::TilePosition tile;
+		// Aquire position.
+		BWAPI::TilePosition pos;
 		if (geyser->isVisible())
-			tile = geyser->getTilePosition();
+			pos = geyser->getTilePosition();
 		else
-			tile = geyser->getInitialTilePosition();
+			pos = geyser->getInitialTilePosition();
 
 		// Verify position.
-		if (tile)
+		if (pos)
 		{
 			// Check region.
-			BWTA::Region * region = BWTA::getRegion(tile);
+			BWTA::Region * region = BWTA::getRegion(pos);
 			if (!contains(region))
 				regionGeysers[region] = utilUnit::UnitSet();
 
 			// Add geyser.
 			regionGeysers[region].insert(geyser);
+			geyserPositions[geyser] = pos;
 		}
 	}
 }
@@ -55,12 +59,15 @@ void Geologist::addGeyser(BWAPI::Unit * geyser)
 void Geologist::removeGeyser(BWAPI::Unit * geyser)
 {
 	// Verify geyser.
-	if (geyser)
+	if (contains(geyser))
 	{
-		// Verify region.
-		BWTA::Region * region = BWTA::getRegion(geyser->getInitialPosition());
-		if (contains(region))
-			regionGeysers[region].erase(geyser);
+		// Aquire position.
+		BWAPI::TilePosition pos = geyserPositions[geyser] = pos;
+		BWTA::Region * region = BWTA::getRegion(pos);
+
+		// Remove geyser.
+		regionGeysers[region].erase(geyser);
+		geyserPositions.erase(geyser);
 	}
 }
 
@@ -72,6 +79,13 @@ bool Geologist::contains(BWTA::Region * region)
 }
 
 
+// Returns whether the geyser is recorded.
+bool Geologist::contains(BWAPI::Unit * geyser)
+{
+	return geyserPositions.count(geyser) > 0;
+}
+
+
 // Returns a set of pointers og recorded geysers in the region.
 utilUnit::UnitSet Geologist::getGeysers(BWTA::Region * region)
 {
@@ -79,4 +93,14 @@ utilUnit::UnitSet Geologist::getGeysers(BWTA::Region * region)
 		return regionGeysers[region];
 	else
 		return utilUnit::UnitSet();
+}
+
+
+// Returns the position of the geyser.
+BWAPI::TilePosition Geologist::getGeyserPosition(BWAPI::Unit * geyser)
+{
+	if (contains(geyser))
+		return geyserPositions[geyser];
+	else
+		return BWAPI::TilePositions::None;
 }

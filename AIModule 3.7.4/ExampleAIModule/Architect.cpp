@@ -27,63 +27,68 @@ void Architect::commandBuild(BWAPI::Unit * builder, BWAPI::TilePosition building
 }
 
 
-// Attempts to schedule a building in the region related to the vassal and returns true if it succeeds.
+// Attempts to schedule a building in the vassal and returns true if it succeeds.
 bool Architect::scheduleBuilding(BWAPI::UnitType buildingType, Vassal * vassal)
 {
 	// Verify vassal.
 	if (vassal &&
 		vassal->getDepot())
-		return scheduleBuilding(buildingType, vassal->getDepot()->getTilePosition());
+	{
+		// Aquire builder.
+		BWAPI::Unit * builder = landlord->getIdleWorker(vassal->getRegion());
+
+		// Aquire building location.
+		BWAPI::TilePosition buildingLocation = getBuildLocation(builder, vassal->getDepot()->getTilePosition(), buildingType);
+
+		// Schedule building.
+		return scheduleBuilding(buildingType, buildingLocation, builder);
+	}
 	else
 		return false;
 }
 
 
+/*
 // Attempts to schedule a building in the region and returns true if it succeeds.
 bool Architect::scheduleBuilding(BWAPI::UnitType buildingType, BWTA::Region * region)
 {
-	return scheduleBuilding(buildingType, landlord->getVassal(region));
+	// Schedule building.
+	scheduleBuilding(buildingType, landlord->getVassal(region));
+}
+*/
+
+
+// Attempts to schedule a building at the location and returns true if it succeeds.
+bool Architect::scheduleBuilding(BWAPI::UnitType buildingType, BWAPI::TilePosition buildingLocation)
+{
+	// Schedule building.
+	return scheduleBuilding(buildingType, buildingLocation, landlord->getIdleWorker(BWTA::getRegion(buildingLocation)));
 }
 
 
-// Attempts to schedule a building near the desired location and returns true if it succeeds.
-bool Architect::scheduleBuilding(BWAPI::UnitType buildingType, BWAPI::TilePosition desiredLocation)
+// Attempts to schedule a building at the location with the builder and returns true if it succeeds.
+//TODO Check if the building can actually be placed at the building location?
+bool Architect::scheduleBuilding(BWAPI::UnitType buildingType, BWAPI::TilePosition buildingLocation, BWAPI::Unit * builder)
 {
-	return scheduleBuilding(buildingType, desiredLocation, landlord->getIdleWorker(BWTA::getRegion(desiredLocation)));
-}
-
-
-// Attempts to schedule a building near the desired location with the builder and returns true if it succeeds.
-bool Architect::scheduleBuilding(BWAPI::UnitType buildingType, BWAPI::TilePosition desiredLocation, BWAPI::Unit * builder)
-{
-	// Confirm the unit type.
-	if (buildingType.isBuilding())
+	// Verify schedule.
+	if (buildingType &&										// Verify building type.
+		buildingType.isBuilding() &&
+		buildingLocation &&									// Verify building location.
+		accountant->isAffordable(buildingType) &&			// Verify resources.
+		utilUnit::isOwned(builder) &&						// Verify builder.
+		builder->exists() &&
+		BWAPI::Broodwar->canMake(builder, buildingType))
 	{
-		// Check if we have the resources.
-		if (accountant->isAffordable(buildingType))
-		{
-			// Verify builder.
-			if (utilUnit::isOwned(builder) &&
-				builder->exists() &&
-				builder->getType().isWorker())
-			{
-				BWAPI::TilePosition buildingLocation = getBuildLocation(builder, desiredLocation, buildingType);
-				if (buildingLocation)
-				{
-					// Order the construction.
-					landlord->employWorker(builder, TASK_BUILD);
-					buildSchedule.insert(std::make_pair(buildingType, std::make_pair(builder, buildingLocation)));
-					accountant->allocate(buildingType);
-					schedule[buildingType]++;
-					commandBuild(builder, buildingLocation, buildingType);
-					return true;
-				}
-			}
-		}
+		// Order the construction.
+		landlord->employWorker(builder, TASK_BUILD);
+		buildSchedule.insert(std::make_pair(buildingType, std::make_pair(builder, buildingLocation)));
+		accountant->allocate(buildingType);
+		schedule[buildingType]++;
+		commandBuild(builder, buildingLocation, buildingType);
+		return true;
 	}
-
-	// Attempt unsuccessful.
-	return false;
+	else
+		return false;
 }
 
 

@@ -2,7 +2,8 @@
 
 
 // Constructor.
-Planner::Planner(Landlord * landlord, Recruiter * recruiter, Settler * settler, Architect * architect) :
+Planner::Planner(Geologist * geologist, Landlord * landlord, Recruiter * recruiter, Settler * settler, Architect * architect) :
+	geologist(geologist),
 	landlord(landlord),
 	recruiter(recruiter),
 	settler(settler),
@@ -73,8 +74,22 @@ bool Planner::produce(BWAPI::UnitType unitType)
 			}
 			else if (unitType.isRefinery())
 			{
+				// Iterate through vassals.
+				BOOST_FOREACH(Vassal * vassal, landlord->getVassals())
+				{
+					// Verify geysers.
+					BWTA::Region * region = vassal->getRegion();
+					utilUnit::UnitSet geysers = geologist->getGeysers(region);
+					if (!geysers.empty())
+					{
+						// Schedule geyser.
+						BWAPI::Unit * geyser = *geysers.begin();
+						return architect->scheduleBuilding(unitType, geologist->getGeyserPosition(geyser));
+					}
+				}
+
+				// Scheduling unsuccesful.
 				return false;
-				//TODO Build refinery.
 			}
 			else
 				return architect->scheduleBuilding(unitType, landlord->getHeadquarters());

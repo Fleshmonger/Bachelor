@@ -13,7 +13,7 @@ Primary::Primary() :
 	settler(&landlord),
 	architect(&accountant, &landlord),
 	reconnoiter(&archivist, &landlord),
-	planner(&landlord, &recruiter, &settler, &architect),
+	planner(&geologist, &landlord, &recruiter, &settler, &architect),
 	economist(&accountant, &landlord, &recruiter, &gatherer, &architect),
 	armyManager(&archivist, &combatJudge),
 	defender(&archivist, &landlord, &combatJudge, &armyManager),
@@ -94,10 +94,10 @@ void Primary::onFrame()
 	Broodwar->drawTextScreen(200, 0, "FPS: %d", BWAPI::Broodwar->getFPS());
 	Broodwar->drawTextScreen(200, 20, "APM: %d", BWAPI::Broodwar->getAPM());
 	drawGeologist();
-	//drawVassals();
-	//drawGatherer();
-	//drawLandlord();
-	//drawPlanner();
+	drawVassals();
+	drawGatherer();
+	drawLandlord();
+	drawPlanner();
 
 	// Prevent spamming by only running our onFrame once every number of latency frames.
 	// Latency frames are the number of frames before commands are processed.
@@ -105,16 +105,15 @@ void Primary::onFrame()
 		return;
 
 	// Manager updatíng
-	/*
 	archivist.update();
-	reconnoiter.update();
+	recruiter.update();
 	architect.update();
+	reconnoiter.update();
 	planner.update();
 	armyManager.update();
 	defender.update(); //TODO Defender must be before attacker and economist, to ensure defenders are available. Fix this.
 	attacker.update();
 	despot.update();
-	*/
 }
 
 
@@ -343,8 +342,7 @@ void Primary::drawGeologist()
 	// Draw geysers' outlines.
 	BOOST_FOREACH(BWTA::Region * region, BWTA::getRegions())
 		BOOST_FOREACH(BWAPI::Unit * geyser, geologist.getGeysers(region))
-			//drawBuildingOutline(geyser->getInitialTilePosition(), geyser->getInitialType());
-			drawBuildingOutline(geyser);
+			drawBuildingOutline(geologist.getGeyserPosition(geyser), geyser->getInitialType());
 }
 
 
@@ -362,7 +360,7 @@ void Primary::drawLandlord()
 
 			// Draw worker data.
 			BWAPI::Position pos = worker->getPosition();
-			BWAPI::Broodwar->drawTextScreen(
+			BWAPI::Broodwar->drawTextMap(
 				pos.x(),
 				pos.y(),
 				"Builder"
