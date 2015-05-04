@@ -33,7 +33,7 @@ void utilUnit::command(BWAPI::Unit * unit, BWAPI::UnitCommandType commandType, B
 		isOwned(unit))
 	{
 		// Ensure the unit has not recieved a command this frame.
-		if (unit->getLastCommandFrame() < BWAPI::Broodwar->getFrameCount())
+		if (!isCommanded(unit))
 		{
 			// Ensure the current unit command is not identical to the new one.
 			BWAPI::UnitCommand lastCommand = unit->getLastCommand();
@@ -55,7 +55,7 @@ void utilUnit::commandBuild(BWAPI::Unit * unit, BWAPI::TilePosition location, BW
 	if (unit && unit->exists() && isOwned(unit))
 	{
 		// Ensure the unit has not recieved a command this frame.
-		if (unit->getLastCommandFrame() < BWAPI::Broodwar->getFrameCount())
+		if (!isCommanded(unit))
 		{
 			// Ensure the current unit command is not identical to the new one.
 			BWAPI::UnitCommand lastCommand = unit->getLastCommand();
@@ -72,6 +72,13 @@ void utilUnit::commandBuild(BWAPI::Unit * unit, BWAPI::TilePosition location, BW
 bool utilUnit::inRegion(BWAPI::Position pos, BWTA::Region * region)
 {
 	return region && BWTA::getRegion(pos) == region;
+}
+
+
+// Returns true if the unit has been commanded this frame.
+bool utilUnit::isCommanded(BWAPI::Unit * unit)
+{
+	return unit && unit->getLastCommandFrame() == BWAPI::Broodwar->getFrameCount();
 }
 
 

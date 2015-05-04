@@ -11,7 +11,6 @@ class Recruiter
 private:
 	Accountant * accountant;
 
-	utilUnit::UnitSet busyFactories;
 	std::map<BWAPI::UnitType, int>
 		trainingSchedule,
 		constructionSchedule;
@@ -21,7 +20,6 @@ public:
 	Recruiter(Accountant * accountant);
 	~Recruiter();
 
-	void update();
 	void addFactory(BWAPI::Unit * factory);
 	void removeFactory(BWAPI::Unit * factory);
 	void addConstruction(BWAPI::Unit * unit);

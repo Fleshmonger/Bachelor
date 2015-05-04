@@ -88,7 +88,6 @@ void Primary::onFrame()
 	if (BWAPI::Broodwar->isReplay() || BWAPI::Broodwar->isPaused() || !BWAPI::Broodwar->self())
 		return;
 
-
 	// Display.
 	//drawTerrainData();
 	Broodwar->drawTextScreen(200, 0, "FPS: %d", BWAPI::Broodwar->getFPS());
@@ -106,7 +105,6 @@ void Primary::onFrame()
 
 	// Manager updatíng
 	archivist.update();
-	recruiter.update();
 	architect.update();
 	reconnoiter.update();
 	planner.update();
