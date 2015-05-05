@@ -6,14 +6,14 @@
 
 
 // Trains units and monitors their construction.
+//TODO Split into recruiter and trainer?
 class Recruiter
 {
 private:
 	Accountant * accountant;
 
-	std::map<BWAPI::UnitType, int>
-		trainingSchedule,
-		constructionSchedule;
+	utilUnit::UnitSet constructions;
+	std::map<BWAPI::UnitType, unsigned int> trainingSchedule;
 	std::map<BWAPI::UnitType, utilUnit::UnitSet> typeFactories;
 
 public:
@@ -25,10 +25,9 @@ public:
 	void addConstruction(BWAPI::Unit * unit);
 	void removeConstruction(BWAPI::Unit * unit);
 
+	bool contains(BWAPI::Unit * unit);
 	bool scheduleTraining(BWAPI::UnitType unitType);
 	bool scheduleTraining(BWAPI::UnitType unitType, BWAPI::Unit * factory);
-
-	unsigned int scheduled(BWAPI::UnitType unitType);
 
 	utilUnit::UnitSet getFactories(BWAPI::UnitType factoryType);
 };

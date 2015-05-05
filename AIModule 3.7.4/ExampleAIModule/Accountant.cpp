@@ -5,7 +5,8 @@
 Accountant::Accountant() :
 	allocatedMinerals(0),
 	allocatedGas(0),
-	allocatedSupply(0)
+	allocatedSupply(0),
+	schedule()
 {
 }
 
@@ -34,6 +35,26 @@ void Accountant::deallocate(BWAPI::UnitType unitType)
 }
 
 
+// Adds a unit type to the schedule.
+void Accountant::addSchedule(BWAPI::UnitType unitType)
+{
+	if (isScheduled(unitType))
+		schedule[unitType]++;
+	else
+		schedule[unitType]++;
+}
+
+
+// Removes a unit type from the schedule.
+void Accountant::removeSchedule(BWAPI::UnitType unitType)
+{
+	if (scheduled(unitType) > 1)
+		schedule[unitType]--;
+	else
+		schedule.erase(unitType);
+}
+
+
 // Returns whether we can afford to build a given unit type.
 bool Accountant::isAffordable(BWAPI::UnitType unitType)
 {
@@ -43,6 +64,23 @@ bool Accountant::isAffordable(BWAPI::UnitType unitType)
 		unitType.gasPrice() <= self->gas() - allocatedGas &&
 		unitType.supplyRequired() <= self->supplyTotal() - self->supplyUsed() - allocatedSupply;
 	return false;
+}
+
+
+// Returns whether the unit type is scheduled.
+bool Accountant::isScheduled(BWAPI::UnitType unitType)
+{
+	return schedule.count(unitType) > 0 && schedule[unitType] > 0;
+}
+
+
+// Returns the amount of scheduled units of the type.
+unsigned int Accountant::scheduled(BWAPI::UnitType unitType)
+{
+	if (isScheduled(unitType))
+		return schedule[unitType];
+	else
+		return 0;
 }
 
 

@@ -2,7 +2,8 @@
 
 
 // Constructor
-Strategist::Strategist(Landlord * landlord, Recruiter * recruiter, Architect * architect) :
+Strategist::Strategist(Accountant * accountant, Landlord * landlord, Recruiter * recruiter, Architect * architect) :
+	accountant(accountant),
 	landlord(landlord),
 	recruiter(recruiter),
 	architect(architect)
@@ -26,6 +27,6 @@ void Strategist::update()
 	Vassal * headquarters = landlord->getHeadquarters();
 	if (headquarters &&
 		headquarters->getDepot() &&
-		architect->scheduled(INFANTRY_FACTORY) + recruiter->getFactories(INFANTRY_FACTORY).size() < MAX_FACTORIES)
+		accountant->scheduled(INFANTRY_FACTORY) + recruiter->getFactories(INFANTRY_FACTORY).size() < MAX_FACTORIES)
 		architect->scheduleBuilding(INFANTRY_FACTORY, headquarters->getDepot()->getTilePosition());
 }

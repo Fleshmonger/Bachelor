@@ -18,10 +18,25 @@ Geologist::~Geologist()
 // Called after BWTA analysis. Adds initial geysers.
 void Geologist::initialize()
 {
-	// Iterate through base locations.
-	BOOST_FOREACH(BWTA::BaseLocation * baseLocation, BWTA::getBaseLocations())
-		BOOST_FOREACH(BWAPI::Unit * geyser, baseLocation->getGeysers())
-			addGeyser(geyser);
+	// Iterate through regions.
+	BOOST_FOREACH(BWTA::Region * region, BWTA::getRegions())
+	{
+		// Add region.
+		regionGeysers[region] = utilUnit::UnitSet();
+
+		// Iterate through base locations.
+		BOOST_FOREACH(BWTA::BaseLocation * baseLocation, region->getBaseLocations())
+		{
+			// Iterate through geysers.
+			BOOST_FOREACH(BWAPI::Unit * geyser, baseLocation->getGeysers())
+			{
+				// Add geyser.
+				regionGeysers[region].insert(geyser);
+				geyserPositions[geyser] = geyser->getInitialTilePosition();
+			}
+		}
+
+	}
 }
 
 
@@ -29,28 +44,16 @@ void Geologist::initialize()
 void Geologist::addGeyser(BWAPI::Unit * geyser)
 {
 	// Verify Geyser.
-	if (geyser &&
-		utilUnit::isGeyser(geyser->getType()) || utilUnit::isGeyser(geyser->getInitialType()))
+	if (!contains(geyser) &&
+		geyser &&
+		geyser->isVisible() &&
+		utilUnit::isGeyser(geyser->getType()))
 	{
-		// Aquire position.
-		BWAPI::TilePosition pos;
-		if (geyser->isVisible())
-			pos = geyser->getTilePosition();
-		else
-			pos = geyser->getInitialTilePosition();
-
-		// Verify position.
-		if (pos)
-		{
-			// Check region.
-			BWTA::Region * region = BWTA::getRegion(pos);
-			if (!contains(region))
-				regionGeysers[region] = utilUnit::UnitSet();
-
-			// Add geyser.
-			regionGeysers[region].insert(geyser);
-			geyserPositions[geyser] = pos;
-		}
+		// Add geyser.
+		BWAPI::Broodwar->sendText("A geyser was added");
+		BWTA::Region * region = BWTA::getRegion(geyser->getTilePosition());
+		regionGeysers[region].insert(geyser);
+		geyserPositions[geyser] = geyser->getTilePosition();
 	}
 }
 
@@ -61,11 +64,8 @@ void Geologist::removeGeyser(BWAPI::Unit * geyser)
 	// Verify geyser.
 	if (contains(geyser))
 	{
-		// Aquire position.
-		BWAPI::TilePosition pos = geyserPositions[geyser] = pos;
-		BWTA::Region * region = BWTA::getRegion(pos);
-
 		// Remove geyser.
+		BWTA::Region * region = BWTA::getRegion(geyserPositions[geyser]);
 		regionGeysers[region].erase(geyser);
 		geyserPositions.erase(geyser);
 	}

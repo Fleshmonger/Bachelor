@@ -1,5 +1,6 @@
 #pragma once
 #include <BWAPI.h>
+#include "Accountant.h"
 #include "Archivist.h"
 #include "Vassal.h"
 #include "Landlord.h"
@@ -16,13 +17,14 @@ const BWAPI::UnitType
 class Strategist
 {
 private:
+	Accountant	* accountant;
 	Archivist	* archivist;
 	Landlord	* landlord;
 	Recruiter	* recruiter;
 	Architect	* architect;
 
 public:
-	Strategist(Landlord * landlord, Recruiter * recruiter, Architect * architect);
+	Strategist(Accountant * accountant, Landlord * landlord, Recruiter * recruiter, Architect * architect);
 	~Strategist();
 
 	void update();

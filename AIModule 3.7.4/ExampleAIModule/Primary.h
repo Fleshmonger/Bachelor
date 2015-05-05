@@ -16,6 +16,7 @@
 #include "Settler.h"
 #include "Architect.h"
 #include "Reconnoiter.h"
+#include "Morpher.h"
 #include "Planner.h"
 #include "Economist.h"
 #include "ArmyManager.h"
@@ -43,6 +44,7 @@ private:
 	Settler			settler;
 	Architect		architect;
 	Reconnoiter		reconnoiter;
+	Morpher			morpher;
 	Planner			planner;
 	Economist		economist;
 	ArmyManager		armyManager;

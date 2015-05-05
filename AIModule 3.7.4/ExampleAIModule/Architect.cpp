@@ -5,7 +5,7 @@
 Architect::Architect(Accountant * accountant, Landlord * landlord) :
 	accountant(accountant),
 	landlord(landlord),
-	constructSchedule(),
+	constructions(),
 	buildSchedule()
 {
 }
@@ -61,7 +61,6 @@ bool Architect::scheduleBuilding(BWAPI::UnitType buildingType, BWTA::Region * re
 // Attempts to schedule a building at the location and returns true if it succeeds.
 bool Architect::scheduleBuilding(BWAPI::UnitType buildingType, BWAPI::TilePosition buildingLocation)
 {
-	// Schedule building.
 	return scheduleBuilding(buildingType, buildingLocation, landlord->getIdleWorker(BWTA::getRegion(buildingLocation)));
 }
 
@@ -83,53 +82,28 @@ bool Architect::scheduleBuilding(BWAPI::UnitType buildingType, BWAPI::TilePositi
 		landlord->employWorker(builder, TASK_BUILD);
 		buildSchedule.insert(std::make_pair(buildingType, std::make_pair(builder, buildingLocation)));
 		accountant->allocate(buildingType);
-		schedule[buildingType]++;
 		commandBuild(builder, buildingLocation, buildingType);
+		accountant->addSchedule(buildingType);
 		return true;
 	}
-	else
-		return false;
-}
-
-
-// Attempts to schedule a refinery at the tile position and returns true if successful.
-bool Architect::scheduleRefinery(BWAPI::UnitType refineryType, BWAPI::TilePosition buildingLocation)
-{
-	// Verify order.
-	if (refineryType.isRefinery() &&										// Verify type.
-		buildingLocation &&													// Verify location
-		accountant->isAffordable(refineryType))								// Verify resources.
+	else if (buildingType.isRefinery())
 	{
-		// Aquire builder.
-		BWAPI::Unit * builder = landlord->getIdleWorker(BWTA::getRegion(buildingLocation));
-
-		// Verify builder.
-		if (builder &&
-			builder->exists())
-		{
-			// Schedule building.
-			landlord->employWorker(builder, TASK_BUILD);
-			buildSchedule.insert(std::make_pair(refineryType, std::make_pair(builder, buildingLocation)));
-			accountant->allocate(refineryType);
-			schedule[refineryType]++;
-			commandBuild(builder, buildingLocation, refineryType);
-			return true;
-		}
+		if (!buildingType)
+			BWAPI::Broodwar->sendText("BuildingType");
+		if (!buildingType.isBuilding())
+			BWAPI::Broodwar->sendText("isBuilding");
+		if (!buildingLocation)
+			BWAPI::Broodwar->sendText("buildingLocation");
+		if (!accountant->isAffordable(buildingType))
+			BWAPI::Broodwar->sendText("isAffordable");
+		if (!utilUnit::isOwned(builder))
+			BWAPI::Broodwar->sendText("isOwned");
+		if (!builder->exists())
+			BWAPI::Broodwar->sendText("exists");
+		if (!BWAPI::Broodwar->canMake(builder, buildingType))
+			BWAPI::Broodwar->sendText("canMake");
 	}
-
-	// Scheduling was unsuccessful.
 	return false;
-}
-
-
-// Attempts to schedule a refinery on the geyser and returns true if it succeeds.
-bool Architect::scheduleRefinery(BWAPI::UnitType refineryType, BWAPI::Unit * geyser)
-{
-	// Verify geyser.
-	if (geyser)
-		return scheduleRefinery(refineryType, geyser->getInitialTilePosition());
-	else
-		return false;
 }
 
 
@@ -137,7 +111,9 @@ bool Architect::scheduleRefinery(BWAPI::UnitType refineryType, BWAPI::Unit * gey
 void Architect::scheduleConstruct(BWAPI::Unit * building)
 {
 	BWAPI::UnitType buildingType = building->getType();
-	constructSchedule.insert(std::make_pair(buildingType, building));
+	//constructSchedule.insert(std::make_pair(buildingType, building));
+	constructions.insert(building);
+	accountant->addSchedule(buildingType);
 }
 
 
@@ -158,7 +134,7 @@ void Architect::removeBuild(BWAPI::UnitType buildingType, BWAPI::TilePosition bu
 				landlord->dismissWorker(builder);
 				accountant->deallocate(build.first);
 				buildSchedule.erase(it);
-				schedule[buildingType]--;
+				accountant->removeSchedule(buildingType);
 				return;
 			}
 			else
@@ -171,26 +147,35 @@ void Architect::removeBuild(BWAPI::UnitType buildingType, BWAPI::TilePosition bu
 // Removes a construction order from the construct schedule.
 void Architect::removeConstruct(BWAPI::Unit * building)
 {
-	if (building &&
-		building->exists() &&
-		utilUnit::isOwned(building) &&
+	if (contains(building))
+	{
+		constructions.erase(building);
+		accountant->removeSchedule(building->getType());
+	}
+	/*
+	// Verify construct
+	if (utilUnit::isOwned(building) &&
 		building->getType().isBuilding())
 	{
+		// Match construct.
 		std::pair<std::multimap<BWAPI::UnitType, BWAPI::Unit*>::iterator, std::multimap<BWAPI::UnitType, BWAPI::Unit*>::iterator> range = constructSchedule.equal_range(building->getType());
 		std::multimap<BWAPI::UnitType, BWAPI::Unit*>::iterator it = range.first, end = range.second;
 		while (it != end)
 		{
+			// Match cosntruct.
 			BWAPI::Unit * construct = (*it).second;
 			if (construct == building)
 			{
+				// Remove construct.
 				constructSchedule.erase(it);
-				schedule[building->getType()]--;
+				accountant->removeSchedule(building->getType());
 				return;
 			}
 			else
 				++it;
 		}
 	}
+	*/
 }
 
 
@@ -200,7 +185,6 @@ void Architect::completeBuild(BWAPI::Unit * building)
 	BWAPI::UnitType buildingType = building->getType();
 	removeBuild(buildingType, building->getTilePosition());
 	scheduleConstruct(building);
-	schedule[buildingType]++;
 }
 
 
@@ -234,6 +218,7 @@ void Architect::update()
 		}
 	}
 
+	/*
 	// Remove all invalid construction orders.
 	{
 		std::multimap<BWAPI::UnitType, BWAPI::Unit*>::iterator it = constructSchedule.begin();
@@ -245,7 +230,15 @@ void Architect::update()
 				removeConstruct(building);
 		}
 	}
+	*/
 
+}
+
+
+// Returns whether the unit is monitored.
+bool Architect::contains(BWAPI::Unit * unit)
+{
+	return constructions.count(unit) > 0;
 }
 
 
@@ -258,14 +251,6 @@ bool Architect::validBuildLocation(BWAPI::Unit * builder, BWAPI::TilePosition lo
 		location.isValid() &&
 		!landlord->getHarvestingZone(BWTA::getRegion(location)).contains(location, buildingType) &&
 		BWAPI::Broodwar->canBuildHere(builder, location, buildingType, false);
-}
-
-
-// Returns the amount of scheduled buildings of the specified type.
-int Architect::scheduled(BWAPI::UnitType buildingType)
-{
-	//return buildSchedule.count(buildingType) + constructSchedule.count(buildingType);
-	return schedule[buildingType];
 }
 
 

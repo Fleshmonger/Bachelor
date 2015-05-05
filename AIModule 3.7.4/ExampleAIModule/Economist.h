@@ -1,6 +1,9 @@
 #pragma once
 #include <BWAPI.h>
+#include <BWTA.h>
+#include <boost/foreach.hpp>
 #include "UtilUnit.h"
+#include "Accountant.h"
 #include "Vassal.h"
 #include "Landlord.h"
 #include "Recruiter.h"

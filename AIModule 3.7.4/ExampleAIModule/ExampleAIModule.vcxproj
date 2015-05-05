@@ -107,6 +107,7 @@
     <ClCompile Include="Geologist.cpp" />
     <ClCompile Include="Landlord.cpp" />
     <ClCompile Include="Gatherer.cpp" />
+    <ClCompile Include="Morpher.cpp" />
     <ClCompile Include="Planner.cpp" />
     <ClCompile Include="Primary.cpp" />
     <ClCompile Include="Recruiter.cpp" />
@@ -131,6 +132,7 @@
     <ClInclude Include="Geologist.h" />
     <ClInclude Include="Landlord.h" />
     <ClInclude Include="Gatherer.h" />
+    <ClInclude Include="Morpher.h" />
     <ClInclude Include="Planner.h" />
     <ClInclude Include="Primary.h" />
     <ClInclude Include="Recruiter.h" />

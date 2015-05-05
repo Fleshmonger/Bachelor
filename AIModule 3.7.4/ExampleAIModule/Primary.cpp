@@ -13,12 +13,13 @@ Primary::Primary() :
 	settler(&landlord),
 	architect(&accountant, &landlord),
 	reconnoiter(&archivist, &landlord),
+	morpher(&accountant, &gatherer),
 	planner(&geologist, &landlord, &recruiter, &settler, &architect),
 	economist(&accountant, &landlord, &recruiter, &gatherer, &architect),
 	armyManager(&archivist, &combatJudge),
 	defender(&archivist, &landlord, &combatJudge, &armyManager),
 	attacker(&archivist, &landlord, &combatJudge, &armyManager),
-	strategist(&landlord, &recruiter, &architect),
+	strategist(&accountant, &landlord, &recruiter, &architect),
 	despot(&landlord, &recruiter, &gatherer, &architect, &planner, &economist, &strategist)
 {
 }
@@ -90,13 +91,34 @@ void Primary::onFrame()
 
 	// Display.
 	//drawTerrainData();
-	Broodwar->drawTextScreen(200, 0, "FPS: %d", BWAPI::Broodwar->getFPS());
-	Broodwar->drawTextScreen(200, 20, "APM: %d", BWAPI::Broodwar->getAPM());
-	drawGeologist();
 	drawVassals();
+	//drawGeologist();
+	BOOST_FOREACH(Vassal * vassal, landlord.getVassals())
+	{
+		BOOST_FOREACH(BWAPI::Unit * geyser, geologist.getGeysers(vassal->getRegion()))
+		{
+			// Draw outline.
+			BWAPI::TilePosition pos = geologist.getGeyserPosition(geyser);
+			drawBuildingOutline(pos, BWAPI::UnitTypes::Resource_Vespene_Geyser);
+
+			// Draw position.
+			BWAPI::Broodwar->drawTextMap(
+				pos.x() * TILE_SIZE,
+				pos.y() * TILE_SIZE,
+				"Pos: (%d, %d)",
+				pos.x(),
+				pos.y()
+				);
+
+		}
+	}
 	drawGatherer();
 	drawLandlord();
 	drawPlanner();
+	Broodwar->drawTextScreen(200, 0, "FPS: %d", BWAPI::Broodwar->getFPS());
+	Broodwar->drawTextScreen(200, 20, "APM: %d", BWAPI::Broodwar->getAPM());
+	Broodwar->drawTextScreen(200, 40, "Scheduled refineries: %d", accountant.scheduled(BWAPI::UnitTypes::Protoss_Assimilator));
+	Broodwar->drawTextScreen(200, 60, "Scheduled pylons: %d", accountant.scheduled(BWAPI::UnitTypes::Protoss_Pylon));
 
 	// Prevent spamming by only running our onFrame once every number of latency frames.
 	// Latency frames are the number of frames before commands are processed.
@@ -107,6 +129,7 @@ void Primary::onFrame()
 	archivist.update();
 	architect.update();
 	reconnoiter.update();
+	morpher.update();
 	planner.update();
 	armyManager.update();
 	defender.update(); //TODO Defender must be before attacker and economist, to ensure defenders are available. Fix this.
@@ -146,7 +169,7 @@ void Primary::onUnitDiscover(BWAPI::Unit* unit)
 	{
 		// Check type.
 		BWAPI::UnitType unitType = unit->getType();
-		if (unitType == BWAPI::UnitTypes::Resource_Vespene_Geyser)
+		if (utilUnit::isGeyser(unitType))
 			geologist.addGeyser(unit);
 		else if (unitType.isRefinery())
 			geologist.removeGeyser(unit);
@@ -222,6 +245,7 @@ void Primary::onUnitDestroy(BWAPI::Unit* unit)
 			else
 			{
 				// Remove monitoring.
+				morpher.removeMorph(unit);
 				if (unitType.isBuilding())
 					architect.removeConstruct(unit);
 				else
@@ -239,11 +263,14 @@ void Primary::onUnitDestroy(BWAPI::Unit* unit)
 void Primary::onUnitMorph(BWAPI::Unit* unit)
 {
 	// Verify unit.
-	if (utilUnit::isOwned(unit) &&
-		unit->getType().isRefinery())
+	if (utilUnit::isOwned(unit))
 	{
-		geologist.removeGeyser(unit);
-		economist.addRefinery(unit);
+		// Monitor morpher.
+		morpher.addMorph(unit);
+
+		// Notify geologist.
+		if (unit->getType().isRefinery())
+			geologist.removeGeyser(unit);
 	}
 }
 
@@ -268,7 +295,7 @@ void Primary::onUnitComplete(BWAPI::Unit *unit)
 		BWAPI::UnitType unitType = unit->getType();
 		if (utilUnit::isOwned(unit))
 		{
-			// Notify architect.
+			// Notify producers.
 			if (unitType.isBuilding())
 				architect.removeConstruct(unit);
 			else
@@ -340,7 +367,7 @@ void Primary::drawGeologist()
 	// Draw geysers' outlines.
 	BOOST_FOREACH(BWTA::Region * region, BWTA::getRegions())
 		BOOST_FOREACH(BWAPI::Unit * geyser, geologist.getGeysers(region))
-			drawBuildingOutline(geologist.getGeyserPosition(geyser), geyser->getInitialType());
+			drawBuildingOutline(geologist.getGeyserPosition(geyser), BWAPI::UnitTypes::Resource_Vespene_Geyser);
 }
 
 

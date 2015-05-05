@@ -22,6 +22,7 @@ Economist::~Economist()
 // Expands workforce and supply.
 void Economist::update()
 {
+	/*
 	// Monitor refineries.
 	utilUnit::UnitList::iterator it = refineries.begin(), end = refineries.end();
 	while (it != end)
@@ -41,6 +42,7 @@ void Economist::update()
 		else
 			it++;
 	}
+	*/
 
 	/*
 	//TODO Early gas harvesting implementation.
@@ -62,7 +64,7 @@ void Economist::update()
 			desiredHarvesters = gatherer->getRefineries(region).size() * REFINERY_SATURATION;
 
 		// Train miners as needed.
-		if (vassal->workforce() + recruiter->scheduled(UNIT_WORKER) < desiredMiners + desiredHarvesters)
+		if (vassal->workforce() + accountant->scheduled(UNIT_WORKER) < desiredMiners + desiredHarvesters)
 			recruiter->scheduleTraining(UNIT_WORKER, vassal->getDepot());
 	}
 
@@ -78,7 +80,7 @@ void Economist::update()
 		{
 			// Build supply as needed.
 			if (accountant->supply() < MIN_SUPPLY &&
-				architect->scheduled(UNIT_SUPPLY) == 0)
+				accountant->scheduled(UNIT_SUPPLY) == 0)
 				architect->scheduleBuilding(UNIT_SUPPLY, headquarters->getDepot()->getTilePosition());
 		}
 

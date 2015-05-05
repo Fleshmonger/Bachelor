@@ -84,7 +84,7 @@ bool Planner::produce(BWAPI::UnitType unitType)
 					{
 						// Schedule geyser.
 						BWAPI::Unit * geyser = *geysers.begin();
-						return architect->scheduleBuilding(unitType, geologist->getGeyserPosition(geyser));
+						return architect->scheduleBuilding(unitType, geologist->getGeyserPosition(geyser), vassal->getIdleWorker());
 					}
 				}
 

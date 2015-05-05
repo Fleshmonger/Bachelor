@@ -4,8 +4,8 @@
 // Constructor
 Recruiter::Recruiter(Accountant * accountant) :
 	accountant(accountant),
+	constructions(),
 	trainingSchedule(),
-	constructionSchedule(),
 	typeFactories()
 {
 }
@@ -52,10 +52,7 @@ void Recruiter::addConstruction(BWAPI::Unit * unit)
 			accountant->deallocate(unitType);
 
 			// Insert unit in construction schedule.
-			if (constructionSchedule.count(unitType) > 0)
-				constructionSchedule[unitType]++;
-			else
-				constructionSchedule[unitType] = 1;
+			constructions.insert(unit);
 		}
 	}
 }
@@ -65,11 +62,19 @@ void Recruiter::addConstruction(BWAPI::Unit * unit)
 void Recruiter::removeConstruction(BWAPI::Unit * unit)
 {
 	// Verify unit.
-	if (utilUnit::isOwned(unit) &&
-		constructionSchedule.count(unit->getType()))
-		constructionSchedule[unit->getType()]--;
+	if (contains(unit))
+	{
+		constructions.erase(unit);
+		accountant->removeSchedule(unit->getType());
+	}
 }
 
+
+// Returns whether the unit is monitored.
+bool Recruiter::contains(BWAPI::Unit * unit)
+{
+	return constructions.count(unit) > 0;
+}
 
 // Attempts to train a unit at an available facility and returns true if successful.
 bool Recruiter::scheduleTraining(BWAPI::UnitType unitType)
@@ -101,12 +106,13 @@ bool Recruiter::scheduleTraining(BWAPI::UnitType unitType, BWAPI::Unit * factory
 		!utilUnit::isCommanded(factory) &&
 		factory->train(unitType))				// Attempt training.
 	{
-		// Schedule training.
+		// Schedule.
+		accountant->addSchedule(unitType);
+		accountant->allocate(unitType);
 		if (trainingSchedule.count(unitType) > 0)
 			trainingSchedule[unitType]++;
 		else
 			trainingSchedule[unitType] = 1;
-		accountant->allocate(unitType);
 		return true;
 	}
 	else
@@ -114,20 +120,8 @@ bool Recruiter::scheduleTraining(BWAPI::UnitType unitType, BWAPI::Unit * factory
 }
 
 
-// Returns the amount of scheduled units of the unit type.
-unsigned int Recruiter::scheduled(BWAPI::UnitType unitType)
-{
-	int scheduled = 0;
-	if (trainingSchedule.count(unitType) > 0)
-		scheduled += trainingSchedule[unitType];
-	if (constructionSchedule.count(unitType) > 0)
-		scheduled += constructionSchedule[unitType];
-	return scheduled;
-}
-
-
 // Returns current factories of the specified type.
-//TODO Is this needed?
+//TODO Redundant?
 utilUnit::UnitSet Recruiter::getFactories(BWAPI::UnitType factoryType)
 {
 	return typeFactories[factoryType];
