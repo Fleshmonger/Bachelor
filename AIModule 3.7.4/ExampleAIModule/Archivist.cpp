@@ -141,7 +141,9 @@ void Archivist::recordUnitStatus(BWAPI::Unit * unit)
 void Archivist::update()
 {
 	// Iterate through units.
-	utilUnit::UnitSet::iterator it = units.begin(), end = units.end();
+	utilUnit::UnitSet::iterator
+		it = units.begin(),
+		end = units.end();
 	while (it != end)
 	{
 		// Update unit state.
@@ -155,7 +157,10 @@ void Archivist::update()
 			unitType &&
 			!unitType.canMove() &&
 			!unitType.isFlyingBuilding())
+		{
 			clearUnit(unit);
+			end = units.end();
+		}
 	}
 
 	// Verify geysers.
@@ -166,9 +171,9 @@ void Archivist::update()
 	{
 		// Verify geyser.
 		BWAPI::Unit * geyser = *geysersIt;
-		if (types[geyser].isRefinery())
+		if (utilUnit::isEnemy(geyser))
 		{
-			// Move geyser to refinery.
+			// Move geyser to enemy refineries.
 			geysersIt = geysers.erase(geysersIt);
 			refineries.insert(geyser);
 			buildings.insert(geyser);

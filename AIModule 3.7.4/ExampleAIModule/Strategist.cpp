@@ -28,5 +28,5 @@ void Strategist::update()
 	if (headquarters &&
 		headquarters->getDepot() &&
 		accountant->scheduled(INFANTRY_FACTORY) + recruiter->getFactories(INFANTRY_FACTORY).size() < MAX_FACTORIES)
-		architect->scheduleBuilding(INFANTRY_FACTORY, headquarters->getDepot()->getTilePosition());
+		architect->scheduleBuilding(INFANTRY_FACTORY, headquarters);
 }

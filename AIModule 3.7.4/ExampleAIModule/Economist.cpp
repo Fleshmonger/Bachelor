@@ -22,39 +22,7 @@ Economist::~Economist()
 // Expands workforce and supply.
 void Economist::update()
 {
-	/*
-	// Monitor refineries.
-	utilUnit::UnitList::iterator it = refineries.begin(), end = refineries.end();
-	while (it != end)
-	{
-		// Verify refinery.
-		BWAPI::Unit * refinery = *it;
-		if (refinery->isCompleted() ||
-			!refinery->exists())
-		{
-			// Completion check.
-			if (refinery->isCompleted())
-				gatherer->addRefinery(refinery);
-
-			// Remove refinery.
-			it = refineries.erase(it);
-		}
-		else
-			it++;
-	}
-	*/
-
-	/*
-	//TODO Early gas harvesting implementation.
-	utilUnit::UnitSet geysers = BWTA::getStartLocation(BWAPI::Broodwar->self())->getGeysers();
-	if (!geysers.empty())
-	{
-		BWAPI::Unit * geyser = *geysers.begin();
-		architect->scheduleRefinery(UNIT_REFINERY, geyser);
-	}
-	*/
-
-	// Command vassals.
+	// Iterate through vassals.
 	BOOST_FOREACH(Vassal * vassal, landlord->getVassals())
 	{
 		BWTA::Region * region = vassal->getRegion();
@@ -81,27 +49,8 @@ void Economist::update()
 			// Build supply as needed.
 			if (accountant->supply() < MIN_SUPPLY &&
 				accountant->scheduled(UNIT_SUPPLY) == 0)
-				architect->scheduleBuilding(UNIT_SUPPLY, headquarters->getDepot()->getTilePosition());
+				architect->scheduleBuilding(UNIT_SUPPLY, headquarters);
 		}
-
-		/*
-		// Expansion check.
-		if (landlord->getVassals().size() < 2 &&
-			architect->scheduled(UNIT_DEPOT) == 0)
-		{
-			// Verify expansion.
-			BWTA::Region * region = nextExpansion();
-			if (region)
-			{
-				std::set<BWTA::BaseLocation*> locations = region->getBaseLocations();
-				if (!locations.empty())
-				{
-					BWTA::BaseLocation * location = *locations.begin();
-					architect->scheduleBuilding(UNIT_DEPOT, location->getTilePosition(), landlord->getIdleWorker(headquarters->getRegion()));
-				}
-			}
-		}
-		*/
 	}
 }
 

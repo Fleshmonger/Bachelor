@@ -50,7 +50,6 @@ void Geologist::addGeyser(BWAPI::Unit * geyser)
 		utilUnit::isGeyser(geyser->getType()))
 	{
 		// Add geyser.
-		BWAPI::Broodwar->sendText("A geyser was added");
 		BWTA::Region * region = BWTA::getRegion(geyser->getTilePosition());
 		regionGeysers[region].insert(geyser);
 		geyserPositions[geyser] = geyser->getTilePosition();

@@ -1,8 +1,8 @@
-﻿Build started 05-05-2015 14:50:07.
+﻿Build started 05-05-2015 20:33:55.
      1>Project "D:\Bachelor\AIModule 3.7.4\ExampleAIModule\ExampleAIModule.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         D:\Programs\Microsoft Visual Studio 9.0\VC\bin\CL.exe /c /I../Source /I"D:\Programs\BWAPI 3.7.4/include" /ID:\Tools\boost_1_57_0 /I/include /I/include /I/include/freetype2 /I/include /Zi /nologo /W3 /WX- /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _WINDOWS /D _USRDLL /D EXAMPLEAIMODULE_EXPORTS /D _WINDLL /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc90.pdb" /Gd /TP /analyze- /errorReport:prompt Primary.cpp
-         Primary.cpp
+         D:\Programs\Microsoft Visual Studio 9.0\VC\bin\CL.exe /c /I../Source /I"D:\Programs\BWAPI 3.7.4/include" /ID:\Tools\boost_1_57_0 /I/include /I/include /I/include/freetype2 /I/include /Zi /nologo /W3 /WX- /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _WINDOWS /D _USRDLL /D EXAMPLEAIMODULE_EXPORTS /D _WINDLL /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc90.pdb" /Gd /TP /analyze- /errorReport:prompt Archivist.cpp
+         Archivist.cpp
        Link:
          D:\Programs\Microsoft Visual Studio 9.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\Bachelor\AIModule 3.7.4\Release\AIBotModule.dll" /INCREMENTAL:NO /NOLOGO "D:\Programs\BWAPI 3.7.4/lib/BWAPI.lib" "D:\Programs\BWAPI 3.7.4/lib/BWTA.lib" "D:\Programs\BWAPI 3.7.4/lib/tinyxml.lib" "D:\Programs\BWAPI 3.7.4/lib/CGAL-vc90-mt.lib" "D:\Programs\BWAPI 3.7.4/lib/libboost_thread-vc90-mt-1_40.lib" "D:\Programs\BWAPI 3.7.4/lib/gmp-vc90-mt.lib" "D:\Programs\BWAPI 3.7.4/lib/mpfr-vc90-mt.lib" kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Release\AIBotModule.dll.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /PDB:"D:\Bachelor\AIModule 3.7.4\Release\AIBotModule.pdb" /SUBSYSTEM:WINDOWS /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\Bachelor\AIModule 3.7.4\Release\AIBotModule.lib" /MACHINE:X86 /DLL Release\Accountant.obj
          Release\Architect.obj
@@ -39,4 +39,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:04.52
+Time Elapsed 00:00:03.77

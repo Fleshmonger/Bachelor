@@ -70,19 +70,20 @@ bool Architect::scheduleBuilding(BWAPI::UnitType buildingType, BWAPI::TilePositi
 bool Architect::scheduleBuilding(BWAPI::UnitType buildingType, BWAPI::TilePosition buildingLocation, BWAPI::Unit * builder)
 {
 	// Verify schedule.
-	if (buildingType &&										// Verify building type.
+	if (buildingType &&																		// Verify building type.
 		buildingType.isBuilding() &&
-		buildingLocation &&									// Verify building location.
-		accountant->isAffordable(buildingType) &&			// Verify resources.
-		utilUnit::isOwned(builder) &&						// Verify builder.
+		buildingLocation &&																	// Verify building location.
+		BWAPI::Broodwar->canBuildHere(builder, buildingLocation, buildingType, false) &&
+		accountant->isAffordable(buildingType) &&											// Verify resources.
+		utilUnit::isOwned(builder) &&														// Verify builder.
 		builder->exists() &&
 		BWAPI::Broodwar->canMake(builder, buildingType))
 	{
 		// Order the construction.
 		landlord->employWorker(builder, TASK_BUILD);
 		buildSchedule.insert(std::make_pair(buildingType, std::make_pair(builder, buildingLocation)));
-		accountant->allocate(buildingType);
 		commandBuild(builder, buildingLocation, buildingType);
+		accountant->allocate(buildingType);
 		accountant->addSchedule(buildingType);
 		return true;
 	}
@@ -132,8 +133,8 @@ void Architect::removeBuild(BWAPI::UnitType buildingType, BWAPI::TilePosition bu
 				std::pair<BWAPI::UnitType, std::pair<BWAPI::Unit*, BWAPI::TilePosition>> build = *it;
 				BWAPI::Unit * builder = build.second.first;
 				landlord->dismissWorker(builder);
-				accountant->deallocate(build.first);
 				buildSchedule.erase(it);
+				accountant->deallocate(build.first);
 				accountant->removeSchedule(buildingType);
 				return;
 			}
@@ -210,7 +211,7 @@ void Architect::update()
 			++it;
 			if (builder &&
 				builder->exists() &&
-				//BWAPI::Broodwar->canBuildHere(builder, buildTarget, buildingType) &&
+				BWAPI::Broodwar->canBuildHere(builder, buildingLocation, buildingType, false) &&
 				BWAPI::Broodwar->canMake(builder, buildingType))
 				commandBuild(builder, buildingLocation, buildingType);
 			else
@@ -218,19 +219,22 @@ void Architect::update()
 		}
 	}
 
-	/*
 	// Remove all invalid construction orders.
 	{
-		std::multimap<BWAPI::UnitType, BWAPI::Unit*>::iterator it = constructSchedule.begin();
-		while (it != constructSchedule.end())
+		utilUnit::UnitSet::iterator
+			it = constructions.begin(),
+			end = constructions.end();
+		while (it != end)
 		{
-			BWAPI::Unit * building = it->second;
+			BWAPI::Unit * building = *it;
 			++it;
 			if (!building || !building->exists())
+			{
 				removeConstruct(building);
+				end = constructions.end();
+			}
 		}
 	}
-	*/
 
 }
 
