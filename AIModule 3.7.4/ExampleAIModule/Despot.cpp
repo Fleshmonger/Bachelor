@@ -20,21 +20,14 @@ Despot::Despot(Landlord * landlord, Recruiter * recruiter, Gatherer * gatherer, 
 	planner->enqueue(BWAPI::UnitTypes::Protoss_Probe);
 	planner->enqueue(BWAPI::UnitTypes::Protoss_Nexus);
 	planner->enqueue(BWAPI::UnitTypes::Protoss_Probe);
+	planner->enqueue(BWAPI::UnitTypes::Protoss_Gateway);
 	planner->enqueue(BWAPI::UnitTypes::Protoss_Assimilator);
 	planner->enqueue(BWAPI::UnitTypes::Protoss_Probe);
 	planner->enqueue(BWAPI::UnitTypes::Protoss_Probe);
+	planner->enqueue(BWAPI::UnitTypes::Protoss_Cybernetics_Core);
 	planner->enqueue(BWAPI::UnitTypes::Protoss_Probe);
 	planner->enqueue(BWAPI::UnitTypes::Protoss_Probe);
-	planner->enqueue(BWAPI::UnitTypes::Protoss_Probe);
-	planner->enqueue(BWAPI::UnitTypes::Protoss_Probe);
-	planner->enqueue(BWAPI::UnitTypes::Protoss_Probe);
-	planner->enqueue(BWAPI::UnitTypes::Protoss_Probe);
-	planner->enqueue(BWAPI::UnitTypes::Protoss_Probe);
-	planner->enqueue(BWAPI::UnitTypes::Protoss_Probe);
-	planner->enqueue(BWAPI::UnitTypes::Protoss_Probe);
-	planner->enqueue(BWAPI::UnitTypes::Protoss_Probe);
-	planner->enqueue(BWAPI::UnitTypes::Protoss_Assimilator);
-	planner->enqueue(BWAPI::UnitTypes::Protoss_Probe);
+	planner->enqueue(BWAPI::UnitTypes::Protoss_Gateway);
 }
 
 

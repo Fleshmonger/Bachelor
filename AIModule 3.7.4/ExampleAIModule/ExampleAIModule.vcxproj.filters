@@ -16,6 +16,9 @@
     <Filter Include="Managers\Landlord\Vassal">
       <UniqueIdentifier>{4eb1ca3c-beec-4dd6-8aed-183ebee3bf9c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Managers\BaseManager">
+      <UniqueIdentifier>{4bb9c7ff-7683-4f4d-8870-7ca2df628e7b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="UtilUnit.cpp">
@@ -86,6 +89,12 @@
     <ClCompile Include="Morpher.cpp">
       <Filter>Managers</Filter>
     </ClCompile>
+    <ClCompile Include="BaseManager.cpp">
+      <Filter>Managers\BaseManager</Filter>
+    </ClCompile>
+    <ClCompile Include="ReserveMap.cpp">
+      <Filter>Managers\BaseManager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="UtilUnit.h">
@@ -154,6 +163,12 @@
     </ClInclude>
     <ClInclude Include="Morpher.h">
       <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseManager.h">
+      <Filter>Managers\BaseManager</Filter>
+    </ClInclude>
+    <ClInclude Include="ReserveMap.h">
+      <Filter>Managers\BaseManager</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

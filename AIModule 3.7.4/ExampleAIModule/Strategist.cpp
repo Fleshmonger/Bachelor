@@ -21,7 +21,7 @@ Strategist::~Strategist()
 void Strategist::update()
 {
 	// Train new troops.
-	recruiter->scheduleTraining(INFANTRY_UNIT);
+	recruiter->scheduleTraining(BWAPI::UnitTypes::Protoss_Dragoon);
 
 	// Build gateways.
 	Vassal * headquarters = landlord->getHeadquarters();

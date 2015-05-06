@@ -8,6 +8,7 @@
 #include "UtilUnit.h"
 #include "Accountant.h"
 #include "Archivist.h"
+#include "BaseManager.h"
 #include "Geologist.h"
 #include "LandLord.h"
 #include "Recruiter.h"
@@ -36,6 +37,7 @@ class Primary : public BWAPI::AIModule
 private:
 	Accountant		accountant;
 	Archivist		archivist;
+	BaseManager		baseManager;
 	Geologist		geologist;
 	Landlord		landlord;
 	Recruiter		recruiter;
@@ -75,6 +77,7 @@ public:
 	virtual void onSaveGame(std::string gameName);
 	virtual void onUnitComplete(BWAPI::Unit *unit);
 
+	void drawBaseManager();
 	void drawGatherer();
 	void drawGeologist();
 	void drawLandlord();

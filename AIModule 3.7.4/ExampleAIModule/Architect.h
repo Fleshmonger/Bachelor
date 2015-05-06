@@ -5,6 +5,7 @@
 #include "UtilMap.h"
 #include "UtilUnit.h"
 #include "Accountant.h"
+#include "BaseManager.h"
 #include "Landlord.h"
 
 
@@ -15,6 +16,7 @@ class Architect
 {
 private:
 	Accountant * accountant;
+	BaseManager * baseManager;
 	Landlord * landlord;
 
 	utilUnit::UnitSet constructions;
@@ -22,7 +24,7 @@ private:
 	std::multimap<BWAPI::UnitType, std::pair<BWAPI::Unit*, BWAPI::TilePosition>> buildSchedule;
 
 public:
-	Architect(Accountant * accountant, Landlord * landlord);
+	Architect(Accountant * accountant, BaseManager * baseManager, Landlord * landlord);
 	~Architect();
 
 	void commandBuild(BWAPI::Unit * builder, BWAPI::TilePosition buildingLocation, BWAPI::UnitType buildingType);

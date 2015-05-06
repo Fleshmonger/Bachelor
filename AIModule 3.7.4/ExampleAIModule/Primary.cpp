@@ -5,13 +5,14 @@
 Primary::Primary() :
 	accountant(),
 	archivist(),
+	baseManager(),
 	geologist(),
 	landlord(),
 	recruiter(&accountant),
 	combatJudge(&archivist),
 	gatherer(&landlord),
 	settler(&landlord),
-	architect(&accountant, &landlord),
+	architect(&accountant, &baseManager, &landlord),
 	reconnoiter(&archivist, &landlord),
 	morpher(&accountant, &gatherer),
 	planner(&geologist, &landlord, &recruiter, &settler, &architect),
@@ -37,7 +38,6 @@ void Primary::onStart()
 	// BWAPI settings.
 	BWAPI::Broodwar->enableFlag(Flag::UserInput);
 	BWAPI::Broodwar->setLocalSpeed(0);
-	//BWAPI::Broodwar->setLocalSpeed(1);
 
 	// Read map information.
 	BWTA::readMap();
@@ -45,6 +45,7 @@ void Primary::onStart()
 
 	// Initialize managers
 	archivist.initialize();
+	baseManager.initialize();
 	geologist.initialize();
 }
 
@@ -90,28 +91,10 @@ void Primary::onFrame()
 		return;
 
 	// Display.
+	//drawBaseManager();
 	//drawTerrainData();
-	drawVassals();
+	//drawVassals();
 	//drawGeologist();
-	BOOST_FOREACH(Vassal * vassal, landlord.getVassals())
-	{
-		BOOST_FOREACH(BWAPI::Unit * geyser, geologist.getGeysers(vassal->getRegion()))
-		{
-			// Draw outline.
-			BWAPI::TilePosition pos = geologist.getGeyserPosition(geyser);
-			drawBuildingOutline(pos, BWAPI::UnitTypes::Resource_Vespene_Geyser);
-
-			// Draw position.
-			BWAPI::Broodwar->drawTextMap(
-				pos.x() * TILE_SIZE,
-				pos.y() * TILE_SIZE,
-				"Pos: (%d, %d)",
-				pos.x(),
-				pos.y()
-				);
-
-		}
-	}
 	drawGatherer();
 	drawLandlord();
 	drawPlanner();
@@ -205,7 +188,10 @@ void Primary::onUnitCreate(BWAPI::Unit* unit)
 		{
 			// Check type.
 			if (unitType.isBuilding())
+			{
+				baseManager.addBuilding(unit);
 				architect.completeBuild(unit);
+			}
 			else if (!utilUnit::isMisc(unitType))
 				recruiter.addConstruction(unit);
 		}
@@ -230,6 +216,8 @@ void Primary::onUnitDestroy(BWAPI::Unit* unit)
 			if (unit->isCompleted())
 			{
 				// Undesignate.
+				if (unitType.isBuilding())
+					baseManager.removeBuilding(unit);
 				if (unitType.isWorker())
 				{
 					landlord.removeWorker(unit);
@@ -316,6 +304,21 @@ void Primary::onUnitComplete(BWAPI::Unit *unit)
 		else if (unitType == BWAPI::UnitTypes::Resource_Vespene_Geyser)
 			geologist.addGeyser(unit);
 	}
+}
+
+
+// Draws baseManager data for debugging.
+void Primary::drawBaseManager()
+{
+	for (int i = 0; i < BWAPI::Broodwar->mapWidth(); i++)
+		for (int j = 0; j < BWAPI::Broodwar->mapHeight(); j++)
+			if (baseManager.isReserved(i, j))
+				BWAPI::Broodwar->drawLineMap(
+				i * TILE_SIZE,
+				j * TILE_SIZE,
+				(i + 1) * TILE_SIZE,
+				(j + 1) * TILE_SIZE,
+				BWAPI::Colors::Yellow);
 }
 
 

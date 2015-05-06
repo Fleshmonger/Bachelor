@@ -2,8 +2,9 @@
 
 
 // Constructor
-Architect::Architect(Accountant * accountant, Landlord * landlord) :
+Architect::Architect(Accountant * accountant, BaseManager * baseManager, Landlord * landlord) :
 	accountant(accountant),
+	baseManager(baseManager),
 	landlord(landlord),
 	constructions(),
 	buildSchedule()
@@ -66,7 +67,6 @@ bool Architect::scheduleBuilding(BWAPI::UnitType buildingType, BWAPI::TilePositi
 
 
 // Attempts to schedule a building at the location with the builder and returns true if it succeeds.
-//TODO Check if the building can actually be placed at the building location?
 bool Architect::scheduleBuilding(BWAPI::UnitType buildingType, BWAPI::TilePosition buildingLocation, BWAPI::Unit * builder)
 {
 	// Verify schedule.
@@ -87,24 +87,8 @@ bool Architect::scheduleBuilding(BWAPI::UnitType buildingType, BWAPI::TilePositi
 		accountant->addSchedule(buildingType);
 		return true;
 	}
-	else if (buildingType.isRefinery())
-	{
-		if (!buildingType)
-			BWAPI::Broodwar->sendText("BuildingType");
-		if (!buildingType.isBuilding())
-			BWAPI::Broodwar->sendText("isBuilding");
-		if (!buildingLocation)
-			BWAPI::Broodwar->sendText("buildingLocation");
-		if (!accountant->isAffordable(buildingType))
-			BWAPI::Broodwar->sendText("isAffordable");
-		if (!utilUnit::isOwned(builder))
-			BWAPI::Broodwar->sendText("isOwned");
-		if (!builder->exists())
-			BWAPI::Broodwar->sendText("exists");
-		if (!BWAPI::Broodwar->canMake(builder, buildingType))
-			BWAPI::Broodwar->sendText("canMake");
-	}
-	return false;
+	else
+		return false;
 }
 
 
@@ -247,13 +231,13 @@ bool Architect::contains(BWAPI::Unit * unit)
 
 
 // Returns whether or not a given building type can be built at a given location.
-//TODO Reimplement harvesting zones.
 bool Architect::validBuildLocation(BWAPI::Unit * builder, BWAPI::TilePosition location, BWAPI::UnitType buildingType)
 {
 	return
 		location &&
 		location.isValid() &&
 		!landlord->getHarvestingZone(BWTA::getRegion(location)).contains(location, buildingType) &&
+		!baseManager->isReserved(location, buildingType) &&
 		BWAPI::Broodwar->canBuildHere(builder, location, buildingType, false);
 }
 
@@ -261,6 +245,7 @@ bool Architect::validBuildLocation(BWAPI::Unit * builder, BWAPI::TilePosition lo
 // Returns the nearest tileposition in a spiral pattern which is buildable.
 BWAPI::TilePosition Architect::getBuildLocation(BWAPI::Unit * builder, BWAPI::TilePosition desiredLocation, BWAPI::UnitType buildingType)
 {
+	// Verify input.
 	if (buildingType && desiredLocation)
 	{
 		// Check in a spiral pattern.
@@ -269,12 +254,12 @@ BWAPI::TilePosition Architect::getBuildLocation(BWAPI::Unit * builder, BWAPI::Ti
 		while (length < BWAPI::Broodwar->mapWidth() || length < BWAPI::Broodwar->mapHeight())
 		{
 			// Check the current tile.
-			BWAPI::TilePosition tile = BWAPI::TilePosition::TilePosition(desiredLocation.x() + dx, desiredLocation.y() + dy);
+			BWAPI::TilePosition tile = BWAPI::TilePosition(desiredLocation.x() + dx, desiredLocation.y() + dy);
 			if (validBuildLocation(builder, tile, buildingType))
 				return tile;
 
 			// Find next tile.
-			if (dx == dy)
+			if (dx == dy && dx == length)
 				length++;
 			if (horizontal)
 			{

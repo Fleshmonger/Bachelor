@@ -100,6 +100,7 @@
     <ClCompile Include="Archivist.cpp" />
     <ClCompile Include="ArmyManager.cpp" />
     <ClCompile Include="Attacker.cpp" />
+    <ClCompile Include="BaseManager.cpp" />
     <ClCompile Include="Defender.cpp" />
     <ClCompile Include="Despot.cpp" />
     <ClCompile Include="Dll.cpp" />
@@ -113,6 +114,7 @@
     <ClCompile Include="Recruiter.cpp" />
     <ClCompile Include="Reconnoiter.cpp" />
     <ClCompile Include="CombatJudge.cpp" />
+    <ClCompile Include="ReserveMap.cpp" />
     <ClCompile Include="Settler.cpp" />
     <ClCompile Include="Strategist.cpp" />
     <ClCompile Include="UtilMap.cpp" />
@@ -126,6 +128,7 @@
     <ClInclude Include="Archivist.h" />
     <ClInclude Include="ArmyManager.h" />
     <ClInclude Include="Attacker.h" />
+    <ClInclude Include="BaseManager.h" />
     <ClInclude Include="Defender.h" />
     <ClInclude Include="Despot.h" />
     <ClInclude Include="Economist.h" />
@@ -138,6 +141,7 @@
     <ClInclude Include="Recruiter.h" />
     <ClInclude Include="Reconnoiter.h" />
     <ClInclude Include="CombatJudge.h" />
+    <ClInclude Include="ReserveMap.h" />
     <ClInclude Include="Settler.h" />
     <ClInclude Include="Strategist.h" />
     <ClInclude Include="UtilMap.h" />

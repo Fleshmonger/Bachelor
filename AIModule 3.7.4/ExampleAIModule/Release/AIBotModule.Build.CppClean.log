@@ -1,6 +1,5 @@
 d:\bachelor\aimodule 3.7.4\release\aibotmodule.lib
 d:\bachelor\aimodule 3.7.4\release\aibotmodule.exp
-d:\bachelor\aimodule 3.7.4\exampleaimodule\release\utilmap.obj
 d:\bachelor\aimodule 3.7.4\exampleaimodule\release\strategist.obj
 d:\bachelor\aimodule 3.7.4\exampleaimodule\release\settler.obj
 d:\bachelor\aimodule 3.7.4\exampleaimodule\release\combatjudge.obj
@@ -8,6 +7,7 @@ d:\bachelor\aimodule 3.7.4\exampleaimodule\release\reconnoiter.obj
 d:\bachelor\aimodule 3.7.4\exampleaimodule\release\recruiter.obj
 d:\bachelor\aimodule 3.7.4\exampleaimodule\release\primary.obj
 d:\bachelor\aimodule 3.7.4\exampleaimodule\release\planner.obj
+d:\bachelor\aimodule 3.7.4\exampleaimodule\release\morpher.obj
 d:\bachelor\aimodule 3.7.4\exampleaimodule\release\gatherer.obj
 d:\bachelor\aimodule 3.7.4\exampleaimodule\release\landlord.obj
 d:\bachelor\aimodule 3.7.4\exampleaimodule\release\geologist.obj
@@ -23,7 +23,10 @@ d:\bachelor\aimodule 3.7.4\exampleaimodule\release\accountant.obj
 d:\bachelor\aimodule 3.7.4\exampleaimodule\release\taskmaster.obj
 d:\bachelor\aimodule 3.7.4\exampleaimodule\release\vassal.obj
 d:\bachelor\aimodule 3.7.4\exampleaimodule\release\utilunit.obj
+d:\bachelor\aimodule 3.7.4\exampleaimodule\release\utilmap.obj
 d:\bachelor\aimodule 3.7.4\exampleaimodule\release\vc90.pdb
+d:\bachelor\aimodule 3.7.4\exampleaimodule\release\reservemap.obj
+d:\bachelor\aimodule 3.7.4\exampleaimodule\release\basemanager.obj
 d:\bachelor\aimodule 3.7.4\release\aibotmodule.dll
 d:\bachelor\aimodule 3.7.4\exampleaimodule\release\aibotmodule.dll.intermediate.manifest
 d:\bachelor\aimodule 3.7.4\exampleaimodule\release\aibotmodule.write.1.tlog
