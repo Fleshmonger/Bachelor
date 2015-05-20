@@ -17,14 +17,14 @@ Settler::~Settler()
 // Returns the next region for expansion.
 BWTA::Region * Settler::nextExpansion()
 {
-	// Verify headquarters.
-	Vassal * headquarters = landlord->getHeadquarters();
-	if (headquarters &&
-		headquarters->getRegion())
+	// Verify main base.
+	Vassal * main = landlord->getMain();
+	if (main &&
+		main->getRegion())
 	{
 		// Initialize queue.
 		std::list<BWTA::Region*> queue;
-		queue.push_front(headquarters->getRegion());
+		queue.push_front(main->getRegion());
 
 		// Iterate through queue.
 		while (!queue.empty())

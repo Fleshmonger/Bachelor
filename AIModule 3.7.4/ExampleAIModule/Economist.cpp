@@ -37,19 +37,19 @@ void Economist::update()
 	}
 
 
-	// Verify headquarters.
-	Vassal * headquarters = landlord->getHeadquarters();
-	if (headquarters)
+	// Verify main base.
+	Vassal * main = landlord->getMain();
+	if (main)
 	{
-		// Verify headquarters depot.
-		BWAPI::Unit * depot = headquarters->getDepot();
+		// Verify mains depot.
+		BWAPI::Unit * depot = main->getDepot();
 		if (depot &&
 			depot->exists())
 		{
 			// Build supply as needed.
 			if (accountant->supply() < MIN_SUPPLY &&
 				accountant->scheduled(UNIT_SUPPLY) == 0)
-				architect->scheduleBuilding(UNIT_SUPPLY, headquarters);
+				architect->scheduleBuilding(UNIT_SUPPLY, main);
 		}
 	}
 }
@@ -72,20 +72,21 @@ void Economist::addRefinery(BWAPI::Unit * refinery)
 }
 
 
+/*
 // Returns the next region for expansion.
 BWTA::Region * Economist::nextExpansion()
 {
 	// Verify headquarters.
-	Vassal * headquarters = landlord->getHeadquarters();
-	if (headquarters &&
-		headquarters->getRegion())
+	Vassal * main = landlord->getMain();
+	if (main &&
+		main->getRegion())
 	{
 		// Search through chokepoints.
-		BOOST_FOREACH(BWTA::Chokepoint * border, landlord->getHeadquarters()->getRegion()->getChokepoints())
+		BOOST_FOREACH(BWTA::Chokepoint * border, landlord->getMain()->getRegion()->getChokepoints())
 		{
 			// Verify chokepoint.
 			BWTA::Region * region;
-			if (border->getRegions().first == headquarters->getRegion())
+			if (border->getRegions().first == main->getRegion())
 				region = border->getRegions().second;
 			else
 				region = border->getRegions().first;
@@ -97,3 +98,4 @@ BWTA::Region * Economist::nextExpansion()
 	// No candidate found.
 	return NULL;
 }
+*/

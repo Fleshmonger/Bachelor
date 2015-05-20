@@ -89,10 +89,10 @@ void Attacker::update()
 		fighters.insert(ready.begin(), ready.end());
 		armyManager->assignUnits(ready, DUTY_ATTACK_FIGHT);
 	}
-	else if (landlord->getHeadquarters())
+	else if (landlord->getMain())
 	{
 		// Aquire depot.
-		BWAPI::Unit * depot = landlord->getHeadquarters()->getDepot();
+		BWAPI::Unit * depot = landlord->getMain()->getDepot();
 
 		// Verify depot.
 		if (depot &&

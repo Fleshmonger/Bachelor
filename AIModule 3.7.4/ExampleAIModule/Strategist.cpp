@@ -21,12 +21,13 @@ Strategist::~Strategist()
 void Strategist::update()
 {
 	// Train new troops.
-	recruiter->scheduleTraining(BWAPI::UnitTypes::Protoss_Dragoon);
+	recruiter->scheduleTraining(BWAPI::UnitTypes::Protoss_Zealot);
+	//recruiter->scheduleTraining(BWAPI::UnitTypes::Protoss_Dragoon);
 
 	// Build gateways.
-	Vassal * headquarters = landlord->getHeadquarters();
-	if (headquarters &&
-		headquarters->getDepot() &&
+	Vassal * main = landlord->getMain();
+	if (main &&
+		main->getDepot() &&
 		accountant->scheduled(INFANTRY_FACTORY) + recruiter->getFactories(INFANTRY_FACTORY).size() < MAX_FACTORIES)
-		architect->scheduleBuilding(INFANTRY_FACTORY, headquarters);
+		architect->scheduleBuilding(INFANTRY_FACTORY, main);
 }

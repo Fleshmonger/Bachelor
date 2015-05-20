@@ -50,12 +50,12 @@ void Reconnoiter::update()
 		if (target)
 		{
 			// Retrieve Scout
-			Vassal * headquarters = landlord->getHeadquarters();
+			Vassal * main = landlord->getMain();
 			if ((!scout || !scout->exists()) &&
-				headquarters &&
-				headquarters->workforce() >= MIN_WORKFORCE)
+				main &&
+				main->workforce() >= MIN_WORKFORCE)
 			{
-				scout = headquarters->getIdleWorker();
+				scout = main->getIdleWorker();
 				landlord->removeWorker(scout);
 			}
 

@@ -11,7 +11,9 @@
 class Landlord
 {
 private:
-	Vassal * headquarters;
+	Vassal
+		* main,
+		* natural;
 	std::set<Vassal*>						vassals;
 	std::map<BWAPI::Unit*, BWTA::Region*>	workerRegion;
 	std::map<BWTA::Region*, Vassal*>		regionVassal;
@@ -31,7 +33,8 @@ public:
 	bool contains(BWTA::Region * region);
 
 	utilMap::Zone getHarvestingZone(BWTA::Region * region);
-	Vassal * getHeadquarters();
+	Vassal * getMain();
+	Vassal * getNatural();
 	Vassal * getVassal(BWTA::Region * region);
 	std::set<Vassal*> getVassals();
 

@@ -41,6 +41,6 @@ public:
 	void update();
 	void addRefinery(BWAPI::Unit * refinery);
 
-	BWTA::Region * nextExpansion();
+	//BWTA::Region * nextExpansion();
 };
 

@@ -8,6 +8,10 @@
 #include "Architect.h"
 
 
+enum Base { BASE_ANY, BASE_NATURAL, BASE_MAIN };
+typedef std::pair<BWAPI::UnitType, Base> Build;
+
+
 class Planner
 {
 private:
@@ -17,7 +21,7 @@ private:
 	Settler		* settler;
 	Architect	* architect;
 
-	std::list<BWAPI::UnitType> buildOrder;
+	std::list<Build> buildOrder;
 
 public:
 	Planner(Geologist * geologist, Landlord * landlord, Recruiter * recruiter, Settler * settler, Architect * architect);
@@ -25,10 +29,11 @@ public:
 
 	void update();
 	void enqueue(BWAPI::UnitType unitType);
+	void enqueue(BWAPI::UnitType unitType, Base base);
 
 	bool empty();
-	bool produce(BWAPI::UnitType unitType);
+	bool produce(Build);
 
-	std::list<BWAPI::UnitType> getBuildOrder();
+	std::list<Build> getBuildOrder();
 };
 

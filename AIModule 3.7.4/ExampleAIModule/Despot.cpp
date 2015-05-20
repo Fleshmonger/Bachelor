@@ -11,23 +11,50 @@ Despot::Despot(Landlord * landlord, Recruiter * recruiter, Gatherer * gatherer, 
 	economist(economist),
 	strategist(strategist)
 {
+	// Load default opening build-order.
 	planner->enqueue(BWAPI::UnitTypes::Protoss_Probe);
 	planner->enqueue(BWAPI::UnitTypes::Protoss_Probe);
 	planner->enqueue(BWAPI::UnitTypes::Protoss_Probe);
 	planner->enqueue(BWAPI::UnitTypes::Protoss_Probe);
 	planner->enqueue(BWAPI::UnitTypes::Protoss_Pylon);
-	planner->enqueue(BWAPI::UnitTypes::Protoss_Probe);
-	planner->enqueue(BWAPI::UnitTypes::Protoss_Probe);
-	planner->enqueue(BWAPI::UnitTypes::Protoss_Nexus);
-	planner->enqueue(BWAPI::UnitTypes::Protoss_Probe);
-	planner->enqueue(BWAPI::UnitTypes::Protoss_Gateway);
-	planner->enqueue(BWAPI::UnitTypes::Protoss_Assimilator);
-	planner->enqueue(BWAPI::UnitTypes::Protoss_Probe);
-	planner->enqueue(BWAPI::UnitTypes::Protoss_Probe);
-	planner->enqueue(BWAPI::UnitTypes::Protoss_Cybernetics_Core);
-	planner->enqueue(BWAPI::UnitTypes::Protoss_Probe);
-	planner->enqueue(BWAPI::UnitTypes::Protoss_Probe);
-	planner->enqueue(BWAPI::UnitTypes::Protoss_Gateway);
+
+	// Load opponent specific build-order.
+	BWAPI::Race enemyRace = BWAPI::Broodwar->enemy()->getRace();
+	if (enemyRace == BWAPI::Races::Terran)
+	{
+		// Terran.
+		planner->enqueue(BWAPI::UnitTypes::Protoss_Probe);
+		planner->enqueue(BWAPI::UnitTypes::Protoss_Probe);
+		planner->enqueue(BWAPI::UnitTypes::Protoss_Probe);
+		planner->enqueue(BWAPI::UnitTypes::Protoss_Probe);
+		planner->enqueue(BWAPI::UnitTypes::Protoss_Nexus);
+		planner->enqueue(BWAPI::UnitTypes::Protoss_Probe);
+		planner->enqueue(BWAPI::UnitTypes::Protoss_Probe);
+		planner->enqueue(BWAPI::UnitTypes::Protoss_Gateway);
+	}
+	else if (enemyRace == BWAPI::Races::Protoss)
+	{
+		// Protoss.
+		planner->enqueue(BWAPI::UnitTypes::Protoss_Probe);
+		planner->enqueue(BWAPI::UnitTypes::Protoss_Probe);
+		planner->enqueue(BWAPI::UnitTypes::Protoss_Probe);
+		planner->enqueue(BWAPI::UnitTypes::Protoss_Probe);
+		planner->enqueue(BWAPI::UnitTypes::Protoss_Nexus);
+		planner->enqueue(BWAPI::UnitTypes::Protoss_Gateway);
+		planner->enqueue(BWAPI::UnitTypes::Protoss_Probe);
+		planner->enqueue(BWAPI::UnitTypes::Protoss_Probe);
+		planner->enqueue(BWAPI::UnitTypes::Protoss_Gateway);
+		planner->enqueue(BWAPI::UnitTypes::Protoss_Probe);
+		planner->enqueue(BWAPI::UnitTypes::Protoss_Pylon);
+	}
+	else if (enemyRace == BWAPI::Races::Zerg)
+	{
+		// Zerg.
+	}
+	else
+	{
+		// Random.
+	}
 }
 
 

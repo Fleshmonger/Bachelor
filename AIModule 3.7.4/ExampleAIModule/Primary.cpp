@@ -404,13 +404,13 @@ void Primary::drawPlanner()
 	// Iterate through build order.
 	int line = 0;
 	std::list<BWAPI::UnitType> test;
-	BOOST_FOREACH(BWAPI::UnitType unitType, planner.getBuildOrder())
+	BOOST_FOREACH(Build build, planner.getBuildOrder())
 	{
 		// Draw build entry.
 		BWAPI::Broodwar->drawTextScreen(
 			0,
 			line,
-			unitType.getName().c_str()
+			build.first.getName().c_str()
 			);
 		line += 20;
 	}

@@ -22,10 +22,10 @@ Planner::~Planner()
 // Updates and executes a build-order.
 void Planner::update()
 {
-	// Verify headquarters.
-	Vassal * headquarters = landlord->getHeadquarters();
-	if (headquarters &&
-		headquarters->getDepot())
+	// Verify main base.
+	Vassal * main = landlord->getMain();
+	if (main &&
+		main->getDepot())
 	{
 		// Execute build-order.
 		while (!buildOrder.empty() &&
@@ -38,7 +38,14 @@ void Planner::update()
 // Enqueues an order at the end of the build-order.
 void Planner::enqueue(BWAPI::UnitType unitType)
 {
-	buildOrder.push_back(unitType);
+	enqueue(unitType, BASE_ANY);
+}
+
+
+// Enqueues an order at the end of the build-order.
+void Planner::enqueue(BWAPI::UnitType unitType, Base base)
+{
+	buildOrder.push_back(std::make_pair(unitType, base));
 }
 
 
@@ -50,9 +57,10 @@ bool Planner::empty()
 
 
 // Attempts to schedule the production of a unit and returns whether successful.
-bool Planner::produce(BWAPI::UnitType unitType)
+bool Planner::produce(Build build)
 {
 	// Verify type.
+	BWAPI::UnitType unitType = build.first;
 	if (unitType &&
 		!utilUnit::isMisc(unitType))
 	{
@@ -68,7 +76,7 @@ bool Planner::produce(BWAPI::UnitType unitType)
 					return architect->scheduleBuilding(
 						unitType,
 						(*region->getBaseLocations().begin())->getTilePosition(),
-						landlord->getHeadquarters()->getIdleWorker());
+						landlord->getMain()->getIdleWorker());
 				else
 					return false;
 			}
@@ -92,7 +100,14 @@ bool Planner::produce(BWAPI::UnitType unitType)
 				return false;
 			}
 			else
-				return architect->scheduleBuilding(unitType, landlord->getHeadquarters());
+			{
+				Vassal * vassal;
+				if (build.second == BASE_NATURAL)
+					vassal = landlord->getNatural();
+				else
+					vassal = landlord->getMain();
+				return architect->scheduleBuilding(unitType, vassal);
+			}
 		}
 		else
 			return recruiter->scheduleTraining(unitType);
@@ -103,7 +118,7 @@ bool Planner::produce(BWAPI::UnitType unitType)
 
 
 // Returns a copy of the build order.
-std::list<BWAPI::UnitType> Planner::getBuildOrder()
+std::list<Build> Planner::getBuildOrder()
 {
 	return buildOrder;
 }

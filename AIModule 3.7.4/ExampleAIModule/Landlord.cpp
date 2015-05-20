@@ -3,7 +3,8 @@
 
 // Constructor.
 Landlord::Landlord() :
-	headquarters(),
+	main(),
+	natural(),
 	vassals(),
 	workerRegion(),
 	regionVassal()
@@ -29,9 +30,11 @@ void Landlord::newVassal(BWTA::Region * region)
 		regionVassal[region] = vassal;
 		vassals.insert(vassal);
 
-		// Assign headquarters if there is none.
-		if (!headquarters)
-			headquarters = vassal;
+		// Assign main or natural if there is none.
+		if (!main)
+			main = vassal;
+		else if (!natural)
+			natural = vassal;
 	}
 }
 
@@ -139,10 +142,17 @@ utilMap::Zone Landlord::getHarvestingZone(BWTA::Region * region)
 }
 
 
-// Returns a pointer to the headquarter vassal.
-Vassal * Landlord::getHeadquarters()
+// Returns a pointer to the main base vassal.
+Vassal * Landlord::getMain()
 {
-	return headquarters;
+	return main;
+}
+
+
+// Returns a pointer to the natural expansion vassal.
+Vassal * Landlord::getNatural()
+{
+	return natural;
 }
 
 
