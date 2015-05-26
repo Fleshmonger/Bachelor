@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (MiKTeX 2.9 64-bit) (preloaded format=pdflatex 2015.2.9)  6 MAY 2015 16:08
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (MiKTeX 2.9 64-bit) (preloaded format=pdflatex 2015.2.9)  25 MAY 2015 14:27
 entering extended mode
 **Thesis.tex
 (D:\Bachelor\Thesis\Thesis.tex
@@ -608,7 +608,8 @@ Package hyperref Info: Option `bookmarksopen' set `true' on input line 39.
 Package hyperref Info: Option `bookmarksnumbered' set `true' on input line 39.
 Package hyperref Info: Option `plainpages' set `false' on input line 39.
  (D:\Bachelor\Thesis\Thesis.aux
-(D:\Bachelor\Thesis\Chapter1.aux) (D:\Bachelor\Thesis\Appendix1.aux))
+(D:\Bachelor\Thesis\Introduction.aux) (D:\Bachelor\Thesis\Implementation.aux)
+(D:\Bachelor\Thesis\Conclusion.aux) (D:\Bachelor\Thesis\Appendix1.aux))
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 50.
 LaTeX Font Info:    ... okay on input line 50.
 LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 50.
@@ -664,7 +665,7 @@ LaTeX Font Info:    Try loading font information for T1+cmss on input line 54.
 (D:\Tools\MiKTeX\tex\latex\base\t1cmss.fd
 File: t1cmss.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
-<figures/DTU-logo.pdf, id=39, 38.98846pt x 56.87358pt>
+<figures/DTU-logo.pdf, id=103, 38.98846pt x 56.87358pt>
 File: figures/DTU-logo.pdf Graphic file (type pdf)
 
 <use figures/DTU-logo.pdf>
@@ -699,7 +700,7 @@ File: ulasy.fd 1998/08/17 v2.2e LaTeX symbol font definitions
 ]) (D:\Bachelor\Thesis\Preface.tex [3] [4
 
 ]
-<figures/SignatureDummy.jpg, id=74, 257.46187pt x 103.13531pt>
+<figures/SignatureDummy.jpg, id=138, 257.46187pt x 103.13531pt>
 File: figures/SignatureDummy.jpg Graphic file (type jpg)
 
 <use figures/SignatureDummy.jpg>
@@ -709,65 +710,69 @@ Package pdftex.def Info: figures/SignatureDummy.jpg used on input line 17.
 [5 <D:/Bachelor/Thesis/figures/SignatureDummy.jpg>] [6
 
 ]) [7] [8]
-(D:\Bachelor\Thesis\Thesis.toc)
+(D:\Bachelor\Thesis\Thesis.toc [9
+
+])
 \tf@toc=\write5
- [9
-
-] [10
-
-] (D:\Bachelor\Thesis\Chapter1.tex
+ [10] (D:\Bachelor\Thesis\Introduction.tex
 Chapter 1.
-LaTeX Font Info:    Try loading font information for T1+cmtt on input line 9.
-(D:\Tools\MiKTeX\tex\latex\base\t1cmtt.fd
-File: t1cmtt.fd 1999/05/25 v2.5h Standard LaTeX font definitions
-)
+[1
+
+
+
+]) [2] (D:\Bachelor\Thesis\Implementation.tex
+Chapter 2.
+[3
+
+
+
+] [4]
+Underfull \vbox (badness 4156) has occurred while \output is active []
+
+ [5]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [1
+ [6]
+[7]) [8] [9] (D:\Bachelor\Thesis\Conclusion.tex [10
+
 
 
 ]
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 17.
+Chapter 3.
+) [11] (D:\Bachelor\Thesis\Appendix1.tex [12
 
-(D:\Tools\MiKTeX\tex\latex\base\omscmr.fd
-File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
-)
-LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 17.
-) [2]
-(D:\Bachelor\Thesis\Appendix1.tex
+
+
+]
 Appendix A.
-) [3
-
-
-
-] [4
+) [13] [14
 
 
 ]
 No file Thesis.bbl.
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 98.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 98.
-(D:\Bachelor\Thesis\Thesis.aux (D:\Bachelor\Thesis\Chapter1.aux)
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 99.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 99.
+(D:\Bachelor\Thesis\Thesis.aux (D:\Bachelor\Thesis\Introduction.aux)
+(D:\Bachelor\Thesis\Implementation.aux) (D:\Bachelor\Thesis\Conclusion.aux)
 (D:\Bachelor\Thesis\Appendix1.aux))
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 98.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 98.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 99.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 99.
 Package rerunfilecheck Info: File `Thesis.out' has not changed.
-(rerunfilecheck)             Checksum: 2F1A176103A4748A69EC97CAD2246D3A;472.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 98.
+(rerunfilecheck)             Checksum: 35D96FEFA1265D6C1BB0A20950B6316C;1506.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 99.
  ) 
 Here is how much of TeX's memory you used:
- 8672 strings out of 493921
- 121943 string characters out of 3152089
- 212485 words of memory out of 3000000
- 11755 multiletter control sequences out of 15000+200000
- 26034 words of font info for 67 fonts, out of 3000000 for 9000
+ 8697 strings out of 493921
+ 122157 string characters out of 3152089
+ 215295 words of memory out of 3000000
+ 11745 multiletter control sequences out of 15000+200000
+ 26497 words of font info for 67 fonts, out of 3000000 for 9000
  841 hyphenation exceptions out of 8191
- 43i,11n,45p,563b,341s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 43i,12n,45p,1485b,490s stack positions out of 5000i,500n,10000p,200000b,50000s
  <C:\Users\Mindbug\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\jknappen\ec\dpi60
-0\ecbx1440.pk> <C:\Users\Mindbug\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\jknap
-pen\ec\dpi600\ectt1000.pk> <C:\Users\Mindbug\AppData\Local\MiKTeX\2.9\fonts\pk\
-ljfour\jknappen\ec\dpi600\ecti1000.pk> <C:\Users\Mindbug\AppData\Local\MiKTeX\2
+0\ecbx1200.pk> <C:\Users\Mindbug\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\jknap
+pen\ec\dpi600\ecti1000.pk> <C:\Users\Mindbug\AppData\Local\MiKTeX\2.9\fonts\pk\
+ljfour\jknappen\ec\dpi600\ecbx1440.pk> <C:\Users\Mindbug\AppData\Local\MiKTeX\2
 .9\fonts\pk\ljfour\jknappen\ec\dpi600\ecrm2488.pk> <C:\Users\Mindbug\AppData\Lo
 cal\MiKTeX\2.9\fonts\pk\ljfour\jknappen\ec\dpi600\eccc1200.pk> <C:\Users\Mindbu
 g\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\jknappen\ec\dpi600\ecbx1000.pk> <C:\
@@ -779,10 +784,10 @@ s\pk\ljfour\jknappen\ec\dpi600\ecss1000.pk> <C:\Users\Mindbug\AppData\Local\MiK
 TeX\2.9\fonts\pk\ljfour\jknappen\ec\dpi600\ecss0900.pk> <C:\Users\Mindbug\AppDa
 ta\Local\MiKTeX\2.9\fonts\pk\ljfour\jknappen\ec\dpi600\ecss1728.pk> <C:\Users\M
 indbug\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\jknappen\ec\dpi600\ecsx2074.pk>
-<D:/Tools/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb>
-Output written on Thesis.pdf (16 pages, 155008 bytes).
+
+Output written on Thesis.pdf (26 pages, 200674 bytes).
 PDF statistics:
- 477 PDF objects out of 1000 (max. 8388607)
- 27 named destinations out of 1000 (max. 500000)
- 83 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 684 PDF objects out of 1000 (max. 8388607)
+ 54 named destinations out of 1000 (max. 500000)
+ 211 words of extra memory for PDF output out of 10000 (max. 10000000)
 

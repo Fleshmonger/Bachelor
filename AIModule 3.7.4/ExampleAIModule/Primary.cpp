@@ -36,8 +36,8 @@ Primary::~Primary()
 void Primary::onStart()
 {
 	// BWAPI settings.
-	BWAPI::Broodwar->enableFlag(Flag::UserInput);
-	BWAPI::Broodwar->setLocalSpeed(0);
+	//BWAPI::Broodwar->enableFlag(Flag::UserInput);
+	//BWAPI::Broodwar->setLocalSpeed(0);
 
 	// Read map information.
 	BWTA::readMap();
@@ -54,6 +54,7 @@ void Primary::onStart()
 void Primary::onEnd(bool isWinner)
 {
 	// Write output.
+	/*
 	std::ofstream outputFile("bwapi-data/write/Results.txt", std::ios::app);
 	if (outputFile.is_open())
 	{
@@ -80,6 +81,7 @@ void Primary::onEnd(bool isWinner)
 		outputFile << "\n";
 		outputFile.close();
 	}
+	*/
 }
 
 
@@ -98,10 +100,10 @@ void Primary::onFrame()
 	drawGatherer();
 	drawLandlord();
 	drawPlanner();
-	Broodwar->drawTextScreen(200, 0, "FPS: %d", BWAPI::Broodwar->getFPS());
-	Broodwar->drawTextScreen(200, 20, "APM: %d", BWAPI::Broodwar->getAPM());
-	Broodwar->drawTextScreen(200, 40, "Scheduled refineries: %d", accountant.scheduled(BWAPI::UnitTypes::Protoss_Assimilator));
-	Broodwar->drawTextScreen(200, 60, "Scheduled pylons: %d", accountant.scheduled(BWAPI::UnitTypes::Protoss_Pylon));
+	//Broodwar->drawTextScreen(200, 0, "FPS: %d", BWAPI::Broodwar->getFPS());
+	//Broodwar->drawTextScreen(200, 20, "APM: %d", BWAPI::Broodwar->getAPM());
+	//Broodwar->drawTextScreen(200, 40, "Scheduled refineries: %d", accountant.scheduled(BWAPI::UnitTypes::Protoss_Assimilator));
+	//Broodwar->drawTextScreen(200, 60, "Scheduled pylons: %d", accountant.scheduled(BWAPI::UnitTypes::Protoss_Pylon));
 
 	// Prevent spamming by only running our onFrame once every number of latency frames.
 	// Latency frames are the number of frames before commands are processed.
