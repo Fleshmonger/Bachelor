@@ -19,48 +19,52 @@ Defender::~Defender()
 
 // Commands defense.
 //TODO Use utilUnit::command
-//TODO Only defends homeregion.
 void Defender::update()
 {
-	// Aquire defenders.
-	utilUnit::UnitSet defenders = armyManager->getEnlisted(DUTY_DEFEND);
-
-	// Aquire invaders.
-	std::set<BWTA::Region*> regions;
-	std::map<BWTA::Region*, utilUnit::UnitSet> regionInvaders;
-	BOOST_FOREACH(Vassal * vassal, landlord->getVassals())
+	// Aquire units.
+	std::map<BWTA::Region*, utilUnit::UnitSet>
+		regionDefenders,
+		regionInvaders;
+	BOOST_FOREACH(BWTA::Region * region, BWTA::getRegions())
 	{
-		regions.insert(vassal->getRegion());
-		regionInvaders[vassal->getRegion()] = utilUnit::UnitSet();
+		regionDefenders[region] = utilUnit::UnitSet();
+		regionInvaders[region] = utilUnit::UnitSet();
 	}
 	BOOST_FOREACH(BWAPI::Unit * enemy, archivist->getEnemies())
 	{
 		// Verify enemy.
 		if (enemy &&
-			!enemy->getType().isFlyer())
+			!enemy->getType().isFlyer() &&
+			!enemy->isCloaked() &&
+			!enemy->isBurrowed())
 		{
 			// Verify region.
-			BWTA::Region * region = BWTA::getRegion(enemy->getPosition());
-			if (regions.count(region) > 0)
+			BWTA::Region * region = BWTA::getRegion(archivist->getPosition(enemy));
+			if (region)
 				regionInvaders[region].insert(enemy);
 		}
 	}
+	BOOST_FOREACH(BWAPI::Unit * defender, armyManager->getEnlisted(DUTY_DEFEND))
+		regionDefenders[BWTA::getRegion(defender->getPosition())].insert(defender);
 
 	// Iterate through regions.
-	BOOST_FOREACH(BWTA::Region * region, regions)
+	BOOST_FOREACH(BWTA::Region * region, BWTA::getRegions())
 	{
-		// Aquire militia.
-		utilUnit::UnitSet militia = landlord->getEmployed(region, TASK_DEFEND);
+		// Aquire units.
+		utilUnit::UnitSet
+			militia = landlord->getEmployed(region, TASK_DEFEND),
+			invaders = regionInvaders[region];
 
-		// Invasion check.
-		utilUnit::UnitSet invaders = regionInvaders[region];
-		if (!invaders.empty())
+		// Verify region.
+		if (landlord->contains(region) &&
+			!invaders.empty())
 		{
 			// Aquire target.
 			BWAPI::Unit * target = *invaders.begin();
 			BWAPI::Position targetPos = archivist->getPosition(target);
 
-			// Enlist units in homeregion
+			// Enlist units in region.
+			utilUnit::UnitSet defenders;
 			BOOST_FOREACH(BWAPI::Unit * unit, armyManager->getArmy())
 			{
 				if (archivist->inRegion(unit, region))
@@ -71,9 +75,13 @@ void Defender::update()
 			}
 
 			// Enlist militia if necessary.
-			double defenseStrength = combatJudge->strength(defenders) + combatJudge->strength(militia), invaderStrength = combatJudge->strength(invaders);
+			double
+				defenseStrength = combatJudge->strength(defenders) + combatJudge->strength(militia),
+				invaderStrength = combatJudge->strength(invaders);
 			utilUnit::UnitSet idle = landlord->getEmployed(region, TASK_IDLE);
-			utilUnit::UnitSet::iterator it = idle.begin(), end = idle.end();
+			utilUnit::UnitSet::iterator
+				it = idle.begin(),
+				end = idle.end();
 			while (it != end && defenseStrength < invaderStrength)
 			{
 				// Verify worker.
@@ -103,7 +111,7 @@ void Defender::update()
 		else
 		{
 			// Return defenders.
-			BOOST_FOREACH(BWAPI::Unit * defender, defenders)
+			BOOST_FOREACH(BWAPI::Unit * defender, regionDefenders[region])
 				armyManager->assignUnit(defender, DUTY_IDLE);
 			BOOST_FOREACH(BWAPI::Unit * worker, militia)
 				landlord->dismissWorker(worker);
