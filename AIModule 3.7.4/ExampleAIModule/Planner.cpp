@@ -2,12 +2,12 @@
 
 
 // Constructor.
-Planner::Planner(Geologist * geologist, Landlord * landlord, Recruiter * recruiter, Settler * settler, Architect * architect) :
+Planner::Planner(Geologist * geologist, Landlord * landlord, Recruiter * recruiter, Architect * architect, Settler * settler) :
 	geologist(geologist),
 	landlord(landlord),
 	recruiter(recruiter),
-	settler(settler),
 	architect(architect),
+	settler(settler),
 	buildOrder()
 {
 }
@@ -49,6 +49,16 @@ void Planner::enqueue(BWAPI::UnitType unitType, Base base)
 }
 
 
+// Returns whether the type is queued.
+bool Planner::contains(BWAPI::UnitType unitType)
+{
+	BOOST_FOREACH(Build build, buildOrder)
+		if (build.first = unitType)
+			return true;
+	return false;
+}
+
+
 // Returns whether the build-order is empty.
 bool Planner::empty()
 {
@@ -69,17 +79,7 @@ bool Planner::produce(Build build)
 		{
 			// Type check.
 			if (unitType.isResourceDepot())
-			{
-				// Build expansion.
-				BWTA::Region * region = settler->nextExpansion();
-				if (region)
-					return architect->scheduleBuilding(
-						unitType,
-						(*region->getBaseLocations().begin())->getTilePosition(),
-						landlord->getMain()->getIdleWorker());
-				else
-					return false;
-			}
+				return settler->buildExpansion();
 			else if (unitType.isRefinery())
 			{
 				// Iterate through vassals.

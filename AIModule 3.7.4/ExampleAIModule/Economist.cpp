@@ -2,12 +2,14 @@
 
 
 // Constructor
-Economist::Economist(Accountant * accountant, Landlord * landlord, Recruiter * recruiter, Gatherer * gatherer, Architect * architect) :
+Economist::Economist(Accountant * accountant, Landlord * landlord, Recruiter * recruiter, Gatherer * gatherer, Architect * architect, Settler * settler, Planner * planner) :
 	accountant(accountant),
 	landlord(landlord),
 	recruiter(recruiter),
 	gatherer(gatherer),
 	architect(architect),
+	settler(settler),
+	planner(planner),
 	refineries()
 {
 }
@@ -20,23 +22,9 @@ Economist::~Economist()
 
 
 // Expands workforce and supply.
+//TODO Cleanup.
 void Economist::update()
 {
-	// Iterate through vassals.
-	BOOST_FOREACH(Vassal * vassal, landlord->getVassals())
-	{
-		BWTA::Region * region = vassal->getRegion();
-		unsigned int
-			minimumMiners = gatherer->getMinerals(region).size(),
-			desiredMiners = minimumMiners * MINERAL_SATURATION,
-			desiredHarvesters = gatherer->getRefineries(region).size() * REFINERY_SATURATION;
-
-		// Train miners as needed.
-		if (vassal->workforce() + accountant->scheduled(UNIT_WORKER) < desiredMiners + desiredHarvesters)
-			recruiter->scheduleTraining(UNIT_WORKER, vassal->getDepot());
-	}
-
-
 	// Verify main base.
 	Vassal * main = landlord->getMain();
 	if (main)
@@ -52,6 +40,41 @@ void Economist::update()
 				architect->scheduleBuilding(UNIT_SUPPLY, main);
 		}
 	}
+
+	// Iterate through vassals.
+	bool expand = true;
+	BOOST_FOREACH(Vassal * vassal, landlord->getVassals())
+	{
+		// Verify vassal.
+		if (vassal->getDepot())
+		{
+			// Calculate values.
+			BWTA::Region * region = vassal->getRegion();
+			unsigned int
+				minerals = gatherer->getMinerals(region).size(),
+				refineries = gatherer->getRefineries(region).size(),
+				workers = vassal->workforce();
+			if (vassal->getDepot()->isTraining())
+				workers++;
+
+			// Saturation check.
+			if (workers < minerals * MAX_MINERAL_SATURATION + refineries * REFINERY_SATURATION)
+			{
+				// Train additional workers.
+				recruiter->scheduleTraining(UNIT_WORKER, vassal->getDepot());
+
+				// Expansion check.
+				if (workers < minerals * MIN_MINERAL_SATURATION + refineries * REFINERY_SATURATION)
+					expand = false;
+			}
+		}
+	}
+
+	// Expansion check.
+	if (expand &&
+		!planner->contains(BWAPI::UnitTypes::Protoss_Nexus) &&
+		!accountant->isScheduled(BWAPI::UnitTypes::Protoss_Nexus))
+		planner->enqueue(BWAPI::UnitTypes::Protoss_Nexus);
 }
 
 
@@ -70,32 +93,3 @@ void Economist::addRefinery(BWAPI::Unit * refinery)
 			refineries.push_back(refinery);
 	}
 }
-
-
-/*
-// Returns the next region for expansion.
-BWTA::Region * Economist::nextExpansion()
-{
-	// Verify headquarters.
-	Vassal * main = landlord->getMain();
-	if (main &&
-		main->getRegion())
-	{
-		// Search through chokepoints.
-		BOOST_FOREACH(BWTA::Chokepoint * border, landlord->getMain()->getRegion()->getChokepoints())
-		{
-			// Verify chokepoint.
-			BWTA::Region * region;
-			if (border->getRegions().first == main->getRegion())
-				region = border->getRegions().second;
-			else
-				region = border->getRegions().first;
-			if (!region->getBaseLocations().empty())
-				return region;
-		}
-	}
-
-	// No candidate found.
-	return NULL;
-}
-*/

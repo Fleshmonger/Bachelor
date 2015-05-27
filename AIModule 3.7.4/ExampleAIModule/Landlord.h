@@ -15,7 +15,7 @@ private:
 		* main,
 		* natural;
 	std::set<Vassal*>						vassals;
-	std::map<BWAPI::Unit*, BWTA::Region*>	workerRegion;
+	std::map<BWAPI::Unit*, BWTA::Region*>	unitRegion;
 	std::map<BWTA::Region*, Vassal*>		regionVassal;
 
 public:
@@ -26,10 +26,11 @@ public:
 	void addDepot(BWAPI::Unit * depot);
 	void addWorker(BWAPI::Unit * worker);
 	void dismissWorker(BWAPI::Unit * worker);
+	void removeDepot(BWAPI::Unit * depot);
 	void employWorker(BWAPI::Unit * worker, Task task);
 	void removeWorker(BWAPI::Unit * worker);
 
-	bool contains(BWAPI::Unit * worker);
+	bool contains(BWAPI::Unit * unit);
 	bool contains(BWTA::Region * region);
 
 	utilMap::Zone getHarvestingZone(BWTA::Region * region);

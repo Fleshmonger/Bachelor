@@ -6,7 +6,7 @@ Landlord::Landlord() :
 	main(),
 	natural(),
 	vassals(),
-	workerRegion(),
+	unitRegion(),
 	regionVassal()
 {
 }
@@ -54,6 +54,9 @@ void Landlord::addDepot(BWAPI::Unit * depot)
 
 		// Designate depot.
 		regionVassal[region]->setDepot(depot);
+
+		// Add entry.
+		unitRegion[depot] = region;
 	}
 }
 
@@ -75,7 +78,7 @@ void Landlord::addWorker(BWAPI::Unit * worker)
 		regionVassal[region]->addWorker(worker);
 
 		// Add entry.
-		workerRegion[worker] = region;
+		unitRegion[worker] = region;
 	}
 }
 
@@ -94,9 +97,24 @@ void Landlord::employWorker(BWAPI::Unit * worker, Task task)
 	if (contains(worker))
 	{
 		// Verify vassal.
-		BWTA::Region * region = workerRegion[worker];
+		BWTA::Region * region = unitRegion[worker];
 		if (contains(region))
 			regionVassal[region]->employWorker(worker, task);
+	}
+}
+
+
+// Removes a depot from the related vassal.
+void Landlord::removeDepot(BWAPI::Unit * depot)
+{
+	// Verify depot.
+	if (depot &&
+		contains(depot))
+	{
+		// Verify vassal.
+		BWTA::Region * region = unitRegion[depot];
+		if (contains(region))
+			regionVassal[region]->clearDepot();
 	}
 }
 
@@ -108,20 +126,20 @@ void Landlord::removeWorker(BWAPI::Unit * worker)
 	if (contains(worker))
 	{
 		// Verify vassal.
-		BWTA::Region * region = workerRegion[worker];
+		BWTA::Region * region = unitRegion[worker];
 		if (contains(region))
 			regionVassal[region]->removeWorker(worker);
 
 		// Remove entry.
-		workerRegion.erase(worker);
+		unitRegion.erase(worker);
 	}
 }
 
 
-// Returns whether a worker is recorded.
-bool Landlord::contains(BWAPI::Unit * worker)
+// Returns whether a unit is recorded.
+bool Landlord::contains(BWAPI::Unit * unit)
 {
-	return workerRegion.count(worker) > 0;
+	return unitRegion.count(unit) > 0;
 }
 
 

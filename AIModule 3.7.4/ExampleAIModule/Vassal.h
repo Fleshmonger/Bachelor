@@ -19,6 +19,7 @@ public:
 	Vassal(BWTA::Region * region);
 	~Vassal();
 
+	void clearDepot();
 	void setDepot(BWAPI::Unit * depot);
 	void addWorker(BWAPI::Unit * worker);
 	void removeWorker(BWAPI::Unit * worker);

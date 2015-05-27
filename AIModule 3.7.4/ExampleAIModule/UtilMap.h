@@ -20,6 +20,7 @@ namespace utilMap
 	};
 
 	bool isExplored(BWAPI::TilePosition buildingLocation, BWAPI::UnitType buildingType);
+	bool isVisible(BWAPI::TilePosition buildingLocation, BWAPI::UnitType buildingType);
 
 	std::set<BWTA::Region*> neighbors(BWTA::Region * region);
 }

@@ -2,8 +2,9 @@
 
 
 // Constructor.
-Settler::Settler(Landlord * landlord) :
-	landlord(landlord)
+Settler::Settler(Landlord * landlord, Architect * architect) :
+	landlord(landlord),
+	architect(architect)
 {
 }
 
@@ -11,6 +12,20 @@ Settler::Settler(Landlord * landlord) :
 // Deconstructor.
 Settler::~Settler()
 {
+}
+
+
+// Attempts to schedule an expansion and returns true if successful.
+bool Settler::buildExpansion()
+{
+	// Attempt schedule.
+	BWTA::Region * region = nextExpansion();
+	return
+		region &&
+		architect->scheduleBuilding(
+			BWAPI::UnitTypes::Protoss_Nexus,
+			(*region->getBaseLocations().begin())->getTilePosition(),
+			landlord->getMain()->getIdleWorker());
 }
 
 
@@ -34,7 +49,7 @@ BWTA::Region * Settler::nextExpansion()
 			if (region)
 			{
 				// Check availability.
-				if (!landlord->contains(region) &&
+				if ((!landlord->contains(region) || !landlord->getVassal(region)->getDepot()) &&
 					!region->getBaseLocations().empty())
 					return region;
 				else

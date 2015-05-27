@@ -2,7 +2,7 @@
 
 
 // Constructor
-Despot::Despot(Landlord * landlord, Recruiter * recruiter, Gatherer * gatherer, Architect * architect, Planner * planner, Economist * economist, Strategist * strategist) :
+Despot::Despot(Landlord * landlord, Recruiter * recruiter, Gatherer * gatherer, Architect * architect, Planner * planner, Strategist * strategist, Economist * economist) :
 	landlord(landlord),
 	recruiter(recruiter),
 	gatherer(gatherer),
@@ -80,8 +80,8 @@ void Despot::update()
 	{
 		BWTA::Region * region = vassal->getRegion();
 		unsigned int
-			minimumMiners = gatherer->getMinerals(region).size(),
-			desiredMiners = minimumMiners * MINERAL_SATURATION,
+			minerals = gatherer->getMinerals(region).size(),
+			minMiners = minerals * MIN_MINERAL_SATURATION,
 			desiredHarvesters = gatherer->getRefineries(region).size() * REFINERY_SATURATION;
 
 		// Harvesters saturation check.
@@ -90,10 +90,10 @@ void Despot::update()
 		if (harvesters.size() < desiredHarvesters)
 		{
 			// Verify minimum miner criteria.
-			if (minimumMiners < vassal->workforce() - harvesters.size())
+			if (minMiners < vassal->workforce() - harvesters.size())
 			{
 				// Assign excess miners to harvesting.
-				int excess = std::min(vassal->workforce() - harvesters.size() - minimumMiners, desiredHarvesters - harvesters.size());
+				int excess = std::min(vassal->workforce() - harvesters.size() - minMiners, desiredHarvesters - harvesters.size());
 				for (; excess > 0; excess--)
 					vassal->employWorker(vassal->getIdleWorker(), TASK_HARVEST);
 			}
@@ -111,6 +111,6 @@ void Despot::update()
 		vassal->employWorkers(vassal->getEmployed(TASK_IDLE), TASK_MINE);
 	}
 
-	// Command harvest.
+	// Command gather.
 	gatherer->gather();
 }

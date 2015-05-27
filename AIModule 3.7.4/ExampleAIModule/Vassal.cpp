@@ -16,6 +16,13 @@ Vassal::~Vassal()
 }
 
 
+// Clears the designated depot.
+void Vassal::clearDepot()
+{
+	depot = NULL;
+}
+
+
 // Designates the depot in the region.
 void Vassal::setDepot(BWAPI::Unit * depot)
 {

@@ -71,6 +71,17 @@ bool utilMap::isExplored(BWAPI::TilePosition buildingLocation, BWAPI::UnitType b
 }
 
 
+// Returns whether or not the entire location is visible.
+bool utilMap::isVisible(BWAPI::TilePosition buildingLocation, BWAPI::UnitType buildingType)
+{
+	for (int i = 0; i < buildingType.tileWidth(); i++)
+		for (int j = 0; j < buildingType.tileHeight(); j++)
+			if (!BWAPI::Broodwar->isVisible(BWAPI::TilePosition(buildingLocation.x() + i, buildingLocation.y() + j)))
+				return false;
+	return true;
+}
+
+
 // Returns neighboring regions.
 std::set<BWTA::Region*> utilMap::neighbors(BWTA::Region * region)
 {

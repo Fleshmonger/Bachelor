@@ -30,19 +30,16 @@ void utilUnit::command(BWAPI::Unit * unit, BWAPI::UnitCommandType commandType, B
 	// Validate the unit.
 	if (unit &&
 		unit->exists() &&
-		isOwned(unit))
+		isOwned(unit) &&
+		!isCommanded(unit))
 	{
-		// Ensure the unit has not recieved a command this frame.
-		if (!isCommanded(unit))
-		{
-			// Ensure the current unit command is not identical to the new one.
-			BWAPI::UnitCommand lastCommand = unit->getLastCommand();
-			if (unit->isIdle() ||
-				lastCommand.getType() != commandType ||
-				lastCommand.getTargetPosition() != position ||
-				lastCommand.getTarget() != target)
-				unit->issueCommand(BWAPI::UnitCommand(unit, commandType, target, position.x(), position.y(), 0));
-		}
+		// Ensure the current unit command is not identical to the new one.
+		BWAPI::UnitCommand lastCommand = unit->getLastCommand();
+		if (unit->isIdle() ||
+			lastCommand.getType() != commandType ||
+			lastCommand.getTargetPosition() != position ||
+			lastCommand.getTarget() != target)
+			unit->issueCommand(BWAPI::UnitCommand(unit, commandType, target, position.x(), position.y(), 0));
 	}
 }
 
@@ -52,19 +49,19 @@ void utilUnit::command(BWAPI::Unit * unit, BWAPI::UnitCommandType commandType, B
 void utilUnit::commandBuild(BWAPI::Unit * unit, BWAPI::TilePosition location, BWAPI::UnitType buildingType)
 {
 	// Validate the unit.
-	if (unit && unit->exists() && isOwned(unit))
+	if (unit &&
+		unit->exists() &&
+		isOwned(unit) &&
+		!isCommanded(unit))
 	{
-		// Ensure the unit has not recieved a command this frame.
-		if (!isCommanded(unit))
-		{
-			// Ensure the current unit command is not identical to the new one.
-			BWAPI::UnitCommand lastCommand = unit->getLastCommand();
-			if (lastCommand.getType() != BWAPI::UnitCommandTypes::Build ||
-				lastCommand.getTargetPosition() != location ||
-				lastCommand.getUnitType() != buildingType)
-				unit->build(location, buildingType);
-		} // Closure: Uniqueness
-	} // Closure: Validity
+		// Ensure the current unit command is not identical to the new one.
+		BWAPI::UnitCommand lastCommand = unit->getLastCommand();
+		if (unit->isIdle() ||
+			lastCommand.getType() != BWAPI::UnitCommandTypes::Build ||
+			lastCommand.getTargetPosition() != location ||
+			lastCommand.getUnitType() != buildingType)
+			unit->build(location, buildingType);
+	}
 }
 
 

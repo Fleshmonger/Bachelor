@@ -9,11 +9,14 @@
 #include "Recruiter.h"
 #include "Gatherer.h"
 #include "Architect.h"
+#include "Settler.h"
+#include "Planner.h"
 
 
 const unsigned int
 		MIN_SUPPLY = 10,
-		MINERAL_SATURATION = 2,
+		MIN_MINERAL_SATURATION = 2,
+		MAX_MINERAL_SATURATION = 4,
 		REFINERY_SATURATION = 3;
 const BWAPI::UnitType
 		UNIT_DEPOT = BWAPI::UnitTypes::Protoss_Nexus,
@@ -31,16 +34,16 @@ private:
 	Recruiter	* recruiter;
 	Gatherer	* gatherer;
 	Architect	* architect;
+	Settler		* settler;
+	Planner		* planner;
 
 	utilUnit::UnitList refineries;
 
 public:
-	Economist(Accountant * accountant, Landlord * landlord, Recruiter * recruiter, Gatherer * gatherer, Architect * architect);
+	Economist(Accountant * accountant, Landlord * landlord, Recruiter * recruiter, Gatherer * gatherer, Architect * architect, Settler * settler, Planner * planner);
 	~Economist();
 
 	void update();
 	void addRefinery(BWAPI::Unit * refinery);
-
-	//BWTA::Region * nextExpansion();
 };
 

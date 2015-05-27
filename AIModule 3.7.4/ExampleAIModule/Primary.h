@@ -14,16 +14,16 @@
 #include "Recruiter.h"
 #include "CombatJudge.h"
 #include "Gatherer.h"
-#include "Settler.h"
 #include "Architect.h"
 #include "Reconnoiter.h"
+#include "ArmyManager.h"
 #include "Morpher.h"
+#include "Settler.h"
+#include "Strategist.h"
+#include "Attacker.h"
+#include "Defender.h"
 #include "Planner.h"
 #include "Economist.h"
-#include "ArmyManager.h"
-#include "Defender.h"
-#include "Attacker.h"
-#include "Strategist.h"
 #include "Despot.h"
 
 
@@ -43,16 +43,16 @@ private:
 	Recruiter		recruiter;
 	CombatJudge		combatJudge;
 	Gatherer		gatherer;
-	Settler			settler;
 	Architect		architect;
 	Reconnoiter		reconnoiter;
-	Morpher			morpher;
-	Planner			planner;
-	Economist		economist;
 	ArmyManager		armyManager;
+	Morpher			morpher;
+	Settler			settler;
+	Strategist		strategist;
 	Attacker		attacker;
 	Defender		defender;
-	Strategist		strategist;
+	Planner			planner;
+	Economist		economist;
 	Despot			despot;
 
 public:

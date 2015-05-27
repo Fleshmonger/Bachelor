@@ -23,7 +23,7 @@ private:
 	Strategist	* strategist;
 
 public:
-	Despot(Landlord * landlord, Recruiter * recruiter, Gatherer * gatherer, Architect * architect, Planner * planner, Economist * economist, Strategist * strategist);
+	Despot(Landlord * landlord, Recruiter * recruiter, Gatherer * gatherer, Architect * architect, Planner * planner, Strategist * strategist, Economist * economist);
 	~Despot();
 
 	void update();

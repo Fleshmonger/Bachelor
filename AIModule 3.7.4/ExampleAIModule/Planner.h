@@ -4,8 +4,8 @@
 #include "Geologist.h"
 #include "Landlord.h"
 #include "Recruiter.h"
-#include "Settler.h"
 #include "Architect.h"
+#include "Settler.h"
 
 
 enum Base { BASE_ANY, BASE_NATURAL, BASE_MAIN };
@@ -18,19 +18,20 @@ private:
 	Geologist	* geologist;
 	Landlord	* landlord;
 	Recruiter	* recruiter;
-	Settler		* settler;
 	Architect	* architect;
+	Settler		* settler;
 
 	std::list<Build> buildOrder;
 
 public:
-	Planner(Geologist * geologist, Landlord * landlord, Recruiter * recruiter, Settler * settler, Architect * architect);
+	Planner(Geologist * geologist, Landlord * landlord, Recruiter * recruiter, Architect * architect, Settler * settler);
 	~Planner();
 
 	void update();
 	void enqueue(BWAPI::UnitType unitType);
 	void enqueue(BWAPI::UnitType unitType, Base base);
 
+	bool contains(BWAPI::UnitType unitType);
 	bool empty();
 	bool produce(Build);
 

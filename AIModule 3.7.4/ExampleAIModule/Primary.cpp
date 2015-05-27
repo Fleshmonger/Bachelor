@@ -11,17 +11,17 @@ Primary::Primary() :
 	recruiter(&accountant),
 	combatJudge(&archivist),
 	gatherer(&landlord),
-	settler(&landlord),
 	architect(&accountant, &baseManager, &landlord),
 	reconnoiter(&archivist, &landlord),
-	morpher(&accountant, &gatherer),
-	planner(&geologist, &landlord, &recruiter, &settler, &architect),
-	economist(&accountant, &landlord, &recruiter, &gatherer, &architect),
 	armyManager(&archivist, &combatJudge),
-	defender(&archivist, &landlord, &combatJudge, &armyManager),
-	attacker(&archivist, &landlord, &combatJudge, &armyManager),
+	morpher(&accountant, &gatherer),
+	settler(&landlord, &architect),
 	strategist(&accountant, &landlord, &recruiter, &architect),
-	despot(&landlord, &recruiter, &gatherer, &architect, &planner, &economist, &strategist)
+	attacker(&archivist, &landlord, &combatJudge, &armyManager),
+	defender(&archivist, &landlord, &combatJudge, &armyManager),
+	planner(&geologist, &landlord, &recruiter, &architect, &settler),
+	economist(&accountant, &landlord, &recruiter, &gatherer, &architect, &settler, &planner),
+	despot(&landlord, &recruiter, &gatherer, &architect, &planner, &strategist, &economist)
 {
 }
 
@@ -36,8 +36,8 @@ Primary::~Primary()
 void Primary::onStart()
 {
 	// BWAPI settings.
-	//BWAPI::Broodwar->enableFlag(Flag::UserInput);
-	//BWAPI::Broodwar->setLocalSpeed(0);
+	BWAPI::Broodwar->enableFlag(Flag::UserInput);
+	BWAPI::Broodwar->setLocalSpeed(1);
 
 	// Read map information.
 	BWTA::readMap();
@@ -93,9 +93,9 @@ void Primary::onFrame()
 		return;
 
 	// Display.
-	//drawBaseManager();
-	//drawTerrainData();
-	//drawVassals();
+	drawBaseManager();
+	drawTerrainData();
+	drawVassals();
 	//drawGeologist();
 	drawGatherer();
 	drawLandlord();
@@ -114,9 +114,9 @@ void Primary::onFrame()
 	archivist.update();
 	architect.update();
 	reconnoiter.update();
+	armyManager.update();
 	morpher.update();
 	planner.update();
-	armyManager.update();
 	defender.update(); //TODO Defender must be before attacker and economist, to ensure defenders are available. Fix this.
 	attacker.update();
 	despot.update();
@@ -225,12 +225,14 @@ void Primary::onUnitDestroy(BWAPI::Unit* unit)
 					landlord.removeWorker(unit);
 					gatherer.removeWorker(unit);
 				}
-				else if (utilUnit::isFighter(unitType))
+				if (utilUnit::isFighter(unitType))
 					armyManager.removeUnit(unit);
-				else if (unitType.canProduce())
-					recruiter.addFactory(unit);
-				else if (unitType.isRefinery())
+				if (unitType.canProduce())
+					recruiter.removeFactory(unit);
+				if (unitType.isRefinery())
 					gatherer.removeRefinery(unit);
+				if (unitType.isResourceDepot())
+					landlord.removeDepot(unit);
 			}
 			else
 			{

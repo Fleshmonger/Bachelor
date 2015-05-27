@@ -21,10 +21,15 @@ Architect::~Architect()
 // Commands the worker to build a structure
 void Architect::commandBuild(BWAPI::Unit * builder, BWAPI::TilePosition buildingLocation, BWAPI::UnitType buildingType)
 {
-	if (utilMap::isExplored(buildingLocation, buildingType))
-		builder->build(buildingLocation, buildingType);
+	if (utilMap::isVisible(buildingLocation, buildingType))
+		utilUnit::commandBuild(builder, buildingLocation, buildingType);
 	else
-		utilUnit::command(builder, BWAPI::UnitCommandTypes::Move, BWAPI::Position(buildingLocation));
+		utilUnit::command(
+			builder,
+			BWAPI::UnitCommandTypes::Move,
+			BWAPI::Position(
+				buildingLocation.x() * TILE_SIZE + buildingType.tileWidth() * TILE_SIZE / 2,
+				buildingLocation.y() * TILE_SIZE + buildingType.tileHeight() * TILE_SIZE / 2));
 }
 
 
