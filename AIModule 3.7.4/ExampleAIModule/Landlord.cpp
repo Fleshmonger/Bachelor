@@ -65,12 +65,20 @@ void Landlord::addDepot(BWAPI::Unit * depot)
 void Landlord::addWorker(BWAPI::Unit * worker)
 {
 	// Verify worker.
+	if (worker)
+		addWorker(worker, BWTA::getRegion(worker->getPosition()));
+}
+
+
+// Adds a worker to the region's related vassal.
+void Landlord::addWorker(BWAPI::Unit * worker, BWTA::Region * region)
+{
+	// Verify worker.
 	if (utilUnit::isOwned(worker) &&
 		worker->exists() &&
 		worker->getType().isWorker())
 	{
 		// Verify vassal or create new.
-		BWTA::Region * region = BWTA::getRegion(worker->getPosition());
 		if (!contains(region))
 			newVassal(region);
 

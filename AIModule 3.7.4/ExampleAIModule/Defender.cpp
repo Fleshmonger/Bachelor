@@ -102,9 +102,10 @@ void Defender::update()
 			{
 				// Command militia.
 				BWAPI::UnitCommand command = worker->getLastCommand();
-				if (worker->getOrderTarget() && command.getType() != BWAPI::UnitCommandTypes::Attack_Unit)
+				if (worker->getOrderTarget() && command.getType() == BWAPI::UnitCommandTypes::Attack_Move)
 					worker->attack(worker->getOrderTarget());
-				else if (command.getType() != BWAPI::UnitCommandTypes::Attack_Move || command.getTargetPosition() != targetPos || worker->isIdle())
+				else if (command.getType() != BWAPI::UnitCommandTypes::Attack_Unit &&
+					(command.getType() != BWAPI::UnitCommandTypes::Attack_Move || command.getTargetPosition() != targetPos || worker->isIdle()))
 					worker->attack(targetPos);
 			}
 		}

@@ -93,3 +93,48 @@ void Economist::addRefinery(BWAPI::Unit * refinery)
 			refineries.push_back(refinery);
 	}
 }
+
+
+// Moves workers to the target region.
+//TODO Check recursively neighbors instead.
+//TODO Should not move if only 6 or less are available.
+void Economist::maynardSlide(BWTA::Region * target)
+{
+	// Update gatherer.
+	if (!gatherer->contains(target))
+		gatherer->addRegion(target);
+
+	// Move workers.
+	unsigned int current = 0, max = gatherer->getMinerals(target).size() * MIN_MINERAL_SATURATION;
+	BOOST_FOREACH(Vassal * vassal, landlord->getVassals())
+	{
+		// Verify region.
+		BWTA::Region * region = vassal->getRegion();
+		if (region != target)
+		{
+			// Move free workers.
+			int freeMiners = vassal->getEmployed(TASK_MINE).size() + vassal->getEmployed(TASK_IDLE).size() - gatherer->getMinerals(region).size() * MIN_MINERAL_SATURATION;
+			while (freeMiners > 0 && current < max)
+			{
+				// Verify worker.
+				BWAPI::Unit * worker = vassal->getIdleWorker();
+				if (worker)
+				{
+					// Stop worker.
+					worker->stop();
+
+					// Move worker.
+					vassal->removeWorker(worker);
+					landlord->addWorker(worker, target);
+					current++;
+					freeMiners--;
+				}
+				else
+					break;
+			}
+		}
+
+		if (current >= max)
+			break;
+	}
+}

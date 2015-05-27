@@ -287,7 +287,7 @@ void Primary::onUnitComplete(BWAPI::Unit *unit)
 		BWAPI::UnitType unitType = unit->getType();
 		if (utilUnit::isOwned(unit))
 		{
-			// Notify producers.
+			// Notify producer.
 			if (unitType.isBuilding())
 				architect.removeConstruct(unit);
 			else
@@ -295,7 +295,10 @@ void Primary::onUnitComplete(BWAPI::Unit *unit)
 
 			// Check if expansion.
 			if (unitType.isResourceDepot())
+			{
 				landlord.addDepot(unit);
+				economist.maynardSlide(BWTA::getRegion(unit->getPosition()));
+			}
 
 			// Designate.
 			if (unitType.isWorker())

@@ -16,7 +16,7 @@
 const unsigned int
 		MIN_SUPPLY = 10,
 		MIN_MINERAL_SATURATION = 2,
-		MAX_MINERAL_SATURATION = 4,
+		MAX_MINERAL_SATURATION = 3,
 		REFINERY_SATURATION = 3;
 const BWAPI::UnitType
 		UNIT_DEPOT = BWAPI::UnitTypes::Protoss_Nexus,
@@ -45,5 +45,6 @@ public:
 
 	void update();
 	void addRefinery(BWAPI::Unit * refinery);
+	void maynardSlide(BWTA::Region * target);
 };
 

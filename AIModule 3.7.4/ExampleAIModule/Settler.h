@@ -16,7 +16,7 @@ private:
 public:
 	Settler(Landlord * landlord, Architect * architect);
 	~Settler();
-	
+
 	bool buildExpansion();
 
 	BWTA::Region * nextExpansion();
