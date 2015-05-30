@@ -120,11 +120,9 @@ void Economist::maynardSlide(BWTA::Region * target)
 				BWAPI::Unit * worker = vassal->getIdleWorker();
 				if (worker)
 				{
-					// Stop worker.
-					worker->stop();
-
 					// Move worker.
 					vassal->removeWorker(worker);
+					gatherer->removeWorker(worker);
 					landlord->addWorker(worker, target);
 					current++;
 					freeMiners--;

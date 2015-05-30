@@ -1,0 +1,66 @@
+\chapter{Combat}
+
+\section{Scouting}
+Scouting is important throughout the entire duration of the game. Early on, players need to know where the opponent is, what faction they are playing and which strategy they are employing. Later on, observing the enemy army size, unit types, base expansions and tech level is important to counter strategies.
+
+Enemy opening -> opponent modeling.
+
+The opponents faction is important when deciding on opening strategies. The factions behave very different early in the game. Openings are a decisively slower when one has to defend against every possible attack. Only if the opponent picked random as a faction will it be hidden. No units are shared across factions, so the first unit discovered will reveal it, which usually is their scout or main-base.
+
+Base positions + expansions
+
+
+	\subsection{Initial Scouting}
+
+	The map terrain, along with resource locations, are completely revealed at match start. This includes all possible player start locations. Scouting for the opponent base is then just going through all other start locations. Maps used in competitive matches are usually no larger than four-player size, meaning there are four possible start locations. A player then has to take into account that they might have to scout up to two bases before knowing the enemy start location. Usually a player wants to know more than where the opponent starts, so even when it is deductible where the opponent is, the player wants to scout the base itself.
+	
+	Enemy opening.
+	
+	Once the enemy base has been revealed, and with it his opening strategy, the scout is not useful any longer. It is a long trip back to gathering resources, and the scout might be followed, revealing your own location. Harassing enemy workers can put a dent in the enemy economy, even if none of them die. Simply by attacking enemy workers forces the opponent to pull two from gathering to defending. From there, the harassing scout can retreat until it is no longer chased, or lead chasing workers around while attacking passive gatherers. If the scout manages to kill a worker the opponent will fall behind in economy. However, compared to competitive human players, bots are usually too inefficient to take full advantage of this, but every bit helps.
+	
+	There are additional uses to the scout however compared to harassing. These must all be considered in the grand strategy, as they involve spending resources. These strategies include proxy bunker, photon cannon, barracks or gateway, manner pylons or gas stealing. Proxy structures involve building right below the enemy ramp or even inside their base. The usual distinction here is whether the structures keep the opponent in with defensive towers or rush attack with front line troop producers. Manner pylons are used in conjunction with these as Protoss, where the required pylon for forward bases are placed within the enemy mineral line, blocking and possibly caging enemy workers. Gas stealing involves building a refinery on the enemy geyser, blocking gas harvesting and forcing tier one unit use. While proxy troop production has not seen much use in bots, both gas steal and proxy towers has been used for varying effect.
+	
+		\subsubsection{Implementation}
+		Usually build orders include specifically when to send out a scout. In case of Protoss, the scout is often a worker that has just warped in a structure. This would however require a build-order system capable of containing other elements than builds. A simpler solution which is used here is sending a scout when a specific supply limit has been reached. This is noted in build orders, allowing for only slightly inaccurate build-order implementations.
+		
+		When picking a scout, the bot searches through different worker groups. First the idle, then the mineral miners and finally the gas harvesters. When it comes across a worker not currently carrying any resources, it assigns it as a scout, removing it from the Task Master in the mean time. Contrary to building or defending, scouts are assumed to not return, so it can safely be removed from the local worker pool and harvesting. If the scouting manager is unsuccessful in finding a worker, it retries next frame.
+		
+		While we have a scout and do not know the opponents position, we pick an unexplored base location and move the scout there. A tile is unexplored if it has never been revealed for the duration of the game. Thus, our home base will not be considered for scouting, and once the scout reaches the destination the tile will be explored, removing it from the possible scouting locations. Exploration is handled by BWAPI.
+		
+		This implementation scouts as long as no enemy buildings are known, extending its use into late game. Usually fast or cloaked units are used to scout later in the game, but it is not necessary.
+		
+	\subsection{Intelligence Management}
+	
+	Locating positions, types.
+	
+	Geysers <-> refineries
+	
+	Possible Additions: Faction
+
+\section{Attacking}
+
+When to attack.
+
+Where to attack.
+
+	\subsection{Combat}
+	
+	Predictions.
+	
+	Grouping.
+	
+	Prioties.
+	
+	Retreating.
+	
+\section{Defending}
+
+Current: anyone in vicinity
+
+Worker militia.
+
+Anti-scouts / anti-harassment
+
+Worker relocate.
+
+Others: Standing army, Pullback, Vicinity prediction and need.
