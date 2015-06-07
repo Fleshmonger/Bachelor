@@ -17,7 +17,7 @@ Producing non-building units is simple compared to building structures. The act 
 		\subsubsection*{Implementation}
 		StarCraft has a simple system of who-constructs-who, as there only exists one possible constructor for each unit. All buildings refer to the relevant worker and all units refer to at most one structure. BWAPI has already implemented this functionality, so given an arbitrary unit type we can easily determine if it is a non-building, and if so who trains it.
 		
-		%TODO Datastructure
+		TODO implementation.
 		
 		%Perspective.
 		The agents manager for training and monitoring units is called the \emph{Recruiter}. It is very low in the module dependency hierarchy, while accessed by many other managers. It is not an independent AI, updated only through events. It contains all units capable of training other units. The implementation is generic enough to allow training any train-able unit in the game, even those trained by non-buildings.
