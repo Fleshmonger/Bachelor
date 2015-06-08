@@ -5,13 +5,6 @@ Goals, challenges, programming language.
 
 Other projects and agents.
 
-\section{The ``separate document''}
-Original project plan.
-
-Revised project plan.
-
-Brief self-evaluation.
-
 \section{Starcraft: Brood War}
 Game description: premise, goals, races, units, challenges.
 
@@ -19,35 +12,42 @@ Imperfect information.
 
 For this bot I focused on Protoss. The main AI challenges between races are shared, however specific gameplay elements differ quite a lot.
 
-	\subsection*{BWAPI}
-	BWAPI description.
-	
-	Loading modules.
-		
-	Imperfect information interface.
+\subsection*{BWAPI}
+BWAPI description.
 
-	Regions
-	
-	BWTA and SparCraft description
+Loading modules.
 
-	\subsection*{AI Competitions}
-	Different competitions and their descriptions.
-	
-	Competition rules: Setup, limits, goals.
-	
-	Ties impossible
+Imperfect information interface.
 
-	This bots involvement/predicted involvement.
-	
-	Short desc. of Starcraft 2 situation.
+Regions
+
+BWTA and SparCraft description
+
+\subsection*{AI Competitions}
+Different competitions and their descriptions.
+
+Competition rules: Setup, limits, goals.
+
+Ties impossible
+
+This bots involvement/predicted involvement.
+
+Short desc. of Starcraft 2 situation.
 
 \section{Process}
-Agile development.
+The bot was developed with the agile development process. The bot was iterated upon with short sprints, only a week long. After each there would be an evaluation of the bot's status, and some goals of the next sprint would be set. A backlog kept during development was consulted when determining the status and goals. There were a few set milestones throughout development, usually a month apart, which ensured that the bot improved consistently and surely. The iterations and milestones were first put into real use after the minimum viable product had been reached. This would include a bot capable of defeating a passive opponent, which means it had to gather resources, build structures and send troops.
 
-Short iterations.
+Testing was done in two steps. First the robustness of the implementations was tested by playing the bot with random built-in StarCraft opponents and tournament maps. This was to ensure the stability of the bot and that the implementations worked as required. The second step was uploading the bot to the SCCAIT tournament page, where the bot would play against the other official bots. This would serve to test the strategic integrity of the bot, and was done rarer than the first step. Because it is more difficult to retrieve data from rounds on the SCCAIT, the first step was needed to determine crash causes and such technicalities.
 
-Testing in SCCAI.
+The opponents on the SSCAIT should be at least updated since that last tournament, and would therefore be viable candidates to test the bot's strength. It is required to make ones bot open source if it is to compete, so there is no reason to keep the newest bot version a secret beyond a year.
 
-Opensource competitions.
+When developing the bot, BWAPI documentation and the StarCraft Broodwar AI forum was often consulted on technicalities, while competitive StarCraft communities and wikis were used when designing strategies.
 
-Documentations, strategy sources.
+	\subsection{Original Project Plan}
+	Original project plan.
+	
+	\subsection{Revised Project Plan}
+	Revised project plan.
+
+Brief self-evaluation.
+
