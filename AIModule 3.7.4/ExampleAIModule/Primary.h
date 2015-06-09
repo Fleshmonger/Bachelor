@@ -19,9 +19,9 @@
 #include "ArmyManager.h"
 #include "Morpher.h"
 #include "Settler.h"
-#include "Strategist.h"
 #include "Attacker.h"
 #include "Defender.h"
+#include "Strategist.h"
 #include "Planner.h"
 #include "Economist.h"
 #include "Despot.h"
@@ -48,9 +48,9 @@ private:
 	ArmyManager		armyManager;
 	Morpher			morpher;
 	Settler			settler;
-	Strategist		strategist;
 	Attacker		attacker;
 	Defender		defender;
+	Strategist		strategist;
 	Planner			planner;
 	Economist		economist;
 	Despot			despot;

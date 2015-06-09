@@ -2,13 +2,14 @@
 
 
 // Constructor
-Economist::Economist(Accountant * accountant, Landlord * landlord, Recruiter * recruiter, Gatherer * gatherer, Architect * architect, Settler * settler, Planner * planner) :
+Economist::Economist(Accountant * accountant, Landlord * landlord, Recruiter * recruiter, Gatherer * gatherer, Architect * architect, Settler * settler, Strategist * strategist, Planner * planner) :
 	accountant(accountant),
 	landlord(landlord),
 	recruiter(recruiter),
 	gatherer(gatherer),
 	architect(architect),
 	settler(settler),
+	strategist(strategist),
 	planner(planner),
 	refineries()
 {
@@ -73,7 +74,8 @@ void Economist::update()
 	// Expansion check.
 	if (expand &&
 		!planner->contains(BWAPI::UnitTypes::Protoss_Nexus) &&
-		!accountant->isScheduled(BWAPI::UnitTypes::Protoss_Nexus))
+		!accountant->isScheduled(BWAPI::UnitTypes::Protoss_Nexus) &&
+		strategist->isDefended())
 		planner->enqueue(BWAPI::UnitTypes::Protoss_Nexus);
 }
 

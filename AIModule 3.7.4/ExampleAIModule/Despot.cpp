@@ -2,7 +2,7 @@
 
 
 // Constructor
-Despot::Despot(Landlord * landlord, Recruiter * recruiter, Gatherer * gatherer, Architect * architect, Planner * planner, Strategist * strategist, Economist * economist) :
+Despot::Despot(Landlord * landlord, Recruiter * recruiter, Gatherer * gatherer, Architect * architect, Strategist * strategist, Planner * planner, Economist * economist) :
 	landlord(landlord),
 	recruiter(recruiter),
 	gatherer(gatherer),
@@ -71,8 +71,8 @@ void Despot::update()
 	if (planner->empty())
 	{
 		// Execute auto-pilot.
-		economist->update();
 		strategist->update();
+		economist->update();
 	}
 
 	// Update vassals.

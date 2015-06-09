@@ -2,11 +2,13 @@
 
 
 // Constructor
-Strategist::Strategist(Accountant * accountant, Landlord * landlord, Recruiter * recruiter, Architect * architect) :
+Strategist::Strategist(Accountant * accountant, Landlord * landlord, Recruiter * recruiter, CombatJudge * combatJudge, Architect * architect, ArmyManager * armyManager) :
 	accountant(accountant),
 	landlord(landlord),
 	recruiter(recruiter),
-	architect(architect)
+	combatJudge(combatJudge),
+	architect(architect),
+	armyManager(armyManager)
 {
 }
 
@@ -32,10 +34,18 @@ void Strategist::update()
 			bases++;
 
 	// Build gateways.
-	unsigned int desiredFactories = FACTORY_DEFAULT + FACTORY_BASE * bases;
+	unsigned int desiredFactories = std::min(FACTORY_DEFAULT + FACTORY_BASE * bases, FACTORY_MAX);
 	Vassal * main = landlord->getMain();
 	if (main &&
 		main->getDepot() &&
 		accountant->scheduled(INFANTRY_FACTORY) + recruiter->getFactories(INFANTRY_FACTORY).size() < desiredFactories)
 		architect->scheduleBuilding(INFANTRY_FACTORY, main);
+}
+
+
+// Returns whether there are enough troops to defend in case of attack.
+//TODO Rename.
+bool Strategist::isDefended()
+{
+	return combatJudge->strength(armyManager->getArmy()) >= combatJudge->strength(archivist->getTroops());
 }

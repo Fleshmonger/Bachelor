@@ -16,12 +16,12 @@ Primary::Primary() :
 	armyManager(&archivist, &combatJudge),
 	morpher(&accountant, &gatherer),
 	settler(&archivist, &landlord, &architect),
-	strategist(&accountant, &landlord, &recruiter, &architect),
 	attacker(&archivist, &landlord, &combatJudge, &armyManager),
 	defender(&archivist, &landlord, &combatJudge, &armyManager),
+	strategist(&accountant, &landlord, &recruiter, &combatJudge, &architect, &armyManager),
 	planner(&geologist, &landlord, &recruiter, &architect, &settler),
-	economist(&accountant, &landlord, &recruiter, &gatherer, &architect, &settler, &planner),
-	despot(&landlord, &recruiter, &gatherer, &architect, &planner, &strategist, &economist)
+	economist(&accountant, &landlord, &recruiter, &gatherer, &architect, &settler, &strategist, &planner),
+	despot(&landlord, &recruiter, &gatherer, &architect, &strategist, &planner, &economist)
 {
 }
 

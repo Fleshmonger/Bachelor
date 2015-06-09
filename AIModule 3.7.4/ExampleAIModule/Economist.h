@@ -10,6 +10,7 @@
 #include "Gatherer.h"
 #include "Architect.h"
 #include "Settler.h"
+#include "Strategist.h"
 #include "Planner.h"
 
 
@@ -35,12 +36,13 @@ private:
 	Gatherer	* gatherer;
 	Architect	* architect;
 	Settler		* settler;
+	Strategist	* strategist;
 	Planner		* planner;
 
 	utilUnit::UnitList refineries;
 
 public:
-	Economist(Accountant * accountant, Landlord * landlord, Recruiter * recruiter, Gatherer * gatherer, Architect * architect, Settler * settler, Planner * planner);
+	Economist(Accountant * accountant, Landlord * landlord, Recruiter * recruiter, Gatherer * gatherer, Architect * architect, Settler * settler, Strategist * strategist, Planner * planner);
 	~Economist();
 
 	void update();
