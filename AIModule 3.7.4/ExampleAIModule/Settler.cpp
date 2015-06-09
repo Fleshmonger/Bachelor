@@ -55,34 +55,47 @@ BWTA::Region * Settler::nextExpansion()
 		main->getRegion())
 	{
 		// Initialize queue.
-		std::list<BWTA::Region*> queue;
-		queue.push_front(main->getRegion());
+		typedef std::pair<unsigned int, BWTA::Region*> Location;
+		std::list<Location> queue;
+		std::set<BWTA::Region*> visited;
+		queue.push_front(std::make_pair(0, main->getRegion()));
 
 		// Iterate through queue.
 		while (!queue.empty())
 		{
-			// Verify region.
-			BWTA::Region * region = queue.front();
-			if (region)
+			// Verify Location.
+			BWTA::Region * region = queue.front().second;
+			if (region &&				// Verify region.
+				!isOccupied(region))	// Check occupation.
 			{
-				// Check occupation.
-				if (!isOccupied(region))
+				// Check availability.
+				if ((!landlord->contains(region) || !landlord->getVassal(region)->getDepot()) &&
+					!region->getBaseLocations().empty())
+					return region;
+				else
 				{
-					// Check availability.
-					if ((!landlord->contains(region) || !landlord->getVassal(region)->getDepot()) &&
-						!region->getBaseLocations().empty())
-						return region;
-					else
+					// Add neighbors.
+					BOOST_FOREACH(BWTA::Chokepoint * border, region->getChokepoints())
 					{
-						// Add neighbors.
-						BOOST_FOREACH(BWTA::Chokepoint * border, region->getChokepoints())
+						// Aquire neighbor.
+						std::pair<BWTA::Region*, BWTA::Region*> neighbors = border->getRegions();
+						BWTA::Region * neighbor;
+						if (neighbors.first == region)
+							neighbor = neighbors.second;
+						else
+							neighbor = neighbors.first;
+						
+						// Verify unvisited.
+						if (visited.count(neighbor) == 0)
 						{
-							// Add neighbor.
-							std::pair<BWTA::Region*, BWTA::Region*> neighbors = border->getRegions();
-							if (neighbors.first == region)
-								queue.push_back(neighbors.second);
-							else
-								queue.push_back(neighbors.first);
+							// Find location in queue.
+							unsigned int distance = queue.front().first + region->getCenter().getApproxDistance(neighbor->getCenter());
+							std::list<Location>::iterator it = queue.begin();
+							while (it != queue.end() && (*it).first < distance)
+								it++;
+							
+							// Add entry.
+							queue.insert(it, std::make_pair(distance, neighbor));
 						}
 					}
 				}
@@ -90,6 +103,7 @@ BWTA::Region * Settler::nextExpansion()
 
 			// Remove entry.
 			queue.pop_front();
+			visited.insert(region);
 		}
 	}
 

@@ -37,7 +37,7 @@ void Primary::onStart()
 {
 	// BWAPI settings.
 	BWAPI::Broodwar->enableFlag(Flag::UserInput);
-	BWAPI::Broodwar->setLocalSpeed(1);
+	BWAPI::Broodwar->setLocalSpeed(0);
 
 	// Read map information.
 	BWTA::readMap();
@@ -100,6 +100,9 @@ void Primary::onFrame()
 	drawGatherer();
 	drawLandlord();
 	drawPlanner();
+	Broodwar->drawTextScreen(200, 0, "Minerals: %d", accountant.minerals());
+	Broodwar->drawTextScreen(200, 20, "Gas: %d", accountant.gas());
+	Broodwar->drawTextScreen(200, 40, "Supply: %d", accountant.supply());
 	//Broodwar->drawTextScreen(200, 0, "FPS: %d", BWAPI::Broodwar->getFPS());
 	//Broodwar->drawTextScreen(200, 20, "APM: %d", BWAPI::Broodwar->getAPM());
 	//Broodwar->drawTextScreen(200, 40, "Scheduled refineries: %d", accountant.scheduled(BWAPI::UnitTypes::Protoss_Assimilator));
