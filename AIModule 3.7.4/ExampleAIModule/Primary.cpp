@@ -15,7 +15,7 @@ Primary::Primary() :
 	reconnoiter(&archivist, &landlord),
 	armyManager(&archivist, &combatJudge),
 	morpher(&accountant, &gatherer),
-	settler(&landlord, &architect),
+	settler(&archivist, &landlord, &architect),
 	strategist(&accountant, &landlord, &recruiter, &architect),
 	attacker(&archivist, &landlord, &combatJudge, &armyManager),
 	defender(&archivist, &landlord, &combatJudge, &armyManager),

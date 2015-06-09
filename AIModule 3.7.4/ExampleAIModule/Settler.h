@@ -1,23 +1,25 @@
 #pragma once
 #include <BWAPI.h>
 #include <BWTA.h>
+#include "Archivist.h"
 #include "Landlord.h"
 #include "Architect.h"
 
 
 // Handles expansions.
-//TODO Maynarding.
 class Settler
 {
 private:
+	Archivist	* archivist;
 	Architect	* architect;
 	Landlord	* landlord;
 
 public:
-	Settler(Landlord * landlord, Architect * architect);
+	Settler(Archivist * archivist, Landlord * landlord, Architect * architect);
 	~Settler();
 
 	bool buildExpansion();
+	bool isOccupied(BWTA::Region * region);
 
 	BWTA::Region * nextExpansion();
 };

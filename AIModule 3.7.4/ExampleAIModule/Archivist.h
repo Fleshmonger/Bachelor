@@ -2,6 +2,7 @@
 #include <BWAPI.h>
 #include <BWTA.h>
 #include <boost/foreach.hpp>
+#include "UtilMap.h"
 #include "UtilUnit.h"
 
 

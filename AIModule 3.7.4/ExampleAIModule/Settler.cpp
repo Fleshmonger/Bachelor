@@ -2,7 +2,8 @@
 
 
 // Constructor.
-Settler::Settler(Landlord * landlord, Architect * architect) :
+Settler::Settler(Archivist * archivist, Landlord * landlord, Architect * architect) :
+	archivist(archivist),
 	landlord(landlord),
 	architect(architect)
 {
@@ -29,6 +30,22 @@ bool Settler::buildExpansion()
 }
 
 
+// Returns whether the region is occupied by enemy units.
+bool Settler::isOccupied(BWTA::Region * region)
+{
+	// Search through enemies.
+	BOOST_FOREACH(BWAPI::Unit * enemy, archivist->getEnemies())
+	{
+		// Check occupation.
+		if (utilMap::inRegion(archivist->getPosition(enemy), region))
+			return true;
+	}
+
+	// No occupants found.
+	return false;
+}
+
+
 // Returns the next region for expansion.
 BWTA::Region * Settler::nextExpansion()
 {
@@ -48,21 +65,25 @@ BWTA::Region * Settler::nextExpansion()
 			BWTA::Region * region = queue.front();
 			if (region)
 			{
-				// Check availability.
-				if ((!landlord->contains(region) || !landlord->getVassal(region)->getDepot()) &&
-					!region->getBaseLocations().empty())
-					return region;
-				else
+				// Check occupation.
+				if (!isOccupied(region))
 				{
-					// Add neighbors.
-					BOOST_FOREACH(BWTA::Chokepoint * border, region->getChokepoints())
+					// Check availability.
+					if ((!landlord->contains(region) || !landlord->getVassal(region)->getDepot()) &&
+						!region->getBaseLocations().empty())
+						return region;
+					else
 					{
-						// Add neighbor.
-						std::pair<BWTA::Region*, BWTA::Region*> neighbors = border->getRegions();
-						if (neighbors.first == region)
-							queue.push_back(neighbors.second);
-						else
-							queue.push_back(neighbors.first);
+						// Add neighbors.
+						BOOST_FOREACH(BWTA::Chokepoint * border, region->getChokepoints())
+						{
+							// Add neighbor.
+							std::pair<BWTA::Region*, BWTA::Region*> neighbors = border->getRegions();
+							if (neighbors.first == region)
+								queue.push_back(neighbors.second);
+							else
+								queue.push_back(neighbors.first);
+						}
 					}
 				}
 			}

@@ -65,13 +65,6 @@ void utilUnit::commandBuild(BWAPI::Unit * unit, BWAPI::TilePosition location, BW
 }
 
 
-// Returns true if the position is within the region.
-bool utilUnit::inRegion(BWAPI::Position pos, BWTA::Region * region)
-{
-	return region && BWTA::getRegion(pos) == region;
-}
-
-
 // Returns true if the unit has been commanded this frame.
 bool utilUnit::isCommanded(BWAPI::Unit * unit)
 {

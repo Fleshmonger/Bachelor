@@ -19,6 +19,7 @@ namespace utilMap
 		bool contains(BWAPI::TilePosition pos, BWAPI::UnitType unitType);
 	};
 
+	bool inRegion(BWAPI::Position position, BWTA::Region * region);
 	bool isExplored(BWAPI::TilePosition buildingLocation, BWAPI::UnitType buildingType);
 	bool isVisible(BWAPI::TilePosition buildingLocation, BWAPI::UnitType buildingType);
 

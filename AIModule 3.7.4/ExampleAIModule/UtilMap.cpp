@@ -60,6 +60,13 @@ bool utilMap::Zone::contains(BWAPI::TilePosition pos, BWAPI::UnitType unitType)
 }
 
 
+// Returns true if the position is within the region.
+bool utilMap::inRegion(BWAPI::Position pos, BWTA::Region * region)
+{
+	return region && BWTA::getRegion(pos) == region;
+}
+
+
 // Returns whether or not the entire location has been explored.
 bool utilMap::isExplored(BWAPI::TilePosition buildingLocation, BWAPI::UnitType buildingType)
 {

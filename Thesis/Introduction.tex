@@ -12,27 +12,25 @@ Imperfect information.
 
 For this bot I focused on Protoss. The main AI challenges between races are shared, however specific gameplay elements differ quite a lot.
 
-\subsection*{BWAPI}
-BWAPI description.
-
-Loading modules.
-
-Imperfect information interface.
-
-Regions
-
-BWTA and SparCraft description
-
-\subsection*{AI Competitions}
-Different competitions and their descriptions.
-
-Competition rules: Setup, limits, goals.
-
-Ties impossible
-
-This bots involvement/predicted involvement.
-
-Short desc. of Starcraft 2 situation.
+	\subsection*{API}
+	\emph{BWAPI} is an API for StarCraft Broodwar and is injected upon startup by \emph{ChaosLauncher}. It loads an AI module written in c++, which can retrieve information about the current match's map status and send commands to the game through BWAPI. This controls the player's actions and allows the development of agents for StarCraft.
+	
+	Depending on the settings in BWAPI, the agent can be disallowed to retrieve information a player would not be able to. This means some units are in some levels of accessibility, where invisible and destroyed units are completely inaccessible. This has some limits however, as the agent can retrieve information about burrowed and cloaked units as if they were not. While a keen player can spot these units as they are not completely transparent, the agent has no limits as if they were completely visible, giving it an advantage. Additionally the agent is not limited to what is visible currently on the display, but can retrieve information from all over the map.
+	
+	There is a popular library, the \emph{Broodwar Terrain Analyzer} or \emph{BWTA} for short, which pre-processes maps for locations of interest. Most importantly, it marks the optimal depot locations for harvesting resources. While BWAPI already does this for start-locations, BWTA also does this for all resource clusters, marking viable expansion locations. The pre-processing of the map only has to be done once as the results are stored for subsequent games on the map. This library is automatically included in the 3.7.4 BWAPI test bot, so it is probable that almost all bots use the library.
+	
+	As an additional note, BWAPI divides the map into \emph{regions}. These contain satellite data about the borders to neighboring regions, included resources and base locations. They are important because the regions are separated in \emph{chokepoints}, which are either ramps or bottlenecked passages. Usually a region only contains a single base location and resource cluster, however some regions contain multiple clusters with overlapping base locations. Because of these qualities regions can be used to mark occupied locations by players.
+	
+	While newer versions of BWAPI exist, the 3.7.4 version is still widely used as it is considered the most stable, and is compatible with BWTA. There does exist a BWTA clone for 4th versions, however it is not very stable. The downside to 3.7.4 is that it does not support c++ 11. There does not exist an equivalent to BWAPI for StarCraft 2, since technically BWAPI is a hack and using it would result in a ban. AI's have been scripted in StarCraft 2's own editor however, and some have even gone and interpreted the display output of the game for a bot.
+	
+	\subsection*{AI Competitions}
+	Different competitions and their descriptions.
+	
+	Competition rules: Setup, limits, goals.
+	
+	Ties impossible
+	
+	This bots involvement/predicted involvement.
 
 \section{Process}
 The bot was developed with the agile development process. The bot was iterated upon with short sprints, only a week long. After each there would be an evaluation of the bot's status, and some goals of the next sprint would be set. A backlog kept during development was consulted when determining the status and goals. There were a few set milestones throughout development, usually a month apart, which ensured that the bot improved consistently and surely. The iterations and milestones were first put into real use after the minimum viable product had been reached. This would include a bot capable of defeating a passive opponent, which means it had to gather resources, build structures and send troops.
@@ -43,10 +41,10 @@ The opponents on the SSCAIT should be at least updated since that last tournamen
 
 When developing the bot, BWAPI documentation and the StarCraft Broodwar AI forum was often consulted on technicalities, while competitive StarCraft communities and wikis were used when designing strategies.
 
-	\subsection{Original Project Plan}
+	\subsection*{Original Project Plan}
 	Original project plan.
 	
-	\subsection{Revised Project Plan}
+	\subsection*{Revised Project Plan}
 	Revised project plan.
 
 Brief self-evaluation.
