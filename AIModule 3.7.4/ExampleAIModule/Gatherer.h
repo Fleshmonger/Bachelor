@@ -37,6 +37,7 @@ public:
 	void removeMineral(BWAPI::Unit * mineral);
 	void addRefinery(BWAPI::Unit * refinery);
 	void removeRefinery(BWAPI::Unit * refinery);
+	void removeResource(BWAPI::Unit * resource, ResourceType resourceType);
 	//void addWorker(BWAPI::Unit * worker, utilUnit::UnitList * resources);
 	void addWorker(BWAPI::Unit * worker, BWTA::Region * region, ResourceType resourceType);
 	void removeWorker(BWAPI::Unit * worker);

@@ -126,6 +126,7 @@ void Economist::maynardSlide(BWTA::Region * target)
 				{
 					// Move worker.
 					landlord->moveWorker(worker, target);
+					gatherer->removeWorker(worker);
 					current++;
 					freeMiners--;
 				}

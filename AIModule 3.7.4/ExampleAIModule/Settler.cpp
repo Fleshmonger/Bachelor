@@ -19,14 +19,23 @@ Settler::~Settler()
 // Attempts to schedule an expansion and returns true if successful.
 bool Settler::buildExpansion()
 {
-	// Attempt schedule.
+	// Aquire region and worker.
 	BWTA::Region * region = nextExpansion();
+	BWAPI::Unit * worker;
+	BOOST_FOREACH(Vassal * vassal, landlord->getVassals())
+	{
+		worker = vassal->getIdleWorker();
+		if (worker)
+			break;
+	}
+
+	// Attempt schedule.
 	return
 		region &&
 		architect->scheduleBuilding(
 			BWAPI::UnitTypes::Protoss_Nexus,
 			(*region->getBaseLocations().begin())->getTilePosition(),
-			landlord->getMain()->getIdleWorker());
+			worker);
 }
 
 
