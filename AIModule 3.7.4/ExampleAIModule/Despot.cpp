@@ -22,6 +22,7 @@ Despot::Despot(Landlord * landlord, Recruiter * recruiter, Gatherer * gatherer, 
 	BWAPI::Race enemyRace = BWAPI::Broodwar->enemy()->getRace();
 	if (enemyRace == BWAPI::Races::Terran)
 	{
+		/*
 		// Terran.
 		planner->enqueue(BWAPI::UnitTypes::Protoss_Probe);
 		planner->enqueue(BWAPI::UnitTypes::Protoss_Probe);
@@ -31,9 +32,11 @@ Despot::Despot(Landlord * landlord, Recruiter * recruiter, Gatherer * gatherer, 
 		planner->enqueue(BWAPI::UnitTypes::Protoss_Probe);
 		planner->enqueue(BWAPI::UnitTypes::Protoss_Probe);
 		planner->enqueue(BWAPI::UnitTypes::Protoss_Gateway);
+		*/
 	}
 	else if (enemyRace == BWAPI::Races::Protoss)
 	{
+		/*
 		// Protoss.
 		planner->enqueue(BWAPI::UnitTypes::Protoss_Probe);
 		planner->enqueue(BWAPI::UnitTypes::Protoss_Probe);
@@ -46,6 +49,7 @@ Despot::Despot(Landlord * landlord, Recruiter * recruiter, Gatherer * gatherer, 
 		planner->enqueue(BWAPI::UnitTypes::Protoss_Gateway);
 		planner->enqueue(BWAPI::UnitTypes::Protoss_Probe);
 		planner->enqueue(BWAPI::UnitTypes::Protoss_Pylon);
+		*/
 	}
 	else if (enemyRace == BWAPI::Races::Zerg)
 	{

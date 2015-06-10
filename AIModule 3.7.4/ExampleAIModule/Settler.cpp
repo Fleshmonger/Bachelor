@@ -63,47 +63,56 @@ BWTA::Region * Settler::nextExpansion()
 		// Iterate through queue.
 		while (!queue.empty())
 		{
-			// Verify Location.
+			// Verify Region.
 			BWTA::Region * region = queue.front().second;
-			if (region &&				// Verify region.
-				!isOccupied(region))	// Check occupation.
+			if (region)
 			{
-				// Check availability.
-				if ((!landlord->contains(region) || !landlord->getVassal(region)->getDepot()) &&
-					!region->getBaseLocations().empty())
-					return region;
-				else
+				// Check occupation.
+				if (!isOccupied(region))
 				{
-					// Add neighbors.
-					BOOST_FOREACH(BWTA::Chokepoint * border, region->getChokepoints())
+					// Check availability.
+					if ((!landlord->contains(region) || !landlord->getVassal(region)->getDepot()) &&
+						!region->getBaseLocations().empty())
+						return region;
+					else
 					{
-						// Aquire neighbor.
-						std::pair<BWTA::Region*, BWTA::Region*> neighbors = border->getRegions();
-						BWTA::Region * neighbor;
-						if (neighbors.first == region)
-							neighbor = neighbors.second;
-						else
-							neighbor = neighbors.first;
-						
-						// Verify unvisited.
-						if (visited.count(neighbor) == 0)
+						BWAPI::Position center = region->getCenter();
+
+						// Add neighbors.
+						BOOST_FOREACH(BWTA::Chokepoint * border, region->getChokepoints())
 						{
-							// Find location in queue.
-							unsigned int distance = queue.front().first + region->getCenter().getApproxDistance(neighbor->getCenter());
-							std::list<Location>::iterator it = queue.begin();
-							while (it != queue.end() && (*it).first < distance)
-								it++;
-							
-							// Add entry.
-							queue.insert(it, std::make_pair(distance, neighbor));
+							// Aquire neighbor.
+							std::pair<BWTA::Region*, BWTA::Region*> neighbors = border->getRegions();
+							BWTA::Region * neighbor;
+							if (neighbors.first == region)
+								neighbor = neighbors.second;
+							else
+								neighbor = neighbors.first;
+
+							// Verify unvisited.
+							if (visited.count(neighbor) == 0)
+							{
+								// Find location in queue.
+								unsigned int distance = queue.front().first;
+								if (center)
+									distance += center.getApproxDistance(neighbor->getCenter());
+								std::list<Location>::iterator it = queue.begin();
+								while (it != queue.end() && (*it).first < distance)
+									it++;
+
+								// Add entry.
+								queue.insert(it, std::make_pair(distance, neighbor));
+							}
 						}
 					}
 				}
+
+				// Add to visited.
+				visited.insert(region);
 			}
 
 			// Remove entry.
 			queue.pop_front();
-			visited.insert(region);
 		}
 	}
 

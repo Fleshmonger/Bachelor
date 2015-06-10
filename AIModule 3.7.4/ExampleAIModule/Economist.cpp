@@ -36,7 +36,8 @@ void Economist::update()
 			depot->exists())
 		{
 			// Build supply as needed.
-			if (accountant->supply() < MIN_SUPPLY &&
+			if (BWAPI::Broodwar->self()->supplyTotal() < MAX_SUPPLY &&
+				accountant->supply() < MIN_SUPPLY &&
 				accountant->scheduled(UNIT_SUPPLY) == 0)
 				architect->scheduleBuilding(UNIT_SUPPLY, main);
 		}
@@ -75,7 +76,8 @@ void Economist::update()
 	if (expand &&
 		!planner->contains(BWAPI::UnitTypes::Protoss_Nexus) &&
 		!accountant->isScheduled(BWAPI::UnitTypes::Protoss_Nexus) &&
-		strategist->isDefended())
+		strategist->isDefended() &&
+		settler->nextExpansion()) // Verify expansion is possible.
 		planner->enqueue(BWAPI::UnitTypes::Protoss_Nexus);
 }
 

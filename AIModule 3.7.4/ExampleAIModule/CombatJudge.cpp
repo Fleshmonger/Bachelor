@@ -26,9 +26,10 @@ CombatJudge::~CombatJudge()
 // TODO Does not account for abilities.
 double CombatJudge::strength(BWAPI::Unit * unit)
 {
-	if (unit)
+	// Verify Unit.
+	BWAPI::UnitType unitType = archivist->getType(unit);
+	if (unitType)
 	{
-		BWAPI::UnitType unitType = archivist->getType(unit);
 		BWAPI::WeaponType weaponType = unitType.groundWeapon();
 		if (weaponType != BWAPI::WeaponTypes::None)
 			return (double)(weaponType.damageAmount() * (unitType.maxHitPoints() + unitType.maxShields())) / weaponType.damageCooldown();

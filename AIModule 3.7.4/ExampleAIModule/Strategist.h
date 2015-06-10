@@ -30,7 +30,7 @@ private:
 	ArmyManager	* armyManager;
 
 public:
-	Strategist(Accountant * accountant, Landlord * landlord, Recruiter * recruiter, CombatJudge * combatJudge, Architect * architect, ArmyManager * armyManager);
+	Strategist(Accountant * accountant, Archivist * archivist, Landlord * landlord, Recruiter * recruiter, CombatJudge * combatJudge, Architect * architect, ArmyManager * armyManager);
 	~Strategist();
 
 	void update();

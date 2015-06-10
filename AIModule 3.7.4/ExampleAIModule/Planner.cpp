@@ -31,6 +31,12 @@ void Planner::update()
 		while (!buildOrder.empty() &&
 			produce(buildOrder.front()))
 			buildOrder.pop_front();
+
+		// Remove impossible expansions.
+		while (!buildOrder.empty() &&
+			buildOrder.front().first.isResourceDepot() &&
+			!settler->nextExpansion())
+			buildOrder.pop_front();
 	}
 }
 

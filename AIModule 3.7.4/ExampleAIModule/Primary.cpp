@@ -18,7 +18,7 @@ Primary::Primary() :
 	settler(&archivist, &landlord, &architect),
 	attacker(&archivist, &landlord, &combatJudge, &armyManager),
 	defender(&archivist, &landlord, &combatJudge, &armyManager),
-	strategist(&accountant, &landlord, &recruiter, &combatJudge, &architect, &armyManager),
+	strategist(&accountant, &archivist, &landlord, &recruiter, &combatJudge, &architect, &armyManager),
 	planner(&geologist, &landlord, &recruiter, &architect, &settler),
 	economist(&accountant, &landlord, &recruiter, &gatherer, &architect, &settler, &strategist, &planner),
 	despot(&landlord, &recruiter, &gatherer, &architect, &strategist, &planner, &economist)
@@ -102,7 +102,7 @@ void Primary::onFrame()
 	drawPlanner();
 	Broodwar->drawTextScreen(200, 0, "Minerals: %d", accountant.minerals());
 	Broodwar->drawTextScreen(200, 20, "Gas: %d", accountant.gas());
-	Broodwar->drawTextScreen(200, 40, "Supply: %d", accountant.supply());
+	Broodwar->drawTextScreen(200, 40, "Supply: %d", accountant.supply() / 2);
 	//Broodwar->drawTextScreen(200, 0, "FPS: %d", BWAPI::Broodwar->getFPS());
 	//Broodwar->drawTextScreen(200, 20, "APM: %d", BWAPI::Broodwar->getAPM());
 	//Broodwar->drawTextScreen(200, 40, "Scheduled refineries: %d", accountant.scheduled(BWAPI::UnitTypes::Protoss_Assimilator));

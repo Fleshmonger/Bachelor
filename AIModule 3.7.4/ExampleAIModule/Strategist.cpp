@@ -2,8 +2,9 @@
 
 
 // Constructor
-Strategist::Strategist(Accountant * accountant, Landlord * landlord, Recruiter * recruiter, CombatJudge * combatJudge, Architect * architect, ArmyManager * armyManager) :
+Strategist::Strategist(Accountant * accountant, Archivist * archivist, Landlord * landlord, Recruiter * recruiter, CombatJudge * combatJudge, Architect * architect, ArmyManager * armyManager) :
 	accountant(accountant),
+	archivist(archivist),
 	landlord(landlord),
 	recruiter(recruiter),
 	combatJudge(combatJudge),
