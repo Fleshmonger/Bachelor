@@ -72,6 +72,7 @@ void Economist::update()
 		}
 	}
 
+	/*
 	// Expansion check.
 	if (expand &&
 		!planner->contains(BWAPI::UnitTypes::Protoss_Nexus) &&
@@ -79,6 +80,7 @@ void Economist::update()
 		strategist->isDefended() &&
 		settler->nextExpansion()) // Verify expansion is possible.
 		planner->enqueue(BWAPI::UnitTypes::Protoss_Nexus);
+	*/
 }
 
 

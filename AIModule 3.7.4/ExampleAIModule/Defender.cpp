@@ -56,7 +56,9 @@ void Defender::update()
 			invaders = regionInvaders[region];
 
 		// Verify region.
-		if (landlord->contains(region) &&
+		Vassal * vassal = landlord->getVassal(region);
+		if (vassal &&
+			vassal->getDepot() &&
 			!invaders.empty())
 		{
 			// Aquire target.
@@ -78,26 +80,26 @@ void Defender::update()
 			double
 				defenseStrength = combatJudge->strength(defenders) + combatJudge->strength(militia),
 				invaderStrength = combatJudge->strength(invaders);
-			utilUnit::UnitSet idle = landlord->getEmployed(region, TASK_IDLE);
-			utilUnit::UnitSet::iterator
-				it = idle.begin(),
-				end = idle.end();
-			while (it != end && defenseStrength < invaderStrength)
+			while (defenseStrength < invaderStrength)
 			{
 				// Verify worker.
-				BWAPI::Unit * worker = *it;
-				if (worker->exists())
+				BWAPI::Unit * worker = landlord->getIdleWorker(region);
+				if (worker &&
+					worker->exists())
 				{
 					// Enlist worker.
 					landlord->employWorker(worker, TASK_DEFEND);
 					defenseStrength += combatJudge->strength(worker);
 					militia.insert(worker);
 				}
+				else
+					break;
 			}
 
 			// Command interception.
 			BOOST_FOREACH(BWAPI::Unit * defender, defenders)
-				utilUnit::command(defender, BWAPI::UnitCommandTypes::Attack_Move, targetPos);
+				if (defender->isIdle() || defender->getLastCommand().getType() != BWAPI::UnitCommandTypes::Attack_Move)
+					utilUnit::command(defender, BWAPI::UnitCommandTypes::Attack_Move, targetPos);
 			BOOST_FOREACH(BWAPI::Unit * worker, militia)
 			{
 				// Command militia.
