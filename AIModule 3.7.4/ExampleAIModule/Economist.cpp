@@ -72,7 +72,6 @@ void Economist::update()
 		}
 	}
 
-	/*
 	// Expansion check.
 	if (expand &&
 		!planner->contains(BWAPI::UnitTypes::Protoss_Nexus) &&
@@ -80,7 +79,6 @@ void Economist::update()
 		strategist->isDefended() &&
 		settler->nextExpansion()) // Verify expansion is possible.
 		planner->enqueue(BWAPI::UnitTypes::Protoss_Nexus);
-	*/
 }
 
 
@@ -103,12 +101,12 @@ void Economist::addRefinery(BWAPI::Unit * refinery)
 
 // Moves workers to the target region.
 //TODO Check recursively neighbors instead.
+//TODO Equalize as much as possible between regions.
 //TODO Should not move if only 6 or less are available.
 void Economist::maynardSlide(BWTA::Region * target)
 {
 	// Update gatherer.
-	if (!gatherer->contains(target))
-		gatherer->addRegion(target);
+	gatherer->addRegion(target);
 
 	// Move workers.
 	unsigned int current = 0, max = gatherer->getMinerals(target).size() * MIN_MINERAL_SATURATION;
@@ -127,9 +125,7 @@ void Economist::maynardSlide(BWTA::Region * target)
 				if (worker)
 				{
 					// Move worker.
-					vassal->removeWorker(worker);
-					gatherer->removeWorker(worker);
-					landlord->addWorker(worker, target);
+					landlord->moveWorker(worker, target);
 					current++;
 					freeMiners--;
 				}

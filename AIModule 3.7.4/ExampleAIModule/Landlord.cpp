@@ -91,6 +91,29 @@ void Landlord::addWorker(BWAPI::Unit * worker, BWTA::Region * region)
 }
 
 
+// Adds a worker to the region's related vassal, and removes it from its current.
+void Landlord::moveWorker(BWAPI::Unit * worker, BWTA::Region * region)
+{
+	// Verify worker.
+	if (utilUnit::isOwned(worker) &&
+		worker->exists() &&
+		worker->getType().isWorker())
+	{
+		// Verify vassal or create new.
+		if (!contains(region))
+			newVassal(region);
+
+		// Remove worker from old vassal.
+		if (contains(worker))
+			regionVassal[unitRegion[worker]]->removeWorker(worker);
+
+		// Add worker to new vassal.
+		regionVassal[region]->addWorker(worker);
+		unitRegion[worker] = region;
+	}
+}
+
+
 // Unemploys a worker from the related vassal.
 void Landlord::dismissWorker(BWAPI::Unit * worker)
 {

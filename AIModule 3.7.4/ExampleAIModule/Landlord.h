@@ -26,6 +26,7 @@ public:
 	void addDepot(BWAPI::Unit * depot);
 	void addWorker(BWAPI::Unit * worker);
 	void addWorker(BWAPI::Unit * worker, BWTA::Region * region);
+	void moveWorker(BWAPI::Unit * worker, BWTA::Region * region);
 	void dismissWorker(BWAPI::Unit * worker);
 	void removeDepot(BWAPI::Unit * depot);
 	void employWorker(BWAPI::Unit * worker, Task task);
