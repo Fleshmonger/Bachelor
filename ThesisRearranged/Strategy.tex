@@ -1,4 +1,5 @@
 \chapter{Strategy}
+\label{ch:strategy}
 This chapter concerns itself with how we implement the overall strategic reasoning in our bot. We have already gone through the basics of strategies in StarCraft, and all the basic functionalities has been implemented in the bot. Now it must all be put together in a cohesive form to achieve a strong AI.
 
 Initially the bot functioned purely on a greedy principle. Concerning a specific set of units, we attempt to produce them if possible every frame. This is possibly the fastest and simplest AI to implement, but it has proven to be an effective approximation in some algorithmic fields. As the bot was developed additional systems was implemented, but the core auto-pilot remained greedy.
@@ -10,12 +11,28 @@ While one could focus on a niche strategy such as proxies or such, as explained 
 All combat decisions are made by the \texttt{Strategist} manager, while economy decisions are made by the \texttt{Economist} manager. These are disabled by the \texttt{Despot} manager when executing a build-order. The \texttt{Despot} module is the highest in the hierarchy, beyond the core AI module receiving call-backs from StarCraft.
 
 \section{Economy}
-TODO intro, importance of economic advantage.
+TODO intro
 
 The \texttt{Economist} manager moderates worker production and expansions, unless it has been disabled by the \texttt{Despot}.
 
 	\subsection*{Workers}
 	Generally it is advised that a Protoss player keeps producing workers constantly until late-game, but some openings might temporarily stop worker production. Therefore, if we are not at the desired worker amount in a base, we attempt to produce a new worker with regards to resources and whether a worker is already in production.
+
+	%Moved from Resources.
+	%Usually a Protoss player should not stop building workers until late game, but some openings require a temporary pause in their production. Therefore the solution is just greedily building workers while no build order is being executed. 
+	
+	%Moved from resources.
+	%\section{Building Supply}
+	%A player can have a maximum of 200 supply. The simplest supply implementation is to build supply units whenever the supply limit has been reached while it is below the maximum threshold. This will however throttle production while the supply structure is being constructed, which is inefficient. The optimal solution would be predicting supply needed in the near future and interlace supply production with unit production such that all orders are completed the earliest. Observe however that this is alike the \emph{Job shop scheduling} problem but more complex with the additional factor of resources. As such the problem is NP-complete, and even then resource gathering rates must be predicted for optimal solutions.
+	
+	%Moved from resources.
+	%A simple solution which is implemented in the current bot is to build supply units when released supply is below a set threshold. This threshold is somewhat arbitrarily set according to testing. A more dynamic solution would be to set the threshold to the amount of supply used if all production facilities built a unit, assuming the unit type can be predicted. This solution will build supply units that are completed before they are needed, but might not result the optimal amount of units completed at any given time (impacting economy with relation to workers). The worst problem, production throttling, is avoided however.
+	
+	%Moved from resources.
+	%Maynard Slide
+	
+	%Moved from resources.
+	%TBD Mineral to gas ratio.
 	
 	\subsection*{Expanding}
 	An expansion secures a more permanent economic advantage, as a player secures both more resources and gathers them faster. More expansions also secures map-control, as the player will have more presence in the map and control more resources.

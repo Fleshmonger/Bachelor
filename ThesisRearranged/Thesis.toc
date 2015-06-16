@@ -9,29 +9,30 @@
 \contentsline {chapter}{\numberline {2}Project Process}{3}{chapter.2}
 \contentsline {section}{\numberline {2.1}Testing}{3}{section.2.1}
 \contentsline {chapter}{\numberline {3}StarCraft}{5}{chapter.3}
-\contentsline {chapter}{\numberline {4}Other Strategies}{7}{chapter.4}
-\contentsline {chapter}{\numberline {5}Agent Design}{9}{chapter.5}
-\contentsline {section}{\numberline {5.1}Overall Strategy}{9}{section.5.1}
-\contentsline {section}{\numberline {5.2}Overall Design Paradigm}{10}{section.5.2}
-\contentsline {chapter}{\numberline {6}Resources and Bases}{13}{chapter.6}
-\contentsline {section}{\numberline {6.1}Mining Minerals}{14}{section.6.1}
-\contentsline {section}{\numberline {6.2}Harvesting Gas}{15}{section.6.2}
-\contentsline {section}{\numberline {6.3}Building Supply}{15}{section.6.3}
-\contentsline {section}{\numberline {6.4}Managing gathering}{15}{section.6.4}
-\contentsline {chapter}{\numberline {7}Production and Expansion}{17}{chapter.7}
-\contentsline {section}{\numberline {7.1}Training Units}{18}{section.7.1}
-\contentsline {section}{\numberline {7.2}Building Structures}{19}{section.7.2}
-\contentsline {section}{\numberline {7.3}Building Expansions}{22}{section.7.3}
-\contentsline {chapter}{\numberline {8}Information Management}{25}{chapter.8}
-\contentsline {section}{\numberline {8.1}Tracking Units}{25}{section.8.1}
-\contentsline {section}{\numberline {8.2}Scouting}{26}{section.8.2}
-\contentsline {chapter}{\numberline {9}Combat}{29}{chapter.9}
-\contentsline {section}{\numberline {9.1}Attacking}{29}{section.9.1}
-\contentsline {section}{\numberline {9.2}Defending}{33}{section.9.2}
-\contentsline {chapter}{\numberline {10}Strategy}{35}{chapter.10}
-\contentsline {section}{\numberline {10.1}Economy}{36}{section.10.1}
-\contentsline {section}{\numberline {10.2}Combat}{37}{section.10.2}
-\contentsline {section}{\numberline {10.3}Build-orders}{38}{section.10.3}
-\contentsline {chapter}{\numberline {11}Results}{41}{chapter.11}
-\contentsline {chapter}{\numberline {12}Conclusion}{43}{chapter.12}
-\contentsline {chapter}{Bibliography}{45}{chapter.12}
+\contentsline {chapter}{\numberline {4}Related Works}{7}{chapter.4}
+\contentsline {section}{\numberline {4.1}Strategies in StarCraft}{7}{section.4.1}
+\contentsline {section}{\numberline {4.2}Bots in StarCraft}{8}{section.4.2}
+\contentsline {chapter}{\numberline {5}Agent Design}{11}{chapter.5}
+\contentsline {section}{\numberline {5.1}Overall Strategy}{11}{section.5.1}
+\contentsline {section}{\numberline {5.2}Overall Architecture Design}{12}{section.5.2}
+\contentsline {chapter}{\numberline {6}Workers and Resources}{15}{chapter.6}
+\contentsline {section}{\numberline {6.1}Managing gathering}{16}{section.6.1}
+\contentsline {section}{\numberline {6.2}Mining Minerals}{17}{section.6.2}
+\contentsline {section}{\numberline {6.3}Harvesting Gas}{18}{section.6.3}
+\contentsline {chapter}{\numberline {7}Production and Expansion}{19}{chapter.7}
+\contentsline {section}{\numberline {7.1}Training Units}{20}{section.7.1}
+\contentsline {section}{\numberline {7.2}Building Structures}{21}{section.7.2}
+\contentsline {section}{\numberline {7.3}Building Expansions}{24}{section.7.3}
+\contentsline {chapter}{\numberline {8}Information Management}{27}{chapter.8}
+\contentsline {section}{\numberline {8.1}Tracking Units}{27}{section.8.1}
+\contentsline {section}{\numberline {8.2}Scouting}{28}{section.8.2}
+\contentsline {chapter}{\numberline {9}Combat}{31}{chapter.9}
+\contentsline {section}{\numberline {9.1}Attacking}{31}{section.9.1}
+\contentsline {section}{\numberline {9.2}Defending}{35}{section.9.2}
+\contentsline {chapter}{\numberline {10}Strategy}{37}{chapter.10}
+\contentsline {section}{\numberline {10.1}Economy}{38}{section.10.1}
+\contentsline {section}{\numberline {10.2}Combat}{39}{section.10.2}
+\contentsline {section}{\numberline {10.3}Build-orders}{40}{section.10.3}
+\contentsline {chapter}{\numberline {11}Results}{43}{chapter.11}
+\contentsline {chapter}{\numberline {12}Conclusion}{45}{chapter.12}
+\contentsline {chapter}{Bibliography}{47}{chapter.12}

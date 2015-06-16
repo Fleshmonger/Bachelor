@@ -1,43 +1,42 @@
 %Contains base and resource management, specifically the TaskMaster.
-\chapter{Resources and Bases}
-In early- and mid-game, \emph{economic advantage} is the most important aspect of StarCraft. This is when you have a higher resource input than your opponent, and happens when you focus more on resources than them, or they sacrifice long term advantage over short term. The point of this is if you eclipse your opponent in resources, you can perform worse in combat and still end up on top. You can send more units, recover them faster and expand economy quicker, retaining your advantage.
+\chapter{Workers and Resources}
+This chapter covers the basics of gathering resources in StarCraft with a bot. 
 
-There are three resources in StarCraft. Minerals are mined from mineral fields which usually are in clusters of 8-12 by each base location. Everything you produce costs minerals, so it is the most important resource. They are harvested by your workers, which bring it back to a nearby resource depot in batches of six. Usually there are 2-3 workers on each field depending on the distance from the depot. \emph{Vespene Gas} or simply gas is harvested from \emph{refineries}. These must be built upon \emph{Vespene Geysers} of which there are one or two by placed by each base location. It is harvested in batches of eight with a max of three workers per refinery at optimal depot distance. Advanced structures, units and all technologies depend on gas, and a decision with major impact is when a player starts harvesting gas. The immediate cost of the refinery and lost mineral gathering is a liability against fast rushing strategies. The last resource, supply, is reserved by units. Every unit reserves some amount of supply which is released upon their destruction. The only way to secure more is building \emph{supply depots}, \emph{pylons} or \emph{overlords} respectively for Terran, Protoss and Zerg. Each of these add some amount of supply, which is removed if they are destroyed. A player can happen to use more supply than they have, but will be unable to build more units until more supply is acquired.
+In early- and mid-game, \emph{economic advantage} is the most important aspect of StarCraft strategy. This occurs when you have a higher resource intake than your opponent, such as if you have more workers that are gathering or more bases to gather from. The advantage is while maintaining an equivalent army to the opponent, one can replace lost troops faster, gain a larger army or upgrade the current one. If you eclipse your opponent in resources, you can perform worse in combat and still win. Without the advantage, upgrading troops would slow troop production down and the opponent could produce an equivalent or even stronger army at any time.
 
-Only one worker can be active at a mineral field or refinery.
+There are three kinds resources in StarCraft. \emph{Workers} are the only units capable of gathering resources. Each race has one worker type and each player start the game with a couple of their race's type. Players also start with a \emph{resource depot} or simply \emph{depot}. This structure can produce new workers and is also the drop off point for gathering resources. The Protoss worker is the \emph{probe} and their depot is the \emph{nexus}.
 
-StarCraft has a built in worker gathering AI. Workers will automatically return cargo from resources (unless they are interrupted). When gathering minerals, the workers will move to another mineral field if the current one is occupied. When gathering gas, they will wait until the refinery is unoccupied and then gather.
+\emph{Minerals} are mined from mineral fields which usually are in clusters of 8-12. All units cost minerals, so it is the most important resource. Workers that mine these bring them back to the depot in batches of six mineral units. Depot's are limited in their proximity to the clusters, but at optimal distance there can be 3 workers on each field. Mineral fields are usually placed in a half-circle formation, such that there exists an optimal depot location. While the first worker on each mineral field will gather at a linear rate, they will yield diminishing returns on the second and especially third worker.
 
-TODO TaskMaster module
+\emph{Vespene Gas} or simply \emph{gas} is harvested from \emph{refineries}. Each race has a distinct refinery structure, although they are very similar. These must be built upon \emph{Vespene Geysers} of which there are up to two by each mineral cluster. It is harvested in batches of eight with a max of three workers per refinery at optimal depot distance. Advanced structures, units and all technologies depend on gas. The immediate cost of the refinery and lost mineral gathering is a liability against fast openings, but harvesting too late means fighting against stronger units.
+
+The last resource, \emph{supply} is a population limit and is not gathered like the other resources. Each unit reserves some amount of supply which is released upon their destruction. The only way to secure more supply is building the race's \emph{supply structure}. Each of these add some amount of supply to the total, which is subtracted if they are destroyed. Units cannot be produced if they require more supply than the player has free. If the player happens to reserve more supply than their total, they will be unable to build more units until more supply is acquired, called \emph{supply blocked}. Although supply is specifically the Terran resource, it is used as the general term for all races. \emph{Psi} and \emph{control} are the Protoss and Zerg equivalents. The Protoss supply structure is the \emph{pylon}.
+
+While multiple workers can gather from the same field or refinery, only one worker can actively occupy it. The rest is either returning cargo, moving to the resource or waiting.
+
+In the next sections we will first describe the architecture behind worker management, followed by how minerals is mined and gas is harvested. Building supply is first covered in chapter \ref{ch:strategy}, as this resources behaves much different than the others.
+
+\section{Managing gathering}
+%TODO Base Location description.
+
+The \emph{TaskMaster} module contains workers at a single base location, and records their current tasks. It can return all workers with a specific task. Each base location is a wrapper \emph{Vassal}. The \emph{Landlord} module contains all vassals. None of these three modules have any agency, and only respond to function calls from superior modules.
+
+%TODO Taskmaster implementation
+
+Gatherer module accesses the Landlord module and with it, all the subordinate TaskMaster modules. Gatherering must be contained in a single superior module rather than within each Vassal, as gathering is not necessarily uniform across all bases.
 
 \section{Mining Minerals}
+StarCraft has a built-in worker gathering AI to help human players. Workers will automatically return cargo from resources (unless they are interrupted) and return to the same resource afterwards. When gathering minerals, they will move to another mineral field if the current one is occupied. This is an inefficient solution, as the worker could be stuck moving between minerals for long periods of time. It is also a liability for a bot, as the AI cannot be disabled. When harvesting gas they will wait until the refinery is unoccupied.
+
 The simplest mineral gathering implementation is ordering idle gatherers to mine some arbitrary mineral. At some point, the built-in AI will ensure the workers are optimally scattered. It will however not be scattered immediately, and some workers will be very inefficient while moving from mineral to mineral. A simple but effective addition would be to scatter the initial workers.
 
 By maintaining a queue of minerals, we can optimally scatter the workers. The first element of the queue is the mineral with fewest workers and the one in the back has the most. By continually assigning new workers to the first element and moving it to the back, we maintain a queue where the last mineral has at most one more worker than the first. Removing workers however requires finding the mineral in the queue, and should be done sparingly. Therefore, it is assumed any building or defending activity will be short and temporary, and workers assigned such will not be removed from the scattering. This might result in an ineffective scattering at some points. It is not clear however if optimizing the scattering at all times results in optimal resource output, as workers might be moved between minerals too often, resulting in less time mining.
 
 If we maintain a dictionary of workers and their targets, we can assign new ones in constant time and retrieving targets in logarithmic time. This could be improved to amortized constant time with hashing. Removing a worker however requires a search through the queue which is linear time.
 
-TODO alternatives.
+%TODO alternatives.
 
 \section{Harvesting Gas}	
-Gas harvest is very much like mineral mining, however it is simpler. It is agreed upon that three workers are the optimal amount per refinery. The implementation reflects this, and is otherwise identical to mineral mining.
+Gas harvest is very much like mineral mining, but simpler. Rarely will players have fewer than three workers on each refinery, as refineries will be built only when needed. Furthermore, almost all late-game units require gas, and harvesting is slower than mining.
 
-Bases have between zero to two geysers, but in no AI tournament maps are there more than one per base location.
-
-\section{Building Supply}
-A player can have a maximum of 200 supply. The simplest supply implementation is to build supply units whenever the supply limit has been reached while it is below the maximum threshold. This will however throttle production while the supply structure is being constructed, which is inefficient. The optimal solution would be predicting supply needed in the near future and interlace supply production with unit production such that all orders are completed the earliest. Observe however that this is alike the \emph{Job shop scheduling} problem but more complex with the additional factor of resources. As such the problem is NP-complete, and even then resource gathering rates must be predicted for optimal solutions.
-
-A simple solution which is implemented in the current bot is to build supply units when released supply is below a set threshold. This threshold is somewhat arbitrarily set according to testing. A more dynamic solution would be to set the threshold to the amount of supply used if all production facilities built a unit, assuming the unit type can be predicted. This solution will build supply units that are completed before they are needed, but might not result the optimal amount of units completed at any given time (impacting economy with relation to workers). The worst problem, production throttling, is avoided however.
-
-\section{Managing gathering}
-Usually a Protoss player should not stop building workers until late game, but some openings require a temporary pause. Therefore the solution is just greedily building workers while no build order is being executed.
-
-Two workers per mineral is the optimal amount. The third worker will have diminishing returns and the fourth would have no impact. A third worker is optimal if the mineral is far away from the depot. Three workers on every refinery is the standard, regulated only according to need. Usually a refinery will be at max capacity, unless the player has lost too many workers.
-
-TODO Multiple bases.
-
-The Production chapter will cover how and where we build these expansions.
-
-TBD Mineral to gas ratio.
-
-TODO Maynard Slide
+The implementation is identical to mineral mining. No AI tournament maps contain more than one refinery, but the gas harvesting still uses a priority queue. In this case however, all operations become constant time, so performance is not harmed while code is reused.
