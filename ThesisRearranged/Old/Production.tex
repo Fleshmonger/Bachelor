@@ -1,0 +1,97 @@
+\chapter{Production and Expansion}
+%TODO Streamline.
+A \emph{Unit} is any player controlled entity, building or not. Some spell effects, like the Terran nuke, are oddly enough also classified as units but they are neither selectable nor controllable. This is allegedly because of time constraints, and when the term unit is used it usually does not include these. %Source?
+In this paper we sometimes refer to non-buildings as units, which should be clear from context. Buildings are sometimes called structures, usually to avoid confusion between building as a verb and a noun.
+
+\emph{Production} here refers to the player controlled act of creating a new unit. Officially producing a building is called \emph{building}; \emph{training} if it is a non-building. The term production has been devised for this paper to refer both building and training, whichever is appropriate. Note that the act of building is creating a unit while building a structure usually refers to the entire process of making structures.
+
+When a production has been ordered, there is a duration where the unit is \emph{constructing} before being complete and usable. The event of a unit being created and starting construction is separate from ending it and being completed. An incomplete unit cannot execute any commands and a player will not receive any benefits like additional supply before completion. Buildings are placed in the world prior to construction while non-buildings are hidden, appearing at their constructor upon completion. A unit consumes resources upon production, including supply requirements.
+
+Expansions are additional depots beyond the starting one, built at other resource clusters. One of the most important concepts in StarCraft, expansions allow players to harvest more resources at higher rates than with only one base. Every tournament legal map has a specific expansion called the \emph{natural expansion}. This is the closest base location to a players start and is usually easily defended compared to other expansions. It usually has less resources than other expansions to compensate.
+
+\section{Training Units}
+%TODO Remove building perspective, as it is after this section.
+%TODO Missing subsection
+Producing non-building units is simple compared to building structures. The act of producing a unit is called \emph{training}, however confusingly an incomplete unit is considered \emph{constructing} as if it were a building. The steps can be described as firstly acquiring a relevant and available facility, and secondly monitoring the training.
+
+		\subsubsection*{Implementation}
+		StarCraft has a simple system of who-constructs-who, as there only exists one possible constructor for each unit. All buildings refer to the relevant worker and all units refer to at most one structure. BWAPI has already implemented this functionality, so given an arbitrary unit type we can easily determine if it is a non-building, and if so who trains it.
+		
+		TODO implementation.
+		
+		%Perspective.
+		The agents manager for training and monitoring units is called the \emph{Recruiter}. It is very low in the module dependency hierarchy, while accessed by many other managers. It is not an independent AI, updated only through events. It contains all units capable of training other units. The implementation is generic enough to allow training any train-able unit in the game, even those trained by non-buildings.
+
+\section{Building Structures}
+Like training units, building structures is in two stages. The structure is built and then it is constructed. Contrary to training, structures require workers to be built, where the worker must first arrive at the desired structure location. All player structures are built by one of the three workers (except Terran extensions, but they are handled more like upgrades).
+
+To build a structure we must first find proper placement, find an available builder and then monitor the structure until completion.
+
+	\subsection*{Structure Placement}
+	%Problem.
+	There can be a lot of strategy behind the placement of buildings, and in special cases it is imperative.
+	
+	Terran can build structures anywhere on the map. Zerg can only build on \emph{creep} which terrain that has been transformed by specific nearby Zerg structures. Protoss can build the Nexus (depot) and Pylon (supply structure) anywhere on the map like Terran. All other structures must be \emph{powered}, which is satisfied when they are within a certain distance of a pylon. A structure can lose power if all pylons nearby are destroyed, and will become inactive until new pylons are constructed.
+	
+	The pylons are therefore important when placing new structures. The Protoss player must place at least one pylon in any area he wishes to build in and should distance pylons in a base to allow more structures. Fortunately, Protoss bases are usually compact enough such that one can place pylons arbitrarily and still manage to fit other structures in the region. It is important however to place at least one pylon in an expansion before other structures can be built.
+	
+	Unless a specific building location is specified, the agent attempts to place the structure as close as possible to the main depot of the desired region. This is easily implemented, avoids some pitfalls and accomplishes some goals. All the workers in the region are usually at the mineral fields by the depot, and therefore will have a short distance to travel. Additionally the workers and depot are shielded since they are the furthest point in the base from all angles. The opponents' troops are forced to either destroy the other structures first or move through the bottlenecks of the base.
+	
+	Even if a region only has one exit, it might be desirable to spread out all structures, as flying units can attack from any angle. Depots will always be placed in new regions at the location BWTA has marked. Refineries can only be built on-top of vespene geysers and are exempt as well.
+	
+		\subsubsection*{Implementation}
+		The implementation to place buildings is simple but expensive. The agent attempts all locations in the map in a spiral pattern around the depot, and returns the first location that is available. There are multiple factors when deciding availability. Obviously there must not be any units in the area and the terrain must allow the structure placement.
+		
+		Placing buildings too close can block passage between them, especially for larger units. The structure hitbox is somewhat arbitrary in StarCraft, as different combinations of buildings next to each other will allow different units to pass through, even though it is tile based. This is because the structure hitbox usually does not cover its location completely. By placing buildings at least one tile from each other, we ensure all units can easily pass through. The agent does this by keeping a tile map of all structure locations inflated by one tile in all directions. If a build location overlaps any of the occupied tiles it is not available. Registering new buildings and querying this is constant time operations, but the space used is polynomial to the map size. It could be improved by only keeping a map for regions we have bases in, although not an asymptotic improvement.
+		
+		We would also like to avoid placing structures between resources and depots to avoid blocking workers. This is simply done by drawing the smallest rectangle including the depot location, geyser(s) and mineral fields, and avoiding placing structures within this. Building the rectangle is linear to the amount of items in it and querying it is constant, but we expect the amount of items to be low (ten or less).
+
+	\subsection*{Aquiring and Commanding Builders}
+	%TODO Implementation subsection?
+	The naive solution in getting a builder is picking one arbitrarily from all controlled workers. This however might interrupt other jobs, pick a worker that is carrying resources, or pick someone far away from the build location.
+	
+	Instead, recall the \texttt{TaskMaster} module from resource gathering. Since all our workers are separated in base locations, we can easily pick a worker from the closest base location. Usually our buildings are placed close to a base location, and in case of expansions we pick a worker from the nearest base. Additionally, the task master marks the jobs of all workers, so to avoid interrupting other jobs it picks a worker from idle or gathering groups (in that order). Finally, the agent searches through the groups until it finds a worker that is not carrying resources. This becomes the builder.
+	
+	The operation time is linear to the amount of workers, as they are usually gathering resources. However it is probable that less than half the workers are returning resources at any given moment, so it is expected that we only need to check two workers before finding a viable candidate.
+	
+	%Commanding.
+	%TODO trivial?
+	Finally, we order the worker to build the construction. A player cannot build in fog of war, therefore the worker should first be moved closer to the target location. When it has been revealed the builder is commanded to build the structure.
+	
+	\subsection*{Monitoring Construction and Completion}
+	While the structure is constructing but not finished, we need to store it somewhere in the agent. The agent would need to know which structures is soon available, otherwise the events which spurred the construction of the structures might be repeated. There is a lot of frames between scheduling the structure and actually receiving it, where unexpected problems could occur.
+	
+	If at any point the structure is unable to be completed, it is desirable to cancel the order rather than repairing it. This is because the unexpected event which canceled the structure might have changed the overall strategy and remove the need for the structure. This way, the meta strategy of when to build structures are moved upwards in the hierarchy, reducing independent AI in this module and making it more accessible by other modules.
+	
+	Cancellation of a build order might occur if for example the builder is destroyed or the build location is invalid.
+	
+		\subsubsection*{Implementation}
+		Both Zerg and Protoss structures auto-construct while Terran require a worker. So the agent only needs to keep a dictionary of all structures that are constructing. While the structure has not yet been built, it can only be identified by its type as no unit exist yet. This implies the need of a multi-set, assuming we want to be able to build multiple structures of the same type simultaneously.
+		
+		The current implementation spends logarithmic time to query, insert and remove new build orders and constructions, but this could be improved to constant with hashing. Both containers are linear in size. Usually a player is not building very many structures at the same time so these improvements are not important. 
+		
+		To ensure tasked workers are building the required structures, the data structure has to be updated every frame. Units have a bad habit of canceling commands in some cases and workers especially do this by retreating from combat. It might also be the case that a worker was given a command in the same frame it was tasked to build, in which case it could not receive the new build command yet.
+		
+		Since refineries are built on top of geysers, they never trigger the event \texttt{create} but \texttt{morph} instead. Additionally, when they are "completed", no event is triggered. Completion checks are required every frame to monitor the construction of refineries.
+		
+		%Perspective.
+		The building, construction and monitoring of structures is handled by the module \texttt{Architect}, which also include acquiring workers and placing buildings. The Architect is an independent manager, since it has to command the workers. It has carefully been low in dependencies, to keep it low in the module hierarchy. The building map used to avoid collisions and preserve distancing is contained in the \texttt{BaseManager} module. The \texttt{Accountant} module is updated with the current schedule of structures by the \texttt{Architect} which is queried by other modules. Monitoring refineries is done in a separate module called \texttt{Morpher} which handles all morphing units.
+
+\section{Building Expansions}
+As noted in the resource chapter, it is often profitable and usually necessary to expand resource harvesting to new locations. To avoid transporting cargo all the way between regions, players have to build resource depots near resources. If the internal data structures behind building structures is limited to regions it may be challenging, and it is in our case.
+
+To build an expansion we need the location and the resources.
+
+	\subsection*{Locating Expansion}
+	%TODO This is a bad solution!
+	There are a few things to take into account when expanding. Obviously we need to expand into a location which is not occupied by enemy forces, especially not if they already have a depot at the desired location. Additional factors are proximity to existing bases, defensibility and resource quantity. Expanding to the natural expansion is usually always the first choice, as it scores high marks on both proximity and defensibility. Usually, the richest base location is in the center and is difficult to defend.
+	
+	When the agent looks for the next expansion location, it recursively searches neighboring regions from the starting one. The first region which is not already occupied is picked.
+	
+	\subsection*{Building Depots}
+	When BWTA analyzes a map, it marks optimal base locations, where a depots distance to a mineral cluster and geysers are minimized. Usually each region only contains one base location, at least this is the case for all the AI tournament maps.
+	
+	Building an expansion is then handled by ordering the depot construction at the found base location with a worker from a nearby region. Currently, the agent always picks a worker from the main base, which is not always optimal. A better solution would be recursively searching neighbor regions' base locations in a priority queue, visiting shortest base-to-base distance first. Since workers are approximately at the same position as their related depot, it would find the optimal worker source.
+
+	%Perspective.
+	While the \texttt{Architect} handles building the depot like any other structure, the \texttt{Settler} module contains expansion logic and orders the construction. It is not an independent module and does not decide when to expand.

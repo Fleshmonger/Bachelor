@@ -1,0 +1,25 @@
+\chapter{Agent Design}
+TODO Intro.
+
+The imperative when designing the bot is to lessen the decision space as greatly as possible.
+
+Before all that, we need a gameplay based goal as well. Since this bot will not reach a great level of complexity due to time restrictions, we can design the data structures with the overall limits of strategy in mind, to speed up the development process.
+
+\section{Overall Strategy}
+
+It is also possible to instead implement some niche strategy, like proxy gateways and the like. The problem is these strategies are hard countered by some general strategies. This means it would not have a chance against some specific other strategies, making it somewhat unsustainable and not very time effective to work on.
+
+This bot will focus on being strong at early game. The logic here is that if it loses early on, there will be no mid- or late game. Therefore, the bot must master early game first before others. Simplest solution is implementing one strategy, which can be expanded into mid-game if the round drags on. Both boom and turtle strategies seek to push the game out of early game, so the remaining strategy which lies in early game is rush. This has seen a lot of use in the bot tournaments, probably being the most popular choice. It requires nothing but building infantry and send them to attack. Additional features would be upgrading, building more advanced units or expanding.
+
+\section{Overall Design Paradigm}
+The problems a bot faces are easily divided into smaller, isolated problems. Its therefore easy to build the bot out of individual modules, each solving some non-overlapping subset of problems. In this paper, managers are modules which has some sort of AI behavior, and is updated every frame of the game. Contrary, a non-manager is passive, only active when other modules need it or on event callbacks from BWAPI. The benefit is modules are individually easily replaced or refactored while the whole still works, as they are non-overlapping.
+
+Behind every module there is an additional design rule. We would rather want to do the right things ineffectively, than doing the wrong things effectively. It is a trivial axiom, but important when implementing new strategic resolutions. We would like to prioritize the minimization of times the bot applies strategies that are not appropriate, rather than possibly applying strategies at appropriate times. Slow and steady wins the race, and this is a safe approach to developing the bot. The idea is that the bot is constantly added to with features, rather than current features being ironed out and odd behavior removed. It streamlines the development process, and eases evaluation of different features.
+
+The UAlberta bot by Dave Churchill used an interesting design paradigm. The modules in the bot are in a arborescence graph structure. There is a root node, the primary AI module loaded into StarCraft, which has exactly one path to each other node in the hierarchy. In other words, there are no cyclic dependencies. Churchill alleges that it is based on "proven military structures". In any case, the UAlberta bot is high-ranking bot, victor of one competition and runner up in others
+
+The benefits of this structure is lesser and easier dependencies, removing the inherent challenges in cyclic dependencies. It enhances the benefits of modular design, since modules has a stricter position in the hierarchy, making the modular design easier. It is also a great boon to agile development, as the tree will just evolve upwards with newer modules easily integrated to the older. This structure can easily contain multiple sibling managers, separated by information and controlled by some higher order manager. Much like the military, the lower managers make smaller decisions with fewer resource such as building and gathering, and the higher managers control more information to make the larger scale decisions such as strategies and attacking.
+
+On the other hand, the structure allows less complicated interactions. By limiting the hierarchy, the information available is limited, as some modules must be at the bottom of the hierarchy. These are inevitably void of interactions with higher modules. This is also felt at the top of the hierarchy, where the root module is the final word on what the bot does. At some point all the choices have to be made in the final module which has all the information available.
+
+An alternative design would be a single manager which makes all decisions based on some subsidiary modules. This structure can easily get confusing in priorities and the order of decisions, but it does allow greater freedom and even a dynamic order in which choices are made.

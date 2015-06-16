@@ -1,0 +1,70 @@
+\chapter{Strategy}
+This chapter concerns itself with how we implement the overall strategic reasoning in our bot. We have already gone through the basics of strategies in StarCraft, and all the basic functionalities has been implemented in the bot. Now it must all be put together in a cohesive form to achieve a strong AI.
+
+Initially the bot functioned purely on a greedy principle. Concerning a specific set of units, we attempt to produce them if possible every frame. This is possibly the fastest and simplest AI to implement, but it has proven to be an effective approximation in some algorithmic fields. As the bot was developed additional systems was implemented, but the core auto-pilot remained greedy.
+
+The overall strategy of the bot is rushing. It needs to be effective in economy early on and build troops as fast as possible. It sacrifices long term advantages for an early game attack. If the initial attacks are successful, the bot would gain even stronger long term advantages by hindering the opponent, and would be able to transcend into mid-game tactics.
+
+While one could focus on a niche strategy such as proxies or such, as explained earlier these strategies are strongly countered by some specific strategies. They are high-risk, high-reward, but only work in  a small subset of match-ups. So even though they would be effective in these match-ups, we would need to implement other solutions for the rest, where a not insignificant amount of them would require an advanced bot beyond these 'cheese' strategies. Therefore, we could just as well implement an advanced bot and cover all match-ups. All-in would be such a niche-strategy against humans, but bots have proved to be very ineffective against this strategy. Additionally, the all-in strategy is a more aggressive version of rushing, so it could easily be transformed into the latter without any large scale implementations.
+
+All combat decisions are made by the \texttt{Strategist} manager, while economy decisions are made by the \texttt{Economist} manager. These are disabled by the \texttt{Despot} manager when executing a build-order. The \texttt{Despot} module is the highest in the hierarchy, beyond the core AI module receiving call-backs from StarCraft.
+
+\section{Economy}
+TODO intro, importance of economic advantage.
+
+The \texttt{Economist} manager moderates worker production and expansions, unless it has been disabled by the \texttt{Despot}.
+
+	\subsection*{Workers}
+	Generally it is advised that a Protoss player keeps producing workers constantly until late-game, but some openings might temporarily stop worker production. Therefore, if we are not at the desired worker amount in a base, we attempt to produce a new worker with regards to resources and whether a worker is already in production.
+	
+	\subsection*{Expanding}
+	An expansion secures a more permanent economic advantage, as a player secures both more resources and gathers them faster. More expansions also secures map-control, as the player will have more presence in the map and control more resources.
+	
+	Deciding when to expand is both difficult and pivotal. It takes time and resources and leaves the new base pretty vulnerable unless there is a standing army. A player with a stronger army can safely expand while guarding it, securing his advantage or at least keeping up with the opponents expansions. Without the stronger army its a risky maneuver, but might still be viable or even imperative. At some point the resources in ones current bases will be depleted, leading to a need to expand. If a player expands before having saturated his current mineral fields, its called a \emph{fast expand}, sometimes used as an opening. This is very risky but with a very immediate payoff in economy. The contrary formula, keeping a single base until mid-game or alike is called \emph{one base play}.
+	
+		\subsubsection*{Implementation}
+		It is only clear that an expansion is viable when all mineral fields have been saturated. Before this, it is both risky as we sacrifice current resources for later economy, which requires both a strategic reason and foresight whether it is viable. By expanding when we have saturated our mineral fields, we risk expanding too late, but ensure a consistent worker production throughout the game. Expanding too late is better than expanding too early; an early expansion will waste resources or possibly result in an immediate loss, where a late expansion simply wastes an opportunity.
+		
+		Since expanding is a costly affair, the bot needs to save up resources. Therefore, the expansion is queued in the build-order, thereby pausing other productions until the expansion is ready.
+		
+		TBD Implement better expanding, avoid opponent regions and avoid if in combat.
+	
+		The bot can perform a fast expand opening, but it has not been very successful compared to its usual one base play. The difficulty lies in detecting whether a fast expand is viable, which is very much Dependant on enemy openings. It was decided to focus on the safer opening instead as it is a more versatile strategy.
+		
+		TBD Evaluation of the auto-expander vs. one-base bot.
+		
+\section{Combat}
+TODO Combat intro.
+
+Building troops.
+
+Counter Strategies.
+
+\texttt{Strategist} order the production of troops and troop facilities.
+
+	\subsection*{Troops}
+	As this bot is very simple in terms of handling units, it is appropriate to use the first available units and attack as quickly as possible. The idea behind this strategy is, that since this bot lacks greater strategic reasoning and handles late game units poorly, then it should attempt to win the game before any of that becomes relevant. This can beat more complex bots, simply because their otherwise superior strategies are never allowed to hatch. Additionally, Protoss has the strongest and easiest to use early game units, and when massed will easily beat both Terran and Zerg.
+
+	Currently the bot just mass produces zealots whenever it can in greedy fashion. As producing zealots is the ultimate goal of the bot, this is sufficient.
+
+	TBD Additions: Dragoons, upgrades.
+	
+	\subsection*{Facilities}
+	It was found through testing that a single saturated start base can handle around four gateways constantly producing zealots. This gets more difficult to asses with expansions, and it was unfortunately also found through testing that greedily building limitless gateways is not even close to optimal.
+	
+	The current limited solution is building seven gateways at max. Usually if the bot reaches a point where it needs more, it has probably already lost due to lacking in technology. A scalable solution has not been implemented, but to be optimal it would require some estimation of resource input, along with estimated need for profit for further development of base and technology.
+
+\section{Build-orders}
+Openings in StarCraft are usually detailed like a \emph{build-order}, which is very much like a chess opening. Because of the huge decision space, even humans need some guidelines weathered by experience to perform well in the beginning of the game. The optimal build-orders have changed a lot across the years, shaping the meta-game of StarCraft. As new strategies were found, new openings had to accommodate new possible opponent strategies.
+
+A build-order is a list of units that must be produced in a specific order, sometimes after certain events. There is no timer in vanilla StarCraft and using one is considered cheating in tournaments, so items in the build-order are to be constructed when specific supply costs has been reached. Between each item in the build-order, the player must produce workers until then next supply limit has been reached unless specifically otherwise instructed. 
+
+This is akin to executing a queue of orders. One could make a queue where the next item is executed if a specific supply is reached while automatically building workers like a human player. The easier solution for bot however is of course manually filling in the gaps with worker orders, such that the supply limits will be reached at the correct times (assuming no workers are lost). Therefore, the solution in the bot is simply having a queue of units. While the queue is not empty, we do not execute any higher-order manager AI that would otherwise automate production. When the queue becomes empty, we resume automatic production.
+
+The benefit of this solution is the ease of adding new openings to the bot. Although the general autopilot AI is the same, different openings will vastly change the strategy and outcome of the game. Proper openings are key to winning in early game, or at least not lose during. The downside however is the rigid planning structure, which can't allow for easy adaptations or responses. What if the bot loses a worker or a structure? It is possible that the current build-order is no longer optimal, viable even. We avoid this, by making sure the build orders are short, such that the opponent could in no way interrupt with any units other than harassing workers.
+
+Additionally, this solution could be used to pause other production in mid-game. Since the bot operates in a greedy fashion, it can be difficult to build high-cost units. The solution is to enqueue the unit, pausing all other production until the unit has been created. This is used in the agent when expanding, where the depot is queued. This solution is risky however, as the bot will not consider removing the depot from the queue under any circumstance. It does not seem to cause any problems however, as the bot will reach the amount of resources required very quickly, resuming normal production again.
+
+Since the build-order is a queue, executing it is constant time, and enqueuing the build-order is linear. The build-order is never changed during gameplay.
+
+The \texttt{Planner} module handles executing build-orders. The main module \texttt{Despot} handles queuing build-orders and disables other managers while \texttt{Planner} is executing a build-order.

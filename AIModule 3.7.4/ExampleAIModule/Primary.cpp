@@ -37,7 +37,7 @@ void Primary::onStart()
 {
 	// BWAPI settings.
 	BWAPI::Broodwar->enableFlag(Flag::UserInput);
-	BWAPI::Broodwar->setLocalSpeed(0);
+	BWAPI::Broodwar->setLocalSpeed(2);
 
 	// Read map information.
 	BWTA::readMap();

@@ -1,0 +1,14 @@
+\chapter{Results}
+Across 780 games the one-base version garnered 527 wins, netting a $79.23\%$ win-rate in a mixed-division on the SSCAIT tournament page. Unfortunately there is not a separate statistic for student-division only, but it was usually contesting the UAlberta bot for top student bot. The UAlberta bot usually wins against this bot however.
+
+TBD expansion bot results.
+
+As one could expect, the bot does well against others using boom-strategies and proxy-strategies. It wins by far most of the matches against other rush bots, including mirror-matches, except UAlberta bot as mentioned. It fares poorly against the turtling Terran bots, which quickly produce more advance units and win through technology. The final additions to the bot were attempts to combat the turtle strategy, however it was never effective enough. It is the natural counter to the rush strategy.
+
+The bot did not reach a very complex higher-level AI. The focus was creating a competitive bot, so development focused on areas that improved performance the best. This is expectedly in low-level technical features such as using the command interface and handling units. The opening-moves and attack commanding is the most advanced AI the bot can boast.  While as a whole it performs somewhat intelligent, the lack of adaption means it is really not.
+
+Even though the bot has now grasped the basics of StarCraft and RTS gameplay, there is probably a long way yet before any high-level AI implementations would be effective. Its still does not use most of the Protoss units and buildings and does not research upgrades. The next steps to take would be improving its combat predictions and map awareness with regards to enemy unit placement, such that it could understand separate bases and armies. From there, counter strategies would be necessary, especially against flying and cloaked.
+
+As an additional note, the bot has problems pathfinding in the maps \emph{Circuit Breakers (4)} and \emph{Heartbreak Ridge (2)}, where neutral structures block terrain passages. The bot uses the built-in pathfinding, which cannot path around these kinds of obstacles. In Circuit Breakers, this will result in a loss every fourth game, as it is only an issue in one of the four start locations. In Heartbreak Ridge, it prohibits the bot from expanding to a certain base location. This problem was never fixed as it would require the implementation of a custom pathfinder which would be too time consuming. Interestingly, the built-in bots suffer the same issue.
+
+The bot will be applied to at least to the 2015 AIIDE tournament with a submission deadline the 15th of august. There is however a limit to 30 submissions, so it is not certain the bot will appear in the tournament.

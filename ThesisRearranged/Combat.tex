@@ -1,0 +1,75 @@
+\chapter{Combat}
+Combat in StarCraft can easily become the most complex part of the bot development. Numerous studies has been done on just small subsets of combat scenarios, where we are given specified units and enemies, but even these just scratch the surface. Like the macroscopic strategies in StarCraft, there is probably no optimal command scheme for ones units. Predicting the outcome of a combat scenario, is therefore only done as approximations.
+
+This is also one of the areas where bots excel against humans, since they can easily command different units in complex ways.
+
+The \texttt{ArmyManager} is the combat parallel to the \texttt{TaskMaster}. It contains all fighter units controlled by the agent and their current assigned \texttt{duty}, same as \texttt{tasks} for workers. A fighter unit is either idle, moving towards the opponent, attacking or defending.
+
+\section{Attacking}
+A player will almost certainly expand to their natural expansion first and a third base is only viable beyond early game. The natural expansion is very close to the main base and is usually right outside the only exit of the main base. This proximity allows us to consider both bases as a single base. All this together we can assume the opponent has only one base for the duration of the early game, which is where the bot mainly operates.
+
+In euclidean space the shortest path between two points is the same regardless of which is the origin. In terms of StarCraft, the shortest path to the enemy base, is also the shortest path from the opponent's base to yours. So assuming each player has only one base and both players will use optimal pathfinders, we can model the map as a straight line between the bases. Ours and their army will travel only along this path, and there is therefore no case of armies moving past each other without collision.
+
+As a rushing bot, it is in our favor to move our troops as close to the opponents base without confrontation before they are ready. This pressures the opponent while also providing some scouting, and allows us to attack as quickly as possible. When the we predict a victory in combat against the opponent army, we attack. In some cases it might be prudent to wait until more units have been amassed, especially if we produce more troops than the opponent, as we will sustain fewer losses and be more certain of a victory. This is difficult to asses while also being very risky, so the safer option is just attacking immediately.
+
+Attacking is handled solely by the \texttt{Attacker} manager. Predictions are handled by the \texttt{CombatJudge} module, which given a set of units outputs their strength value.
+
+	\subsection*{Prediction}
+	Predicting combat is very difficult in StarCraft. Even beyond the numerous factors in combat, the optimal command of ones troops is very Dependant on the command of the opponents'. Unless the opponent operates in a recognizable pattern, they movement is unpredictable. Predicting combat is therefore more based on what units the opponent controls, how the terrain is and then either a theoretical upper limit of their damage output versus a prediction of our own.
+	
+	Some of the most successful predictors simulates a simple form of combat and evaluates the result. This however assumes how the opponent will control its troops, or at least assumes it knows the optimal control scheme. Neither of these are possible, especially not with incomplete map information, but it has proven to be close enough to the correct result.
+	
+	It is assumed the opponent has only a single army which is always gathered in close proximity. This is not very useful in late game where flanking maneuvers and harassment is viable tactics, but it is sufficient for early game. The worst case is we will overestimate the opponent strength, which is a much better case than underestimating it. It would be possible to detect these individual groupings however with a cluster detection algorithm.
+	
+	TODO Prediction heuristic.
+	
+	\subsection*{Targeting}
+	Usually RTS games has a command called \emph{attack-move}, and StarCraft is no exception. A unit executing this command will move towards a target or location, but will attack any enemies along the way. In StarCraft the unit will prioritize units that are attacking it before others. So beyond auto-targeting nearby enemies, this command also carries a simple prioritized targeting.
+	
+	By targeting the enemy base location or structures with this command, we have simple prioritized targeting. We avoid targeting the opponents units, as our army might be lead astray by a decoy. The most important targets are the enemy structures since a player loses when they have no more of them.
+	
+	Since we already have a dictionary of enemy buildings, the agent just picks one arbitrarily from the list. Assuming the opponent has only one base, the army will attack the foremost building regardless of target since they are attack-moving. Since the natural extension is usually the only exit from the main base, this assumption is valid while the opponent has two or fewer bases, which is true for the entire early game.
+	
+	Some bots go beyond the attack-move prioritize. A useful alternative is attacking the unit with highest health to resources cost ratio, targeting damaging units first. This will ensure an attack deals a size-able blow to the opponent's economy, trading resource loss as favorably as greedily possible. A similar one is attacking units with highest health to damage ratio. There is a lot more to prioritization. This is especially true when considering large scale armies composed of different units, where counter-play between individual types are important. Beyond fighting the enemy army, the order when attacking is usually opponent's army, then economy and then unit facilities.
+	
+	\subsection*{Troop Rendezvous}
+	As all troops are sent off immediately from production, its necessary to avoid sending them into the enemy base one at a time. The strength of an army increases faster than linearly with its size, as troops will die slower while enemies die faster. This means our troops get more time to deal damage while their troops get less.
+	
+	At some point troops in transit will be within some danger distance of the enemy base, where they will risk being attacked. This will be the minimum distance from the opponent where they can safely gather. By only counting these arrived troops in our combat predictions, we can tell when enough troops have gathered to attack. Currently, the bot only counts units currently within this danger distance of an enemy unit as arrived, that is, it does not record arrivals. Testing proved the battlefield shifted too much to record arrivals and pausing them until attack, which lead to troops being scattered across the battlefield rather than actually gathering. This solution proved sufficient however for the few and small units the bot uses. A better solution would be needed with a larger army composed of larger units. This could be solved with a cluster detection system, to detect when ones army is actually gathered.
+	
+	\subsection*{Fighting}
+	There is a lot of depth in unit combat in StarCraft. Maneuvers and strategies involving the precise commanding of units is called \emph{micro}. There has been multiple studies in this area in specific scenarios.
+	
+	The bot uses the Zealot unit which is a very efficient unit but also a very simple unit. All we need to do attack move each zealot, which will then auto-target to the nearest enemy. This is surprisingly effective against other units, mostly because other units are a lot more complicated, especially if they are ranged. There is a lot of room for improvement, but most of the bot development focused on the macroscopic strategy than the micro.
+	
+	\subsection*{Retreating}	
+	Sometimes because of incomplete information, the combat prediction turns out to be wrong and the opponent had in fact more units hiding the fog of war. In some cases, it is optimal to retreat. Depending on how tangled ones units are with the opponents, retreating becomes a less desirable option as some units will die without fighting back. However the opponent would not lose very much value in troops by staying in combat, compared to how much you would lose by retreating, then it is the better option to retreat. Calculating this is not easy however, and would also require a strong combat predictor, something that we don't have access to.
+	
+	The bot will therefore not retreat any units that has been assigned combat, only units that are in transit. The logic here is that we don't know how tangled our combat units are to the opponent, but the transit units will usually be outside enemy range, such that we lose no troops to retreat.
+
+	Retreating units move towards the start location, which will path them outside the enemy base. This is usually the optimal solution barring cloaked or flying units, or enemy units that need to be avoided. Fortunately, its rare that the opponent has some troops that can be avoided if they are on the retreat path, and the bot does not utilize cloaked or flying units. A solution to these problems however would be using a custom pathfinder using heatmaps of enemies or potential fields.
+	
+\section{Defending}
+Sometimes the enemy attack first, break through our attack or somehow avoid our army. In this case the base must be defended. At other time, the opponent might have sent an early Zerg rush or a worker as scout and harasser. In these cases we need to pull workers to fend off the attackers.
+
+Although they have not been implemented, turrets are effective when playing defensively. Usually cost-effective compared to mobile units, they can easily repel early assaults. The problem however is finding proper locations, as the bot has to predict the point of entry to defend it. This is coupled with the logistical problem of blocking the entrance or bottlenecking it.
+
+The \texttt{Defender} manager handles the enlistment and commanding of defenders.
+
+	\subsection*{Scrambling Defenders}
+	The problem with designating defenders is related to retreating. We must avoid drawing troops away, that would be better used attacking. This is difficult to asses. It is obvious however, that everyone in a region under attack, should defend it. This will not interrupt desired combat or cause undesirable behavior. If they are already defending, nothing is interrupted, and otherwise they are better served defending.
+	
+	As it turns out from testing and because of the straight-line assumption, we very rarely have any units left beyond our base if the opponent is attacking, since they would already have fought and died. Those that are beyond however, continue to assault the opponents' now undefended base, which is desirable since they are too far away to actually help the defense. The current simple implementation therefore proved to be sufficient.
+	
+	TODO Edge of region problem.
+	
+	TODO Alternatives: Vicinity check, Standing army, Pullback.
+
+	\subsection*{Militia}
+	Sometimes there are not enough troops in the base. This usually happens before an army has been aquired or after it has died. In this case, a common strategy is scrambling all the workers for defense in hopes of surviving. Worst case all workers die and the player loses, but that would have been certain without the militia anyways.
+	
+	Workers are tasked to defend until \texttt{CombatJudge} predicts they win. If its an early attack, usually a few workers, but later in the game it is almost all workers.
+	
+	TODO Anti-scouts / anti-harassment
+	
+	TODO Alternatives: Worker relocate.
