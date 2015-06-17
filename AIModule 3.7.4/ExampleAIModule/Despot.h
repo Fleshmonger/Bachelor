@@ -1,10 +1,14 @@
 #pragma once
 #include <BWAPI.h>
+#include "UtilUnit.h"
+#include "Accountant.h"
+#include "Archivist.h"
 #include "Landlord.h"
 #include "Recruiter.h"
 #include "Gatherer.h"
 #include "Architect.h"
 #include "Strategist.h"
+#include "Settler.h"
 #include "Planner.h"
 #include "Economist.h"
 
@@ -14,18 +18,25 @@
 class Despot
 {
 private:
+	Accountant	* accountant;
+	Archivist	* archivist;
 	Landlord	* landlord;
 	Recruiter	* recruiter;
 	Gatherer	* gatherer;
 	Architect	* architect;
 	Strategist	* strategist;
+	Settler		* settler;
 	Planner		* planner;
 	Economist	* economist;
 
+	bool expand;
+
 public:
-	Despot(Landlord * landlord, Recruiter * recruiter, Gatherer * gatherer, Architect * architect, Strategist * strategist, Planner * planner, Economist * economist);
+	Despot(Accountant * accountant, Archivist * archivist, Landlord * landlord, Recruiter * recruiter, Gatherer * gatherer, Architect * architect, Strategist * strategist, Settler * settler, Planner * planner, Economist * economist);
 	~Despot();
 
 	void update();
+
+	bool isExpanding();
 };
 

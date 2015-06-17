@@ -28,6 +28,7 @@ const BWAPI::UnitType
 
 
 // Commands and expands harvesting and controlled regions.
+//TODO Remove strategist from dependency.
 class Economist
 {
 private:
@@ -49,5 +50,7 @@ public:
 	void update();
 	void addRefinery(BWAPI::Unit * refinery);
 	void maynardSlide(BWTA::Region * target);
+
+	bool isSaturated();
 };
 

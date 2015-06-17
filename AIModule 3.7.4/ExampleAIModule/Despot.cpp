@@ -2,14 +2,18 @@
 
 
 // Constructor
-Despot::Despot(Landlord * landlord, Recruiter * recruiter, Gatherer * gatherer, Architect * architect, Strategist * strategist, Planner * planner, Economist * economist) :
+Despot::Despot(Accountant * accountant, Archivist * archivist, Landlord * landlord, Recruiter * recruiter, Gatherer * gatherer, Architect * architect, Strategist * strategist, Settler * settler, Planner * planner, Economist * economist) :
+	accountant(accountant),
+	archivist(archivist),
 	landlord(landlord),
 	recruiter(recruiter),
 	gatherer(gatherer),
 	architect(architect),
+	settler(settler),
 	planner(planner),
 	economist(economist),
-	strategist(strategist)
+	strategist(strategist),
+	expand(false)
 {
 	// Load default opening build-order.
 	planner->enqueue(BWAPI::UnitTypes::Protoss_Probe);
@@ -79,6 +83,34 @@ void Despot::update()
 		economist->update();
 	}
 
+	// Expand logic check.
+	if (!expand)
+	{
+		// Iterate through enemy buildings
+		BOOST_FOREACH(BWAPI::Unit * enemy, archivist->getBuildings())
+		{
+			// Defense check.
+			BWAPI::UnitType unitType = archivist->getType(enemy);
+			if (utilUnit::isTurret(unitType) ||
+				unitType == BWAPI::UnitTypes::Terran_Bunker ||
+				unitType == BWAPI::UnitTypes::Zerg_Evolution_Chamber)
+			{
+				// Activate expansion behavior.
+				expand = true;
+				break;
+			}
+		}
+	}
+
+	// Expansion check.
+	if (expand &&												// Verify expansion behavior activated.
+		economist->isSaturated() &&								// Verify saturation.
+		!planner->contains(BWAPI::UnitTypes::Protoss_Nexus) &&	// Verify not currently expanding.
+		!accountant->isScheduled(BWAPI::UnitTypes::Protoss_Nexus) &&
+		strategist->isDefended() &&								// Verify bases are defended.
+		settler->nextExpansion())								// Verify expansion is possible.
+		planner->enqueue(BWAPI::UnitTypes::Protoss_Nexus);
+
 	// Update vassals.
 	BOOST_FOREACH(Vassal * vassal, landlord->getVassals())
 	{
@@ -117,4 +149,11 @@ void Despot::update()
 
 	// Command gather.
 	gatherer->gather();
+}
+
+
+// Returns whether expanding behavior is activated.
+bool Despot::isExpanding()
+{
+	return expand;
 }

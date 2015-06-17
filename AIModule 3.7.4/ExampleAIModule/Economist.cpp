@@ -44,7 +44,6 @@ void Economist::update()
 	}
 
 	// Iterate through vassals.
-	bool expand = true;
 	BOOST_FOREACH(Vassal * vassal, landlord->getVassals())
 	{
 		// Verify vassal.
@@ -59,26 +58,11 @@ void Economist::update()
 			if (vassal->getDepot()->isTraining())
 				workers++;
 
-			// Saturation check.
+			// Check saturation.
 			if (workers < minerals * MAX_MINERAL_SATURATION + refineries * REFINERY_SATURATION)
-			{
-				// Train additional workers.
 				recruiter->scheduleTraining(UNIT_WORKER, vassal->getDepot());
-
-				// Expansion check.
-				if (workers < minerals * MIN_MINERAL_SATURATION + refineries * REFINERY_SATURATION)
-					expand = false;
-			}
 		}
 	}
-
-	// Expansion check.
-	if (expand &&
-		!planner->contains(BWAPI::UnitTypes::Protoss_Nexus) &&
-		!accountant->isScheduled(BWAPI::UnitTypes::Protoss_Nexus) &&
-		strategist->isDefended() &&
-		settler->nextExpansion()) // Verify expansion is possible.
-		planner->enqueue(BWAPI::UnitTypes::Protoss_Nexus);
 }
 
 
@@ -138,4 +122,18 @@ void Economist::maynardSlide(BWTA::Region * target)
 		if (current >= max)
 			break;
 	}
+}
+
+
+bool Economist::isSaturated()
+{
+	//Iterate through vassals.
+	BOOST_FOREACH(Vassal * vassal, landlord->getVassals())
+	{
+		// Check saturation.
+		BWTA::Region * region = vassal->getRegion();
+		if (vassal->workforce() < gatherer->getMinerals(region).size() * MIN_MINERAL_SATURATION + gatherer->getRefineries(region).size() * REFINERY_SATURATION)
+			return false;
+	}
+	return true;
 }
