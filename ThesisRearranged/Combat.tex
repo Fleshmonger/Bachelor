@@ -61,15 +61,15 @@ The \texttt{Defender} manager handles the enlistment and commanding of defenders
 	
 	As it turns out from testing and because of the straight-line assumption, we very rarely have any units left beyond our base if the opponent is attacking, since they would already have fought and died. Those that are beyond however, continue to assault the opponents' now undefended base, which is desirable since they are too far away to actually help the defense. The current simple implementation therefore proved to be sufficient.
 	
-	TODO Edge of region problem.
+	%TODO Edge of region problem.
 	
-	TODO Alternatives: Vicinity check, Standing army, Pullback.
+	%TODO Alternatives: Vicinity check, Standing army, Pullback.
 
 	\subsection*{Militia}
 	Sometimes there are not enough troops in the base. This usually happens before an army has been aquired or after it has died. In this case, a common strategy is scrambling all the workers for defense in hopes of surviving. Worst case all workers die and the player loses, but that would have been certain without the militia anyways.
 	
 	Workers are tasked to defend until \texttt{CombatJudge} predicts they win. If its an early attack, usually a few workers, but later in the game it is almost all workers.
 	
-	TODO Anti-scouts / anti-harassment
+	%TODO Anti-scouts / anti-harassment
 	
-	TODO Alternatives: Worker relocate.
+	%TODO Alternatives: Worker relocate.

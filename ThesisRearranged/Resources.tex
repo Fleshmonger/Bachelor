@@ -16,14 +16,14 @@ While multiple workers can gather from the same field or refinery, only one work
 
 In the next sections we will first describe the architecture behind worker management, followed by how minerals is mined and gas is harvested. Building supply is first covered in chapter \ref{ch:strategy}, as this resources behaves much different than the others.
 
-\section{Managing gathering}
+\section{Managing Workers}
 %TODO Base Location description.
 
 The \emph{TaskMaster} module contains workers at a single base location, and records their current tasks. It can return all workers with a specific task. Each base location is a wrapper \emph{Vassal}. The \emph{Landlord} module contains all vassals. None of these three modules have any agency, and only respond to function calls from superior modules.
 
 %TODO Taskmaster implementation
 
-Gatherer module accesses the Landlord module and with it, all the subordinate TaskMaster modules. Gatherering must be contained in a single superior module rather than within each Vassal, as gathering is not necessarily uniform across all bases.
+Gatherer module accesses the Landlord module and with it, all the subordinate TaskMaster modules. Gatherering must be contained in a single superior module rather than within each Vassal, as gathering is not necessarily uniform across all bases. This also lends greater control over gathering, as superior modules can control a single module instead.
 
 \section{Mining Minerals}
 StarCraft has a built-in worker gathering AI to help human players. Workers will automatically return cargo from resources (unless they are interrupted) and return to the same resource afterwards. When gathering minerals, they will move to another mineral field if the current one is occupied. This is an inefficient solution, as the worker could be stuck moving between minerals for long periods of time. It is also a liability for a bot, as the AI cannot be disabled. When harvesting gas they will wait until the refinery is unoccupied.

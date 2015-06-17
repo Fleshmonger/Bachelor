@@ -29,7 +29,7 @@
 \contentsline {chapter}{\numberline {9}Combat}{31}{chapter.9}
 \contentsline {section}{\numberline {9.1}Attacking}{31}{section.9.1}
 \contentsline {section}{\numberline {9.2}Defending}{35}{section.9.2}
-\contentsline {chapter}{\numberline {10}Strategy}{37}{chapter.10}
+\contentsline {chapter}{\numberline {10}Macro Strategy}{37}{chapter.10}
 \contentsline {section}{\numberline {10.1}Economy}{38}{section.10.1}
 \contentsline {section}{\numberline {10.2}Combat}{39}{section.10.2}
 \contentsline {section}{\numberline {10.3}Build-orders}{40}{section.10.3}
