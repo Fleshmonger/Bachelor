@@ -1,6 +1,7 @@
-Build	Wins	Losses	Ratio	Overall		Description
-1	180	146	55.21%	55.21%		Initial
-2	218	172	59.38%	55.90%		Combat squadding
-3	527	253	79.23%			Combat squadding fixed.
-4	651	388	47.88%			Expansion + buildorders (buggy).
-5						Auto-expansion.
+Build	Wins	Losses	Games	Ratio	Overall		Description
+1	180	146		55.21%	55.21%		Initial
+2	218	172		59.38%	55.90%		Combat squadding
+3	527	253		79.23%			Combat squadding fixed.
+4	651	388		47.88%			Expansion + buildorders (buggy).
+5	729	414	104	75.00%			Auto-expansion.
+6							Autoexpander + onebase

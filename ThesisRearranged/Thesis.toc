@@ -19,10 +19,11 @@
 \contentsline {section}{\numberline {6.1}Managing Workers}{16}{section.6.1}
 \contentsline {section}{\numberline {6.2}Mining Minerals}{17}{section.6.2}
 \contentsline {section}{\numberline {6.3}Harvesting Gas}{18}{section.6.3}
-\contentsline {chapter}{\numberline {7}Production and Expansion}{19}{chapter.7}
-\contentsline {section}{\numberline {7.1}Training Units}{20}{section.7.1}
-\contentsline {section}{\numberline {7.2}Building Structures}{21}{section.7.2}
-\contentsline {section}{\numberline {7.3}Building Expansions}{24}{section.7.3}
+\contentsline {chapter}{\numberline {7}Production}{19}{chapter.7}
+\contentsline {section}{\numberline {7.1}Production Architecture}{20}{section.7.1}
+\contentsline {section}{\numberline {7.2}Training Units}{20}{section.7.2}
+\contentsline {section}{\numberline {7.3}Building Structures}{22}{section.7.3}
+\contentsline {section}{\numberline {7.4}Building Expansions}{25}{section.7.4}
 \contentsline {chapter}{\numberline {8}Information Management}{27}{chapter.8}
 \contentsline {section}{\numberline {8.1}Tracking Units}{27}{section.8.1}
 \contentsline {section}{\numberline {8.2}Scouting}{28}{section.8.2}
