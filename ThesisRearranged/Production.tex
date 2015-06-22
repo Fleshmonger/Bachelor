@@ -28,7 +28,7 @@ To train units, the steps are twofold: issue the train command to a relevant, av
 	
 	To command the training we require the trainer. For this we would like to keep records of all units capable of training. BWAPI inherently contains the trainer of any given unit type, so using a dictionary of trainers with their types as keys is sufficient and allows fast queries. From this we can search through the set of trainers until we find one that is available and then send the train command. The evaluation of trainers involve verifying the current existence and control of the unit, and ensuring it is not currently training another unit or has been commanded to in this frame.
 	
-	Searching through the dictionary is logarithmic and iteration through the matching trainers is linear. Evaluating a trainer is constant. Given $n$ total trainers and $m$ matching trainers the final time for training is then $log(n)m$, which could be improved to $m$ with hashing. Neither $n$ or $m$ are usually very large, but $m$ especially is only in the range of zero to four. Insertions and deletions of trainers are both logarithmic to their size.
+	Searching through the dictionary is logarithmic and iteration through the matching trainers is linear. Evaluating a trainer is constant. Given $n$ trainers and $m$ trainer matches, the time complexity for training is $log(n) + m$, which could be improved to $m$ with hashing. Neither $n$ or $m$ are usually very large, but $m$ especially is only in the range of zero to four. Insertions and deletions of trainers are both logarithmic to their size.
 
 	\subsection*{Monitoring Trainee}
 	The agent needs to know which units are currently scheduled, such that it can include this into its plans. Units could also be destroyed before completion, in which case the agent might need to reschedule.
@@ -62,9 +62,11 @@ However, all Protoss structures must be in close proximity to a Pylon when built
 	To summarize, if a location is not specified, buildings are placed in a spiral pattern around the depot, distanced by one tile and outside the gathering-zone.
 
 	\subsection*{Aquiring Builder}
-	Recall the Task Master module from chapter \ref{ch:resources}. Since all workers are separated in base locations, we can easily pick a worker from the region the building location is. In case of expansions, we pick a worker from the main base. As the task master marks the jobs of all workers, we can pick a worker from either idle, mineral mining or gas harvesting (in that order). This way we do not interrupt other possibly important tasks. The agent searches through the groups until it finds a worker that is not carrying resources, which then becomes the builder and is tasked as such in the Task Master.
+	Recall the Task Master module from chapter \ref{ch:resources}. Since all workers are separated in base locations, we can easily pick a worker from the region the building location is. As the task master marks the jobs of all workers, we can pick a worker from either idle, mineral mining or gas harvesting (in that order). This way we do not interrupt other possibly important tasks. The agent searches through the groups until it finds a worker that is not carrying resources, which then becomes the builder and is tasked as such in the Task Master.
 	
 	The time complexity is linear to the amount of workers in these groups. However, it is probable that less than half the workers are returning resources at any given moment, so it is expected that we only need to check two workers before finding a viable candidate. In case there are idle workers, the operation is constant.
+	
+	This solution does not work if we have no workers in the region. This is the case when expanding, where the worker must be specified by a superior module.
 	
 	\subsection*{Executing Command}
 	Once the builder has been retrieved, it will be commanded to build at the specified location. A player cannot build in hidden terrain, so the worker will first be moved closer to the target location in this case. When the entire placement has been revealed the builder is commanded to build the structure.
@@ -79,24 +81,26 @@ However, all Protoss structures must be in close proximity to a Pylon when built
 	As mentioned prior however, refineries are handled by the Morpher module. BWAPI is notified when a unit morphs, upon which it is inserted in a set of incomplete morphs. A morphing unit is not considered constructing, although it is incomplete. When a unit is finished morphing, no event is called, therefore forcing the agent to verify all morphs every frame. However, there are very few expected morphing units at any given moment.
 
 \section{Building Expansions}
-\emph{Expansions} are additional depots beyond the starting one, built at other resource clusters. One of the most important concepts in StarCraft, expansions allow players to harvest more resources, more efficiently than with one base. These become necessary as the match progresses, especially since the start locations inevitably run out of resources.
+Recall that \emph{expansions} are additional depots beyond the initial one, built at new resource clusters. As explained in the chapter \ref{ch:resources}, it is often profitable and sometimes necessary to expand resource harvesting to new locations. To avoid transporting cargo all the way between regions, players have to build depots near resources they wish to harvest.
 
-Every tournament legal map has a specific expansion called the \emph{natural expansion}. This refers to the closest base location to a player's start location and is easily defended compared to other expansions. It usually has less resources than other expansions to compensate. %TODO Move?
+When BWTA analyzes a map, it marks all viable depot locations. These are positions in which a depot will be at optimal distance from nearby minerals and geysers. Usually every resource cluster only has one of these positions, but some locations may contain overlapping depots. Regions rarely have more than one base location. Given a region, we can obtain all internal base locations, including these depot locations.
 
-As noted in the resource chapter, it is often profitable and usually necessary to expand resource harvesting to new locations. To avoid transporting cargo all the way between regions, players have to build resource depots near resources. If the internal data structures behind building structures is limited to regions it may be challenging, and it is in our case.
+This significantly simplifies the construction of expansions, however the agent still has to decide which base location to settle.
 
-To build an expansion we need the location and the resources.
+The \emph{Settler} module is responsible for all expansion behavior, and is also used to determine if expanding is possible. To build an expansion we need to specify a location and builder. These are handled by the Settler module, while the rest is done by the usual build procedure in the Architect.
 
 	\subsection*{Expansion Placement}
-	%TODO This is a bad solution!
-	There are a few things to take into account when expanding. Obviously we need to expand into a location which is not occupied by enemy forces, especially not if they already have a depot at the desired location. Additional factors are proximity to existing bases, defensibility and resource quantity. Expanding to the natural expansion is usually always the first choice, as it scores high marks on both proximity and defensibility. Usually, the richest base location is in the center and is difficult to defend.
+	To determine whether a base location is fit to expand it must not already be expanded upon or contain enemy forces. Additionally, it must be reachable by non-flying units and have a path of regions without enemies. If these are satisfied, we consider the base location available for expansion.
 	
-	When the agent looks for the next expansion location, it recursively searches neighboring regions from the starting one. The first region which is not already occupied is picked.
-	
-	\subsection*{Building Depots}
-	When BWTA analyzes a map, it marks optimal base locations, where a depots distance to a mineral cluster and geysers are minimized. Usually each region only contains one base location, at least this is the case for all the AI tournament maps.
-	
-	Building an expansion is then handled by ordering the depot construction at the found base location with a worker from a nearby region. Currently, the agent always picks a worker from the main base, which is not always optimal. A better solution would be recursively searching neighbor regions' base locations in a priority queue, visiting shortest base-to-base distance first. Since workers are approximately at the same position as their related depot, it would find the optimal worker source.
+	From the starting region, we visit neighbor regions recursively in order of proximity by using a priority queue, where the lowest priority is picked first. Initially the start region with priority 0 is inserted. When we visit a region, we visit all contained base locations. If any are available, we return one as the target location of expansion. In case none are available, but the region is unoccupied by enemy forces, we add all unvisited neighbors to the queue. The priority is equal to the distance between the two region's centers plus the current regions priority. If the region does have enemy units within, its neighbors are not added to the queue. The algorithm terminates when the queue is empty or an available candidate has been found.
 
-	%Perspective.
-	While the \texttt{Architect} handles building the depot like any other structure, the \texttt{Settler} module contains expansion logic and orders the construction. It is not an independent module and does not decide when to expand.
+	This solution satisfies our expansion requirements, and additionally includes the starting region should the depot be lost. It is very crudely implemented however, and quite expensive. Determining whether a region is occupied involves checking all enemy units. Given $r$ regions and $n$ enemy units, the time complexity is $rn$. This could be optimized by first marking all occupied regions before the recursion.
+	
+	There could exists more factors when determining expansion locations beyond distance. Resource quantity or defensibility are also important, but are not considered here. One could favor regions distant to the opponent for added defense or alternatively closer for better map control.
+
+	\subsection*{Expansion Builder}
+	An expansion is often the first structure in a region, and therefore the player must acquire a builder elsewhere. The agent attempts to pick workers only from the region the location is within, so the Settler must specify a worker beforehand.
+	
+	In this case, we just pick a free worker from the main base. There could be workers closer to the destination in other regions, and in this case the solution is sub-optimal. Recursively checking neighbors in order of proximity would result in an approximation of the closest worker. It was not a priority however as the improvement would be insignificant.
+	
+	The solution is cheap, and costs the usual to pick a worker. A worker considered available is either idle or tasked with gathering.
