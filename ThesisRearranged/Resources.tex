@@ -1,12 +1,10 @@
-%Contains base and resource management, specifically the TaskMaster.
 \chapter{Workers and Resources}
 \label{ch:resources}
-
-This chapter covers the basics of gathering resources in StarCraft with a bot. 
+This chapter covers the related to gathering resources, and how we handle this with the agent including the worker management architecture. 
 
 In early- and mid-game, \emph{economic advantage} is the most important aspect of StarCraft strategy. This occurs when you have a higher resource intake than your opponent, such as if you have more workers that are gathering or more bases to gather from. The advantage is while maintaining an equivalent army to the opponent, one can replace lost troops faster, gain a larger army or upgrade the current one. If you eclipse your opponent in resources, you can perform worse in combat and still win. Without the advantage, upgrading troops would slow troop production down and the opponent could produce an equivalent or even stronger army at any time.
 
-There are three kinds resources in StarCraft. \emph{Workers} are the only units capable of gathering resources. Each race has one worker type and each player start the game with a couple of their race's type. Players also start with a \emph{resource depot} or simply \emph{depot}. This structure can produce new workers and is also the drop off point for gathering resources. The Protoss worker is the \emph{probe} and their depot is the \emph{nexus}.
+There are three kinds resources in StarCraft: \emph{minerals}, \emph{gas} and \emph{supply}. \emph{Workers} are the only units capable of gathering resources. Each race has one worker type and each player start the game with a couple of their race's type. Players also start with a \emph{resource depot} or simply \emph{depot}. This structure can produce new workers and is also the drop off point for gathering resources. The Protoss worker is the \emph{probe} and their depot is the \emph{nexus}.
 
 \emph{Minerals} are mined from mineral fields which usually are in clusters of 8-12. All units cost minerals, so it is the most important resource. Workers that mine these bring them back to the depot in batches of six mineral units. Depot's are limited in their proximity to the clusters, but at optimal distance there can be 3 workers on each field. Mineral fields are usually placed in a half-circle formation, such that there exists an optimal depot location. While the first worker on each mineral field will gather at a linear rate, they will yield diminishing returns on the second and especially third worker.
 
@@ -16,16 +14,14 @@ The last resource, \emph{supply} is a population limit and is not gathered like 
 
 While multiple workers can gather from the same field or refinery, only one worker can actively occupy it. The rest is either returning cargo, moving to the resource or waiting.
 
-In the next sections we will first describe the architecture behind worker management, followed by how minerals is mined and gas is harvested. Building supply is first covered in chapter \ref{ch:strategy}, as this resources behaves much different than the others.
+In the next sections we will first describe the architecture behind worker management, followed by how minerals is mined and gas is harvested. Building supply is first covered in Chapter \ref{ch:strategy}, as this resources behaves much different than the others.
 
 \section{Managing Workers}
-%TODO Base Location description.
+The \emph{Task Master} module contains workers related to a single depot. Every depot has its own instance of the module, separating the workers into resource clusters for easy gathering. The task master keeps the workers in sets and also designates a \emph{task} for each worker. Initially a worker is tasked as \texttt{idle}, but other modules could re-task workers, essentially allocating and freeing workers. Each task has a related set of workers, stored as a dictionary of sets. Given $n$ workers and a small amount of tasks, insertions, deletions and re-tasks operations has time complexity $O(\log n)$. We expect $n$ to be in the range of $0-24$, so the operations are quite fast. The current set of tasks are \texttt{idle}, \texttt{mine}, \texttt{harvest}, \texttt{build} and \texttt{defend}.
 
-The \emph{TaskMaster} module contains workers at a single base location, and records their current tasks. It can return all workers with a specific task. Each base location is a wrapper \emph{Vassal}. The \emph{Landlord} module contains all vassals. None of these three modules have any agency, and only respond to function calls from superior modules.
+Every task master is wrapped in a \emph{Vassal} module, all of which are contained in a dictionary within the \emph{Landlord} module. As the amount of needed Vassal instances are unknown, they are stored in dynamic memory. The Landlord designates new workers to or destroyed from the related Vassal. This allows for easier operations from superior modules to the worker pool.
 
-%TODO Taskmaster implementation
-
-Gatherer module accesses the Landlord module and with it, all the subordinate TaskMaster modules. Gatherering must be contained in a single superior module rather than within each Vassal, as gathering is not necessarily uniform across all bases. This also lends greater control over gathering, as superior modules can control a single module instead.
+The \emph{Gatherer} module commands all gathering workers, superior only to the Landlord module and its immediate subordinates. Resource gathering was initially kept within each task master, however this makes it difficult to control gathering on a large scale. The resource priorities should not necessarily be uniform across all bases. Each frame, the Gatherer iterates through the vassals, commanding current gatherers and re-tasking all idle workers to gathering. How this is handled is explained the following sections.
 
 \section{Mining Minerals}
 StarCraft has a built-in worker gathering AI to help human players. Workers will automatically return cargo from resources (unless they are interrupted) and return to the same resource afterwards. When gathering minerals, they will move to another mineral field if the current one is occupied. This is an inefficient solution, as the worker could be stuck moving between minerals for long periods of time. It is also a liability for a bot, as the AI cannot be disabled. When harvesting gas they will wait until the refinery is unoccupied.

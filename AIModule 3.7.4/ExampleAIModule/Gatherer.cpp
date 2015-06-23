@@ -3,15 +3,15 @@
 
 // Constructor.
 Gatherer::Gatherer(Landlord * landlord) :
-landlord(landlord),
-regions(),
-regionMinerals(),
-regionRefineries(),
-workerResourceType(),
-workerRegion(),
-workerTargets(),
-resourceWorkers()
-//workerResources()
+	landlord(landlord),
+	regions(),
+	regionMinerals(),
+	regionRefineries(),
+	workerResourceType(),
+	workerRegion(),
+	workerTargets(),
+	resourceWorkers()
+	//workerResources()
 {
 }
 
