@@ -2,25 +2,35 @@
 \label{ch:combat}
 This chapter explains how combat is handled in StarCraft, how its outcomes can be predicted and how the agent manages troops, attacking and defending.
 
-Combat in StarCraft can easily become the most complex part of bot development. Multiple studies has been done on just small subsets of artificial combat scenarios, with specified units and barren terrain, but even these just scratch the surface of the field. Like the macroscopic strategies in StarCraft, there is likely no optimal command scheme for ones units. Predicting the outcome of a combat scenario, is therefore only done as approximations. This is also one of the areas where bots can excel against humans, since they can easily command different units in complex ways.
+Combat in StarCraft can easily become the most complex part of bot development. Multiple studies has been done on just small subsets of artificial combat scenarios, with specified units and simple terrain, but even these just scratch the surface of the field. Like the macroscopic strategies in StarCraft, there is likely no optimal command scheme for ones units. Predicting the outcome of a combat scenario, is therefore only done as approximations. This is also one of the areas where bots can excel against humans, since they can easily command different units in complex ways.
+
+\emph{Troops} or \emph{fighters} here means units used for combat. Almost all non-building units beyond the workers are used in combat. Some units called \emph{spellcasters} deal damage indirectly through their abilities, while \emph{support} units help others fight better.
 
 Every unit has some amount of \emph{health}, and almost all units can \emph{attack} to deal \emph{damage} to others. There are a number of additional factors such as armor and damage types, splash and hit probability, but it is sufficient to know that a unit loses health relative to the damage it is dealt. When a unit reaches 0 health, they are destroyed. Units attack at different ranges, such that \emph{melee} units need to be close and \emph{ranged} units can attack at a distance.
 
-In the following sections we will explain the base management of troops. Then we move on to combat prediction, followed by attacking and then defending.
+In the following sections we will explain the base management of troops. Then we move on to combat prediction, followed by attacking and defending.
 
 \section{Managing Troops}
-\emph{Troops} or \emph{fighters} here means units used for combat. Almost all non-building units beyond the workers are used in combat. Some units called \emph{spellcasters} deal damage indirectly through their abilities, while \emph{support} units help others fight better.
-
 The \emph{Army Manager} is the troop parallel to the Task Master from Chapter \ref{ch:resources}. It contains all fighter units controlled by the agent and their current assigned \emph{duty}, same as the \emph{tasks} for workers from Section \ref{sec:manageWorkers}. The current types of duty are \texttt{idle}, \texttt{defend}, \texttt{attackTransit} and \texttt{attackFight}. Distinct from the Task Master, there is only one instance of the Army Manager, as troops are not separated into regions.
 
 \section{Combat Prediction}
-Predicting combat is very difficult in StarCraft. Even beyond the numerous factors in combat, the optimal command of troops is completely dependant on the opponents commands. Unless the opponent operates in a recognizable pattern, they movement is unpredictable. Predicting combat is therefore more based on what units the opponent controls, how the terrain is and then either a theoretical upper limit of their damage output versus a prediction of our own.
+Predicting the victor of combat is very difficult in StarCraft and predicting the specific casualties is neigh impossible. Even beyond the numerous factors in combat, the optimal command of troops is completely Dependant on the opponent's commands. Unless the opponent operates in a recognizable pattern, they movement is unpredictable. Predicting combat is therefore more based on what units the opponent controls, how the terrain is and then either a theoretical upper limit of their damage output versus a prediction of our own.
 
-Some of the most successful predictors simulates a simple form of combat and evaluates the result. This however assumes how the opponent will control its troops, or at least assumes it knows the optimal control scheme. Neither of these are possible, especially not with incomplete map information, but it has proven to be close enough to the correct result.
+Some of the most successful predictors simulates a simple form of combat and evaluates the result. This however assumes how the opponent will control its troops, or at least assumes it knows the optimal control scheme. Neither of these are possible, especially not with incomplete map information, but the results are usually close enough. SparCraft uses this method with good results, but even it ignores multiple factors including collision.
 
-It is assumed the opponent has only a single army which is always gathered in close proximity. This is not very useful in late game where flanking maneuvers and harassment is viable tactics, but it is sufficient for early game. The worst case is we will overestimate the opponent strength, which is a much better case than underestimating it. It would be possible to detect these individual groupings however with a cluster detection algorithm.
+The combat prediction algorithm resides in the \emph{Combat Judge} module, which is used only by the Attacker and Defender, covered in this chapter, and the \emph{Strategist} covered in Chapter \ref{ch:strategy}. Given a set of units, it returns a value representing the \emph{strength} of them. The army with the higher value is predicted to win in a confrontation.
 
-TODO Prediction heuristic.
+Following is a description of the prediction heuristic: let us assume a simple scenario: two units, $a$ and $b$ are attacking each other. We have the health values $h_a, h_b$ and the \emph{damage-per-second} (DPS) values $dps_a, dps_b$. Assuming both units start attacking each other at the same time, then we must have $TTK_a = h_b / dps_a, TTK_b = h_a / dps_b$, where $TTK_a$ and $TTK_b$ are each unit's \emph{time-to-kill} (TTK). This value represents the time in seconds it takes to kill the opponent. It must be the case that the unit with the lowest TTK becomes the victor, and with this we can predict the outcome of the simple situation.
+
+Notice that we can simplify the solution and instead simply compare the values $s_a = h_a dps_a$ and $s_b = h_b dps_b$. This enables us to value the strength of an unit independently of the enemy, which is quite helpful when pulling workers one at a time in Section \ref{sec:defending}.
+
+We would like to scale the solution to armies by using the sum of strengths as the army's strength. This requires the additional assumption that no units are destroyed during combat. If this happened the TTK would not be constant, changing the outcome. This is almost never the case in real combat scenarios, and can cause the prediction to be inaccurate. This happens when armies have the same strength value, but not the same amount of troops, where the largest army is overestimated.
+
+The prediction was already inaccurate however, as we never take terrain or range into account. For this reason, the prediction underestimates Terran units, which are all ranged. Additionally the prediction has two properties that are not true. Firstly the strength of armies increases linearly with its size, which is not necessarily true in-game. When grouped, the units destroyed last will have dealt more damage than possible if attacking one at a time. Secondly the comparison between armies is non-transitive. The units in StarCraft (and most RTS games) are designed like a rock-paper-scissor game, such that army $A$ beats $B$ and loses to $C$ while $B$ beats $C$. This means the strength of an army is relative, and cannot be accurately evaluated as an absolute value like here. 
+
+However, this solution has proven to be sufficient in the early game. Protoss has the strongest early unit, which mitigates the disadvantage of attacking when outnumbered. The units will usually be able to destroy one or more of the enemies, such that both players loses troops. The only case where this is not true is against other Protoss players, but here the prediction is perfect as both use the same early unit type.
+
+The prediction is very cheap, having a time complexity linear to the size of the army and uses constant amount of space.
 
 \section{Attacking}
 \label{sec:attacking}
@@ -31,8 +41,6 @@ In euclidean space the shortest path between two points is the same regardless o
 When rushing, it is favorable to move troops as close to the opponent's base as possible without confrontation, even before they are ready to attack. This pressures the opponent, scouts the map, attacks the earliest possible time and distances the opponent's troops far from the player's base. Even if the fight ends in defeat, the opponent's troops will have to move across the map to attack, and in case of victory, the player's troops can continue towards the opponent's base with minimum delay.
 
 When the we predict a victory in combat against the opponent army, we attack. In some cases it might be prudent to wait until more units have been amassed, especially if we produce more troops than the opponent, as we will sustain fewer losses and be more certain of a victory. This is difficult to asses while also being very risky, so the safer option is just attacking immediately.
-
-%Since the Agent never uses any units capable of attacking flying or cloaked enemies, they are ignored. These units are rarely used in early game.
 
 Attacking is handled solely by the \emph{Attacker} module.
 

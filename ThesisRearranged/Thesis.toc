@@ -31,11 +31,11 @@
 \contentsline {section}{\numberline {9.1}Managing Troops}{32}{section.9.1}
 \contentsline {section}{\numberline {9.2}Combat Prediction}{32}{section.9.2}
 \contentsline {section}{\numberline {9.3}Attacking}{33}{section.9.3}
-\contentsline {section}{\numberline {9.4}Defending}{35}{section.9.4}
-\contentsline {chapter}{\numberline {10}Macro Strategy}{37}{chapter.10}
-\contentsline {section}{\numberline {10.1}Economy}{38}{section.10.1}
-\contentsline {section}{\numberline {10.2}Combat}{39}{section.10.2}
-\contentsline {section}{\numberline {10.3}Build-orders}{40}{section.10.3}
-\contentsline {chapter}{\numberline {11}Results}{43}{chapter.11}
-\contentsline {chapter}{\numberline {12}Conclusion}{45}{chapter.12}
-\contentsline {chapter}{Bibliography}{47}{chapter.12}
+\contentsline {section}{\numberline {9.4}Defending}{36}{section.9.4}
+\contentsline {chapter}{\numberline {10}Macro Strategy}{39}{chapter.10}
+\contentsline {section}{\numberline {10.1}Economy}{40}{section.10.1}
+\contentsline {section}{\numberline {10.2}Combat}{41}{section.10.2}
+\contentsline {section}{\numberline {10.3}Build-orders}{42}{section.10.3}
+\contentsline {chapter}{\numberline {11}Results}{45}{chapter.11}
+\contentsline {chapter}{\numberline {12}Conclusion}{47}{chapter.12}
+\contentsline {chapter}{Bibliography}{49}{chapter.12}

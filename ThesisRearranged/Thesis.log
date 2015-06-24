@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (MiKTeX 2.9 64-bit) (preloaded format=pdflatex 2015.2.9)  23 JUN 2015 15:32
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (MiKTeX 2.9 64-bit) (preloaded format=pdflatex 2015.2.9)  24 JUN 2015 19:49
 entering extended mode
 **Thesis.tex
 (D:\Bachelor\ThesisRearranged\Thesis.tex
@@ -701,7 +701,7 @@ LaTeX Font Info:    Try loading font information for T1+cmss on input line 57.
 (D:\Tools\MiKTeX\tex\latex\base\t1cmss.fd
 File: t1cmss.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
-<figures/DTU-logo.pdf, id=150, 38.98846pt x 56.87358pt>
+<figures/DTU-logo.pdf, id=158, 38.98846pt x 56.87358pt>
 File: figures/DTU-logo.pdf Graphic file (type pdf)
 
 <use figures/DTU-logo.pdf>
@@ -757,7 +757,7 @@ File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
 (Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 10.
 
-<figures/SignatureDummy.jpg, id=188, 257.46187pt x 103.13531pt>
+<figures/SignatureDummy.jpg, id=196, 257.46187pt x 103.13531pt>
 File: figures/SignatureDummy.jpg Graphic file (type jpg)
 
 <use figures/SignatureDummy.jpg>
@@ -845,36 +845,30 @@ an-dled by the \T1/cmr/m/it/10 Archivist
 
 [28] [29]) [30] (D:\Bachelor\ThesisRearranged\Combat.tex
 Chapter 9.
-
-Underfull \vbox (badness 2828) has occurred while \output is active []
-
- [31
+[31
 
 
 
-]
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [32]
-[33] [34] [35]) [36] (D:\Bachelor\ThesisRearranged\Strategy.tex
+] [32] [33] [34] [35] [36] [37]) [38]
+(D:\Bachelor\ThesisRearranged\Strategy.tex
 Chapter 10.
-[37
+[39
 
 
 
-] [38] [39] [40]) [41] (D:\Bachelor\ThesisRearranged\Results.tex [42
+] [40] [41] [42]) [43] (D:\Bachelor\ThesisRearranged\Results.tex [44
 
 
 
 ]
 Chapter 11.
-[43]) [44] (D:\Bachelor\ThesisRearranged\Conclusion.tex
+[45]) [46] (D:\Bachelor\ThesisRearranged\Conclusion.tex
 Chapter 12.
-) [45
+) [47
 
 
 
-] [46
+] [48
 
 
 ] (D:\Bachelor\ThesisRearranged\Thesis.bbl
@@ -883,7 +877,7 @@ LaTeX Warning: Empty `thebibliography' environment on input line 3.
 
 )
 Package atveryend Info: Empty hook `BeforeClearDocument' on input line 111.
- [47
+ [49
 
 ]
 Package atveryend Info: Empty hook `AfterLastShipout' on input line 111.
@@ -902,25 +896,18 @@ Package atveryend Info: Empty hook `AfterLastShipout' on input line 111.
 (D:\Bachelor\ThesisRearranged\Conclusion.aux))
 Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 111.
 Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 111.
-
-
-Package rerunfilecheck Warning: File `Thesis.out' has changed.
-(rerunfilecheck)                Rerun to get outlines right
-(rerunfilecheck)                or use package `bookmark'.
-
-Package rerunfilecheck Info: Checksums for `Thesis.out':
-(rerunfilecheck)             Before: D72E33AA5C98B10AA68715D50FD99526;2143
-(rerunfilecheck)             After:  B72CD50FC29EF91E623F5AFDCD5AE34C;2277.
+Package rerunfilecheck Info: File `Thesis.out' has not changed.
+(rerunfilecheck)             Checksum: B72CD50FC29EF91E623F5AFDCD5AE34C;2277.
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 111.
  ) 
 Here is how much of TeX's memory you used:
- 8990 strings out of 493921
- 127721 string characters out of 3152089
- 220536 words of memory out of 3000000
- 11896 multiletter control sequences out of 15000+200000
+ 8994 strings out of 493921
+ 127769 string characters out of 3152089
+ 220610 words of memory out of 3000000
+ 11900 multiletter control sequences out of 15000+200000
  26051 words of font info for 67 fonts, out of 3000000 for 9000
  841 hyphenation exceptions out of 8191
- 43i,12n,45p,973b,489s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 43i,12n,45p,908b,489s stack positions out of 5000i,500n,10000p,200000b,50000s
  <C:\Users\Mindbug\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\jknappen\ec\dpi60
 0\ecbx1200.pk> <C:\Users\Mindbug\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\jknap
 pen\ec\dpi600\ecbx1440.pk> <C:\Users\Mindbug\AppData\Local\MiKTeX\2.9\fonts\pk\
@@ -937,11 +924,11 @@ TeX\2.9\fonts\pk\ljfour\jknappen\ec\dpi600\ecss0900.pk> <C:\Users\Mindbug\AppDa
 ta\Local\MiKTeX\2.9\fonts\pk\ljfour\jknappen\ec\dpi600\ecss1728.pk> <C:\Users\M
 indbug\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\jknappen\ec\dpi600\ecsx2074.pk>
 <D:/Tools/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi10.pfb><D:/Tools/MiKTeX/fon
-ts/type1/public/amsfonts/cm/cmr10.pfb><D:/Tools/MiKTeX/fonts/type1/public/amsfo
-nts/cm/cmsy10.pfb>
-Output written on Thesis.pdf (59 pages, 346124 bytes).
+ts/type1/public/amsfonts/cm/cmmi7.pfb><D:/Tools/MiKTeX/fonts/type1/public/amsfo
+nts/cm/cmr10.pfb><D:/Tools/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb>
+Output written on Thesis.pdf (61 pages, 365362 bytes).
 PDF statistics:
- 1010 PDF objects out of 1200 (max. 8388607)
+ 1035 PDF objects out of 1200 (max. 8388607)
  124 named destinations out of 1000 (max. 500000)
- 307 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 323 words of extra memory for PDF output out of 10000 (max. 10000000)
 
