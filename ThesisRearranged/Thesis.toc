@@ -33,9 +33,10 @@
 \contentsline {section}{\numberline {9.3}Attacking}{33}{section.9.3}
 \contentsline {section}{\numberline {9.4}Defending}{36}{section.9.4}
 \contentsline {chapter}{\numberline {10}Macro Strategy}{39}{chapter.10}
-\contentsline {section}{\numberline {10.1}Economy}{40}{section.10.1}
-\contentsline {section}{\numberline {10.2}Combat}{41}{section.10.2}
-\contentsline {section}{\numberline {10.3}Build-orders}{42}{section.10.3}
-\contentsline {chapter}{\numberline {11}Results}{45}{chapter.11}
-\contentsline {chapter}{\numberline {12}Conclusion}{47}{chapter.12}
-\contentsline {chapter}{Bibliography}{49}{chapter.12}
+\contentsline {section}{\numberline {10.1}Strategy Architecture}{39}{section.10.1}
+\contentsline {section}{\numberline {10.2}Build-order}{40}{section.10.2}
+\contentsline {section}{\numberline {10.3}Economy Strategy}{41}{section.10.3}
+\contentsline {section}{\numberline {10.4}Combat Strategy}{44}{section.10.4}
+\contentsline {chapter}{\numberline {11}Results}{47}{chapter.11}
+\contentsline {chapter}{\numberline {12}Conclusion}{49}{chapter.12}
+\contentsline {chapter}{Bibliography}{51}{chapter.12}

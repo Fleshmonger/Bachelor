@@ -18,6 +18,7 @@ Training is handled by the \emph{Recruiter} module, while building is done by th
 There is a third module, the \emph{Morpher}, which handles the rare case of a unit that executes a \emph{morph} command. A morphing unit transforms from one type to another, which is most often seen in case of building refineries. Counter-intuitively, the geyser morphs into a refinery and changes ownership to the constructing player, but the refinery is still built by a worker with a build command. The Morpher exclusively monitors morphing units, while the Architect handles the building.
 
 \section{Training Units}
+\label{sec:training}
 The \emph{Recruiter} needs to be low in the hierarchy, as it needs to be accessed by many other modules. It does not contain an independent AI, acting only through certain events and method calls. The current implementation is generic such that it can handle any train-able unit in the game.
 
 To train units, the steps are twofold: issue the train command to a relevant, available trainer and then monitor the construction.
@@ -82,7 +83,7 @@ However, all Protoss structures must be in close proximity to a Pylon when built
 	As mentioned prior however, refineries are handled by the Morpher module. BWAPI is notified when a unit morphs, upon which it is inserted in a set of incomplete morphs. A morphing unit is not considered constructing, although it is incomplete. When a unit is finished morphing, no event is called, therefore forcing the Morpher to verify all morphs every frame. However, there are very few expected morphing units at any given moment.
 
 \section{Building Expansions}
-\label{sec:expansions}
+\label{sec:buildExpansions}
 Recall that \emph{expansions} are additional depots beyond the initial one, built at new resource clusters. As explained in the chapter \ref{ch:resources}, it is often profitable and sometimes necessary to expand resource harvesting to new locations. To avoid transporting cargo all the way between regions, players have to build depots near resources they wish to harvest.
 
 When BWTA analyzes a map, it marks all viable depot locations. These are positions in which a depot will be at optimal distance from nearby minerals and geysers. Usually every resource cluster only has one of these positions, but some locations may contain overlapping depots. Regions rarely have more than one base location. Given a region, we can obtain all internal base locations, including these depot locations.
