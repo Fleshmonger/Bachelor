@@ -21,9 +21,7 @@ private:
 	Accountant	* accountant;
 	Archivist	* archivist;
 	Landlord	* landlord;
-	Recruiter	* recruiter;
 	Gatherer	* gatherer;
-	Architect	* architect;
 	Strategist	* strategist;
 	Settler		* settler;
 	Planner		* planner;
@@ -32,7 +30,7 @@ private:
 	bool expand;
 
 public:
-	Despot(Accountant * accountant, Archivist * archivist, Landlord * landlord, Recruiter * recruiter, Gatherer * gatherer, Architect * architect, Strategist * strategist, Settler * settler, Planner * planner, Economist * economist);
+	Despot(Accountant * accountant, Archivist * archivist, Landlord * landlord, Gatherer * gatherer, Strategist * strategist, Settler * settler, Planner * planner, Economist * economist);
 	~Despot();
 
 	void update();

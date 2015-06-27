@@ -2,7 +2,7 @@
 
 
 // Constructor
-Economist::Economist(Accountant * accountant, Landlord * landlord, Recruiter * recruiter, Gatherer * gatherer, Architect * architect, Settler * settler, Strategist * strategist, Planner * planner) :
+Economist::Economist(Accountant * accountant, Landlord * landlord, Recruiter * recruiter, Gatherer * gatherer, Architect * architect, Settler * settler, Strategist * strategist) :
 	accountant(accountant),
 	landlord(landlord),
 	recruiter(recruiter),
@@ -10,7 +10,6 @@ Economist::Economist(Accountant * accountant, Landlord * landlord, Recruiter * r
 	architect(architect),
 	settler(settler),
 	strategist(strategist),
-	planner(planner),
 	refineries()
 {
 }

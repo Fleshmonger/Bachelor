@@ -39,12 +39,11 @@ private:
 	Architect	* architect;
 	Settler		* settler;
 	Strategist	* strategist;
-	Planner		* planner;
 
 	utilUnit::UnitList refineries;
 
 public:
-	Economist(Accountant * accountant, Landlord * landlord, Recruiter * recruiter, Gatherer * gatherer, Architect * architect, Settler * settler, Strategist * strategist, Planner * planner);
+	Economist(Accountant * accountant, Landlord * landlord, Recruiter * recruiter, Gatherer * gatherer, Architect * architect, Settler * settler, Strategist * strategist);
 	~Economist();
 
 	void update();

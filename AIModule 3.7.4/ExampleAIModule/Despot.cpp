@@ -2,13 +2,11 @@
 
 
 // Constructor
-Despot::Despot(Accountant * accountant, Archivist * archivist, Landlord * landlord, Recruiter * recruiter, Gatherer * gatherer, Architect * architect, Strategist * strategist, Settler * settler, Planner * planner, Economist * economist) :
+Despot::Despot(Accountant * accountant, Archivist * archivist, Landlord * landlord, Gatherer * gatherer, Strategist * strategist, Settler * settler, Planner * planner, Economist * economist) :
 	accountant(accountant),
 	archivist(archivist),
 	landlord(landlord),
-	recruiter(recruiter),
 	gatherer(gatherer),
-	architect(architect),
 	settler(settler),
 	planner(planner),
 	economist(economist),

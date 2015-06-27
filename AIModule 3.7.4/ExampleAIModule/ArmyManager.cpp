@@ -2,9 +2,8 @@
 
 
 // Constructor
-ArmyManager::ArmyManager(Archivist * archivist, CombatJudge * combatJudge) :
+ArmyManager::ArmyManager(Archivist * archivist) :
 	archivist(archivist),
-	combatJudge(combatJudge),
 	army(),
 	assignments(),
 	enlisted()

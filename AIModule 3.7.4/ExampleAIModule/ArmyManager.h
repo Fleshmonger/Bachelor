@@ -16,14 +16,13 @@ class ArmyManager
 {
 private:
 	Archivist		* archivist;
-	CombatJudge		* combatJudge;
 
 	utilUnit::UnitSet					army;
 	std::map<BWAPI::Unit*, Duty>		assignments;
 	std::map<Duty, utilUnit::UnitSet>	enlisted;
 
 public:
-	ArmyManager(Archivist * archivist, CombatJudge * combatJudge);
+	ArmyManager(Archivist * archivist);
 	~ArmyManager();
 
 	void update();

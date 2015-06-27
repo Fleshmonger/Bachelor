@@ -9,19 +9,19 @@ Primary::Primary() :
 	geologist(),
 	landlord(),
 	recruiter(&accountant),
+	armyManager(&archivist),
 	combatJudge(&archivist),
 	gatherer(&landlord),
 	architect(&accountant, &baseManager, &landlord),
 	reconnoiter(&archivist, &landlord),
-	armyManager(&archivist, &combatJudge),
 	morpher(&accountant, &gatherer),
 	settler(&archivist, &landlord, &architect),
 	attacker(&archivist, &landlord, &combatJudge, &armyManager),
 	defender(&archivist, &landlord, &combatJudge, &armyManager),
 	strategist(&accountant, &archivist, &landlord, &recruiter, &combatJudge, &architect, &armyManager),
 	planner(&geologist, &landlord, &recruiter, &architect, &settler),
-	economist(&accountant, &landlord, &recruiter, &gatherer, &architect, &settler, &strategist, &planner),
-	despot(&accountant, &archivist, &landlord, &recruiter, &gatherer, &architect, &strategist, &settler, &planner, &economist)
+	economist(&accountant, &landlord, &recruiter, &gatherer, &architect, &settler, &strategist),
+	despot(&accountant, &archivist, &landlord, &gatherer, &strategist, &settler, &planner, &economist)
 {
 }
 

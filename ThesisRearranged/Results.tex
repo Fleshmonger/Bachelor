@@ -1,20 +1,22 @@
 \chapter{Results}
 \label{ch:results}
-The bot was submitted to the Student StarCraft AI Tournament (SSCAIT). While the tournament itself has not started yet, the bots play against each other with results and replays easily available. As mentioned in Section \ref{sec:expanding} there are three versions of the bot, all of which has been submitted. The versions are "One-Base", "Always-Expand" and "Condition-Expand". The first version never expands, the second expands whenever desirable. The third behaves like the first version, until the opponent builds defensive structures where it switches to the second.
+The bot was submitted to the Student StarCraft AI Tournament (SSCAIT). While the tournament itself has not started yet, the bots still play against each other in live-streamed matches. There is a scoreboard where bots are placed accodingly to their win-rate, with total wins and losses marked. As mentioned in Section \ref{sec:expanding} there are three versions of the bot, all of which has been submitted. The versions are "One-Base", "Always-Expand" and "Condition-Expand". The first version never expands, the second expands whenever desirable. The third behaves like the first version, until the opponent builds defensive structures where it switches to the second. Table \ref{tab:results} contains the results of the three versions.
 
-The results are:
-
-	\begin{center}
-	\begin{tabularx}{\linewidth}{|X||l|l|l|}
-		\hline
-		Version				& Games	& Wins	& Win-rate	\\
-		\hline
-		One-Base			& $780$	& $527$	& $79.23\%$	\\
-		Always-Expand		& $104$	& $78$	& $75.00\%$	\\
-		Condition-Expand	& $79$	& $63$	& $79.75\%$	\\
-		\hline
-	\end{tabularx}
-	\end{center}
+\begin{table}
+\begin{center}
+\begin{tabularx}{\linewidth}{|X||l|l|l|}
+	\hline
+	Version				& Games	& Wins	& Win-rate	\\
+	\hline
+	One-Base			& $780$	& $527$	& $79.23\%$	\\
+	Always-Expand		& $104$	& $78$	& $75.00\%$	\\
+	Condition-Expand	& $79$	& $63$	& $79.75\%$	\\
+	\hline
+\end{tabularx}
+\end{center}
+\caption{Sparring results from the SSCAIT website}
+\label{tab:results}
+\end{table}
 
 The initial One-Base version did very well, netting almost an $80\%$ win-rate. The next version, Always-Expand, was not tested as thoroughly, but it is clear that it did not perform as good. It turned out that by far most of the bots were aggressive rushers, which often would destroy the first expansion. At that point the bot would be behind in troops and quickly lose. This spurred the Condition-Expand version, where it would not expand against rushers. Unfortunately, it only marginally improved the win-rate, and with few enough games for the results not to be conclusive. This is probably because the expansions was not enough to win against the defensive bots, in which case the outcomes of games were unchanged.
 
@@ -34,6 +36,6 @@ The bot will be entered in the 2015 AIIDE and CIG competitions, and further deve
 	The bot has never lost a match due to breaking the time limits. In fact, it has not been observed to once exceed 55 milliseconds in a frame. Not unexpected however, since the bot has favored simple and very cheap solutions. There are certainly some algorithms that could be improved, such as detecting troops' proximity to the enemy. These are the minority however, and the current implementation allows for further development without reworking it.
 
 	\subsection*{Features}
-	The bot never reached any high-level AI solutions. The focus was creating a competitive bot, so development focused on areas that improved performance the best. This turned out to be low-level technical features such as using the command interface and handling units. It was much more important that the bot acted correctly than it acted optimally, so simple solutions was sufficient in almost all aspects. Further development should focus on improving combat predictions and map awareness with regards to enemy unit placement, such that the bot can play in later stages of the match. Additional features would be controlling more kinds of units and better adaption to opponents' strategies.
+	The bot never reached any high-level, complex AI solutions. The focus was creating a competitive bot, so development focused on areas that improved performance the best. This turned out to be low-level technical features such as managing and commanding units and internal production data-structures. It was much more important that the bot acted correctly than it acted optimally, so simple solutions was sufficient in almost all aspects. Further development should focus on improving combat predictions and map awareness with regards to enemy unit placement, such that the bot can play in later stages of the match. Additional features would be controlling more kinds of units and better adaption to opponents' strategies.
 	
 	As the results show, the expansions did not improve performance noticeably. The economic advantage gained from expansions were not enough to offset the disadvantage of only using the earliest Protoss combat unit. By increasing the array of units used by the bot, the advantage of expansions may be clearer. In any case, expansions were needed at some point in the bot's development, as they are mandatory in longer games. In hindsight, it might have improved gameplay performance more if other features were pursued instead, like combat prediction or advanced units.
