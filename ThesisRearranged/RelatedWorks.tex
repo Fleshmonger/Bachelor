@@ -1,7 +1,6 @@
-\chapter{Related Works}
-Bots in StarCraft
+\chapter{Bots in StarCraft}
+Before delving into the agent's design, this chapter will cover a few other bots, their solutions to the AI challenges and the competitions in which they play. First we will explain the basics of strategies in StarCraft.
 
-\section{Strategies in StarCraft}
 In most RTS games, StarCraft being no exception, there is a trinity of strategies in a rock-paper-scissor formation. These are the \emph{rush}, \emph{boom} and \emph{turtle} strategies.
 
 The \emph{rush} strategy is when the player attempts to produce and attack with troops as fast as possible. There are many variations in StarCraft, where the most aggressive are called \emph{all-in}, as the rushing player will lose shortly afterwards if the initial rush fails. This could happen if the opponent builds stationary defenses, which are usually much more cost-effective than the mobile units required to attack.
@@ -10,35 +9,24 @@ Closely related, a player could instead focus on developing economy or technolog
 
 Finally, the defensive strategy called a \emph{turtle} or \emph{turtling} builds strong defenses early on. As mentioned, this will counter an enemy rush by costing fewer resources, used to expand in economy or technology. The resulting advantage is then used to win. This is a slow strategy however, which fails against the riskier \emph{boom} strategy. Since the defensive strategy does not put pressure on the opponent, they are free to completely spend resources on expanding to stronger units.
 
-A very important part of StarCraft strategies are the openings. Much like chess openings, StarCraft has a wide array of detailed steps to take in the first few minutes of a round.
+Matches in most RTS games can be divided into three stages: \emph{early-}, \emph{mid-} and \emph{late-game}. These are somewhat vague definitions of time intervals in the game where different strategies apply. There is no match timer in StarCraft, so the stages are usually determined by the game-state, and therefore they arrive at different times across matches. Mid-game is when players have established their base and economy and usually built more bases. Late-game is once most of the map has been settled and all units are available to players. The three basic strategies we covered are used during the early game, but has strong influence on mid- and late-game.
 
-Usually either of these strategies are used during the early game. Later on, players will have more resources to pursue multiple goals and a more balanced overall strategy. This takes form in StarCraft by players attempting to gain a long-term economic advantage, done by controlling the limited resource locations. While early game can be decided by a single battle, later stages require multiple.
+\section{Bots}
+Few bots ever reach mid-game or later as matches are often determined beforehand. As the game progresses to later stages, the races gain access to many kinds of units, which are difficult to control well for a bot. Most bots therefore focus on the early-game where only a few units are available, unable to perform well at later stages. The most advanced bots, capable of playing the later stages well, forces the match into mid-game by turtling, winning against the early bots.
 
-TODO Early, mid, lategame
-
-\section{Bots in StarCraft}
 Usually bots focus on only one strategy. Some of the more advanced bots identify whatever opening strategy the opponent is using.
 
 Few bots reach the late-game content of StarCraft. Those that do usually focus on the incredible precision and speed which the bot can play compared to a human.
 
 %ICEbot, Krasi0, tscmoo + tscmooz, Martin Rooijackers, UAlberta, Black White, Tomas Vajda, Andrew Smith
 
-	\subsection*{API}
-	\emph{BWAPI} is an API for StarCraft Broodwar and is injected upon startup by \emph{ChaosLauncher}. It loads an AI module written in c++, which can retrieve information about the current match's map status and send commands to the game through BWAPI. This controls the player's actions and allows the development of agents for StarCraft.
-	
-	Depending on the settings in BWAPI, the agent can be disallowed to retrieve information a player would not be able to. This means some units are in some levels of accessibility, where invisible and destroyed units are completely inaccessible. This has some limits however, as the agent can retrieve information about burrowed and cloaked units as if they were not. While a keen player can spot these units as they are not completely transparent, the agent has no limits as if they were completely visible, giving it an advantage. Additionally the agent is not limited to what is visible currently on the display, but can retrieve information from all over the map.
-	
-	There is a popular library, the \emph{Broodwar Terrain Analyzer} or \emph{BWTA} for short, which pre-processes maps for locations of interest. Most importantly, it marks the optimal depot locations for harvesting resources. While BWAPI already does this for start-locations, BWTA also does this for all resource clusters, marking viable expansion locations. The pre-processing of the map only has to be done once as the results are stored for subsequent games on the map. This library is automatically included in the 3.7.4 BWAPI test bot, so it is probable that almost all bots use the library.
-	
-	As an additional note, BWAPI divides the map into \emph{regions}. These contain satellite data about the borders to neighboring regions, included resources and base locations. They are important because the regions are separated in \emph{chokepoints}, which are either ramps or bottlenecked passages. Usually a region only contains a single base location and resource cluster, however some regions contain multiple clusters with overlapping base locations. Because of these qualities regions can be used to mark occupied locations by players.
-	
-	While newer versions of BWAPI exist, the 3.7.4 version is still widely used as it is considered the most stable, and is compatible with BWTA. There does exist a BWTA clone for 4th versions, however it is not very stable. The downside to 3.7.4 is that it does not support c++ 11. There does not exist an equivalent to BWAPI for StarCraft 2, since technically BWAPI is a hack and using it would result in a ban. AI's have been scripted in StarCraft 2's own editor however, and some have even gone and interpreted the display output of the game for a bot.
 
-	\subsection*{AI Competitions}
-	Different competitions and their descriptions.
-	
-	Competition rules: Setup, limits, goals.
-	
-	Ties impossible
-	
-	This bots involvement/predicted involvement.
+\section{AI Competitions}
+AIIDE, CIG, SSCAIT.
+Different competitions and their descriptions.
+
+Competition rules: Setup, limits, goals.
+
+Ties impossible
+
+This bots involvement/predicted involvement.
