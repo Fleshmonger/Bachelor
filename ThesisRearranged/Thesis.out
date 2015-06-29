@@ -6,36 +6,37 @@
 \BOOKMARK [0][]{chapter.1}{1 Introduction}{}% 6
 \BOOKMARK [0][]{chapter.2}{2 Project Process}{}% 7
 \BOOKMARK [1][]{section.2.1}{2.1 Testing}{chapter.2}% 8
-\BOOKMARK [0][]{chapter.3}{3 StarCraft}{}% 9
-\BOOKMARK [0][]{chapter.4}{4 Related Works}{}% 10
-\BOOKMARK [1][]{section.4.1}{4.1 Strategies in StarCraft}{chapter.4}% 11
-\BOOKMARK [1][]{section.4.2}{4.2 Bots in StarCraft}{chapter.4}% 12
-\BOOKMARK [0][]{chapter.5}{5 Agent Design}{}% 13
-\BOOKMARK [1][]{section.5.1}{5.1 Agent Strategy}{chapter.5}% 14
-\BOOKMARK [1][]{section.5.2}{5.2 Architecture Design}{chapter.5}% 15
-\BOOKMARK [2][]{subsection.5.2.1}{5.2.1 Implementation}{section.5.2}% 16
-\BOOKMARK [0][]{chapter.6}{6 Workers and Resources}{}% 17
-\BOOKMARK [1][]{section.6.1}{6.1 Managing Workers}{chapter.6}% 18
-\BOOKMARK [1][]{section.6.2}{6.2 Mining Minerals}{chapter.6}% 19
-\BOOKMARK [1][]{section.6.3}{6.3 Harvesting Gas}{chapter.6}% 20
-\BOOKMARK [0][]{chapter.7}{7 Production}{}% 21
-\BOOKMARK [1][]{section.7.1}{7.1 Production Architecture}{chapter.7}% 22
-\BOOKMARK [1][]{section.7.2}{7.2 Training Units}{chapter.7}% 23
-\BOOKMARK [1][]{section.7.3}{7.3 Building Structures}{chapter.7}% 24
-\BOOKMARK [1][]{section.7.4}{7.4 Building Expansions}{chapter.7}% 25
-\BOOKMARK [0][]{chapter.8}{8 Exploration}{}% 26
-\BOOKMARK [1][]{section.8.1}{8.1 Tracking Units}{chapter.8}% 27
-\BOOKMARK [1][]{section.8.2}{8.2 Scouting}{chapter.8}% 28
-\BOOKMARK [0][]{chapter.9}{9 Combat}{}% 29
-\BOOKMARK [1][]{section.9.1}{9.1 Managing Troops}{chapter.9}% 30
-\BOOKMARK [1][]{section.9.2}{9.2 Combat Prediction}{chapter.9}% 31
-\BOOKMARK [1][]{section.9.3}{9.3 Attacking}{chapter.9}% 32
-\BOOKMARK [1][]{section.9.4}{9.4 Defending}{chapter.9}% 33
-\BOOKMARK [0][]{chapter.10}{10 Macro Strategy}{}% 34
-\BOOKMARK [1][]{section.10.1}{10.1 Strategy Architecture}{chapter.10}% 35
-\BOOKMARK [1][]{section.10.2}{10.2 Build-order}{chapter.10}% 36
-\BOOKMARK [1][]{section.10.3}{10.3 Economy Strategy}{chapter.10}% 37
-\BOOKMARK [1][]{section.10.4}{10.4 Combat Strategy}{chapter.10}% 38
-\BOOKMARK [0][]{chapter.11}{11 Results}{}% 39
-\BOOKMARK [0][]{chapter.12}{12 Conclusion}{}% 40
-\BOOKMARK [0][]{chapter.12}{Bibliography}{}% 41
+\BOOKMARK [1][]{section.2.2}{2.2 Development Results}{chapter.2}% 9
+\BOOKMARK [1][]{section.2.3}{2.3 Evaluation}{chapter.2}% 10
+\BOOKMARK [0][]{chapter.3}{3 StarCraft}{}% 11
+\BOOKMARK [0][]{chapter.4}{4 Bots in StarCraft}{}% 12
+\BOOKMARK [1][]{section.4.1}{4.1 Bots}{chapter.4}% 13
+\BOOKMARK [1][]{section.4.2}{4.2 AI Competitions}{chapter.4}% 14
+\BOOKMARK [0][]{chapter.5}{5 Agent Design}{}% 15
+\BOOKMARK [1][]{section.5.1}{5.1 Architecture Design}{chapter.5}% 16
+\BOOKMARK [2][]{subsection.5.1.1}{5.1.1 Implementation}{section.5.1}% 17
+\BOOKMARK [0][]{chapter.6}{6 Workers and Resources}{}% 18
+\BOOKMARK [1][]{section.6.1}{6.1 Managing Workers}{chapter.6}% 19
+\BOOKMARK [1][]{section.6.2}{6.2 Mining Minerals}{chapter.6}% 20
+\BOOKMARK [1][]{section.6.3}{6.3 Harvesting Gas}{chapter.6}% 21
+\BOOKMARK [0][]{chapter.7}{7 Production}{}% 22
+\BOOKMARK [1][]{section.7.1}{7.1 Production Architecture}{chapter.7}% 23
+\BOOKMARK [1][]{section.7.2}{7.2 Training Units}{chapter.7}% 24
+\BOOKMARK [1][]{section.7.3}{7.3 Building Structures}{chapter.7}% 25
+\BOOKMARK [1][]{section.7.4}{7.4 Building Expansions}{chapter.7}% 26
+\BOOKMARK [0][]{chapter.8}{8 Exploration}{}% 27
+\BOOKMARK [1][]{section.8.1}{8.1 Tracking Units}{chapter.8}% 28
+\BOOKMARK [1][]{section.8.2}{8.2 Scouting}{chapter.8}% 29
+\BOOKMARK [0][]{chapter.9}{9 Combat}{}% 30
+\BOOKMARK [1][]{section.9.1}{9.1 Managing Troops}{chapter.9}% 31
+\BOOKMARK [1][]{section.9.2}{9.2 Combat Prediction}{chapter.9}% 32
+\BOOKMARK [1][]{section.9.3}{9.3 Attacking}{chapter.9}% 33
+\BOOKMARK [1][]{section.9.4}{9.4 Defending}{chapter.9}% 34
+\BOOKMARK [0][]{chapter.10}{10 Macro Strategy}{}% 35
+\BOOKMARK [1][]{section.10.1}{10.1 Strategy Architecture}{chapter.10}% 36
+\BOOKMARK [1][]{section.10.2}{10.2 Build-order}{chapter.10}% 37
+\BOOKMARK [1][]{section.10.3}{10.3 Economy Strategy}{chapter.10}% 38
+\BOOKMARK [1][]{section.10.4}{10.4 Combat Strategy}{chapter.10}% 39
+\BOOKMARK [0][]{chapter.11}{11 Results}{}% 40
+\BOOKMARK [0][]{chapter.12}{12 Conclusion}{}% 41
+\BOOKMARK [0][]{chapter.12}{Bibliography}{}% 42

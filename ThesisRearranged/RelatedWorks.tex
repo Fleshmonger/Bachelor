@@ -12,21 +12,57 @@ Finally, the defensive strategy called a \emph{turtle} or \emph{turtling} builds
 Matches in most RTS games can be divided into three stages: \emph{early-}, \emph{mid-} and \emph{late-game}. These are somewhat vague definitions of time intervals in the game where different strategies apply. There is no match timer in StarCraft, so the stages are usually determined by the game-state, and therefore they arrive at different times across matches. Mid-game is when players have established their base and economy and usually built more bases. Late-game is once most of the map has been settled and all units are available to players. The three basic strategies we covered are used during the early game, but has strong influence on mid- and late-game.
 
 \section{Bots}
-Few bots ever reach mid-game or later as matches are often determined beforehand. As the game progresses to later stages, the races gain access to many kinds of units, which are difficult to control well for a bot. Most bots therefore focus on the early-game where only a few units are available, unable to perform well at later stages. The most advanced bots, capable of playing the later stages well, forces the match into mid-game by turtling, winning against the early bots.
+Computer-controlled players in games are called \emph{bots}. The main difference between agent and bot is that bots are a replacement for players, and they are usually limited by the same rules as human players. The term is mostly used in first-person shooters, but can be extended to all video games.
 
-Usually bots focus on only one strategy. Some of the more advanced bots identify whatever opening strategy the opponent is using.
+Compared to other games however, bots in RTS games are usually much worse than competitive human players.
 
-Few bots reach the late-game content of StarCraft. Those that do usually focus on the incredible precision and speed which the bot can play compared to a human.
+24 frames per second
 
-%ICEbot, Krasi0, tscmoo + tscmooz, Martin Rooijackers, UAlberta, Black White, Tomas Vajda, Andrew Smith
+Lignende spil og deres løsninger?
 
+Hvorfor er normale løsninger til AI ikke mulige? Searchspace.
+
+The following sections outline some of the challenges in StarCraft bot development.
+
+Few bots ever reach mid-game or later as matches are often determined beforehand. As the game progresses to later stages, the races gain access to many kinds of units, which are difficult to control well for a bot. Most bots therefore focus on the early-game where only a few units are available, unable to perform well at later stages. The most advanced bots, capable of playing the later stages well, forces the match into mid-game by turtling, winning against the early bots. Notable examples are tscmoo, Martin Roijackers, Tomas Vajda, ICEbot and Krasi0.
+
+	\subsection*{Incomplete Information}
+	As the map is partially shrouded in the fog-of-war, players are left to guess what the opponents' are scheming. The longer they are left unchecked, the more difficult it is to deduce their game-state. While humans are pretty good at this, it becomes troublesome when bots have to model the movement of opponents. Scouting them is therefore imperative, as current information is key.
+	
+	Beyond the fog-of-war, upgrades are impossible to discover unless their effects are observed. Experienced players can often guess the state of opponents' research based on their strategy, and in some cases have memorized some unit match-ups upgraded and otherwise. The accuracy of combat predictions rely on this information, which are already difficult to do accurate without factoring in upgrades.
+	
+	%TODO Work references.
+	
+	%http://skemman.is/stream/get/1946/10688/26112/1/MSc.pdf
+	
+	\subsection*{Controlling Multiple Units}
+	There is a lot more to RTS combat than commanding unit A to attack B. Positioning alone is a huge factor, which is completely dependant on the positioning of all other units in the area. The terrain of the map can be advantageous or otherwise. There are different ways to prioritize targets, none of which are conclusively superior than others. Humans have the advantage by easily reading the graphical display of RTS games, where the bot must use other methods.
+	
+	
+	%TODO Work references Potential Fields, Potential Flows. ICEbot
+	
+	%TODO Scouting harassment example?
+	%http://www.bth.se/fou/forskinfo.nsf/alfs/123430edd41f2a41c1257acb00388ce0/$file/Potential%20field%20based.pdf
+	%Micromanagement in StarCraft using Potential Fields tuned with a Multi- Objective Genetic Algorithm
+
+	\subsection*{Strategic Planning}
+	Once the opponents' game-state is known, it is possible to infer their strategy and future actions. Without this, it becomes difficult to react to attacks in time and counter their strategy. It is sometimes difficult to even predict own moves. Without this, future resource and technology capabilities are impossible to know, and planning actions ahead becomes difficult.
+	
+	%TODO Work references.
+	
+	%http://agents.fel.cvut.cz/~certicky/files/publications/tciaig2014.pdf
 
 \section{AI Competitions}
-AIIDE, CIG, SSCAIT.
+StarCraft bot competitions has been running for X years now. All of them include the Brood War expansion.
+
+The Student StarCraft AI Tournament (SSCAIT). The competition deadline and execution has yet to be announced, but usually lies around January.
+AIIDE. The deadline for submissions is the Xth of July, where they only admit 30 bots.
+Computational Intelligence in Games (CIG). 15th of August.
+
 Different competitions and their descriptions.
 
-Competition rules: Setup, limits, goals.
+Competition rules:
+goals
+Timing
 
-Ties impossible
-
-This bots involvement/predicted involvement.
+With these rules ties are practically impossible. Scores are determined by actions such as destroying units and gathering resources.
