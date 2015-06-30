@@ -8,6 +8,8 @@ A \emph{unit} is any player controlled entity, structure or not. Resources are a
 
 BWAPI notifies the agent whenever a unit is created or completed in separate events, which can be used to update internal data-structures.
 
+As an additional note, BWAPI divides the map into \emph{regions}, which contains resource and base locations. They are important because the regions border each other at \emph{chokepoints}, which are either ramps or bottlenecked passages. Usually a region contains none or a single base location and resource cluster, however some regions contain multiple clusters with overlapping base locations. Because of these qualities, regions are very useful in both combat and economy, and is used throughout the implementation. They are needed for expansions, explained in Section \ref{sec:buildExpansions}. BWTA redefines the regions to contain the optimal base locations in expansion.
+
 In the following sections we first briefly describe our location in the hierarchy. Then we begin with training of non-structure, moving on to building structures. Finally we cover expansions and expanding.
 
 \section{Production Architecture}

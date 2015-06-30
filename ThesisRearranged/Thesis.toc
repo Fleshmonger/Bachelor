@@ -7,38 +7,35 @@
 \contentsline {chapter}{Acknowledgements}{vii}{chapter*.4}
 \contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.1}
 \contentsline {chapter}{\numberline {2}Project Process}{3}{chapter.2}
-\contentsline {section}{\numberline {2.1}Testing}{3}{section.2.1}
-\contentsline {section}{\numberline {2.2}Development Results}{4}{section.2.2}
-\contentsline {section}{\numberline {2.3}Evaluation}{4}{section.2.3}
-\contentsline {chapter}{\numberline {3}StarCraft}{5}{chapter.3}
-\contentsline {chapter}{\numberline {4}Bots in StarCraft}{7}{chapter.4}
-\contentsline {section}{\numberline {4.1}Bots}{8}{section.4.1}
-\contentsline {section}{\numberline {4.2}AI Competitions}{9}{section.4.2}
-\contentsline {chapter}{\numberline {5}Agent Design}{11}{chapter.5}
-\contentsline {section}{\numberline {5.1}Architecture Design}{12}{section.5.1}
-\contentsline {subsection}{\numberline {5.1.1}Implementation}{14}{subsection.5.1.1}
-\contentsline {chapter}{\numberline {6}Workers and Resources}{17}{chapter.6}
-\contentsline {section}{\numberline {6.1}Managing Workers}{18}{section.6.1}
-\contentsline {section}{\numberline {6.2}Mining Minerals}{19}{section.6.2}
-\contentsline {section}{\numberline {6.3}Harvesting Gas}{20}{section.6.3}
-\contentsline {chapter}{\numberline {7}Production}{21}{chapter.7}
-\contentsline {section}{\numberline {7.1}Production Architecture}{22}{section.7.1}
-\contentsline {section}{\numberline {7.2}Training Units}{22}{section.7.2}
-\contentsline {section}{\numberline {7.3}Building Structures}{24}{section.7.3}
-\contentsline {section}{\numberline {7.4}Building Expansions}{27}{section.7.4}
-\contentsline {chapter}{\numberline {8}Exploration}{29}{chapter.8}
-\contentsline {section}{\numberline {8.1}Tracking Units}{30}{section.8.1}
-\contentsline {section}{\numberline {8.2}Scouting}{31}{section.8.2}
-\contentsline {chapter}{\numberline {9}Combat}{33}{chapter.9}
-\contentsline {section}{\numberline {9.1}Managing Troops}{34}{section.9.1}
-\contentsline {section}{\numberline {9.2}Combat Prediction}{34}{section.9.2}
-\contentsline {section}{\numberline {9.3}Attacking}{35}{section.9.3}
-\contentsline {section}{\numberline {9.4}Defending}{38}{section.9.4}
-\contentsline {chapter}{\numberline {10}Macro Strategy}{41}{chapter.10}
-\contentsline {section}{\numberline {10.1}Strategy Architecture}{41}{section.10.1}
-\contentsline {section}{\numberline {10.2}Build-order}{42}{section.10.2}
-\contentsline {section}{\numberline {10.3}Economy Strategy}{43}{section.10.3}
-\contentsline {section}{\numberline {10.4}Combat Strategy}{46}{section.10.4}
-\contentsline {chapter}{\numberline {11}Results}{49}{chapter.11}
-\contentsline {chapter}{\numberline {12}Conclusion}{53}{chapter.12}
-\contentsline {chapter}{Bibliography}{55}{chapter.12}
+\contentsline {section}{\numberline {2.1}Project Plan}{4}{section.2.1}
+\contentsline {chapter}{\numberline {3}StarCraft}{7}{chapter.3}
+\contentsline {chapter}{\numberline {4}Bots in StarCraft}{9}{chapter.4}
+\contentsline {section}{\numberline {4.1}Bots}{10}{section.4.1}
+\contentsline {chapter}{\numberline {5}Agent Design}{13}{chapter.5}
+\contentsline {section}{\numberline {5.1}Architecture Design}{14}{section.5.1}
+\contentsline {section}{\numberline {5.2}Implementation Details}{16}{section.5.2}
+\contentsline {chapter}{\numberline {6}Workers and Resources}{19}{chapter.6}
+\contentsline {section}{\numberline {6.1}Managing Workers}{20}{section.6.1}
+\contentsline {section}{\numberline {6.2}Mining Minerals}{21}{section.6.2}
+\contentsline {section}{\numberline {6.3}Harvesting Gas}{22}{section.6.3}
+\contentsline {chapter}{\numberline {7}Production}{23}{chapter.7}
+\contentsline {section}{\numberline {7.1}Production Architecture}{24}{section.7.1}
+\contentsline {section}{\numberline {7.2}Training Units}{24}{section.7.2}
+\contentsline {section}{\numberline {7.3}Building Structures}{26}{section.7.3}
+\contentsline {section}{\numberline {7.4}Building Expansions}{29}{section.7.4}
+\contentsline {chapter}{\numberline {8}Exploration}{31}{chapter.8}
+\contentsline {section}{\numberline {8.1}Tracking Units}{32}{section.8.1}
+\contentsline {section}{\numberline {8.2}Scouting}{33}{section.8.2}
+\contentsline {chapter}{\numberline {9}Combat}{35}{chapter.9}
+\contentsline {section}{\numberline {9.1}Managing Troops}{36}{section.9.1}
+\contentsline {section}{\numberline {9.2}Combat Prediction}{36}{section.9.2}
+\contentsline {section}{\numberline {9.3}Attacking}{37}{section.9.3}
+\contentsline {section}{\numberline {9.4}Defending}{40}{section.9.4}
+\contentsline {chapter}{\numberline {10}Macro Strategy}{43}{chapter.10}
+\contentsline {section}{\numberline {10.1}Strategy Architecture}{43}{section.10.1}
+\contentsline {section}{\numberline {10.2}Build-order}{44}{section.10.2}
+\contentsline {section}{\numberline {10.3}Economy Strategy}{45}{section.10.3}
+\contentsline {section}{\numberline {10.4}Combat Strategy}{48}{section.10.4}
+\contentsline {chapter}{\numberline {11}Results and Evaluation}{51}{chapter.11}
+\contentsline {chapter}{\numberline {12}Conclusion}{55}{chapter.12}
+\contentsline {chapter}{Bibliography}{57}{chapter.12}

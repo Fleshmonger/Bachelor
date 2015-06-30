@@ -14,55 +14,43 @@ Matches in most RTS games can be divided into three stages: \emph{early-}, \emph
 \section{Bots}
 Computer-controlled players in games are called \emph{bots}. The main difference between agent and bot is that bots are always a replacement for players, and they are usually limited by the same rules as human players. The term is mostly used in first-person shooters, but can be extended to all video games. Both bot and agent is used in this paper to refer to AI-controlled StarCraft players.
 
-Compared to other games however, bots in RTS games are usually much worse than competitive human players.
+Compared to other games however, even the best bots in RTS games are usually worse than competitive human players. This is a result of the difficult challenges bots must overcome in the games, particular the huge decision space. At every frame, a player is capable of giving one or all of their units new commands, most of which require a target unit or location. Couple a 55 ms. limit in the SSCAIT and similar in other tournaments, bots do not have very long to perform calculations on this decision space. While the same issue lies in Chess turns, there are many more frames in a typical StarCraft match, which is usually among the ten-thousands.
 
-24 frames per second
+It is practically not possible to use any standard AI solution that scales with the decision space, like alpha-beta pruning, without massive simplifications. Bots usually resort to having a few, very rigid move-sets, with some hard coded adaption to usual enemy strategies.
 
-Lignende spil og deres løsninger?
+Few bots ever reach mid-game or later as matches are often determined beforehand. As the game progresses to later stages, the races gain access to many kinds of units, which are difficult to control well for a bot. Most bots therefore focus on the early-game where only a few units are available, unable to perform well at later stages. The most advanced bots, capable of playing the later stages well, forces the match into mid-game by turtling, winning against the simpler bots. Notable examples of this strategy are Letabot and XIMP bot.
 
-Hvorfor er normale løsninger til AI ikke mulige? Searchspace.
-
-The following sections outline some of the challenges in StarCraft bot development.
-
-Few bots ever reach mid-game or later as matches are often determined beforehand. As the game progresses to later stages, the races gain access to many kinds of units, which are difficult to control well for a bot. Most bots therefore focus on the early-game where only a few units are available, unable to perform well at later stages. The most advanced bots, capable of playing the later stages well, forces the match into mid-game by turtling, winning against the early bots. Notable examples are tscmoo, Martin Roijackers, Tomas Vajda, ICEbot and Krasi0.
+The following sections outline some of the challenges in StarCraft bot development and some solutions.
 
 	\subsection*{Incomplete Information}
-	As the map is partially shrouded in the fog-of-war, players are left to guess what the opponents' are scheming. The longer they are left unchecked, the more difficult it is to deduce their game-state. While humans are pretty good at this, it becomes troublesome when bots have to model the movement of opponents. Scouting them is therefore imperative, as current information is key.
+	As the map is partially shrouded in the fog-of-war, players are left to guess what the opponents' are scheming. While humans are pretty good at this, it becomes troublesome when bots have to model the movement of opponents. The longer they are left unchecked, the more possible game-states are there to account for. Scouting opponents is therefore imperative, as this will reduce the amount of prediction needed.
 	
-	Beyond the fog-of-war, upgrades are impossible to discover unless their effects are observed. Experienced players can often guess the state of opponents' research based on their strategy, and in some cases have memorized some unit match-ups upgraded and otherwise. The accuracy of combat predictions rely on this information, which are already difficult to do accurate without factoring in upgrades.
-	
-	%TODO Work references.
-	
-	%http://skemman.is/stream/get/1946/10688/26112/1/MSc.pdf
-	
-	\subsection*{Controlling Multiple Units}
-	There is a lot more to RTS combat than commanding unit A to attack B. Positioning alone is a huge factor, which is completely dependant on the positioning of all other units in the area. The terrain of the map can be advantageous or otherwise. There are different ways to prioritize targets, none of which are conclusively superior than others. Humans have the advantage by easily reading the graphical display of RTS games, where the bot must use other methods.
-	
-	
-	%TODO Work references Potential Fields, Potential Flows. ICEbot
-	
-	%TODO Scouting harassment example?
-	%http://www.bth.se/fou/forskinfo.nsf/alfs/123430edd41f2a41c1257acb00388ce0/$file/Potential%20field%20based.pdf
-	%Micromanagement in StarCraft using Potential Fields tuned with a Multi- Objective Genetic Algorithm
-
-	\subsection*{Strategic Planning}
-	Once the opponents' game-state is known, it is possible to infer their strategy and future actions. Without this, it becomes difficult to react to attacks in time and counter their strategy. It is sometimes difficult to even predict own moves. Without this, future resource and technology capabilities are impossible to know, and planning actions ahead becomes difficult.
+	Beyond the fog-of-war, upgrades are impossible to discover unless their effects are observed. Experienced players can often guess the state of opponents' research based on their strategy, and in some cases have memorized some unit match-ups upgraded and otherwise. The accuracy of combat predictions rely on this information, which are already difficult to do accurate without factoring in upgrades. Opponents' resources are also hidden from players.
 	
 	%TODO Work references.
 	
 	%http://agents.fel.cvut.cz/~certicky/files/publications/tciaig2014.pdf
+	%http://skemman.is/stream/get/1946/10688/26112/1/MSc.pdf Bayesian network to represent technology
+	
+	\subsection*{Controlling Multiple Units}
+	There is a lot more to RTS combat than commanding unit A to attack B. Positioning alone is a huge factor, which is completely dependent on the positioning of all other units in the area. The terrain of the map can be advantageous or otherwise. There are different ways to prioritize targets, none of which are conclusively superior than others. Humans have the advantage by easily reading the graphical display of RTS games, where the bot must use other methods.
+	
+	One of the solutions practiced by ICEbot is using potential flows to direct units' positioning. A similar solution is also used when scouting in order to avoid enemy troops. Potential fields is used by the Berkeley Overmind for guiding its air-units around threats, and heatmaps have been used to detect army compositions.
+	
+	%http://www.bth.se/fou/forskinfo.nsf/alfs/123430edd41f2a41c1257acb00388ce0/$file/Potential%20field%20based.pdf
+	%Micromanagement in StarCraft using Potential Fields tuned with a Multi- Objective Genetic Algorithm
 
-\section{AI Competitions}
-StarCraft bot competitions has been running for X years now. All of them include the Brood War expansion.
-
-The Student StarCraft AI Tournament (SSCAIT). The competition deadline and execution has yet to be announced, but usually lies around January.
-AIIDE. The deadline for submissions is the Xth of July, where they only admit 30 bots.
-Computational Intelligence in Games (CIG). 15th of August.
-
-Different competitions and their descriptions.
-
-Competition rules:
-goals
-Timing
-
-With these rules ties are practically impossible. Scores are determined by actions such as destroying units and gathering resources.
+	\subsection*{Strategic Planning}
+	To create more adaptable bots, there has been several attempts to use some dynamic decision making solutions. Once the opponents' game-state is known, it is possible to infer their strategy and future actions, which can be used to react and prepare a counter-strategy.
+	
+	There has been multiple studies about using Bayesian models for planning and prediction.
+	%http://link.springer.com/chapter/10.1007/978-3-642-37798-3_38
+	%http://emotion.inrialpes.fr/people/synnaeve/index_files/SpecialTactics.pdf
+	%http://emotion.inrialpes.fr/people/synnaeve/index_files/OpeningPrediction_proceedings.pdf
+	%http://emotion.inrialpes.fr/people/synnaeve/index_files/AIIDE_11_RC1.pdf
+	%http://emotion.inrialpes.fr/people/synnaeve/index_files/BayesianUnit.pdf
+	%https://hal.archives-ouvertes.fr/hal-00752868/
+	
+	%TODO Work references.
+	
+	%http://agents.fel.cvut.cz/~certicky/files/publications/tciaig2014.pdf
