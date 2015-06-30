@@ -1,3 +1,34 @@
-\begin{thebibliography}{}
+\begin{thebibliography}{Hua11}
+
+\bibitem[Hag12]{PotentialNav}
+Johan Hagelbäck.
+\newblock Potential-field based navigation in starcraft.
+\newblock In {\em Computational Intelligence in Games}, 2012.
+
+\bibitem[Hua11]{Overmind}
+Haomiao Huang.
+\newblock Skynet meets the swarm: how the berkeley overmind won the 2010
+  starcraft ai competition.
+\newblock {\em Ars Technica}, 2011.
+
+\bibitem[SB12]{BayTac}
+Gabriel Synnaeve and Pierre Bessiere.
+\newblock A bayesian tactician.
+\newblock In {\em Computer Games Workshop at ECAI}, 2012.
+
+\bibitem[SR12]{Potential12}
+Jørgen~Bøe Svendsen and Espen~Auran Rathe.
+\newblock Micromanagement in starcraft using potential fields tuned with a
+  multi- objective genetic algorithm.
+\newblock Master's thesis, Norwegian University of Science and Technology,
+  2012.
+
+\bibitem[SSC]{SSCAIT}
+Student starcraft artificial intelligence tournament.
+\newblock \url{http://www.sscaitournament.com/}.
+
+\bibitem[UAl]{UAlberta}
+Ualberta bot.
+\newblock \url{https://code.google.com/p/ualbertabot/}.
 
 \end{thebibliography}
