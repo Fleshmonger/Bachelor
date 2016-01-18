@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (MiKTeX 2.9 64-bit) (preloaded format=pdflatex 2015.2.9)  30 JUN 2015 19:44
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (MiKTeX 2.9 64-bit) (preloaded format=pdflatex 2015.2.9)  30 JUN 2015 21:29
 entering extended mode
 **Thesis.tex
 (D:\Bachelor\ThesisRearranged\Thesis.tex
@@ -643,6 +643,7 @@ Package hyperref Info: Option `plainpages' set `false' on input line 43.
 (D:\Bachelor\ThesisRearranged\Information.aux)
 (D:\Bachelor\ThesisRearranged\Combat.aux)
 (D:\Bachelor\ThesisRearranged\Strategy.aux)
+(D:\Bachelor\ThesisRearranged\Summary.aux)
 (D:\Bachelor\ThesisRearranged\Results.aux)
 (D:\Bachelor\ThesisRearranged\Conclusion.aux))
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 54.
@@ -701,7 +702,7 @@ LaTeX Font Info:    Try loading font information for T1+cmss on input line 58.
 (D:\Tools\MiKTeX\tex\latex\base\t1cmss.fd
 File: t1cmss.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
-<figures/DTU-logo.pdf, id=154, 38.98846pt x 56.87358pt>
+<figures/DTU-logo.pdf, id=158, 38.98846pt x 56.87358pt>
 File: figures/DTU-logo.pdf Graphic file (type pdf)
 
 <use figures/DTU-logo.pdf>
@@ -780,23 +781,30 @@ Chapter 2.
 
 ]
 Chapter 3.
-) [7] [8] (D:\Bachelor\ThesisRearranged\RelatedWorks.tex
+<figures/Base.png, id=296, 267.24844pt x 131.74219pt>
+File: figures/Base.png Graphic file (type png)
+ <use figures/Base.png>
+Package pdftex.def Info: figures/Base.png used on input line 7.
+(pdftex.def)             Requested size: 267.24779pt x 131.74185pt.
+)
+[7] [8 <D:/Bachelor/ThesisRearranged/figures/Base.png>]
+(D:\Bachelor\ThesisRearranged\RelatedWorks.tex
 Chapter 4.
 [9
 
 
 
-] [10]
+] [10])
 Underfull \vbox (badness 4899) has occurred while \output is active []
 
- [11])
+ [11]
 [12] (D:\Bachelor\ThesisRearranged\Design.tex
 Chapter 5.
 [13
 
 
 
-] [14] <figures/Hierarchy.png, id=339, 853.1875pt x 702.625pt>
+] [14] <figures/Hierarchy.png, id=348, 853.1875pt x 702.625pt>
 File: figures/Hierarchy.png Graphic file (type png)
 
 <use figures/Hierarchy.png>
@@ -808,38 +816,55 @@ Overfull \hbox (30.79962pt too wide) in paragraph at lines 44--45
 in-jected upon startup by \T1/cmr/m/it/10 ChaosLauncher\T1/cmr/m/n/10 .
  []
 
-[16]) [17] (D:\Bachelor\ThesisRearranged\Resources.tex [18
+[16]) [17] [18] (D:\Bachelor\ThesisRearranged\Resources.tex
+Chapter 6.
+<figures/Resources.png, id=377, 257.46187pt x 214.55156pt>
+File: figures/Resources.png Graphic file (type png)
+
+<use figures/Resources.png>
+Package pdftex.def Info: figures/Resources.png used on input line 9.
+(pdftex.def)             Requested size: 257.46123pt x 214.55103pt.
+ [19
+
+
+
+] [20 <D:/Bachelor/ThesisRearranged/figures/Resources.png>]
+Underfull \vbox (badness 5077) has occurred while \output is active []
+
+ [21]
+<figures/Minerals.png, id=398, 217.5628pt x 188.20313pt>
+File: figures/Minerals.png Graphic file (type png)
+
+<use figures/Minerals.png>
+Package pdftex.def Info: figures/Minerals.png used on input line 43.
+(pdftex.def)             Requested size: 217.56227pt x 188.20265pt.
+) [22] [23 <D:/Bachelor/ThesisRearranged/figures/Minerals.png>] (D:\Bachelor\Th
+esisRearranged\Production.tex [24
 
 
 
 ]
-Chapter 6.
-[19] [20] [21]) [22] (D:\Bachelor\ThesisRearranged\Production.tex
 Chapter 7.
-[23
-
-
-
-] [24] [25] [26]
+[25] [26] [27] [28]
 Underfull \vbox (badness 6658) has occurred while \output is active []
 
- [27]
+ [29]
 
-LaTeX Warning: Reference `sec:expansions' on page 28 undefined on input line 73
+LaTeX Warning: Reference `sec:expansions' on page 30 undefined on input line 73
 .
 
 
 Underfull \vbox (badness 7685) has occurred while \output is active []
 
- [28]
+ [30]
 Overfull \hbox (3.59103pt too wide) in paragraph at lines 85--86
 []\T1/cmr/m/n/10 As men-tioned prior how-ever, re-finer-ies are han-dled by the
  Mor-pher mod-ule. BWAPI
  []
 
-[29]) [30] (D:\Bachelor\ThesisRearranged\Information.tex
+[31]) [32] (D:\Bachelor\ThesisRearranged\Information.tex
 Chapter 8.
-[31
+[33
 
 
 
@@ -849,36 +874,42 @@ Overfull \hbox (0.9786pt too wide) in paragraph at lines 11--12
 an-dled by the \T1/cmr/m/it/10 Archivist
  []
 
-[32] [33]) [34] (D:\Bachelor\ThesisRearranged\Combat.tex
+[34] [35]) [36] (D:\Bachelor\ThesisRearranged\Combat.tex
 Chapter 9.
-[35
+[37
 
 
 
-] [36] [37] [38] [39] [40] [41]) [42]
+] [38] [39] [40] [41] [42] [43]) [44]
 (D:\Bachelor\ThesisRearranged\Strategy.tex
 Chapter 10.
-[43
+[45
 
 
 
-] [44]
+] [46]
 Underfull \vbox (badness 5741) has occurred while \output is active []
 
- [45]
-[46] [47] [48]) [49] (D:\Bachelor\ThesisRearranged\Results.tex [50
+ [47]
+[48] [49] [50]) [51] (D:\Bachelor\ThesisRearranged\Summary.tex [52
 
 
 
 ]
 Chapter 11.
-[51] [52]) [53] (D:\Bachelor\ThesisRearranged\Conclusion.tex [54
+[53]) [54] (D:\Bachelor\ThesisRearranged\Results.tex
+Chapter 12.
+[55
+
+
+
+] [56]) [57] (D:\Bachelor\ThesisRearranged\Conclusion.tex [58
 
 
 
 ]
-Chapter 12.
-) [55] [56
+Chapter 13.
+) [59] [60
 
 
 ] (D:\Bachelor\ThesisRearranged\Thesis.bbl
@@ -888,11 +919,11 @@ Underfull \hbox (badness 2189) in paragraph at lines 27--29
  []
 
 )
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 112.
- [57
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 113.
+ [61
 
 ]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 112.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 113.
  (D:\Bachelor\ThesisRearranged\Thesis.aux
 (D:\Bachelor\ThesisRearranged\Introduction.aux)
 (D:\Bachelor\ThesisRearranged\ProjectProcess.aux)
@@ -904,23 +935,24 @@ Package atveryend Info: Empty hook `AfterLastShipout' on input line 112.
 (D:\Bachelor\ThesisRearranged\Information.aux)
 (D:\Bachelor\ThesisRearranged\Combat.aux)
 (D:\Bachelor\ThesisRearranged\Strategy.aux)
+(D:\Bachelor\ThesisRearranged\Summary.aux)
 (D:\Bachelor\ThesisRearranged\Results.aux)
 (D:\Bachelor\ThesisRearranged\Conclusion.aux))
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 112.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 112.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 113.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 113.
 Package rerunfilecheck Info: File `Thesis.out' has not changed.
-(rerunfilecheck)             Checksum: 9E150611B86241CC5DAFFED6CD7FD1C1;2231.
+(rerunfilecheck)             Checksum: 83DA8FB8D9C8930AD0BCE2A94AB753EB;2286.
 
 
 LaTeX Warning: There were undefined references.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 112.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 113.
  ) 
 Here is how much of TeX's memory you used:
- 9028 strings out of 493921
- 128113 string characters out of 3152089
- 221234 words of memory out of 3000000
- 11922 multiletter control sequences out of 15000+200000
+ 9063 strings out of 493921
+ 128831 string characters out of 3152089
+ 222085 words of memory out of 3000000
+ 11940 multiletter control sequences out of 15000+200000
  26051 words of font info for 67 fonts, out of 3000000 for 9000
  841 hyphenation exceptions out of 8191
  43i,12n,45p,1180b,469s stack positions out of 5000i,500n,10000p,200000b,50000s
@@ -942,9 +974,9 @@ indbug\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\jknappen\ec\dpi600\ecsx2074.pk>
 <D:/Tools/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi10.pfb><D:/Tools/MiKTeX/fon
 ts/type1/public/amsfonts/cm/cmmi7.pfb><D:/Tools/MiKTeX/fonts/type1/public/amsfo
 nts/cm/cmr10.pfb><D:/Tools/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb>
-Output written on Thesis.pdf (67 pages, 405947 bytes).
+Output written on Thesis.pdf (71 pages, 617508 bytes).
 PDF statistics:
- 1106 PDF objects out of 1200 (max. 8388607)
- 140 named destinations out of 1000 (max. 500000)
- 315 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 1144 PDF objects out of 1200 (max. 8388607)
+ 148 named destinations out of 1000 (max. 500000)
+ 338 words of extra memory for PDF output out of 10000 (max. 10000000)
 

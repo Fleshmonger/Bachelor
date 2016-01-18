@@ -28,23 +28,10 @@ The following sections outline some of the challenges in StarCraft bot developme
 	
 	Beyond the fog-of-war, upgrades are impossible to discover unless their effects are observed. Experienced players can often guess the state of opponents' research based on their strategy, and in some cases have memorized some unit match-ups upgraded and otherwise. The accuracy of combat predictions rely on this information, which are already difficult to do accurate without factoring in upgrades. Opponents' resources are also hidden from players.
 	
-	%http://agents.fel.cvut.cz/~certicky/files/publications/tciaig2014.pdf
-	%http://skemman.is/stream/get/1946/10688/26112/1/MSc.pdf Bayesian network to represent technology
-	
 	\subsection*{Controlling Multiple Units}
 	There is a lot more to RTS combat than commanding unit A to attack B. Positioning alone is a huge factor, which is completely dependent on the positioning of all other units in the area. The terrain of the map can be advantageous or otherwise. There are different ways to prioritize targets, none of which are conclusively superior than others. Humans have the advantage by easily reading the graphical display of RTS games, where the bot must use other methods.
 	
 	One of the solutions practiced by ICEbot is using potential flows to direct units' positioning. A similar solution is also used when scouting in order to avoid enemy troops. Potential fields is used by the Berkeley Overmind for guiding its air-units around threats, and heatmaps have been used to detect army compositions. \cite{Overmind} \cite{Potential12} \cite{PotentialNav}
 
 	\subsection*{Strategic Planning}
-	To create more adaptable bots, there has been several attempts to use some dynamic decision making solutions. Once the opponents' game-state is known, it is possible to infer their strategy and future actions, which can be used to react and prepare a counter-strategy.
-	
-	There has been multiple studies about using Bayesian models for planning and prediction. \cite{BayTac}
-	%http://link.springer.com/chapter/10.1007/978-3-642-37798-3_38
-	%http://emotion.inrialpes.fr/people/synnaeve/index_files/SpecialTactics.pdf
-	%http://emotion.inrialpes.fr/people/synnaeve/index_files/OpeningPrediction_proceedings.pdf
-	%http://emotion.inrialpes.fr/people/synnaeve/index_files/AIIDE_11_RC1.pdf
-	%http://emotion.inrialpes.fr/people/synnaeve/index_files/BayesianUnit.pdf
-	%https://hal.archives-ouvertes.fr/hal-00752868/
-	
-	%http://agents.fel.cvut.cz/~certicky/files/publications/tciaig2014.pdf
+	To create more adaptable bots, there has been several attempts to use some dynamic decision making solutions. Once the opponents' game-state is known, it is possible to infer their strategy and future actions, which can be used to react and prepare a counter-strategy. There has been multiple studies about using Bayesian models for planning and prediction. \cite{BayTac}

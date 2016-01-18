@@ -1,0 +1,15 @@
+\chapter{Feature Summary}
+\label{ch:summary}
+This chapter briefly summaries the features described in the prior five chapters, and puts them in perspective of the whole.
+
+The Landlord records all workers and their current given task. The workers are separated across the regions, such that modules can approximate the closest cluster of workers for building, defending and gathering. Both minerals and gas can be gathered, and workers are evenly spread across them in each region for optimal resource intake.
+
+Buildings are placed around base locations in regions by the Architect, such that structures are clustered and within distance of pylons. They are spaced with at least a tile in between such that large units can travel freely. No buildings are placed between resources and the base location to avoid blocking workers. Multiple buildings can be built simultaneously, and workers are temporarily tasked as a builder, returning to an idle state upon completion. All Protoss unit types can be trained by the Recruiter, assuming the appropriate trainer exists.
+
+All discovered enemy units are stored with their last known position and type by the Archivist. Since the first pylon is built, the Reconnoiter sends scouts while no enemy buildings are known. They search the different start locations, and attacks an arbitrary enemy upon discovering their base.
+
+Troops move as close as possible to the enemy base without risking confrontation. There they wait until the Combat Judge predicts a positive outcome, and then attack. The troops will retreat while not ready if enemies move towards them.
+
+The Economist will build workers in every occupied region until the resources are saturated. The Strategist greedily trains zealots and builds up to four gateways or six if an expansion has been built. Expansions are built if there exists a location and all current bases are saturated with workers. Workers will be moved from existing bases to the new one upon completion for better resource intake.
+
+One version of the bot is without expansion and two are with. One will expand as described before, where the other also requires the opponent to build a defensive structure before expanding. Note that gas harvesting is not used in any current version, as the units requiring the resource was not used. Building distancing is also not significant as the agent does not use large units. Earlier versions tested the use of larger units, which required these features, but they were too inefficient with the current combat solutions.

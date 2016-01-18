@@ -38,7 +38,7 @@ The modules are separated in categories of interests, where likewise colored mod
 	\item At the root of the hierarchy is economy and strategy, which is described in Chapter \ref{ch:strategy} (blue).
 \end{itemize}
 
-Finally, Chapter \ref{ch:results} presents and discusses the results of the bot and the project.
+Finally, Chapter \ref{ch:summary} summaries the features explained in the above mentioned chapters, and Chapter \ref{ch:results} presents and discusses the results of the bot and the project.
 
 \section{Implementation Details}
 \emph{BWAPI} is an API for StarCraft Broodwar and is injected upon startup by \emph{ChaosLauncher}. It loads an AI module written in C++, which can retrieve information about the current match's map status and send commands to the game through BWAPI. This controls the player's actions and allows the development of bots for StarCraft.
@@ -59,3 +59,5 @@ While newer versions of BWAPI exist, the 3.7.4 version is still widely used as i
 	Some C++ STLs were used for their data-structures or writing to a stream. \emph{BOOST} libraries were used for their macro for-loops, capable of some C++11 functionalities lacking in C++98. Use of dynamic memory was avoided as much as possible because of the risks of memory-mismanagement. Only the \emph{Vassals} from Chapter \ref{ch:resources} use them.
 	
 	Every method has a brief comment describing its input, return and possible modifications to the object. Almost every scope beyond one line has a single line summarizing the current scope, since some methods can get quite large.
+	
+	Debugging the AI is difficult, as it is run by StarCraft itself, which does not have a public debug mode. A series of methods therefore draw data and locations on screen when active, which allowed for real-time monitoring of internal values.
